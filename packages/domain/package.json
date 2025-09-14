@@ -1,0 +1,37 @@
+{
+  "name": "@render-engine/domain",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.13.1",
+  "description": "Domain package for the render-engine app that written in Clean Architecture",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "lint": "eslint . --fix",
+    "format": "prettier --write . --log-level warn",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0",
+    "zod": "^4.0.14"
+  },
+  "devDependencies": {
+    "@render-engine/eslint-config": "workspace:*",
+    "@types/node": "^22.16.0",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9.17.0",
+    "prettier": "3.6.2",
+    "tsc-alias": "^1.8.16"
+  }
+}

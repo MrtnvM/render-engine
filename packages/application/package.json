@@ -1,0 +1,25 @@
+{
+  "name": "@render-engine/application",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.13.1",
+  "description": "Application package for the render-engine app that written in Clean Architecture",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --fix",
+    "format": "prettier --write . --log-level warn",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@render-engine/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@render-engine/eslint-config": "workspace:*",
+    "@types/node": "^22.16.0",
+    "eslint": "^9.17.0",
+    "prettier": "3.6.2"
+  }
+}
