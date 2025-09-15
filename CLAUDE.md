@@ -102,6 +102,7 @@ pnpm -F @render-engine/infrastructure test    # Run infrastructure tests
 - Prettier for code formatting
 - Pre-commit hooks via husky and lint-staged
 - TypeScript with strict mode enabled
+- **Always use existing ID value object**: When creating entities, use the existing `ID` value object from `packages/domain/src/kernel/value-objects/id.value-object.ts` instead of creating custom ID types. All entities should extend `Entity<ID>` and use `ID.create()` for ID generation.
 
 ### Specification-Driven Development
 
