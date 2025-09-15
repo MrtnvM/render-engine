@@ -40,5 +40,5 @@ export enum DataTypeCategory {
   FONT = 'font',
   IMAGE_URL = 'imageUrl',
   COMPONENT_REF = 'componentRef',
-  TEMPLATE_REF = 'templateRef'
+  TEMPLATE_REF = 'templateRef',
 }

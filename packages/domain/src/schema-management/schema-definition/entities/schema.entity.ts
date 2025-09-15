@@ -8,8 +8,8 @@ import {
   CompatibilityResult,
   SchemaChange,
   Component,
-  Property,
-  SchemaValidationRule,
+  PropertyType as PropertyInterface,
+  SchemaValidationRuleInterface as SchemaValidationRuleInterfaceType,
 } from '../../shared/types/schema-types.js'
 import { SchemaStatus } from '../../shared/enums/schema-status.enum.js'
 import { SchemaValidationError } from '../../schema-validation/value-objects/validation-result.vo.js'
@@ -39,11 +39,11 @@ export class Schema extends Entity<ID> {
     return this._props.components
   }
 
-  get globalProperties(): Property[] {
+  get globalProperties(): PropertyInterface[] {
     return this._props.globalProperties || []
   }
 
-  get validationRules(): SchemaValidationRule[] {
+  get validationRules(): SchemaValidationRuleInterfaceType[] {
     return this._props.validationRules || []
   }
 
@@ -432,7 +432,7 @@ export class Schema extends Entity<ID> {
   private applyChange(
     change: SchemaChange,
     components: Component[],
-    globalProperties: Property[],
+    globalProperties: PropertyInterface[],
     validationRules: any[],
   ): void {
     // Apply the change to the appropriate arrays
@@ -455,7 +455,7 @@ export class Schema extends Entity<ID> {
     // This would handle add, remove, update, rename operations
   }
 
-  private applyPropertyChange(change: SchemaChange, properties: Property[]): void {
+  private applyPropertyChange(change: SchemaChange, properties: PropertyInterface[]): void {
     // Apply property-specific changes
   }
 

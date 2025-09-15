@@ -395,13 +395,13 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
         isValid = typeof value === 'string'
         break
       case 'number':
-        isValid = typeof value === 'number' && !isNaN(value)
+        isValid = typeof value === 'number' && !Number.isNaN(value)
         break
       case 'boolean':
         isValid = typeof value === 'boolean'
         break
       case 'date':
-        isValid = value instanceof Date && !isNaN(value.getTime())
+        isValid = value instanceof Date && !Number.isNaN(value.getTime())
         break
       case 'array':
         isValid = Array.isArray(value)
@@ -487,7 +487,7 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
       return { isValid: false, errors: [] }
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/
     return { isValid: emailRegex.test(value), errors: [] }
   }
 
@@ -497,6 +497,7 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
     }
 
     try {
+      // eslint-disable-next-line no-new
       new URL(value)
       return { isValid: true, errors: [] }
     } catch {
@@ -554,7 +555,7 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
       case 'string':
         return typeof value === 'string'
       case 'number':
-        return typeof value === 'number' && !isNaN(value)
+        return typeof value === 'number' && !Number.isNaN(value)
       case 'boolean':
         return typeof value === 'boolean'
       case 'array':

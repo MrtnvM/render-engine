@@ -1,4 +1,4 @@
-import { Property, PropertyJSON, Component, SchemaValidationRule } from '../../../schema-management/index.js'
+import { PropertyJSON, Component } from '../../../schema-management/index.js'
 import { ComponentType, PlatformSupport } from '../enums/index.js'
 
 export interface ComponentId {
@@ -19,10 +19,10 @@ export interface ComponentProps {
   type: ComponentType
   displayName: string
   description?: string
-  properties: Property[]
+  properties: PropertyJSON[]
   children?: Component[]
   parentId?: ComponentId | null
-  validationRules?: SchemaValidationRule[]
+  validationRules?: any[]
   events?: ComponentEvent[]
   styles?: ComponentStyle[]
   metadata: ComponentMetadata
@@ -37,7 +37,7 @@ export interface ComponentJSON {
   properties: PropertyJSON[]
   children?: ComponentJSON[]
   parentId?: string
-  validationRules?: SchemaValidationRule[]
+  validationRules?: any[]
   events?: ComponentEvent[]
   styles?: ComponentStyle[]
   metadata: {

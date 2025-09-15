@@ -325,7 +325,7 @@ export class Property extends ValueObject<PropertyProps> {
   }
 
   private static validateName(name: string): void {
-    const nameRegex = /^[a-zA-Z][a-zA-Z0-9_-]*$/
+    const nameRegex = /^[a-z][\w-]*$/i
     if (!nameRegex.test(name)) {
       throw new Error(
         `Property name '${name}' is invalid. Must start with a letter and contain only letters, numbers, underscores, and hyphens.`,

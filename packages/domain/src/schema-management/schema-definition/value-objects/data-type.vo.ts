@@ -1,7 +1,5 @@
 import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
 import { DataTypeCategory, PlatformSupport } from '../../shared/enums/index.js'
-import { v4 as uuidv4 } from 'uuid'
-import { z } from 'zod'
 
 export interface DataTypeConstraint {
   name: string
@@ -56,39 +54,39 @@ export class DataType extends ValueObject<DataTypeProps> {
   }
 
   get name(): string {
-    return this.props.name
+    return this.value.name
   }
 
   get type(): DataTypeCategory {
-    return this.props.type
+    return this.value.type
   }
 
   get baseType(): DataType | null {
-    return this.props.baseType || null
+    return this.value.baseType || null
   }
 
   get constraints(): DataTypeConstraint[] {
-    return this.props.constraints || []
+    return this.value.constraints || []
   }
 
   get defaultValue(): unknown | null {
-    return this.props.defaultValue || null
+    return this.value.defaultValue || null
   }
 
   get isBuiltIn(): boolean {
-    return this.props.isBuiltIn || false
+    return this.value.isBuiltIn || false
   }
 
   get isAbstract(): boolean {
-    return this.props.isAbstract || false
+    return this.value.isAbstract || false
   }
 
   get platformSupport(): PlatformSupport[] {
-    return this.props.platformSupport
+    return this.value.platformSupport
   }
 
   get metadata(): DataTypeMetadata {
-    return this.props.metadata
+    return this.value.metadata
   }
 
   get constraintCount(): number {
@@ -100,7 +98,7 @@ export class DataType extends ValueObject<DataTypeProps> {
   }
 
   get hasDefaultValue(): boolean {
-    return this.props.defaultValue !== null && this.props.defaultValue !== undefined
+    return this.value.defaultValue !== null && this.value.defaultValue !== undefined
   }
 
   get isPrimitive(): boolean {
@@ -112,7 +110,7 @@ export class DataType extends ValueObject<DataTypeProps> {
       DataTypeCategory.FLOAT,
       DataTypeCategory.DATE,
       DataTypeCategory.TIME,
-      DataTypeCategory.DATETIME
+      DataTypeCategory.DATETIME,
     ].includes(this.type)
   }
 
@@ -181,8 +179,8 @@ export class DataType extends ValueObject<DataTypeProps> {
     }
 
     // Check platform support overlap
-    const hasPlatformOverlap = this.platformSupport.some(platform =>
-      other.platformSupport.includes(platform)
+    const hasPlatformOverlap = this.platformSupport.some((platform) =>
+      other.platformSupport.includes(platform),
     )
 
     if (!hasPlatformOverlap) {
@@ -228,9 +226,9 @@ export class DataType extends ValueObject<DataTypeProps> {
           return value
         case DataTypeCategory.NUMBER:
         case DataTypeCategory.FLOAT:
-          return parseFloat(value)
+          return Number.parseFloat(value)
         case DataTypeCategory.INTEGER:
-          return parseInt(value, 10)
+          return Number.parseInt(value, 10)
         case DataTypeCategory.BOOLEAN:
           return value.toLowerCase() === 'true'
         case DataTypeCategory.DATE:
@@ -264,36 +262,36 @@ export class DataType extends ValueObject<DataTypeProps> {
     const newConstraints = [...this.constraints, constraint]
     const newMetadata = {
       ...this.metadata,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     return new DataType({
-      ...this.props,
+      ...this.value,
       constraints: newConstraints,
-      metadata: newMetadata
+      metadata: newMetadata,
     })
   }
 
   public removeConstraint(name: string): DataType {
-    const newConstraints = this.constraints.filter(c => c.name !== name)
+    const newConstraints = this.constraints.filter((c) => c.name !== name)
     const newMetadata = {
       ...this.metadata,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     return new DataType({
-      ...this.props,
+      ...this.value,
       constraints: newConstraints,
-      metadata: newMetadata
+      metadata: newMetadata,
     })
   }
 
   public getConstraint(name: string): DataTypeConstraint | null {
-    return this.constraints.find(c => c.name === name) || null
+    return this.constraints.find((c) => c.name === name) || null
   }
 
   public hasConstraint(name: string): boolean {
-    return this.constraints.some(c => c.name === name)
+    return this.constraints.some((c) => c.name === name)
   }
 
   public isSupportedOn(platform: PlatformSupport): boolean {
@@ -302,7 +300,7 @@ export class DataType extends ValueObject<DataTypeProps> {
 
   public getUnsupportedPlatforms(): PlatformSupport[] {
     const allPlatforms = Object.values(PlatformSupport)
-    return allPlatforms.filter(platform => !this.platformSupport.includes(platform))
+    return allPlatforms.filter((platform) => !this.platformSupport.includes(platform))
   }
 
   public addPlatformSupport(platform: PlatformSupport): DataType {
@@ -313,13 +311,13 @@ export class DataType extends ValueObject<DataTypeProps> {
     const newPlatformSupport = [...this.platformSupport, platform]
     const newMetadata = {
       ...this.metadata,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     return new DataType({
-      ...this.props,
+      ...this.value,
       platformSupport: newPlatformSupport,
-      metadata: newMetadata
+      metadata: newMetadata,
     })
   }
 
@@ -336,9 +334,13 @@ export class DataType extends ValueObject<DataTypeProps> {
       metadata: {
         ...this.metadata,
         createdAt: this.metadata.createdAt.toISOString(),
-        updatedAt: this.metadata.updatedAt.toISOString()
-      }
+        updatedAt: this.metadata.updatedAt.toISOString(),
+      },
     }
+  }
+
+  public toPrimitive(): DataTypeProps {
+    return this.value
   }
 
   private isValidType(value: unknown): boolean {
@@ -351,14 +353,14 @@ export class DataType extends ValueObject<DataTypeProps> {
         return typeof value === 'string'
       case DataTypeCategory.NUMBER:
       case DataTypeCategory.FLOAT:
-        return typeof value === 'number' && !isNaN(value)
+        return typeof value === 'number' && !Number.isNaN(value)
       case DataTypeCategory.INTEGER:
-        return typeof value === 'number' && Number.isInteger(value) && !isNaN(value)
+        return typeof value === 'number' && Number.isInteger(value) && !Number.isNaN(value)
       case DataTypeCategory.BOOLEAN:
         return typeof value === 'boolean'
       case DataTypeCategory.DATE:
       case DataTypeCategory.DATETIME:
-        return value instanceof Date && !isNaN(value.getTime())
+        return value instanceof Date && !Number.isNaN(value.getTime())
       case DataTypeCategory.ARRAY:
         return Array.isArray(value)
       case DataTypeCategory.OBJECT:
@@ -414,12 +416,12 @@ export class DataType extends ValueObject<DataTypeProps> {
     const metadata: DataTypeMetadata = {
       createdAt: new Date(),
       updatedAt: new Date(),
-      version: '1.0.0'
+      version: '1.0.0',
     }
 
     return new DataType({
       ...props,
-      metadata
+      metadata,
     })
   }
 
@@ -434,7 +436,7 @@ export class DataType extends ValueObject<DataTypeProps> {
       type,
       defaultValue,
       isBuiltIn: true,
-      platformSupport: [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID]
+      platformSupport: [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID],
     })
   }
 
@@ -443,7 +445,7 @@ export class DataType extends ValueObject<DataTypeProps> {
       name,
       type: DataTypeCategory.OBJECT,
       baseType,
-      platformSupport: baseType?.platformSupport || [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID]
+      platformSupport: baseType?.platformSupport || [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID],
     })
   }
 
@@ -451,12 +453,12 @@ export class DataType extends ValueObject<DataTypeProps> {
     name: string,
     category: DataTypeCategory,
     validator: (value: unknown) => boolean,
-    platformSupport: PlatformSupport[] = [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID]
+    platformSupport: PlatformSupport[] = [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID],
   ): DataType {
     return DataType.create({
       name,
       type: category,
-      platformSupport
+      platformSupport,
     })
   }
 
@@ -469,7 +471,7 @@ export class DataType extends ValueObject<DataTypeProps> {
       float: DataTypeCategory.FLOAT,
       date: DataTypeCategory.DATE,
       datetime: DataTypeCategory.DATETIME,
-      time: DataTypeCategory.TIME
+      time: DataTypeCategory.TIME,
     }
 
     return primitiveMap[name] || null

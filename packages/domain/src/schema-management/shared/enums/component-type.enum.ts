@@ -62,5 +62,5 @@ export enum ComponentType {
   FILE_UPLOAD = 'fileUpload',
 
   // Custom Components
-  CUSTOM = 'custom'
+  CUSTOM = 'custom',
 }

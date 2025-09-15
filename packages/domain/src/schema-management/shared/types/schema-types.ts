@@ -21,12 +21,12 @@ export interface Component {
   toJSON(): any
 }
 
-export interface Property {
+export interface PropertyType {
   name: string
   toJSON(): any
 }
 
-export interface SchemaValidationRule {
+export interface SchemaValidationRuleInterface {
   name: string
   toJSON(): any
 }
@@ -36,8 +36,8 @@ export interface SchemaProps {
   version: SemanticVersion
   description?: string
   components: Component[]
-  globalProperties?: Property[]
-  validationRules?: SchemaValidationRule[]
+  globalProperties?: PropertyType[]
+  validationRules?: SchemaValidationRuleInterface[]
   metadata: SchemaMetadata
 }
 
