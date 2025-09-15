@@ -149,7 +149,7 @@ The [EntityName] entity can emit the following domain events:
 
 ### Entities
 
-- RelatedEntity -> Entity
+- RelatedEntity
 
 ### Domain Events
 
@@ -368,11 +368,13 @@ The [EntityName] entity can emit the following domain events:
 #### Entity Base Class Methods
 
 - **Identity Management:**
+
   - Test id getter returns correct value
   - Test createdAt and updatedAt getters
   - Test equality comparison
 
 - **Domain Events:**
+
   - Test event emission in command methods
   - Test event collection and retrieval
   - Test event clearing
