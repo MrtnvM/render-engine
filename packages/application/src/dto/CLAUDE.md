@@ -31,7 +31,6 @@ dto/
 - Define schema using `z.object({ ... })`
 - Always **export the schema** and the **inferred type**
 - Name conventions:
-
   - Schema: `createUserDtoSchema`
   - Type: `CreateUserDto`
 
@@ -104,10 +103,7 @@ export type CreateUserDto = z.infer<typeof createUserDtoSchema>;
 Inside a Use Case:
 
 ```ts
-import {
-  createUserDtoSchema,
-  CreateUserDto,
-} from "@/application/dto/create-user.dto";
+import { createUserDtoSchema, CreateUserDto } from "@/application/dto/create-user.dto";
 
 function execute(input: CreateUserDto): void {
   const parsed: CreateUserDto = createUserDtoSchema.parse(input);

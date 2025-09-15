@@ -9,6 +9,8 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
     "lint": "eslint . --fix",
     "format": "prettier --write . --log-level warn",
     "test": "vitest run"

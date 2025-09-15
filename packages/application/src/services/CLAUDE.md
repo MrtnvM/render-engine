@@ -42,7 +42,7 @@ export class OnboardUserService {
     @inject(RegisterUserUseCase)
     private registerUser: RegisterUserUseCase,
     @inject(SendWelcomeEmailUseCase)
-    private sendWelcome: SendWelcomeEmailUseCase
+    private sendWelcome: SendWelcomeEmailUseCase,
   ) {}
 
   async execute(command: OnboardUserCommand): Promise<void> {
@@ -57,14 +57,12 @@ export class OnboardUserService {
 ## 🔌 DEPENDENCY RULES
 
 - ✅ Allowed:
-
   - Use Cases
   - Repositories
   - Domain entities
   - Application services
 
 - ❌ Not allowed:
-
   - Frameworks (e.g., Express, React, NestJS)
   - Database/HTTP clients (use ports/interfaces)
   - UI/View logic
@@ -83,7 +81,6 @@ export class OnboardUserService {
 
 - Application services must remain stateless
 - All relevant state lives in:
-
   - Input DTOs
   - Domain entities
   - Repositories
@@ -109,7 +106,6 @@ export class OnboardUserService {
 ## 🗣️ DOMAIN LANGUAGE
 
 - Use **business-centric naming** throughout:
-
   - ✅ `sendVerificationEmail()`
   - ✅ `confirmUserIdentity()`
   - ❌ `setIsActive(true)`
@@ -126,7 +122,6 @@ export class OnboardUserService {
 ## ✅ GOOD PRACTICES
 
 - Keep logic lean — offload heavy work to:
-
   - Use cases
   - Domain methods
 

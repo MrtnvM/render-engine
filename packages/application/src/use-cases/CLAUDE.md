@@ -30,7 +30,7 @@ export class CreateUserUseCase {
     @inject("IUserRepository")
     private userRepository: IUserRepository,
     @inject("IEventBus")
-    private eventBus: IEventBus
+    private eventBus: IEventBus,
   ) {}
 
   async execute(input: CreateUserInput): Promise<CreateUserOutput> {
@@ -46,30 +46,24 @@ export class CreateUserUseCase {
 Structure your use case class in this exact order:
 
 1. 📦 Constructor
-
    - Inject dependencies via interfaces
 
 2. 🏁 Public Method
-
    - `execute(input): Promise<output>`
    - Single entry point
 
 3. ⚖️ Validation
-
    - Use domain-level validation
    - Throw domain errors
 
 4. 🧠 Business Flow
-
    - Coordinate domain entities and services
    - Enforce atomicity and invariants
 
 5. 📣 Emit Events
-
    - Emit domain or integration events after success
 
 6. 📤 Return DTO
-
    - Always return simplified, serializable output
 
 ---
@@ -77,7 +71,6 @@ Structure your use case class in this exact order:
 ## 🧪 INPUT & OUTPUT TYPES
 
 - Define strict DTOs:
-
   - `CreateUserInput` – passed to `execute()`
   - `CreateUserOutput` – returned by `execute()`
 

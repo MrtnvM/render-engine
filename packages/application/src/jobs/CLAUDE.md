@@ -44,17 +44,14 @@
 Structure inside a Job class:
 
 1. **Constructor**
-
    - Inject use cases, repositories, gateways, loggers
 
 2. **Public `run()` Method**
-
    - Orchestrates the entire job
    - Must return success/failure result or throw domain/application error
    - Handles retryable and non-retryable failure modes
 
 3. **Private Helpers**
-
    - Break down complex logic into small private methods
    - Pure and testable logic (where possible)
 
@@ -88,7 +85,6 @@ Structure inside a Job class:
 ## 🔄 IDEMPOTENCY
 
 - Wherever possible, make jobs **idempotent**
-
   - E.g., re-running `SyncCustomerDataJob` should not break system state
 
 - Use domain models’ invariants and timestamps to skip redundant updates
@@ -118,7 +114,7 @@ export class SendOverdueRemindersJob {
     @inject(FetchOverdueUsersUseCase)
     private readonly sendReminder: SendReminderUseCase,
     @inject("ILogger")
-    private readonly logger: ILogger
+    private readonly logger: ILogger,
   ) {}
 
   async run(): Promise<void> {
