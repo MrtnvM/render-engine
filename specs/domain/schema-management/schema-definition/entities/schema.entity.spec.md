@@ -10,16 +10,16 @@ The Schema entity manages the entire lifecycle of UI definitions, including vers
 
 ### Core Fields
 
-| Field              | Type               | Description                                         | Constraints                                |
-| ------------------ | ------------------ | --------------------------------------------------- | ------------------------------------------ | ----------------------- |
-| `id`               | `ID`               | Unique identifier for the schema                    | Auto-generated, immutable                  |
-| `name`             | `string`           | Human-readable name for the schema                  | Required, min 3 chars, max 100 chars       |
-| `version`          | `SemanticVersion`  | Version of the schema following semantic versioning | Required, format: major.minor.patch        |
-| `description`      | `string            | null`                                               | Optional description of the schema purpose | Optional, max 500 chars |
-| `components`       | `Component[]`      | Collection of UI components defined in the schema   | Required, non-empty array                  |
-| `globalProperties` | `Property[]`       | Global properties available to all components       | Optional array                             |
-| `validationRules`  | `ValidationRule[]` | Schema-level validation rules                       | Optional array                             |
-| `metadata`         | `SchemaMetadata`   | Additional schema metadata                          | Required                                   |
+| Field              | Type               | Description                                         | Constraints                          |
+| ------------------ | ------------------ | --------------------------------------------------- | ------------------------------------ |
+| `id`               | `ID`               | Unique identifier for the schema                    | Auto-generated, immutable            |
+| `name`             | `string`           | Human-readable name for the schema                  | Required, min 3 chars, max 100 chars |
+| `version`          | `SemanticVersion`  | Version of the schema following semantic versioning | Required, format: major.minor.patch  |
+| `description`      | `string \| null`   | Optional description of the schema purpose          | Optional, max 500 chars              |
+| `components`       | `Component[]`      | Collection of UI components defined in the schema   | Required, non-empty array            |
+| `globalProperties` | `Property[]`       | Global properties available to all components       | Optional array                       |
+| `validationRules`  | `ValidationRule[]` | Schema-level validation rules                       | Optional array                       |
+| `metadata`         | `SchemaMetadata`   | Additional schema metadata                          | Required                             |
 
 ### Derived Fields
 
@@ -295,12 +295,6 @@ Converts the schema to a JSON representation suitable for client applications.
    - Validation rule references must be valid
 
 ## Dependencies
-
-### External Dependencies
-
-- `uuid`: For generating unique identifiers
-- `zod`: For schema validation and type safety
-- `date-fns`: For date/time operations
 
 ### Internal Dependencies
 

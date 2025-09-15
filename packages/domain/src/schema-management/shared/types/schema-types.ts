@@ -1,4 +1,6 @@
-import { SchemaStatus } from '../enums/index.js'
+import { ID } from 'src/kernel/value-objects/index.js'
+import { ComponentType, SchemaStatus } from '../enums/index.js'
+import { ComponentJSON } from './component-types.js'
 
 export interface SemanticVersion {
   major: number
@@ -16,9 +18,10 @@ export interface SchemaMetadata {
 
 // Forward declarations to avoid circular dependencies
 export interface Component {
-  id: { value: string }
+  id: ID
   name: string
-  toJSON(): any
+  type: ComponentType
+  toJSON(): ComponentJSON
 }
 
 export interface PropertyType {
@@ -32,6 +35,7 @@ export interface SchemaValidationRuleInterface {
 }
 
 export interface SchemaProps {
+  id?: ID
   name: string
   version: SemanticVersion
   description?: string

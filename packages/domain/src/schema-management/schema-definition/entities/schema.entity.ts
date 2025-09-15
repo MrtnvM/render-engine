@@ -10,10 +10,17 @@ import {
   Component,
   PropertyType as PropertyInterface,
   SchemaValidationRuleInterface as SchemaValidationRuleInterfaceType,
+  SchemaValidationRuleInterface,
 } from '../../shared/types/schema-types.js'
 import { SchemaStatus } from '../../shared/enums/schema-status.enum.js'
-import { SchemaValidationError } from '../../schema-validation/value-objects/validation-result.vo.js'
-import { v4 as uuidv4 } from 'uuid'
+import {
+  SchemaValidationError,
+  SchemaValidationInfo,
+  SchemaValidationResult,
+  SchemaValidationWarning,
+} from '../../schema-validation/value-objects/validation-result.vo.js'
+import { SchemaValidationSeverity } from 'src/schema-management/shared/enums/validation-severity.enum.js'
+import { ComponentType } from 'src/schema-management/shared/enums/component-type.enum.js'
 
 export class Schema extends Entity<ID> {
   private readonly _props: SchemaProps
@@ -88,12 +95,12 @@ export class Schema extends Entity<ID> {
     this.updateMetadata()
   }
 
-  public removeComponent(componentId: string): void {
+  public removeComponent(componentId: ID): void {
     if (this.status === SchemaStatus.PUBLISHED) {
       throw new Error('Cannot remove components from published schemas. Create a new version instead.')
     }
 
-    const componentIndex = this.components.findIndex((c) => c.id.value === componentId)
+    const componentIndex = this.components.findIndex((c) => c.id.equals(componentId))
     if (componentIndex === -1) {
       throw new Error(`Component with ID '${componentId}' not found in schema`)
     }
@@ -107,12 +114,12 @@ export class Schema extends Entity<ID> {
     this.updateMetadata()
   }
 
-  public updateComponent(componentId: string, updates: Partial<Component>): void {
+  public updateComponent(componentId: ID, updates: Partial<Component>): void {
     if (this.status === SchemaStatus.PUBLISHED) {
       throw new Error('Cannot update components in published schemas. Create a new version instead.')
     }
 
-    const componentIndex = this.components.findIndex((c) => c.id.value === componentId)
+    const componentIndex = this.components.findIndex((c) => c.id.equals(componentId))
     if (componentIndex === -1) {
       throw new Error(`Component with ID '${componentId}' not found in schema`)
     }
@@ -122,7 +129,7 @@ export class Schema extends Entity<ID> {
     this.updateMetadata()
   }
 
-  public addComponentHierarchy(parentId: string, childId: string): void {
+  public addComponentHierarchy(parentId: ID, childId: ID): void {
     const parent = this.findComponent(parentId)
     const child = this.findComponent(childId)
 
@@ -141,10 +148,10 @@ export class Schema extends Entity<ID> {
     this.updateMetadata()
   }
 
-  public validate(): any {
+  public validate(): SchemaValidationResult {
     const errors: SchemaValidationError[] = []
-    const warnings: any[] = []
-    const info: any[] = []
+    const warnings: SchemaValidationWarning[] = []
+    const info: SchemaValidationInfo[] = []
 
     // Validate schema structure
     this.validateSchemaStructure(errors, warnings, info)
@@ -165,17 +172,26 @@ export class Schema extends Entity<ID> {
 
     // Create a simple validation result for now
     // In a complete implementation, we would use the proper factory methods
-    return {
+
+    if (isValid) {
+      return SchemaValidationResult.success({
+        isValid,
+        warnings,
+        info,
+        timestamp: new Date(),
+        metadata: {
+          validator: 'Schema',
+        },
+      })
+    }
+
+    return SchemaValidationResult.failure(errors, {
       isValid,
-      errors,
       warnings,
       info,
-      metadata: {
-        timestamp: new Date(),
-        validator: 'Schema',
-        version: '1.0.0',
-      },
-    } as any
+      timestamp: new Date(),
+      validator: 'Schema',
+    })
   }
 
   public validateBackwardCompatibility(previousVersion: Schema): CompatibilityResult {
@@ -269,22 +285,21 @@ export class Schema extends Entity<ID> {
     this.updateMetadata()
   }
 
-  public findComponent(name: string): Component | null {
-    return this.components.find((c) => c.name === name) || null
+  public findComponent(id: ID): Component | null {
+    return this.components.find((c) => c.id.equals(id)) || null
   }
 
-  public findComponentById(id: string): Component | null {
-    return this.components.find((c) => c.id.value === id) || null
+  public findComponentById(id: ID): Component | null {
+    return this.components.find((c) => c.id.equals(id)) || null
   }
 
-  public getComponentsByType(type: string): Component[] {
+  public getComponentsByType(type: ComponentType): Component[] {
     return this.components.filter((c) => {
-      // This would check component type - simplified for now
-      return true // In practice, you'd check c.type === type
+      return c.type === type
     })
   }
 
-  public getComponentHierarchy(componentId: string): Component[] {
+  public getComponentHierarchy(componentId: ID): Component[] {
     const component = this.findComponentById(componentId)
     if (!component) {
       return []
@@ -312,14 +327,18 @@ export class Schema extends Entity<ID> {
     }
   }
 
-  private validateSchemaStructure(errors: any[], warnings: any[], info: any[]): void {
+  private validateSchemaStructure(
+    errors: SchemaValidationError[],
+    warnings: SchemaValidationWarning[],
+    info: SchemaValidationInfo[],
+  ): void {
     // Validate name
     if (this.name.length < 3 || this.name.length > 100) {
       errors.push({
-        id: uuidv4(),
+        id: ID.create().toPrimitive(),
         code: 'INVALID_SCHEMA_NAME',
         message: 'Schema name must be between 3 and 100 characters',
-        severity: 'error' as const,
+        severity: SchemaValidationSeverity.ERROR,
         timestamp: new Date(),
       })
     }
@@ -327,10 +346,10 @@ export class Schema extends Entity<ID> {
     // Validate components
     if (this.components.length === 0) {
       errors.push({
-        id: uuidv4(),
+        id: ID.create().toPrimitive(),
         code: 'EMPTY_SCHEMA',
         message: 'Schema must have at least one component',
-        severity: 'error' as const,
+        severity: SchemaValidationSeverity.ERROR,
         timestamp: new Date(),
       })
     }
@@ -340,10 +359,10 @@ export class Schema extends Entity<ID> {
     this.components.forEach((component) => {
       if (componentNames.has(component.name)) {
         errors.push({
-          id: uuidv4(),
+          id: ID.create().toPrimitive(),
           code: 'DUPLICATE_COMPONENT_NAME',
           message: `Duplicate component name: ${component.name}`,
-          severity: 'error' as const,
+          severity: SchemaValidationSeverity.ERROR,
           timestamp: new Date(),
         })
       }
@@ -351,33 +370,41 @@ export class Schema extends Entity<ID> {
     })
   }
 
-  private validateComponents(errors: any[], warnings: any[], info: any[]): void {
+  private validateComponents(
+    errors: SchemaValidationError[],
+    warnings: SchemaValidationWarning[],
+    info: SchemaValidationInfo[],
+  ): void {
     // Validate each component
     this.components.forEach((component) => {
       // This would delegate to component validation
       // For now, just basic checks
       if (!component.name || component.name.trim() === '') {
         errors.push({
-          id: uuidv4(),
+          id: ID.create().toPrimitive(),
           code: 'INVALID_COMPONENT_NAME',
           message: 'Component name cannot be empty',
-          severity: 'error' as const,
+          severity: SchemaValidationSeverity.ERROR,
           timestamp: new Date(),
         })
       }
     })
   }
 
-  private validateGlobalProperties(errors: any[], warnings: any[], info: any[]): void {
+  private validateGlobalProperties(
+    errors: SchemaValidationError[],
+    warnings: SchemaValidationWarning[],
+    info: SchemaValidationInfo[],
+  ): void {
     // Validate global properties
     const propertyNames = new Set<string>()
     this.globalProperties.forEach((property) => {
       if (propertyNames.has(property.name)) {
         errors.push({
-          id: uuidv4(),
+          id: ID.create().toPrimitive(),
           code: 'DUPLICATE_PROPERTY_NAME',
           message: `Duplicate global property name: ${property.name}`,
-          severity: 'error' as const,
+          severity: SchemaValidationSeverity.ERROR,
           timestamp: new Date(),
         })
       }
@@ -385,12 +412,20 @@ export class Schema extends Entity<ID> {
     })
   }
 
-  private validateComponentRelationships(errors: any[], warnings: any[], info: any[]): void {
+  private validateComponentRelationships(
+    errors: SchemaValidationError[],
+    warnings: SchemaValidationWarning[],
+    info: SchemaValidationInfo[],
+  ): void {
     // Validate component relationships
     // This would check parent-child relationships, references, etc.
   }
 
-  private validateNoCircularDependencies(errors: any[], warnings: any[], info: any[]): void {
+  private validateNoCircularDependencies(
+    errors: SchemaValidationError[],
+    warnings: SchemaValidationWarning[],
+    info: SchemaValidationInfo[],
+  ): void {
     // Check for circular dependencies
     // This would require graph traversal algorithms
   }
@@ -412,13 +447,13 @@ export class Schema extends Entity<ID> {
     return newVersion.patch > current.patch
   }
 
-  private isComponentReferenced(componentId: string): boolean {
+  private isComponentReferenced(componentId: ID): boolean {
     // Check if any components reference this component
     // This would require analyzing component relationships
     return false // Simplified for now
   }
 
-  private wouldCreateCircularDependency(parentId: string, childId: string): boolean {
+  private wouldCreateCircularDependency(parentId: ID, childId: ID): boolean {
     // Check if adding this relationship would create a cycle
     // This would require graph traversal
     return false // Simplified for now
@@ -433,7 +468,7 @@ export class Schema extends Entity<ID> {
     change: SchemaChange,
     components: Component[],
     globalProperties: PropertyInterface[],
-    validationRules: any[],
+    validationRules: SchemaValidationRuleInterface[],
   ): void {
     // Apply the change to the appropriate arrays
     // This is a simplified implementation
@@ -459,7 +494,7 @@ export class Schema extends Entity<ID> {
     // Apply property-specific changes
   }
 
-  private applyValidationChange(change: SchemaChange, rules: any[]): void {
+  private applyValidationChange(change: SchemaChange, rules: SchemaValidationRuleInterface[]): void {
     // Apply validation rule changes
   }
 
@@ -560,7 +595,9 @@ export class Schema extends Entity<ID> {
     const validation = this.validate()
 
     if (!validation.isValid) {
-      throw new Error(`Schema validation failed: ${validation.errors.map((e: any) => e.message).join(', ')}`)
+      throw new Error(
+        `Schema validation failed: ${validation.errors.map((e: SchemaValidationError) => e.message).join(', ')}`,
+      )
     }
 
     // Check specific invariants
