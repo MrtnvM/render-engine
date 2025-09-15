@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import { DomainEvent } from '../events/base.domain-event.js'
 import { ID } from '../value-objects/id.value-object.js'
 import { ValueObject } from '../value-objects/base.value-object.js'
@@ -98,29 +96,4 @@ export abstract class Entity<Id extends ValueObject<any> = ID> {
   toString(): string {
     return `${this.constructor.name}(id=${this._id})`
   }
-
-  /**
-   * Generate a new UUID for entity IDs
-   */
-  protected static generateId(): string {
-    return uuidv4()
-  }
-
-  /**
-   * Check if the entity is valid
-   * Must be implemented by concrete entities
-   */
-  abstract isValid(): boolean
-
-  /**
-   * Get the entity's business rules and invariants
-   * Must be implemented by concrete entities
-   */
-  abstract getBusinessRules(): string[]
-
-  /**
-   * Validate the entity's invariants
-   * Must be implemented by concrete entities
-   */
-  abstract validateInvariants(): void
 }
