@@ -10,29 +10,28 @@ Properties are fundamental building blocks that enable dynamic configuration of 
 
 ### Core Properties
 
-| Property | Type | Description | Constraints |
-|----------|------|-------------|-------------|
-| `name` | `string` | Unique name for the property within the component | Required, min 1 char, max 50 chars, alphanumeric + underscore/hyphen |
-| `type` | `DataType` | Data type of the property | Required, must be valid DataType |
-| `displayName` | `string` | Human-readable display name | Required, min 3 chars, max 100 chars |
-| `description` | `string | null` | Optional description of the property | Optional, max 500 chars |
-| `defaultValue` | `unknown | null` | Default value for the property | Optional, must match data type |
-| `isRequired` | `boolean` | Whether the property is required | Required, default: false |
-| `isReadOnly` | `boolean` | Whether the property is read-only | Required, default: false |
-| `validationRules` | `ValidationRule[]` | Array of validation rules for the property | Optional array |
-| `bindingOptions` | `BindingOptions | null` | Data binding configuration | Optional |
-| `uiHint` | `UIHint | null` | UI rendering hints | Optional |
-| `metadata` | `PropertyMetadata` | Additional property metadata | Required |
+| Property          | Type                   | Description                                       | Constraints                                                          |
+| ----------------- | ---------------------- | ------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------ |
+| `name`            | `PropertyName`         | Unique name for the property within the component | Required, min 1 char, max 50 chars, alphanumeric + underscore/hyphen |
+| `type`            | `DataType`             | Data type of the property                         | Required, must be valid DataType                                     |
+| `description`     | `ComponentDescription` | Description of the property                       | Can be empty, max 500 chars                                          |
+| `defaultValue`    | `unknown               | null`                                             | Default value for the property                                       | Optional, must match data type |
+| `isRequired`      | `boolean`              | Whether the property is required                  | Required, default: false                                             |
+| `isReadOnly`      | `boolean`              | Whether the property is read-only                 | Required, default: false                                             |
+| `validationRules` | `ValidationRule[]`     | Array of validation rules for the property        | Optional array                                                       |
+| `bindingOptions`  | `BindingOptions        | null`                                             | Data binding configuration                                           | Optional                       |
+| `uiHint`          | `UIHint                | null`                                             | UI rendering hints                                                   | Optional                       |
+| `metadata`        | `PropertyMetadata`     | Additional property metadata                      | Required                                                             |
 
 ### Derived Properties
 
-| Property | Type | Description | Calculation |
-|----------|------|-------------|-------------|
-| `hasDefaultValue` | `boolean` | Whether property has a default value | `defaultValue !== null` |
-| `validationRuleCount` | `number` | Number of validation rules | `validationRules.length` |
-| `isBindable` | `boolean` | Whether property supports data binding | `bindingOptions !== null` |
-| `isComplex` | `boolean` | Whether property is a complex data type | Based on DataType |
-| `isPrimitive` | `boolean` | Whether property is a primitive data type | Based on DataType |
+| Property              | Type      | Description                               | Calculation               |
+| --------------------- | --------- | ----------------------------------------- | ------------------------- |
+| `hasDefaultValue`     | `boolean` | Whether property has a default value      | `defaultValue !== null`   |
+| `validationRuleCount` | `number`  | Number of validation rules                | `validationRules.length`  |
+| `isBindable`          | `boolean` | Whether property supports data binding    | `bindingOptions !== null` |
+| `isComplex`           | `boolean` | Whether property is a complex data type   | Based on DataType         |
+| `isPrimitive`         | `boolean` | Whether property is a primitive data type | Based on DataType         |
 
 ## Methods
 
@@ -43,9 +42,9 @@ Properties are fundamental building blocks that enable dynamic configuration of 
 Creates a new Property instance with the provided properties.
 
 **Parameters:**
+
 - `props.name`: Property name (required)
 - `props.type`: Data type (required)
-- `props.displayName`: Display name (required)
 - `props.description`: Optional description
 - `props.defaultValue`: Optional default value
 - `props.isRequired`: Whether required (default: false)
@@ -58,6 +57,7 @@ Creates a new Property instance with the provided properties.
 **Returns:** New Property instance
 
 **Business Rules:**
+
 - Property name must be valid (alphanumeric + underscore/hyphen)
 - Data type must be valid DataType
 - Display name must be valid (3-100 characters)
@@ -66,16 +66,18 @@ Creates a new Property instance with the provided properties.
 
 ### Validation Methods
 
-#### `validateValue(value: unknown): PropertyValidationResult`
+#### `validateValue(value: unknown): ValidationResult`
 
 Validates a value against the property definition.
 
 **Parameters:**
+
 - `value`: Value to validate
 
-**Returns:** PropertyValidationResult with validation status and errors
+**Returns:** ValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Value must match property data type
 - Value must pass all validation rules
 - Required properties cannot have null/undefined values
@@ -88,6 +90,7 @@ Validates that the default value is valid for the property.
 **Returns:** True if default value is valid, false otherwise
 
 **Business Rules:**
+
 - Default value must match property data type
 - Default value must pass all validation rules
 - Required properties must have valid default values
@@ -97,11 +100,13 @@ Validates that the default value is valid for the property.
 Checks if this property is compatible with another property.
 
 **Parameters:**
+
 - `other`: Property to check compatibility with
 
 **Returns:** True if properties are compatible, false otherwise
 
 **Business Rules:**
+
 - Properties must have the same data type
 - Validation rules must be compatible
 - Required status must be compatible (can become required)
@@ -114,11 +119,13 @@ Checks if this property is compatible with another property.
 Coerces a value to match the property data type.
 
 **Parameters:**
+
 - `value`: Value to coerce
 
 **Returns:** Coerced value
 
 **Business Rules:**
+
 - Value should be converted to match property type if possible
 - Should return original value if coercion is not possible
 - Should not throw exceptions for invalid values
@@ -129,11 +136,13 @@ Coerces a value to match the property data type.
 Gets the effective value, using default if provided value is null/undefined.
 
 **Parameters:**
+
 - `value`: Value to process
 
 **Returns:** Effective value (value or default value)
 
 **Business Rules:**
+
 - If value is provided and not null/undefined, return it
 - If value is null/undefined and default exists, return default
 - If no default and value is null/undefined, return null
@@ -144,11 +153,13 @@ Gets the effective value, using default if provided value is null/undefined.
 Serializes a property value to a string representation.
 
 **Parameters:**
+
 - `value`: Value to serialize
 
 **Returns:** Serialized string representation
 
 **Business Rules:**
+
 - Serialized value should be JSON-compatible
 - Complex types should be serialized appropriately
 - Date values should use ISO format
@@ -159,11 +170,13 @@ Serializes a property value to a string representation.
 Deserializes a string value back to the property data type.
 
 **Parameters:**
+
 - `serialized`: Serialized string value
 
 **Returns:** Deserialized value
 
 **Business Rules:**
+
 - Should reverse serialization process
 - Should handle invalid serialized values gracefully
 - Should validate deserialized value matches property type
@@ -188,11 +201,13 @@ Gets the binding expression for the property.
 Creates a new property with the specified binding expression.
 
 **Parameters:**
+
 - `expression`: Binding expression to set
 
 **Returns:** New Property instance with binding expression
 
 **Business Rules:**
+
 - Property must support data binding
 - Expression must be valid binding syntax
 - Expression must be compatible with property data type
@@ -204,6 +219,7 @@ Creates a new property with the specified binding expression.
 Checks if the property has a specific validation rule.
 
 **Parameters:**
+
 - `ruleName`: Name of validation rule to check
 
 **Returns:** True if rule exists, false otherwise
@@ -213,6 +229,7 @@ Checks if the property has a specific validation rule.
 Gets a specific validation rule by name.
 
 **Parameters:**
+
 - `ruleName`: Name of validation rule to get
 
 **Returns:** ValidationRule if found, null otherwise
@@ -242,6 +259,7 @@ Converts the property to a JSON representation.
 Creates a new property with auto-generated metadata.
 
 **Parameters:**
+
 - `props`: Property properties (excluding metadata)
 
 **Returns:** New Property instance
@@ -251,6 +269,7 @@ Creates a new property with auto-generated metadata.
 Creates a property with default settings for the specified data type.
 
 **Parameters:**
+
 - `type`: Data type for the property
 - `name`: Property name
 - `displayName`: Display name
@@ -258,6 +277,7 @@ Creates a property with default settings for the specified data type.
 **Returns:** New Property instance with default settings for the type
 
 **Business Rules:**
+
 - Default validation rules are added based on data type
 - Appropriate UI hints are set based on data type
 - Required status is set based on data type conventions
@@ -267,12 +287,14 @@ Creates a property with default settings for the specified data type.
 Creates a clone of an existing property with optional new name.
 
 **Parameters:**
+
 - `original`: Original property to clone
 - `newName`: Optional new name for the property
 
 **Returns:** New Property instance that is a copy of the original
 
 **Business Rules:**
+
 - All properties are copied from original
 - New name must be provided and valid
 - Original property remains unchanged
@@ -283,12 +305,14 @@ Creates a clone of an existing property with optional new name.
 ### Type Safety Invariants
 
 1. **Type Consistency**: Property type must be consistent and valid
+
    - Type must be valid DataType enum value
    - Type cannot be changed after creation
    - All values must match the declared type
    - Type validation must be strict
 
 2. **Value Validation**: All property values must be properly validated
+
    - Values must match property data type
    - Values must pass all validation rules
    - Required properties must have non-null values
@@ -303,6 +327,7 @@ Creates a clone of an existing property with optional new name.
 ### Name and Identity Invariants
 
 1. **Name Validity**: Property names must be valid and consistent
+
    - Names must be alphanumeric with underscore/hyphen
    - Names must be unique within component
    - Names must be case-sensitive
@@ -317,6 +342,7 @@ Creates a clone of an existing property with optional new name.
 ### Validation Invariants
 
 1. **Rule Consistency**: Validation rules must be consistent and valid
+
    - Rules must be compatible with property type
    - Rules must not conflict with each other
    - Required rules must be satisfied
@@ -368,6 +394,7 @@ Creates a clone of an existing property with optional new name.
 ### Unit Tests
 
 1. **Property Creation**
+
    - Should create property with valid properties
    - Should throw error for invalid names
    - Should throw error for invalid data types
@@ -375,6 +402,7 @@ Creates a clone of an existing property with optional new name.
    - Should auto-generate metadata
 
 2. **Value Validation**
+
    - Should validate values against property type
    - Should validate required properties
    - Should validate read-only properties
@@ -382,6 +410,7 @@ Creates a clone of an existing property with optional new name.
    - Should return comprehensive validation results
 
 3. **Value Processing**
+
    - Should coerce values to match property type
    - Should get effective values with defaults
    - Should serialize values to strings
@@ -389,6 +418,7 @@ Creates a clone of an existing property with optional new name.
    - Should handle edge cases gracefully
 
 4. **Data Binding**
+
    - Should support data binding when configured
    - Should validate binding expressions
    - Should handle binding type compatibility
@@ -405,12 +435,14 @@ Creates a clone of an existing property with optional new name.
 ### Integration Tests
 
 1. **Component Integration**
+
    - Should integrate with component validation
    - Should handle component property conflicts
    - Should support component inheritance
    - Should handle component serialization
 
 2. **Schema Integration**
+
    - Should integrate with schema validation
    - Should handle schema-level constraints
    - Should support schema versioning
@@ -428,22 +460,22 @@ Creates a clone of an existing property with optional new name.
 
 ```typescript
 interface PropertyJSON {
-  name: string;
-  type: string;
-  displayName: string;
-  description?: string;
-  defaultValue?: unknown;
-  isRequired: boolean;
-  isReadOnly: boolean;
-  validationRules?: ValidationRuleJSON[];
-  bindingOptions?: BindingOptionsJSON;
-  uiHint?: UIHintJSON;
+  name: string
+  type: string
+  displayName: string
+  description?: string
+  defaultValue?: unknown
+  isRequired: boolean
+  isReadOnly: boolean
+  validationRules?: ValidationRuleJSON[]
+  bindingOptions?: BindingOptionsJSON
+  uiHint?: UIHintJSON
   metadata: {
-    createdAt: string;
-    updatedAt: string;
-    version: string;
-    [key: string]: any;
-  };
+    createdAt: string
+    updatedAt: string
+    version: string
+    [key: string]: any
+  }
 }
 ```
 
@@ -466,15 +498,15 @@ interface PropertyJSON {
 
 ## Metadata
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Last Updated** | 2025-09-15 |
-| **Author** | Schema Management Domain Team |
-| **Status** | Draft |
-| **Dependencies** | DataType, ValidationRule, BindingOptions, UIHint |
-| **Complexity** | Medium |
-| **Testing Priority** | High |
-| **Review Required** | Yes |
-| **Documentation** | Complete |
-| **Breaking Changes** | None |
+| Field                | Value                                            |
+| -------------------- | ------------------------------------------------ |
+| **Version**          | 1.0.0                                            |
+| **Last Updated**     | 2025-09-15                                       |
+| **Author**           | Schema Management Domain Team                    |
+| **Status**           | Draft                                            |
+| **Dependencies**     | DataType, ValidationRule, BindingOptions, UIHint |
+| **Complexity**       | Medium                                           |
+| **Testing Priority** | High                                             |
+| **Review Required**  | Yes                                              |
+| **Documentation**    | Complete                                         |
+| **Breaking Changes** | None                                             |
