@@ -17,7 +17,6 @@ export interface ComponentProps {
   id?: ComponentId
   name: string
   type: ComponentType
-  displayName: string
   description?: string
   properties: PropertyJSON[]
   children?: Component[]
@@ -32,7 +31,6 @@ export interface ComponentJSON {
   id: string
   name: string
   type: string
-  displayName: string
   description?: string
   properties: PropertyJSON[]
   children?: ComponentJSON[]

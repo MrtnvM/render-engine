@@ -1,5 +1,6 @@
 import { Entity } from '../../../kernel/entities/base.entity.js'
 import { ID } from '../../../kernel/value-objects/id.value-object.js'
+import { Name, Description } from '../../schema-definition/value-objects/index.js'
 import {
   SchemaProps,
   SchemaJSON,
@@ -24,22 +25,26 @@ import { ComponentType } from 'src/schema-management/shared/enums/component-type
 
 export class Schema extends Entity<ID> {
   private readonly _props: SchemaProps
+  private readonly _name: Name
+  private readonly _description: Description
 
-  private constructor(id: ID, props: SchemaProps) {
-    super(id)
+  private constructor(props: SchemaProps) {
+    super(props.id || ID.generate())
     this._props = props
+    this._name = Name.create(props.name)
+    this._description = Description.create(props.description)
   }
 
   get name(): string {
-    return this._props.name
+    return this._name.value
   }
 
   get version(): SemanticVersion {
     return this._props.version
   }
 
-  get description(): string | null {
-    return this._props.description || null
+  get description(): string {
+    return this._description.value
   }
 
   get components(): Component[] {
@@ -84,11 +89,6 @@ export class Schema extends Entity<ID> {
   public addComponent(component: Component): void {
     if (this.status === SchemaStatus.PUBLISHED) {
       throw new Error('Cannot add components to published schemas. Create a new version instead.')
-    }
-
-    // Check for component name conflicts
-    if (this.components.some((c) => c.name === component.name)) {
-      throw new Error(`Component with name '${component.name}' already exists in schema`)
     }
 
     this._props.components.push(component)
@@ -248,18 +248,17 @@ export class Schema extends Entity<ID> {
       tags: [...(this.metadata.tags || []), 'new-version'],
     }
 
-    const id = ID.create()
     const schemaProps: SchemaProps = {
       name: this.name,
       version: newVersion,
-      description: this.description || '',
+      description: this.description,
       components: newComponents,
       globalProperties: newGlobalProperties,
       validationRules: newValidationRules,
       metadata: newMetadata,
     }
 
-    return new Schema(id, schemaProps)
+    return new Schema(schemaProps)
   }
 
   public publish(): void {
@@ -314,7 +313,7 @@ export class Schema extends Entity<ID> {
       id: this.id.toPrimitive(),
       name: this.name,
       version: `${this.version.major}.${this.version.minor}.${this.version.patch}`,
-      description: this.description || '',
+      description: this.description,
       components: this.components.map((c) => c.toJSON()),
       globalProperties: this.globalProperties.map((p) => p.toJSON()),
       validationRules: this.validationRules.map((r) => r.toJSON()),
@@ -332,17 +331,6 @@ export class Schema extends Entity<ID> {
     warnings: SchemaValidationWarning[],
     info: SchemaValidationInfo[],
   ): void {
-    // Validate name
-    if (this.name.length < 3 || this.name.length > 100) {
-      errors.push({
-        id: ID.create().toPrimitive(),
-        code: 'INVALID_SCHEMA_NAME',
-        message: 'Schema name must be between 3 and 100 characters',
-        severity: SchemaValidationSeverity.ERROR,
-        timestamp: new Date(),
-      })
-    }
-
     // Validate components
     if (this.components.length === 0) {
       errors.push({
@@ -353,21 +341,6 @@ export class Schema extends Entity<ID> {
         timestamp: new Date(),
       })
     }
-
-    // Validate component name uniqueness
-    const componentNames = new Set<string>()
-    this.components.forEach((component) => {
-      if (componentNames.has(component.name)) {
-        errors.push({
-          id: ID.create().toPrimitive(),
-          code: 'DUPLICATE_COMPONENT_NAME',
-          message: `Duplicate component name: ${component.name}`,
-          severity: SchemaValidationSeverity.ERROR,
-          timestamp: new Date(),
-        })
-      }
-      componentNames.add(component.name)
-    })
   }
 
   private validateComponents(
@@ -502,8 +475,7 @@ export class Schema extends Entity<ID> {
     this._props.metadata.updatedAt = new Date()
   }
 
-  public static create(props: SchemaProps): Schema {
-    const id = ID.create()
+  public static create(props: Omit<SchemaProps, 'id'> & { id?: ID }): Schema {
     const metadata: SchemaMetadata = {
       ...props.metadata,
       createdAt: new Date(),
@@ -515,7 +487,7 @@ export class Schema extends Entity<ID> {
       metadata,
     }
 
-    return new Schema(id, schemaProps)
+    return new Schema(schemaProps)
   }
 
   public static fromJSON(json: SchemaJSON): Schema {
@@ -536,6 +508,7 @@ export class Schema extends Entity<ID> {
 
     const id = ID.create(json.id)
     const schemaProps: SchemaProps = {
+      id,
       name: json.name,
       version,
       description: json.description,
@@ -545,15 +518,14 @@ export class Schema extends Entity<ID> {
       metadata,
     }
 
-    return new Schema(id, schemaProps)
+    return new Schema(schemaProps)
   }
 
   public static duplicate(original: Schema, newName: string, newVersion: SemanticVersion): Schema {
-    const id = ID.create()
     const schemaProps: SchemaProps = {
       name: newName,
       version: newVersion,
-      description: original.description || undefined,
+      description: original.description,
       components: [...original.components],
       globalProperties: [...original.globalProperties],
       validationRules: [...original.validationRules],
@@ -565,7 +537,7 @@ export class Schema extends Entity<ID> {
       },
     }
 
-    return new Schema(id, schemaProps)
+    return new Schema(schemaProps)
   }
 
   // Required abstract method implementations
@@ -583,9 +555,7 @@ export class Schema extends Entity<ID> {
 
   public getBusinessRules(): string[] {
     return [
-      'Schema name must be between 3 and 100 characters',
       'Schema must have at least one component',
-      'Component names must be unique within a schema',
       'Published schemas cannot be modified',
       'Schema versions must be incremented for changes',
     ]
@@ -601,17 +571,8 @@ export class Schema extends Entity<ID> {
     }
 
     // Check specific invariants
-    if (this.name.length < 3 || this.name.length > 100) {
-      throw new Error('Schema name must be between 3 and 100 characters')
-    }
-
     if (this.components.length === 0) {
       throw new Error('Schema must have at least one component')
-    }
-
-    const componentNames = new Set(this.components.map((c) => c.name))
-    if (componentNames.size !== this.components.length) {
-      throw new Error('Component names must be unique within a schema')
     }
   }
 }
