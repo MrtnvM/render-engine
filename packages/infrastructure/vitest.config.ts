@@ -1,14 +1,15 @@
-import { defineConfig } from "vitest/config"
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: "node",
+    environment: 'node',
     include: [
-      "tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-      "src/**/tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
+      'tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      'src/**/tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
-    exclude: ["node_modules", "dist", ".idea", ".git", ".cache"],
-    setupFiles: ["./tests/setup.ts"],
+    exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
+    setupFiles: ['./tests/setup.ts'],
+    passWithNoTests: true,
   },
 })
