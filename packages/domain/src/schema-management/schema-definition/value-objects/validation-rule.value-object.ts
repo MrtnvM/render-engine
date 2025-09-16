@@ -1,5 +1,5 @@
 import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
-import { DataType } from './data-type.vo.js'
+import { DataType } from './data-type.value-object.js'
 import { SchemaValidationRuleType, SchemaValidationSeverity } from '../../shared/enums/index.js'
 
 export interface SchemaValidationRuleParameter {
@@ -311,24 +311,6 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
     return map.get(this.type) || []
   }
 
-  public toJSON(): SchemaValidationRuleJSON {
-    return {
-      name: this.name,
-      type: this.type,
-      displayName: this.displayName,
-      description: this.description || undefined,
-      parameters: this.parameters,
-      errorMessage: this.errorMessage || undefined,
-      severity: this.severity,
-      isBuiltIn: this.isBuiltIn,
-      metadata: {
-        ...this.metadata,
-        createdAt: this.metadata.createdAt.toISOString(),
-        updatedAt: this.metadata.updatedAt.toISOString(),
-      },
-    }
-  }
-
   public toPrimitive(): SchemaValidationRuleProps {
     return this.value
   }
@@ -633,32 +615,6 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
       displayName,
       parameters,
       isBuiltIn: true,
-    })
-  }
-
-  public static custom(
-    name: string,
-    type: SchemaValidationRuleType,
-    displayName: string,
-    validator: (value: unknown) => boolean,
-    parameters: SchemaValidationRuleParameter[] = [],
-  ): SchemaValidationRule {
-    const allParameters = [
-      ...parameters,
-      {
-        name: 'validator',
-        value: validator,
-        type: 'function',
-        required: true,
-        description: 'Custom validation function',
-      },
-    ]
-
-    return SchemaValidationRule.create({
-      name,
-      type,
-      displayName,
-      parameters: allParameters,
     })
   }
 }

@@ -1,6 +1,5 @@
 export * from './shared/types/index.js'
 export * from './shared/enums/index.js'
 export * from './schema-definition/entities/index.js'
-export * from './schema-definition/value-objects/property.vo.js'
+export * from './schema-definition/value-objects/index.js'
 export * from './template-management/index.js'
-export * from './schema-validation/index.js'

@@ -255,7 +255,7 @@ Converts the schema to a JSON representation suitable for client applications.
 
    - No circular dependencies allowed
    - Parent-child relationships must be valid
-   - Component nesting depth must be reasonable (max 10 levels)
+   - Component nesting depth must be reasonable (max 100 levels)
 
 4. **Version Integrity**: Schema versions must be properly managed
    - Versions must follow semantic versioning (major.minor.patch)
@@ -287,7 +287,7 @@ Converts the schema to a JSON representation suitable for client applications.
 
    - Must be parseable as valid JSON
    - Must maintain all business rules when serialized/deserialized
-   - Circular references must be handled properly
+   - Circular references must be prevented (throws error)
 
 2. **Reference Integrity**: All references must be valid
    - Component references must exist within the schema

@@ -1,2 +1,5 @@
 export { ValueObject } from './base.value-object.js'
+export { Description } from './description.value-object.js'
 export { ID } from './id.value-object.js'
+export { Name } from './name.value-object.js'
+export { SemanticVersion } from './semantic-version.value-object.js'

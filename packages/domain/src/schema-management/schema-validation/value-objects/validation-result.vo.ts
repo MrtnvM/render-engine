@@ -523,21 +523,6 @@ export class SchemaValidationResult extends ValueObject<SchemaValidationResultPr
     return allMessages.filter((msg) => msg.code === code)
   }
 
-  public toJSON(): SchemaValidationResultJSON {
-    return {
-      isValid: this.isValid,
-      errors: this.errors,
-      warnings: this.warnings,
-      info: this.info,
-      context: this.context || undefined,
-      duration: this.duration || undefined,
-      metadata: {
-        ...this.metadata,
-        timestamp: this.metadata.timestamp.toISOString(),
-      },
-    }
-  }
-
   public toSummary(): SchemaValidationSummary {
     return {
       isValid: this.isValid,

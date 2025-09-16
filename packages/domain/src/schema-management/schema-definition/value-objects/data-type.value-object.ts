@@ -179,9 +179,7 @@ export class DataType extends ValueObject<DataTypeProps> {
     }
 
     // Check platform support overlap
-    const hasPlatformOverlap = this.platformSupport.some((platform) =>
-      other.platformSupport.includes(platform),
-    )
+    const hasPlatformOverlap = this.platformSupport.some((platform) => other.platformSupport.includes(platform))
 
     if (!hasPlatformOverlap) {
       return false
@@ -319,24 +317,6 @@ export class DataType extends ValueObject<DataTypeProps> {
       platformSupport: newPlatformSupport,
       metadata: newMetadata,
     })
-  }
-
-  public toJSON(): DataTypeJSON {
-    return {
-      name: this.name,
-      type: this.type,
-      baseType: this.baseType?.name,
-      constraints: this.constraints,
-      defaultValue: this.defaultValue,
-      isBuiltIn: this.isBuiltIn,
-      isAbstract: this.isAbstract,
-      platformSupport: this.platformSupport,
-      metadata: {
-        ...this.metadata,
-        createdAt: this.metadata.createdAt.toISOString(),
-        updatedAt: this.metadata.updatedAt.toISOString(),
-      },
-    }
   }
 
   public toPrimitive(): DataTypeProps {

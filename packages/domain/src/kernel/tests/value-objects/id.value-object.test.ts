@@ -102,48 +102,6 @@ describe('id value object', () => {
     })
   })
 
-  describe('jSON Deserialization', () => {
-    it('should deserialize valid JSON object with value property', () => {
-      const uuid = '550e8400-e29b-41d4-a716-446655440000'
-      const data = { value: uuid }
-      const id = ID.fromJSON(data)
-
-      expect(id.toString()).toBe(uuid)
-    })
-
-    it('should throw InvalidDataError for invalid JSON structure', () => {
-      const invalidData = [null, undefined, 'not an object', 123]
-
-      invalidData.forEach((data) => {
-        expect(() => ID.fromJSON(data as any)).toThrow('Invalid data structure')
-      })
-    })
-
-    it('should throw InvalidDataError for array input', () => {
-      expect(() => ID.fromJSON([])).toThrow('Missing required property')
-    })
-
-    it('should throw InvalidDataError for missing value field', () => {
-      const data = { id: '550e8400-e29b-41d4-a716-446655440000' } // wrong property name
-
-      expect(() => ID.fromJSON(data as any)).toThrow('Missing required property')
-    })
-
-    it('should handle null/undefined value in JSON by generating new UUID', () => {
-      const id1 = ID.fromJSON({ value: null })
-      const id2 = ID.fromJSON({ value: undefined })
-
-      expect(id1.toString()).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
-      expect(id2.toString()).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
-    })
-
-    it('should throw InvalidValueError for invalid value format', () => {
-      const data = { value: 'not-a-uuid' }
-
-      expect(() => ID.fromJSON(data)).toThrow('Invalid UUID format')
-    })
-  })
-
   // ===== Property Accessors Tests =====
 
   describe('value Access', () => {
@@ -221,23 +179,6 @@ describe('id value object', () => {
       expect(json.value).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
     })
 
-    it('should recreate identical ID from JSON', () => {
-      const originalId = ID.generate()
-      const json = originalId.toJSON()
-      const recreatedId = ID.fromJSON(json)
-
-      expect(originalId.equals(recreatedId)).toBe(true)
-    })
-
-    it('should preserve data in round-trip serialization', () => {
-      const originalId = ID.generate()
-      const json = originalId.toJSON()
-      const recreatedId = ID.fromJSON(json)
-      const finalJson = recreatedId.toJSON()
-
-      expect(json).toEqual(finalJson)
-    })
-
     it('should return string value for toPrimitive', () => {
       const id = ID.generate()
       const primitive = id.toPrimitive()
@@ -289,10 +230,6 @@ describe('id value object', () => {
   describe('error scenarios', () => {
     it('should handle invalid UUID format gracefully', () => {
       expect(() => ID.create('invalid-uuid')).toThrow('Invalid UUID format')
-    })
-
-    it('should handle malformed JSON gracefully', () => {
-      expect(() => ID.fromJSON('not-an-object' as any)).toThrow('Invalid data structure')
     })
 
     it('should provide meaningful error messages', () => {

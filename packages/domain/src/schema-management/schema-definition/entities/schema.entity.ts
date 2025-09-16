@@ -1,17 +1,6 @@
-import { Entity } from '../../../kernel/entities/base.entity.js'
+import { Entity, EntityData } from '../../../kernel/entities/base.entity.js'
 import { ID } from '../../../kernel/value-objects/id.value-object.js'
-import {
-  SchemaProps,
-  SchemaJSON,
-  SemanticVersion,
-  SchemaMetadata,
-  CompatibilityResult,
-  SchemaChange,
-  Component,
-  PropertyType as PropertyInterface,
-  SchemaValidationRuleInterface as SchemaValidationRuleInterfaceType,
-  SchemaValidationRuleInterface,
-} from '../../shared/types/schema-types.js'
+import { CompatibilityResult, SchemaChange, SchemaValidationRuleInterface } from '../../shared/types/schema-types.js'
 import { SchemaStatus } from '../../shared/enums/schema-status.enum.js'
 import {
   SchemaValidationError,
@@ -21,64 +10,74 @@ import {
 } from '../../schema-validation/value-objects/validation-result.vo.js'
 import { SchemaValidationSeverity } from 'src/schema-management/shared/enums/validation-severity.enum.js'
 import { ComponentType } from 'src/schema-management/shared/enums/component-type.enum.js'
+import { Name, Description, SemanticVersion } from '../../../kernel/value-objects/index.js'
+import { Component } from './component.entity.js'
+import { Property } from '../value-objects/property.value-object.js'
+import { SchemaValidationRule } from '../value-objects/validation-rule.value-object.js'
 
-export class Schema extends Entity<ID> {
-  private readonly _props: SchemaProps
+interface SchemaData extends EntityData {
+  id: ID
+  name: Name
+  description: Description
+  version: SemanticVersion
+  status: SchemaStatus
+  components: Component[]
+  globalProperties?: Property[]
+  validationRules?: SchemaValidationRule[]
+}
 
-  private constructor(id: ID, props: SchemaProps) {
-    super(id)
-    this._props = props
+export class Schema extends Entity<SchemaData> {
+  private constructor(props: SchemaData) {
+    super(props)
   }
 
-  get name(): string {
-    return this._props.name
+  public static create(
+    props: Omit<SchemaData, 'id' | 'createdAt' | 'updatedAt'> & { id?: ID; createdAt?: Date; updatedAt?: Date },
+  ): Schema {
+    const schemaData: SchemaData = {
+      ...props,
+      id: props.id ?? ID.generate(),
+      createdAt: props.createdAt ?? new Date(),
+      updatedAt: props.updatedAt ?? new Date(),
+    }
+
+    return new Schema(schemaData)
+  }
+
+  get name(): Name {
+    return this.data.name
   }
 
   get version(): SemanticVersion {
-    return this._props.version
+    return this.data.version
   }
 
-  get description(): string | null {
-    return this._props.description || null
+  get description(): Description {
+    return this.data.description
   }
 
   get components(): Component[] {
-    return this._props.components
+    return this.data.components
   }
 
-  get globalProperties(): PropertyInterface[] {
-    return this._props.globalProperties || []
+  get globalProperties(): readonly Property[] {
+    return this.data.globalProperties || []
   }
 
-  get validationRules(): SchemaValidationRuleInterfaceType[] {
-    return this._props.validationRules || []
+  get validationRules(): readonly SchemaValidationRule[] {
+    return this.data.validationRules || []
   }
 
   get componentCount(): number {
     return this.components.length
   }
 
-  get metadata(): SchemaMetadata {
-    return this._props.metadata
-  }
-
   isValid(): boolean {
     return this.validate().isValid
   }
 
-  get lastModified(): Date {
-    return this.metadata.updatedAt
-  }
-
   get status(): SchemaStatus {
-    // Simple status determination based on metadata and validation
-    if (this.metadata.tags?.includes('deprecated')) {
-      return SchemaStatus.DEPRECATED
-    }
-    if (this.metadata.tags?.includes('published')) {
-      return SchemaStatus.PUBLISHED
-    }
-    return SchemaStatus.DRAFT
+    return this.data.status
   }
 
   public addComponent(component: Component): void {
@@ -86,13 +85,8 @@ export class Schema extends Entity<ID> {
       throw new Error('Cannot add components to published schemas. Create a new version instead.')
     }
 
-    // Check for component name conflicts
-    if (this.components.some((c) => c.name === component.name)) {
-      throw new Error(`Component with name '${component.name}' already exists in schema`)
-    }
-
-    this._props.components.push(component)
-    this.updateMetadata()
+    this.data.components.push(component)
+    this.data.updatedAt = new Date()
   }
 
   public removeComponent(componentId: ID): void {
@@ -110,8 +104,8 @@ export class Schema extends Entity<ID> {
       throw new Error(`Cannot remove component '${componentId}' as it is referenced by other components`)
     }
 
-    this._props.components.splice(componentIndex, 1)
-    this.updateMetadata()
+    this.data.components.splice(componentIndex, 1)
+    this.data.updatedAt = new Date()
   }
 
   public updateComponent(componentId: ID, updates: Partial<Component>): void {
@@ -125,8 +119,8 @@ export class Schema extends Entity<ID> {
     }
 
     // Apply updates (this is a simplified version - in practice you'd need more sophisticated merging)
-    Object.assign(this._props.components[componentIndex], updates)
-    this.updateMetadata()
+    Object.assign(this.data.components[componentIndex], updates)
+    this.data.updatedAt = new Date()
   }
 
   public addComponentHierarchy(parentId: ID, childId: ID): void {
@@ -145,7 +139,7 @@ export class Schema extends Entity<ID> {
     // Add child to parent (this would be implemented in the Component class)
     // For now, we'll just validate the relationship
     this.validateComponentRelationship(parent, child)
-    this.updateMetadata()
+    this.data.updatedAt = new Date()
   }
 
   public validate(): SchemaValidationResult {
@@ -169,9 +163,6 @@ export class Schema extends Entity<ID> {
     this.validateNoCircularDependencies(errors, warnings, info)
 
     const isValid = errors.length === 0
-
-    // Create a simple validation result for now
-    // In a complete implementation, we would use the proper factory methods
 
     if (isValid) {
       return SchemaValidationResult.success({
@@ -241,25 +232,20 @@ export class Schema extends Entity<ID> {
       this.applyChange(change, newComponents, newGlobalProperties, newValidationRules)
     })
 
-    const newMetadata: SchemaMetadata = {
-      ...this.metadata,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      tags: [...(this.metadata.tags || []), 'new-version'],
-    }
-
-    const id = ID.create()
-    const schemaProps: SchemaProps = {
+    const schemaData: SchemaData = {
+      id: this.id,
       name: this.name,
       version: newVersion,
-      description: this.description || '',
+      status: this.status,
+      description: this.description,
       components: newComponents,
       globalProperties: newGlobalProperties,
       validationRules: newValidationRules,
-      metadata: newMetadata,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
 
-    return new Schema(id, schemaProps)
+    return new Schema(schemaData)
   }
 
   public publish(): void {
@@ -272,8 +258,16 @@ export class Schema extends Entity<ID> {
       throw new Error('Cannot publish schema with no components.')
     }
 
-    this.metadata.tags = [...(this.metadata.tags || []), 'published']
-    this.updateMetadata()
+    if (this.status === SchemaStatus.PUBLISHED) {
+      throw new Error('Schema is already published.')
+    }
+
+    if (this.status === SchemaStatus.DEPRECATED) {
+      throw new Error('Cannot publish deprecated schema.')
+    }
+
+    this.data.status = SchemaStatus.PUBLISHED
+    this.data.updatedAt = new Date()
   }
 
   public deprecate(): void {
@@ -281,15 +275,11 @@ export class Schema extends Entity<ID> {
       throw new Error('Schema is already deprecated.')
     }
 
-    this.metadata.tags = [...(this.metadata.tags || []), 'deprecated']
-    this.updateMetadata()
+    this.data.status = SchemaStatus.DEPRECATED
+    this.data.updatedAt = new Date()
   }
 
   public findComponent(id: ID): Component | null {
-    return this.components.find((c) => c.id.equals(id)) || null
-  }
-
-  public findComponentById(id: ID): Component | null {
     return this.components.find((c) => c.id.equals(id)) || null
   }
 
@@ -299,50 +289,11 @@ export class Schema extends Entity<ID> {
     })
   }
 
-  public getComponentHierarchy(componentId: ID): Component[] {
-    const component = this.findComponentById(componentId)
-    if (!component) {
-      return []
-    }
-
-    // Simplified hierarchy traversal
-    return [component] // In practice, you'd build the complete hierarchy
-  }
-
-  public toJSON(): SchemaJSON {
-    return {
-      id: this.id.toPrimitive(),
-      name: this.name,
-      version: `${this.version.major}.${this.version.minor}.${this.version.patch}`,
-      description: this.description || '',
-      components: this.components.map((c) => c.toJSON()),
-      globalProperties: this.globalProperties.map((p) => p.toJSON()),
-      validationRules: this.validationRules.map((r) => r.toJSON()),
-      metadata: {
-        ...this.metadata,
-        createdAt: this.metadata.createdAt.toISOString(),
-        updatedAt: this.metadata.updatedAt.toISOString(),
-      },
-      status: this.status,
-    }
-  }
-
   private validateSchemaStructure(
     errors: SchemaValidationError[],
     warnings: SchemaValidationWarning[],
     info: SchemaValidationInfo[],
   ): void {
-    // Validate name
-    if (this.name.length < 3 || this.name.length > 100) {
-      errors.push({
-        id: ID.create().toPrimitive(),
-        code: 'INVALID_SCHEMA_NAME',
-        message: 'Schema name must be between 3 and 100 characters',
-        severity: SchemaValidationSeverity.ERROR,
-        timestamp: new Date(),
-      })
-    }
-
     // Validate components
     if (this.components.length === 0) {
       errors.push({
@@ -353,21 +304,6 @@ export class Schema extends Entity<ID> {
         timestamp: new Date(),
       })
     }
-
-    // Validate component name uniqueness
-    const componentNames = new Set<string>()
-    this.components.forEach((component) => {
-      if (componentNames.has(component.name)) {
-        errors.push({
-          id: ID.create().toPrimitive(),
-          code: 'DUPLICATE_COMPONENT_NAME',
-          message: `Duplicate component name: ${component.name}`,
-          severity: SchemaValidationSeverity.ERROR,
-          timestamp: new Date(),
-        })
-      }
-      componentNames.add(component.name)
-    })
   }
 
   private validateComponents(
@@ -375,20 +311,7 @@ export class Schema extends Entity<ID> {
     warnings: SchemaValidationWarning[],
     info: SchemaValidationInfo[],
   ): void {
-    // Validate each component
-    this.components.forEach((component) => {
-      // This would delegate to component validation
-      // For now, just basic checks
-      if (!component.name || component.name.trim() === '') {
-        errors.push({
-          id: ID.create().toPrimitive(),
-          code: 'INVALID_COMPONENT_NAME',
-          message: 'Component name cannot be empty',
-          severity: SchemaValidationSeverity.ERROR,
-          timestamp: new Date(),
-        })
-      }
-    })
+    // TODO: Validate each component
   }
 
   private validateGlobalProperties(
@@ -467,7 +390,7 @@ export class Schema extends Entity<ID> {
   private applyChange(
     change: SchemaChange,
     components: Component[],
-    globalProperties: PropertyInterface[],
+    globalProperties: Property[],
     validationRules: SchemaValidationRuleInterface[],
   ): void {
     // Apply the change to the appropriate arrays
@@ -490,128 +413,11 @@ export class Schema extends Entity<ID> {
     // This would handle add, remove, update, rename operations
   }
 
-  private applyPropertyChange(change: SchemaChange, properties: PropertyInterface[]): void {
+  private applyPropertyChange(change: SchemaChange, properties: Property[]): void {
     // Apply property-specific changes
   }
 
   private applyValidationChange(change: SchemaChange, rules: SchemaValidationRuleInterface[]): void {
     // Apply validation rule changes
-  }
-
-  private updateMetadata(): void {
-    this._props.metadata.updatedAt = new Date()
-  }
-
-  public static create(props: SchemaProps): Schema {
-    const id = ID.create()
-    const metadata: SchemaMetadata = {
-      ...props.metadata,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }
-
-    const schemaProps: SchemaProps = {
-      ...props,
-      metadata,
-    }
-
-    return new Schema(id, schemaProps)
-  }
-
-  public static fromJSON(json: SchemaJSON): Schema {
-    // Parse version
-    const versionParts = json.version.split('.').map(Number)
-    const version: SemanticVersion = {
-      major: versionParts[0] || 0,
-      minor: versionParts[1] || 0,
-      patch: versionParts[2] || 0,
-    }
-
-    // Parse metadata dates
-    const metadata: SchemaMetadata = {
-      ...json.metadata,
-      createdAt: new Date(json.metadata.createdAt),
-      updatedAt: new Date(json.metadata.updatedAt),
-    }
-
-    const id = ID.create(json.id)
-    const schemaProps: SchemaProps = {
-      name: json.name,
-      version,
-      description: json.description,
-      components: json.components, // In practice, you'd deserialize these properly
-      globalProperties: json.globalProperties || [],
-      validationRules: json.validationRules || [],
-      metadata,
-    }
-
-    return new Schema(id, schemaProps)
-  }
-
-  public static duplicate(original: Schema, newName: string, newVersion: SemanticVersion): Schema {
-    const id = ID.create()
-    const schemaProps: SchemaProps = {
-      name: newName,
-      version: newVersion,
-      description: original.description || undefined,
-      components: [...original.components],
-      globalProperties: [...original.globalProperties],
-      validationRules: [...original.validationRules],
-      metadata: {
-        ...original.metadata,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        tags: [...(original.metadata.tags || []), 'duplicate'],
-      },
-    }
-
-    return new Schema(id, schemaProps)
-  }
-
-  // Required abstract method implementations
-  public toPrimitive(): object {
-    return {
-      id: this.id.toPrimitive(),
-      name: this.name,
-      version: `${this.version.major}.${this.version.minor}.${this.version.patch}`,
-      description: this.description,
-      components: this.components.map((c) => c.toJSON()),
-      metadata: this.metadata,
-      status: this.status,
-    }
-  }
-
-  public getBusinessRules(): string[] {
-    return [
-      'Schema name must be between 3 and 100 characters',
-      'Schema must have at least one component',
-      'Component names must be unique within a schema',
-      'Published schemas cannot be modified',
-      'Schema versions must be incremented for changes',
-    ]
-  }
-
-  public validateInvariants(): void {
-    const validation = this.validate()
-
-    if (!validation.isValid) {
-      throw new Error(
-        `Schema validation failed: ${validation.errors.map((e: SchemaValidationError) => e.message).join(', ')}`,
-      )
-    }
-
-    // Check specific invariants
-    if (this.name.length < 3 || this.name.length > 100) {
-      throw new Error('Schema name must be between 3 and 100 characters')
-    }
-
-    if (this.components.length === 0) {
-      throw new Error('Schema must have at least one component')
-    }
-
-    const componentNames = new Set(this.components.map((c) => c.name))
-    if (componentNames.size !== this.components.length) {
-      throw new Error('Component names must be unique within a schema')
-    }
   }
 }
