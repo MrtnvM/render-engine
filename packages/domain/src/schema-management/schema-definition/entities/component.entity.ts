@@ -18,7 +18,6 @@ export interface ComponentStyle {
 }
 
 export interface ComponentData extends EntityData {
-  id: ID
   name: Name
   type: ComponentType
   description: Description

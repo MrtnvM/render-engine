@@ -141,3 +141,4 @@ ServiceUnavailableError represents failures that occur when a service is tempora
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/service-unavailable.error.ts`

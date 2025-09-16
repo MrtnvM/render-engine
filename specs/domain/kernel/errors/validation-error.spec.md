@@ -76,42 +76,49 @@ ValidationError represents validation failures that occur when input data fails 
 ### Static Factory Methods
 
 - `static forField(fieldName: string, fieldValue: unknown, rule: string): ValidationError`
+
   - **Purpose**: Creates a validation error for a single field
   - **Parameters**: Field name, field value, and validation rule description
   - **Returns**: ValidationError with single field error
   - **Usage**: When a single field fails validation
 
 - `static forFields(fields: FieldError[]): ValidationError`
+
   - **Purpose**: Creates a validation error for multiple fields
   - **Parameters**: Array of FieldError objects
   - **Returns**: ValidationError with multiple field errors
   - **Usage**: When multiple fields fail validation simultaneously
 
 - `static invalidFormat(fieldName: string, fieldValue: unknown, expectedFormat: string): ValidationError`
+
   - **Purpose**: Creates a validation error for format violations
   - **Parameters**: Field name, field value, expected format description
   - **Returns**: ValidationError with format-specific message
   - **Usage**: When field format is invalid (email, phone, etc.)
 
 - `static emptyValue(fieldName: string): ValidationError`
+
   - **Purpose**: Creates a validation error for empty required fields
   - **Parameters**: Field name
   - **Returns**: ValidationError with empty value message
   - **Usage**: When a required field is empty or null
 
 - `static invalidType(fieldName: string, fieldValue: unknown, expectedType: string): ValidationError`
+
   - **Purpose**: Creates a validation error for type mismatches
   - **Parameters**: Field name, field value, expected type
   - **Returns**: ValidationError with type-specific message
   - **Usage**: When field has wrong data type
 
 - `static multipleEmptyFields(fieldNames: string[]): ValidationError`
+
   - **Purpose**: Creates a validation error for multiple empty fields
   - **Parameters**: Array of field names
   - **Returns**: ValidationError with multiple empty field errors
   - **Usage**: When multiple required fields are empty
 
 - `static multipleInvalidTypes(fieldTypes: { name: string; value: unknown; expectedType: string }[]): ValidationError`
+
   - **Purpose**: Creates a validation error for multiple type mismatches
   - **Parameters**: Array of field type information
   - **Returns**: ValidationError with multiple type errors
@@ -130,12 +137,14 @@ ValidationError represents validation failures that occur when input data fails 
 #### Error Creation
 
 - **Valid Parameters:**
+
   - Create error with single field validation failure
   - Create error with multiple field validation failures
   - Verify all properties are set correctly
   - Verify error code is VALIDATION_ERROR
 
 - **Invalid Parameters:**
+
   - Create error with null field array (should throw error)
   - Create error with empty field array
   - Create error with invalid field error objects (should throw error)
@@ -156,6 +165,7 @@ ValidationError represents validation failures that occur when input data fails 
 #### Error Properties Validation
 
 - **Property Access:**
+
   - Verify fields property is readonly
   - Verify fields property returns correct array
   - Verify fields array contains correct FieldError objects
@@ -179,6 +189,7 @@ ValidationError represents validation failures that occur when input data fails 
 #### Error Throwing
 
 - **Validation Context:**
+
   - Verify error is thrown when field validation fails
   - Verify error is not thrown when field validation passes
   - Test error throwing in entity constructor
@@ -195,6 +206,7 @@ ValidationError represents validation failures that occur when input data fails 
 #### Error Catching
 
 - **Handler Behavior:**
+
   - Handler catches ValidationError correctly
   - Handler processes field errors appropriately
   - Handler displays user-friendly error messages
@@ -210,6 +222,7 @@ ValidationError represents validation failures that occur when input data fails 
 #### Boundary Conditions
 
 - **Field Names:**
+
   - Test with very long field names
   - Test with special characters in field names
   - Test with unicode characters in field names
@@ -229,6 +242,7 @@ ValidationError represents validation failures that occur when input data fails 
 #### Performance Tests
 
 - **Error Creation:**
+
   - Test error creation with many field errors
   - Test error creation performance with large datasets
   - Test memory usage with complex error objects
@@ -271,3 +285,4 @@ ValidationError represents validation failures that occur when input data fails 
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/validation.error.ts`

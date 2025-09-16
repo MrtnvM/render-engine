@@ -26,12 +26,14 @@ export abstract class DomainError extends Error {
 ### Public Properties
 
 - **name**: `string` (readonly)
+
   - **Purpose**: The name of the error class
   - **Source**: Automatically set to `this.constructor.name`
   - **Immutability**: Set once during construction, cannot be modified
   - **Usage**: Error identification and debugging
 
 - **code**: `string` (readonly)
+
   - **Purpose**: Unique error code for programmatic identification
   - **Default**: Auto-generated from class name if not provided
   - **Format**: UPPER_SNAKE_CASE (e.g., `USER_NOT_FOUND`, `VALIDATION_FAILED`)
@@ -68,6 +70,7 @@ protected constructor(params: {
 ### Parameters
 
 - **message**: `string` (required)
+
   - **Purpose**: Human-readable error description
   - **Requirements**: Must be descriptive and domain-focused
   - **Format**: Should use domain language, not technical terms
@@ -76,6 +79,7 @@ protected constructor(params: {
     - ❌ "Email already exists in database"
 
 - **code**: `string` (required)
+
   - **Purpose**: Unique error code for programmatic identification
   - **Default**: Auto-generated from class name using PascalCase to UPPER_SNAKE_CASE conversion
   - **Format**: UPPER_SNAKE_CASE
@@ -443,4 +447,4 @@ try {
 
 Version: 1.0.0
 Last Updated: 2025-09-13
-Base Class Location: `packages/domain/src/kernel/errors/base.domain-error.ts`
+Location: `packages/domain/src/kernel/errors/base.domain.error.ts`

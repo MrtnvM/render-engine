@@ -146,3 +146,4 @@ FormatError represents failures that occur when field values do not conform to t
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/format.error.ts`

@@ -218,3 +218,9 @@ The generated code includes:
 3. **Dependencies**: Specify all component dependencies
 4. **Error Handling**: Document expected errors and their conditions
 5. **Testing**: Include test scenarios in specifications
+
+## Metadata
+
+Version: 1.0.0
+Last Updated: 2025-09-16
+Location: `packages/infrastructure/src/core/llm/spec-to-code.llm-call.ts`

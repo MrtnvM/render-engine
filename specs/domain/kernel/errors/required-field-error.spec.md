@@ -141,3 +141,4 @@ RequiredFieldError represents failures that occur when required fields are missi
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/required-field.error.ts`

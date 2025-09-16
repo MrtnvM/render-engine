@@ -80,11 +80,12 @@ interface EntityNameData extends EntityData {
 
 ### Base Classes
 
-- Entity<EntityNameData>
+- Entity
 
 ### Value Objects
 
-- Type1, Type2
+- Type1
+- Type2
 
 ### Domain Events
 
@@ -92,7 +93,8 @@ interface EntityNameData extends EntityData {
 
 ### Domain Errors
 
-- ValidationError
+- ValidationError - Existing errors from kernel module
+- <EntityName>Error - With factory methods and different error codes for different errors that related to Entity
 ```
 
 ### 6. Tests
@@ -159,19 +161,23 @@ interface UserData extends EntityData {
 
 ### Base Classes
 
-- Entity<UserData>
+- Entity
 
 ### Value Objects
 
-- Email, UserName
+- Email
+- UserName
 
 ### Domain Events
 
-- UserCreatedEvent, UserActivatedEvent
+- UserCreatedEvent
+- UserActivatedEvent
 
 ### Domain Errors
 
-- ValidationError, BusinessRuleViolation
+- ValidationError
+- BusinessRuleViolation
+- UserError
 
 ## Tests
 
@@ -198,4 +204,5 @@ interface UserData extends EntityData {
 
 Version: 1.0.0
 Last Updated: 2025-09-16
+Location: `packages/domain/src/<module>/entities/<entity-name>.entity.ts`
 ```

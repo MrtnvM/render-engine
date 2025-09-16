@@ -10,17 +10,17 @@ Each component has a specific type (e.g., button, text input, container, image) 
 
 ### Core Fields
 
-| Field         | Type                   | Description                                          | Constraints                                                |
-| ------------- | ---------------------- | ---------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- |
-| `id`          | `ID`                   | Unique identifier for the component                  | Auto-generated, immutable                                  |
-| `name`        | `ComponentName`        | Name for the component within the schema             | Required, min 3 chars, max 50 chars, alphanumeric + hyphen |
-| `type`        | `ComponentType`        | Type of UI component (button, text, container, etc.) | Required, must be valid component type                     |
-| `description` | `ComponentDescription` | Optional description of the component purpose        | Can be empty max 500 chars                                 |
-| `properties`  | `Property[]`           | Array of component properties                        | Required, non-empty for most component types               |
-| `children`    | `Component[]`          | Child components (for container types)               | Optional, depends on component type                        |
-| `parentId`    | `ID                    | null`                                                | Parent component ID (for nested components)                | Optional, must be valid if present |
-| `styles`      | `ComponentStyle[]`     | Styling properties for the component                 | Optional array                                             |
-| `metadata`    | `ComponentMetadata`    | Additional component metadata                        | Required                                                   |
+| Field         | Type                | Description                                          | Constraints                                  |
+| ------------- | ------------------- | ---------------------------------------------------- | -------------------------------------------- | ---------------------------------- |
+| `id`          | `ID`                | Unique identifier for the component                  | Auto-generated, immutable                    |
+| `name`        | `Name`              | Name for the component within the schema             | Required, uses Name value object validation  |
+| `type`        | `ComponentType`     | Type of UI component (button, text, container, etc.) | Required, must be valid component type       |
+| `description` | `Description`       | Optional description of the component purpose        | Optional, uses Description value object      |
+| `properties`  | `Property[]`        | Array of component properties                        | Required, non-empty for most component types |
+| `children`    | `Component[]`       | Child components (for container types)               | Optional, depends on component type          |
+| `parentId`    | `ID                 | null`                                                | Parent component ID (for nested components)  | Optional, must be valid if present |
+| `styles`      | `ComponentStyle[]`  | Styling properties for the component                 | Optional array                               |
+| `metadata`    | `ComponentMetadata` | Additional component metadata                        | Required                                     |
 
 ### Derived Fields
 
@@ -278,6 +278,8 @@ Converts the component to a JSON representation.
 ### Internal Dependencies
 
 - `ID`: Value object for component identification
+- `Name`: Value object for component names from kernel
+- `Description`: Value object for component descriptions from kernel
 - `ComponentType`: Value object for component type definition
 - `Property`: Value object for component properties
 - `ComponentUpdatedEvent`: Value object for component events
@@ -417,7 +419,8 @@ Creates a new component with auto-generated ID or provided ID.
 
 ## Metadata
 
-| Field            | Value      |
-| ---------------- | ---------- |
-| **Version**      | 1.0.0      |
-| **Last Updated** | 2025-09-15 |
+| Field            | Value                                                                                  |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| **Version**      | 1.0.0                                                                                  |
+| **Last Updated** | 2025-09-15                                                                             |
+| **Location**     | `packages/domain/src/schema-management/schema-definition/entities/component.entity.ts` |

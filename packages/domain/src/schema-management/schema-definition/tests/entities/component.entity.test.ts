@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { Component } from '../../entities/component.entity.js'
 import { ID } from '../../../../kernel/value-objects/id.value-object.js'
+import { Name } from '../../../../kernel/value-objects/name.value-object.js'
+import { Description } from '../../../../kernel/value-objects/description.value-object.js'
 import { ComponentType } from '../../../shared/enums/component-type.enum.js'
 import { Property } from '../../value-objects/property.value-object.js'
 import { DataType } from '../../value-objects/data-type.value-object.js'
@@ -14,9 +16,9 @@ describe('Component Entity', () => {
     mockProperty = Property.fromType(DataType.primitive('string'), 'testProperty', 'Test Property')
 
     mockProps = {
-      name: 'testComponent',
+      name: Name.create('testComponent'),
       type: ComponentType.BUTTON,
-      description: 'Test component description',
+      description: Description.create('Test component description'),
       properties: [mockProperty],
       metadata: {
         createdAt: new Date(),
@@ -31,9 +33,9 @@ describe('Component Entity', () => {
       const component = Component.create(mockProps)
 
       expect(component).toBeInstanceOf(Component)
-      expect(component.name).toBe('testComponent')
+      expect(component.name.toString()).toBe('testComponent')
       expect(component.type).toBe(ComponentType.BUTTON)
-      expect(component.description).toBe('Test component description')
+      expect(component.description.toString()).toBe('Test component description')
       expect(component.properties).toHaveLength(1)
       expect(component.propertyCount).toBe(1)
     })
@@ -109,13 +111,13 @@ describe('Component Entity', () => {
     beforeEach(() => {
       parentComponent = Component.create({
         ...mockProps,
-        name: 'parent',
+        name: Name.create('parent'),
         type: ComponentType.CONTAINER,
       })
 
       childComponent = Component.create({
         ...mockProps,
-        name: 'child',
+        name: Name.create('child'),
         type: ComponentType.BUTTON,
       })
     })
@@ -146,7 +148,7 @@ describe('Component Entity', () => {
     it('should throw error when removing non-existent child', () => {
       const parentComponent = Component.create({
         ...mockProps,
-        name: 'parent',
+        name: Name.create('parent'),
         type: ComponentType.CONTAINER,
       })
 
@@ -160,6 +162,7 @@ describe('Component Entity', () => {
     it('should identify container components', () => {
       const container = Component.create({
         ...mockProps,
+        name: Name.create('container'),
         type: ComponentType.CONTAINER,
       })
 
@@ -170,6 +173,7 @@ describe('Component Entity', () => {
     it('should identify leaf components', () => {
       const button = Component.create({
         ...mockProps,
+        name: Name.create('button'),
         type: ComponentType.BUTTON,
       })
 
@@ -180,19 +184,19 @@ describe('Component Entity', () => {
     it('should return children by type', () => {
       const container = Component.create({
         ...mockProps,
-        name: 'parent',
+        name: Name.create('parent'),
         type: ComponentType.CONTAINER,
       })
 
       const button = Component.create({
         ...mockProps,
-        name: 'button',
+        name: Name.create('button'),
         type: ComponentType.BUTTON,
       })
 
       const text = Component.create({
         ...mockProps,
-        name: 'text',
+        name: Name.create('text'),
         type: ComponentType.TEXT,
       })
 
@@ -207,28 +211,22 @@ describe('Component Entity', () => {
 
   describe('validation', () => {
     it('should validate invariants on create', () => {
-      const invalidProps = { ...mockProps, name: '' }
-
       expect(() => {
-        Component.create(invalidProps)
-      }).toThrow("Field 'name' cannot be empty")
+        Name.create('')
+      }).toThrow()
     })
 
     it('should validate name format', () => {
-      const invalidProps = { ...mockProps, name: '123invalid' }
-
       expect(() => {
-        Component.create(invalidProps)
-      }).toThrow("Field 'name' has invalid format")
+        Name.create('123invalid')
+      }).toThrow()
     })
 
     it('should validate name length', () => {
       const longName = 'a'.repeat(101)
-      const invalidProps = { ...mockProps, name: longName }
-
       expect(() => {
-        Component.create(invalidProps)
-      }).toThrow("Field 'name' has invalid format")
+        Name.create(longName)
+      }).toThrow()
     })
 
     it('should validate duplicate property names', () => {

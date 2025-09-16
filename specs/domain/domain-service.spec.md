@@ -449,6 +449,7 @@ transferService.transferFunds({
 
 Version: 1.0.0
 Last Updated: [Date]
+Location: `packages/domain/src/<module>/services/<service-name>.service.ts`
 
 ```
 

@@ -72,12 +72,14 @@ InvalidDataError represents failures that occur when data structures or data obj
 ### Static Factory Methods
 
 - `static forData(data: unknown, expectedFormat: string, parseContext: string): InvalidDataError`
+
   - **Purpose**: Creates an invalid data error for general data validation failures
   - **Parameters**: Invalid data, expected format description, parse context
   - **Returns**: InvalidDataError with detailed data validation failure information
   - **Usage**: When general data validation fails
 
 - `static missingProperty(property: string, data: unknown): InvalidDataError`
+
   - **Purpose**: Creates an invalid data error for missing required properties
   - **Parameters**: Missing property name and data object
   - **Returns**: InvalidDataError with missing property information
@@ -159,3 +161,4 @@ InvalidDataError represents failures that occur when data structures or data obj
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/invalid-data.error.ts`

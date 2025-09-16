@@ -144,3 +144,4 @@ EntityStateError represents failures that occur when an entity is in an invalid 
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/entity-state.error.ts`
