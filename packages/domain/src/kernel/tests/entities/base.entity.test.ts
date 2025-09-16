@@ -1,11 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { DomainEvent } from '../../events/index.js'
 import { Entity } from '../../entities/index.js'
-import { ID } from 'src/kernel/value-objects/id.value-object.js'
-import { ValueObject } from '../../value-objects/base.value-object.js'
-
-// Alias for BaseEntity to match existing code
-const BaseEntity = Entity
+import { ID } from '../../value-objects/id.value-object.js'
 
 // Test domain event for testing
 class TestDomainEvent extends DomainEvent {
@@ -18,14 +14,9 @@ class TestDomainEvent extends DomainEvent {
 }
 
 // Test-specific subclass that exposes protected methods for testing
-class TestEntityWithExposedProtected extends Entity {
-  private _name: string
-  private _value: number
-
-  private constructor(id: ID, name: string, value: number, createdAt?: Date, updatedAt?: Date) {
-    super(id, createdAt, updatedAt)
-    this._name = name
-    this._value = value
+class TestEntityWithExposedProtected extends Entity<TestEntityData> {
+  private constructor(data: TestEntityData) {
+    super(data)
   }
 
   static create(name: string, value: number): TestEntityWithExposedProtected {
@@ -36,7 +27,13 @@ class TestEntityWithExposedProtected extends Entity {
       throw new Error('Value must be non-negative')
     }
 
-    const entity = new TestEntityWithExposedProtected(ID.generate(), name.trim(), value)
+    const entity = new TestEntityWithExposedProtected({
+      id: ID.generate(),
+      name: name.trim(),
+      value: value,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
     entity.addDomainEvent(new TestDomainEvent(entity.id))
     return entity
   }
@@ -46,59 +43,28 @@ class TestEntityWithExposedProtected extends Entity {
     this.addDomainEvent(event)
   }
 
-  public static generateIdPublic(): string {
-    return Entity.generateId()
-  }
-
   get name(): string {
-    return this._name
+    return this.data.name as string
   }
 
   get value(): number {
-    return this._value
-  }
-
-  toJSON(): object {
-    return {
-      id: this.id.toPrimitive(),
-      name: this._name,
-      value: this._value,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    }
-  }
-
-  toPrimitive(): object {
-    return this.toJSON()
-  }
-
-  isValid(): boolean {
-    return this._name.trim().length > 0 && this._value >= 0
-  }
-
-  getBusinessRules(): string[] {
-    return ['Name must not be empty', 'Value must be non-negative', 'Entity must have unique ID']
-  }
-
-  validateInvariants(): void {
-    if (this._name.trim().length === 0) {
-      throw new Error('Name is required')
-    }
-    if (this._value < 0) {
-      throw new Error('Value must be non-negative')
-    }
+    return this.data.value as number
   }
 }
 
-// Concrete implementation for testing
-class TestEntity extends Entity {
-  private _name: string
-  private _value: number
+interface TestEntityData {
+  id: ID
+  name: string
+  value: number
+  createdAt: Date
+  updatedAt: Date
+  [key: string]: unknown
+}
 
-  private constructor(id: ID, name: string, value: number, createdAt?: Date, updatedAt?: Date) {
-    super(id, createdAt, updatedAt)
-    this._name = name
-    this._value = value
+// Concrete implementation for testing
+class TestEntity extends Entity<TestEntityData> {
+  constructor(data: TestEntityData) {
+    super(data)
   }
 
   static create(name: string, value: number): TestEntity {
@@ -109,29 +75,42 @@ class TestEntity extends Entity {
       throw new Error('Value must be non-negative')
     }
 
-    const entity = new TestEntity(ID.generate(), name.trim(), value)
+    const entity = new TestEntity({
+      id: ID.generate(),
+      name: name.trim(),
+      value: value,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
 
     entity.addDomainEvent(new TestDomainEvent(entity.id))
     return entity
   }
 
   static fromPersistence(id: string, name: string, value: number, createdAt: Date, updatedAt: Date): TestEntity {
-    return new TestEntity(ID.create(id), name, value, createdAt, updatedAt)
+    return new TestEntity({
+      id: ID.create(id),
+      name,
+      value,
+      createdAt,
+      updatedAt,
+    })
   }
 
   get name(): string {
-    return this._name
+    return this.data.name as string
   }
 
   get value(): number {
-    return this._value
+    return this.data.value as number
   }
 
   updateName(newName: string): void {
     if (!newName || newName.trim().length === 0) {
       throw new Error('Name is required')
     }
-    this._name = newName.trim()
+    // Update the data object directly
+    ;(this.data as any).name = newName.trim()
     this.addDomainEvent(new TestDomainEvent(this.id))
   }
 
@@ -139,39 +118,9 @@ class TestEntity extends Entity {
     if (newValue < 0) {
       throw new Error('Value must be non-negative')
     }
-    this._value = newValue
+    // Update the data object directly
+    ;(this.data as any).value = newValue
     this.addDomainEvent(new TestDomainEvent(this.id))
-  }
-
-  toJSON(): object {
-    return {
-      id: this.id.toPrimitive(),
-      name: this._name,
-      value: this._value,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    }
-  }
-
-  toPrimitive(): object {
-    return this.toJSON()
-  }
-
-  isValid(): boolean {
-    return this._name.trim().length > 0 && this._value >= 0
-  }
-
-  getBusinessRules(): string[] {
-    return ['Name must not be empty', 'Value must be non-negative', 'Entity must have unique ID']
-  }
-
-  validateInvariants(): void {
-    if (this._name.trim().length === 0) {
-      throw new Error('Name is required')
-    }
-    if (this._value < 0) {
-      throw new Error('Value must be non-negative')
-    }
   }
 }
 
@@ -184,7 +133,7 @@ describe('baseEntity', () => {
 
       const entity = TestEntity.fromPersistence(id, 'Test', 42, createdAt, updatedAt)
 
-      expect(entity.id.toPrimitive()).toBe(id)
+      expect(entity.id.toString()).toBe(id)
       expect(entity.createdAt).toEqual(createdAt)
       expect(entity.updatedAt).toEqual(updatedAt)
     })
@@ -203,11 +152,27 @@ describe('baseEntity', () => {
     it('should store ID as readonly', () => {
       const entity = TestEntity.create('Test', 42)
 
-      // This should not compile if ID is properly readonly
+      // ID should be readonly - attempting to modify should not work
       expect(() => {
         // @ts-expect-error - Testing readonly property
-        entity.id = 'new-id'
+        entity.id = ID.create('new-id')
       }).toThrow()
+    })
+
+    it('should create entity with optional ID and timestamps', () => {
+      const entity = new TestEntity({
+        id: ID.generate(),
+        name: 'Test',
+        value: 42,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+
+      expect(entity.id).toBeInstanceOf(ID)
+      expect(entity.createdAt).toBeInstanceOf(Date)
+      expect(entity.updatedAt).toBeInstanceOf(Date)
+      expect(entity.name).toBe('Test')
+      expect(entity.value).toBe(42)
     })
   })
 
@@ -216,7 +181,7 @@ describe('baseEntity', () => {
       const id = '550e8400-e29b-41d4-a716-446655440000'
       const entity = TestEntity.fromPersistence(id, 'Test', 42, new Date(), new Date())
 
-      expect(entity.id.toPrimitive()).toBe(id)
+      expect(entity.id.toString()).toBe(id)
     })
 
     it('should provide access to creation timestamp', () => {
@@ -244,6 +209,17 @@ describe('baseEntity', () => {
 
       expect(entity.updatedAt).toEqual(updatedAt)
     })
+
+    it('should provide access to entity data', () => {
+      const entity = TestEntity.create('Test', 42)
+      const data = entity.toJSON()
+
+      expect(data).toHaveProperty('id')
+      expect(data).toHaveProperty('name', 'Test')
+      expect(data).toHaveProperty('value', 42)
+      expect(data).toHaveProperty('createdAt')
+      expect(data).toHaveProperty('updatedAt')
+    })
   })
 
   describe('equality Comparison', () => {
@@ -263,34 +239,25 @@ describe('baseEntity', () => {
     })
 
     it('should return false for entities with different types', () => {
-      class DifferentEntity extends Entity {
-        constructor(id: ID) {
-          super(id)
-        }
+      interface DifferentEntityData {
+        id: ID
+        createdAt: Date
+        updatedAt: Date
+        [key: string]: unknown
+      }
 
-        toJSON(): object {
-          return { id: this.id }
-        }
-
-        toPrimitive(): object {
-          return this.toJSON()
-        }
-
-        isValid(): boolean {
-          return true
-        }
-
-        getBusinessRules(): string[] {
-          return []
-        }
-
-        validateInvariants(): void {
-          // No validation
+      class DifferentEntity extends Entity<DifferentEntityData> {
+        constructor(data: DifferentEntityData) {
+          super(data)
         }
       }
 
       const entity1 = TestEntity.create('Test', 42)
-      const entity2 = new DifferentEntity(entity1.id)
+      const entity2 = new DifferentEntity({
+        id: entity1.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
 
       expect(entity1.equals(entity2)).toBe(false)
     })
@@ -379,29 +346,16 @@ describe('baseEntity', () => {
   })
 
   describe('serialization', () => {
-    it('should convert to JSON', () => {
+    it('should convert to JSON with recursive serialization', () => {
       const entity = TestEntity.create('Test', 42)
       const json = entity.toJSON()
 
       expect(json).toEqual({
-        id: entity.id.toPrimitive(),
+        id: { value: entity.id.toString() },
         name: 'Test',
         value: 42,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-      })
-    })
-
-    it('should convert to primitive', () => {
-      const entity = TestEntity.create('Test', 42)
-      const primitive = entity.toPrimitive()
-
-      expect(primitive).toEqual({
-        id: entity.id.toPrimitive(),
-        name: 'Test',
-        value: 42,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
+        createdAt: entity.createdAt.toISOString(),
+        updatedAt: entity.updatedAt.toISOString(),
       })
     })
 
@@ -409,136 +363,56 @@ describe('baseEntity', () => {
       const entity = TestEntity.create('Test', 42)
       const str = entity.toString()
 
-      expect(str).toBe(`TestEntity(id=${entity.id.toPrimitive()})`)
-    })
-  })
-
-  describe('utility Methods', () => {
-    it('should generate unique IDs', () => {
-      // Access static protected method through type assertion
-      const BaseEntityAsAny = BaseEntity as any
-      const id1 = BaseEntityAsAny.generateId()
-      const id2 = BaseEntityAsAny.generateId()
-
-      expect(id1).toBeDefined()
-      expect(id2).toBeDefined()
-      expect(id1).not.toBe(id2)
-      expect(typeof id1).toBe('string')
-      expect(typeof id2).toBe('string')
+      expect(str).toBe(`TestEntity(id=${entity.id.toString()})`)
     })
 
-    it('should generate UUID format IDs', () => {
-      // Access static protected method through type assertion
-      const BaseEntityAsAny = BaseEntity as any
-      const id = BaseEntityAsAny.generateId()
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    it('should provide detailed string representation', () => {
+      const entity = TestEntity.create('Test', 42)
+      const detailedStr = entity.toDetailedString()
 
-      expect(id).toMatch(uuidRegex)
-    })
-  })
-
-  describe('abstract Methods', () => {
-    let entity: TestEntity
-
-    beforeEach(() => {
-      entity = TestEntity.create('Test', 42)
-    })
-
-    it('should implement isValid method', () => {
-      expect(entity.isValid()).toBe(true)
-
-      const invalidEntity = TestEntity.fromPersistence(
-        '550e8400-e29b-41d4-a716-446655440000',
-        '',
-        -1,
-        new Date(),
-        new Date(),
-      )
-      expect(invalidEntity.isValid()).toBe(false)
-    })
-
-    it('should implement getBusinessRules method', () => {
-      const rules = entity.getBusinessRules()
-
-      expect(Array.isArray(rules)).toBe(true)
-      expect(rules).toContain('Name must not be empty')
-      expect(rules).toContain('Value must be non-negative')
-      expect(rules).toContain('Entity must have unique ID')
-    })
-
-    it('should implement validateInvariants method', () => {
-      expect(() => entity.validateInvariants()).not.toThrow()
-
-      const invalidEntity = TestEntity.fromPersistence(
-        '550e8400-e29b-41d4-a716-446655440000',
-        '',
-        -1,
-        new Date(),
-        new Date(),
-      )
-      expect(() => invalidEntity.validateInvariants()).toThrow('Name is required')
+      expect(detailedStr).toContain(`TestEntity(id=${entity.id.toString()}`)
+      expect(detailedStr).toContain('name="Test"')
+      expect(detailedStr).toContain('value=42')
+      expect(detailedStr).toContain('createdAt=')
+      expect(detailedStr).toContain('updatedAt=')
     })
   })
 
   describe('generic Type Support', () => {
-    it('should work with string ID type', () => {
+    it('should work with ID value object type', () => {
       const entity = TestEntity.create('Test', 42)
-      expect(typeof entity.id.toPrimitive()).toBe('string')
+      expect(entity.id).toBeInstanceOf(ID)
+      expect(typeof entity.id.toString()).toBe('string')
     })
 
-    it('should work with custom ID type', () => {
-      class CustomIdValueObject extends ValueObject<number> {
-        constructor(value: number) {
-          super(value)
+    it('should work with custom entity data type', () => {
+      interface CustomEntityData {
+        id: ID
+        customField: string
+        createdAt: Date
+        updatedAt: Date
+        [key: string]: unknown
+      }
+
+      class CustomEntity extends Entity<CustomEntityData> {
+        constructor(data: CustomEntityData) {
+          super(data)
         }
 
-        get value(): number {
-          return this._value
-        }
-
-        equals(other: ValueObject<number> | null | undefined): boolean {
-          if (!other) return false
-          return this._value === (other as CustomIdValueObject)._value
-        }
-
-        toJSON(): object {
-          return { value: this._value }
-        }
-
-        toPrimitive(): number {
-          return this._value
+        get customField(): string {
+          return this.data.customField as string
         }
       }
 
-      class CustomIdEntity extends Entity<CustomIdValueObject> {
-        constructor(id: CustomIdValueObject) {
-          super(id)
-        }
+      const entity = new CustomEntity({
+        id: ID.generate(),
+        customField: 'test',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
 
-        toJSON(): object {
-          return { id: this.id.value }
-        }
-
-        toPrimitive(): object {
-          return this.toJSON()
-        }
-
-        isValid(): boolean {
-          return true
-        }
-
-        getBusinessRules(): string[] {
-          return []
-        }
-
-        validateInvariants(): void {
-          // No validation
-        }
-      }
-
-      const entity = new CustomIdEntity(new CustomIdValueObject(123))
-      expect(typeof entity.id.value).toBe('number')
-      expect(entity.id.value).toBe(123)
+      expect(entity.customField).toBe('test')
+      expect(entity.id).toBeInstanceOf(ID)
     })
   })
 
@@ -568,23 +442,6 @@ describe('baseEntity', () => {
       expect(events[1]).toBe(event)
     })
 
-    it('should test static generateId using type assertion', () => {
-      // Access static protected method through type assertion
-      const BaseEntityAsAny = Entity as any
-      const id1 = BaseEntityAsAny.generateId()
-      const id2 = BaseEntityAsAny.generateId()
-
-      expect(id1).toBeDefined()
-      expect(id2).toBeDefined()
-      expect(id1).not.toBe(id2)
-      expect(typeof id1).toBe('string')
-      expect(typeof id2).toBe('string')
-
-      // Verify UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-      expect(id1).toMatch(uuidRegex)
-    })
-
     it('should test addDomainEvent using reflection', () => {
       const entity = TestEntity.create('Test', 42)
 
@@ -608,16 +465,6 @@ describe('baseEntity', () => {
       const events = entity.getDomainEvents()
       expect(events).toHaveLength(2) // One from create, one from addDomainEventPublic
       expect(events[1]).toBe(event)
-
-      // Test static protected method through public wrapper
-      const id1 = TestEntityWithExposedProtected.generateIdPublic()
-      const id2 = TestEntityWithExposedProtected.generateIdPublic()
-
-      expect(id1).toBeDefined()
-      expect(id2).toBeDefined()
-      expect(id1).not.toBe(id2)
-      expect(typeof id1).toBe('string')
-      expect(typeof id2).toBe('string')
     })
   })
 

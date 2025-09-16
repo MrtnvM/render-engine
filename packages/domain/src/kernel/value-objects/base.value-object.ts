@@ -44,15 +44,20 @@ export abstract class ValueObject<T> {
 
   /**
    * Converts value object to JSON-serializable object
+   * Recursively serializes all properties, handling dates, value objects, and nested structures
    * @returns Plain object suitable for JSON serialization
    */
-  abstract toJSON(): object
+  toJSON(): Record<string, unknown> {
+    return this.serializeValue(this._value) as Record<string, unknown>
+  }
 
   /**
    * Converts value object to its primitive representation
    * @returns The primitive value of type T
    */
-  abstract toPrimitive(): T
+  toPrimitive(): T {
+    return this._value
+  }
 
   /**
    * Converts value object to string representation
@@ -60,6 +65,63 @@ export abstract class ValueObject<T> {
    */
   toString(): string {
     return String(this._value)
+  }
+
+  /**
+   * Serialize a value to JSON-compatible format
+   * Handles dates, value objects, arrays, and nested objects
+   * @param value The value to serialize
+   * @returns JSON-compatible representation
+   */
+  private serializeValue(value: unknown): unknown {
+    // Handle null and undefined
+    if (value === null || value === undefined) {
+      return value
+    }
+
+    // Handle primitives
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      return value
+    }
+
+    // Handle dates
+    if (value instanceof Date) {
+      return value.toISOString()
+    }
+
+    // Handle arrays
+    if (Array.isArray(value)) {
+      return value.map((item) => this.serializeValue(item))
+    }
+
+    // Handle objects with toJSON method (value objects, etc.)
+    if (typeof value === 'object' && 'toJSON' in value && typeof value.toJSON === 'function') {
+      return (value as { toJSON: () => unknown }).toJSON()
+    }
+
+    // Handle plain objects
+    if (typeof value === 'object' && value.constructor === Object) {
+      const serialized: Record<string, unknown> = {}
+      for (const [k, v] of Object.entries(value)) {
+        serialized[k] = this.serializeValue(v)
+      }
+      return serialized
+    }
+
+    // Handle other objects (classes without toJSON)
+    if (typeof value === 'object') {
+      // For custom objects without toJSON, try to serialize their enumerable properties
+      const serialized: Record<string, unknown> = {}
+      for (const k in value as Record<string, unknown>) {
+        if (Object.prototype.hasOwnProperty.call(value, k)) {
+          serialized[k] = this.serializeValue((value as Record<string, unknown>)[k])
+        }
+      }
+      return serialized
+    }
+
+    // Fallback for any other type
+    return value
   }
 
   /**

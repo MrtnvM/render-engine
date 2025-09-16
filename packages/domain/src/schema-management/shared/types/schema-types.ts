@@ -1,48 +1,8 @@
-import { ID } from 'src/kernel/value-objects/index.js'
-import { ComponentType, SchemaStatus } from '../enums/index.js'
-import { ComponentJSON } from './component-types.js'
-
-export interface SemanticVersion {
-  major: number
-  minor: number
-  patch: number
-}
-
-export interface SchemaMetadata {
-  createdAt: Date
-  updatedAt: Date
-  createdBy?: string
-  tags?: string[]
-  [key: string]: unknown
-}
-
-// Forward declarations to avoid circular dependencies
-export interface Component {
-  id: ID
-  name: string
-  type: ComponentType
-  toJSON(): ComponentJSON
-}
-
-export interface PropertyType {
-  name: string
-  toJSON(): any
-}
+import { SchemaStatus } from '../enums/index.js'
 
 export interface SchemaValidationRuleInterface {
   name: string
   toJSON(): any
-}
-
-export interface SchemaProps {
-  id?: ID
-  name: string
-  version: SemanticVersion
-  description?: string
-  components: Component[]
-  globalProperties?: PropertyType[]
-  validationRules?: SchemaValidationRuleInterface[]
-  metadata: SchemaMetadata
 }
 
 export interface SchemaJSON {

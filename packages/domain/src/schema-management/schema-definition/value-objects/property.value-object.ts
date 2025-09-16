@@ -1,6 +1,6 @@
 import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
-import { DataType } from './data-type.vo.js'
-import { SchemaValidationRule } from './validation-rule.vo.js'
+import { DataType } from './data-type.value-object.js'
+import { SchemaValidationRule } from './validation-rule.value-object.js'
 
 export interface BindingOptions {
   expression: string
@@ -218,42 +218,6 @@ export class Property extends ValueObject<PropertyProps> {
     return null
   }
 
-  public serializeValue(value: unknown): string {
-    if (value === null || value === undefined) {
-      return 'null'
-    }
-
-    if (typeof value === 'string') {
-      return value
-    }
-
-    if (typeof value === 'number' || typeof value === 'boolean') {
-      return String(value)
-    }
-
-    if (value instanceof Date) {
-      return value.toISOString()
-    }
-
-    if (Array.isArray(value)) {
-      return JSON.stringify(value)
-    }
-
-    if (typeof value === 'object') {
-      return JSON.stringify(value)
-    }
-
-    return String(value)
-  }
-
-  public deserializeValue(serialized: string): unknown {
-    try {
-      return this.type.convertFromString(serialized)
-    } catch {
-      return null
-    }
-  }
-
   public supportsBinding(): boolean {
     return this.bindingOptions !== null
   }
@@ -298,26 +262,6 @@ export class Property extends ValueObject<PropertyProps> {
 
   public getOptionalValidationRules(): SchemaValidationRule[] {
     return this.validationRules.filter((rule) => !rule.isRequiredFor(this.type))
-  }
-
-  public toJSON(): PropertyJSON {
-    return {
-      name: this.name,
-      type: this.type.toJSON(),
-      displayName: this.displayName,
-      description: this.description || undefined,
-      defaultValue: this.defaultValue,
-      isRequired: this.isRequired,
-      isReadOnly: this.isReadOnly,
-      validationRules: this.validationRules.map((rule) => rule.toJSON()),
-      bindingOptions: this.bindingOptions || undefined,
-      uiHint: this.uiHint || undefined,
-      metadata: {
-        ...this.metadata,
-        createdAt: this.metadata.createdAt.toISOString(),
-        updatedAt: this.metadata.updatedAt.toISOString(),
-      },
-    }
   }
 
   public toPrimitive(): PropertyProps {
@@ -382,13 +326,6 @@ export class Property extends ValueObject<PropertyProps> {
       displayName,
       defaultValue,
       uiHint,
-    })
-  }
-
-  public static clone(original: Property, newName?: string): Property {
-    return Property.create({
-      ...original.value,
-      name: newName || original.name,
     })
   }
 

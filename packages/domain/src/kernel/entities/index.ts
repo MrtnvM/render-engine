@@ -1,1 +1,1 @@
-export { Entity } from './base.entity.js'
+export { Entity, type EntityData } from './base.entity.js'

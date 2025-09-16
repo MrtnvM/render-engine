@@ -1,8 +1,5 @@
-import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
-
-export interface NameProps {
-  value: string
-}
+import { ValueObject } from './base.value-object.js'
+import { ValidationError } from '../errors/validation.error.js'
 
 export class Name extends ValueObject<string> {
   public static readonly MIN_LENGTH = 3
@@ -18,13 +15,19 @@ export class Name extends ValueObject<string> {
 
   public static create(value: string): Name {
     const trimmed = value.trim()
+
     if (trimmed.length < Name.MIN_LENGTH || trimmed.length > Name.MAX_LENGTH) {
-      throw new Error(`Name must be between ${Name.MIN_LENGTH} and ${Name.MAX_LENGTH} characters`)
+      throw ValidationError.forField(
+        'name',
+        trimmed,
+        `length must be between ${Name.MIN_LENGTH} and ${Name.MAX_LENGTH} characters`,
+      )
     }
+
     return new Name(trimmed)
   }
 
-  public toJSON(): object {
+  public toJSON(): { value: string } {
     return { value: this._value }
   }
 

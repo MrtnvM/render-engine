@@ -104,4 +104,12 @@ export class ValidationError extends DomainError {
     }))
     return ValidationError.forFields(fields)
   }
+
+  static duplicate(fieldName: string, message: string): ValidationError {
+    return new ValidationError({
+      message: `Field '${fieldName}' has duplicate value: ${message}`,
+      code: 'VALIDATION_ERROR',
+      metadata: { fields: [{ name: fieldName, value: undefined, rule: 'duplicate' }] },
+    })
+  }
 }

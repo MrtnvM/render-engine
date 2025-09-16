@@ -121,13 +121,13 @@ Organize methods into logical groups:
 
 ### Entities
 
-- EntityName -> Entity (operates on)
-- AnotherEntity -> Entity (operates on)
+- EntityName
+- AnotherEntity
 
 ### Value Objects
 
-- ValueObjectName -> ValueObject (uses)
-- AnotherValueObject -> ValueObject (uses)
+- ValueObjectName
+- AnotherValueObject
 
 ### Domain Errors
 
@@ -136,8 +136,8 @@ Organize methods into logical groups:
 
 ### Policies/Strategies (if any)
 
-- PolicyName -> Domain Policy (injected dependency)
-- StrategyName -> Domain Strategy (injected dependency)
+- PolicyName
+- StrategyName
 ```
 
 **Guidelines:**
@@ -290,33 +290,6 @@ Version: 1.0.0
 Last Updated: [Date or reference to analysis]
 ````
 
-## Writing Guidelines
-
-### General Principles
-
-1. **Clarity**: Write clear, unambiguous descriptions
-2. **Completeness**: Cover all aspects of the service
-3. **Consistency**: Use consistent formatting and terminology
-4. **Accuracy**: Ensure all information is correct and up-to-date
-5. **Maintainability**: Structure for easy updates and modifications
-
-### Content Guidelines
-
-1. **Business Logic Focus**: Emphasize domain logic, not implementation details
-2. **Stateless Nature**: Always emphasize the stateless requirement
-3. **Cross-Entity Rules**: Highlight why logic belongs in a service vs. entity
-4. **Errors**: Include all possible exceptions with clear descriptions
-5. **Dependencies**: List all domain dependencies clearly
-6. **Tests**: Provide comprehensive test coverage requirements
-
-### Formatting Guidelines
-
-1. **Headers**: Use consistent header hierarchy
-2. **Lists**: Use bullet points for better readability
-3. **Code**: Use backticks for method signatures and types
-4. **Emphasis**: Use bold for important terms and error names
-5. **Structure**: Maintain consistent indentation and spacing
-
 ### Review Checklist
 
 Before finalizing a domain service specification, ensure:
@@ -387,12 +360,12 @@ The TransferService encapsulates the complex business logic for transferring fun
 
 ### Entities
 
-- Account -> Entity (operates on)
+- Account
 
 ### Value Objects
 
-- Money -> ValueObject (uses)
-- AccountType -> ValueObject (uses)
+- Money
+- AccountType
 
 ### Domain Errors
 
@@ -491,6 +464,4 @@ Last Updated: [Date]
 8. **Document assumptions**: Make implicit business rules explicit
 9. **Emphasize statelessness**: Always highlight the stateless nature
 10. **Focus on pure logic**: Emphasize the absence of side effects
-
-This guide ensures that domain service specifications are comprehensive, consistent, and maintainable, serving as effective documentation for domain modeling and implementation.
 ```

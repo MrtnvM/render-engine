@@ -3,7 +3,6 @@ import { v4 as uuidv4, validate as validateUUID } from 'uuid'
 import { ValueObject } from './base.value-object.js'
 import { ValidationError } from '../errors/validation.error.js'
 import { InvalidValueError } from '../errors/invalid-value.error.js'
-import { InvalidDataError } from '../errors/invalid-data.error.js'
 
 /**
  * ID Value Object
@@ -21,8 +20,6 @@ export class ID extends ValueObject<string> {
   private constructor(value: string) {
     super(value)
   }
-
-  // ===== Factory Methods =====
 
   /**
    * Creates a new ID instance
@@ -63,55 +60,6 @@ export class ID extends ValueObject<string> {
   }
 
   /**
-   * Creates ID from JSON data
-   * @param data Object containing 'value' property with UUID string
-   * @returns New ID instance
-   * @throws InvalidDataError if data structure is invalid
-   * @throws ValidationError if UUID format is invalid
-   */
-  static fromJSON(data: { value: string } | any): ID {
-    if (data === null || data === undefined || typeof data !== 'object') {
-      throw InvalidDataError.invalidStructure('object with value property', data)
-    }
-
-    if (!('value' in data)) {
-      throw InvalidDataError.missingProperty('value', data)
-    }
-
-    return ID.create(data.value)
-  }
-
-  // ===== Property Accessors =====
-
-  /**
-   * Returns the UUID string value
-   * @returns The UUID string
-   */
-  toString(): string {
-    return this.value
-  }
-
-  // ===== Utility Methods =====
-
-  /**
-   * Converts ID to JSON-serializable object
-   * @returns Plain object with value property
-   */
-  toJSON(): { value: string } {
-    return { value: this.value }
-  }
-
-  /**
-   * Converts ID to primitive string value
-   * @returns The UUID string value
-   */
-  toPrimitive(): string {
-    return this.value
-  }
-
-  // ===== Private Methods =====
-
-  /**
    * Validates if a string is a valid UUID format (any version)
    * @param id The string to validate
    * @returns true if valid UUID format
@@ -123,5 +71,21 @@ export class ID extends ValueObject<string> {
 
     // Use uuid library's validate function for any valid UUID format
     return validateUUID(id)
+  }
+
+  /**
+   * Override toString to return just the UUID string
+   * @returns The UUID string value
+   */
+  toString(): string {
+    return this._value
+  }
+
+  /**
+   * Override toJSON to return object with value property for JSON serialization
+   * @returns Object with value property containing the UUID string
+   */
+  toJSON(): { value: string } {
+    return { value: this._value }
   }
 }
