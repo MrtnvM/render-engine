@@ -38,15 +38,15 @@ dto/
 
 ```ts
 // create-user.dto.ts
-import { z } from "zod";
+import { z } from 'zod'
 
 export const createUserDtoSchema = z.object({
   email: z.string().email(),
   name: z.string().min(1),
   password: z.string().min(8),
-});
+})
 
-export type CreateUserDto = z.infer<typeof createUserDtoSchema>;
+export type CreateUserDto = z.infer<typeof createUserDtoSchema>
 ```
 
 ---
@@ -103,10 +103,10 @@ export type CreateUserDto = z.infer<typeof createUserDtoSchema>;
 Inside a Use Case:
 
 ```ts
-import { createUserDtoSchema, CreateUserDto } from "@/application/dto/create-user.dto";
+import { createUserDtoSchema, CreateUserDto } from '@/application/dto/create-user.dto'
 
 function execute(input: CreateUserDto): void {
-  const parsed: CreateUserDto = createUserDtoSchema.parse(input);
+  const parsed: CreateUserDto = createUserDtoSchema.parse(input)
   // Use parsed DTO to map to Domain Entity
 }
 ```

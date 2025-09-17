@@ -1,5 +1,5 @@
 // Database connection and utilities
-export { Database } from "./connection.js"
+export { Database } from './connection.js'
 
 // Database schema
-export * from "./schema.js"
+export * from './schema.js'

@@ -1,9 +1,8 @@
 import { ID } from '../../../kernel/value-objects/id.value-object.js'
-import { Name } from '../../../kernel/value-objects/name.value-object.js'
 import { SemanticVersion } from '../../../kernel/value-objects/semantic-version.value-object.js'
 
 export interface CreateReleaseParams {
-  name: Name
+  name: string
   description?: string
   schemas: SchemaRelease[]
   createdBy: ID
@@ -42,4 +41,12 @@ export interface EnvironmentConfig {
   customSettings?: Record<string, unknown>
 }
 
-export type ReleaseStatus = 'DRAFT' | 'PENDING_APPROVAL' | 'APPROVED' | 'DEPLOYING' | 'DEPLOYED' | 'FAILED' | 'ROLLED_BACK' | 'CANCELLED'
+export type ReleaseStatus =
+  | 'DRAFT'
+  | 'PENDING_APPROVAL'
+  | 'APPROVED'
+  | 'DEPLOYING'
+  | 'DEPLOYED'
+  | 'FAILED'
+  | 'ROLLED_BACK'
+  | 'CANCELLED'

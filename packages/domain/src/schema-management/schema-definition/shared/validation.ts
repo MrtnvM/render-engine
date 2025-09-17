@@ -119,7 +119,7 @@ export class ValidationRule {
       case 'string':
         return typeof value === 'string'
       case 'number':
-        return typeof value === 'number' && !isNaN(value)
+        return typeof value === 'number' && !Number.isNaN(value)
       case 'boolean':
         return typeof value === 'boolean'
       case 'array':
@@ -178,8 +178,8 @@ export class ValidationRule {
   private validateURL(value: unknown): boolean {
     if (typeof value !== 'string') return false
     try {
-      new URL(value)
-      return true
+      const url = new URL(value)
+      return url !== null
     } catch {
       return false
     }

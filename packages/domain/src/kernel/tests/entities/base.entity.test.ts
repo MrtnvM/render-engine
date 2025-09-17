@@ -30,7 +30,7 @@ class TestEntityWithExposedProtected extends Entity<TestEntityData> {
     const entity = new TestEntityWithExposedProtected({
       id: ID.generate(),
       name: name.trim(),
-      value: value,
+      value,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -78,7 +78,7 @@ class TestEntity extends Entity<TestEntityData> {
     const entity = new TestEntity({
       id: ID.generate(),
       name: name.trim(),
-      value: value,
+      value,
       createdAt: new Date(),
       updatedAt: new Date(),
     })

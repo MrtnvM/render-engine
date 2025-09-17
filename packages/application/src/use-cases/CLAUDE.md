@@ -27,9 +27,9 @@ Each use case is implemented as a class:
 @injectable()
 export class CreateUserUseCase {
   constructor(
-    @inject("IUserRepository")
+    @inject('IUserRepository')
     private userRepository: IUserRepository,
-    @inject("IEventBus")
+    @inject('IEventBus')
     private eventBus: IEventBus,
   ) {}
 
@@ -94,12 +94,12 @@ Use cases depend on **interfaces**, not infrastructure:
 
 ```ts
 interface IUserRepository {
-  findByEmail(email: string): Promise<User | null>;
-  save(user: User): Promise<void>;
+  findByEmail(email: string): Promise<User | null>
+  save(user: User): Promise<void>
 }
 
 interface IEventBus {
-  publish(...events: DomainEvent[]): Promise<void>;
+  publish(...events: DomainEvent[]): Promise<void>
 }
 ```
 

@@ -322,16 +322,17 @@ export class Schema extends Entity<SchemaData> {
     // Validate global properties
     const propertyNames = new Set<string>()
     this.globalProperties.forEach((property) => {
-      if (propertyNames.has(property.name)) {
+      const propertyName = property.name.toString()
+      if (propertyNames.has(propertyName)) {
         errors.push({
           id: ID.create().toPrimitive(),
           code: 'DUPLICATE_PROPERTY_NAME',
-          message: `Duplicate global property name: ${property.name}`,
+          message: `Duplicate global property name: ${propertyName}`,
           severity: SchemaValidationSeverity.ERROR,
           timestamp: new Date(),
         })
       }
-      propertyNames.add(property.name)
+      propertyNames.add(propertyName)
     })
   }
 

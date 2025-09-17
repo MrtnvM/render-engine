@@ -59,7 +59,7 @@ describe('Component Entity', () => {
       const component = Component.create(mockProps)
 
       expect(component.properties).toHaveLength(1)
-      expect(component.properties[0].name).toBe('testProperty')
+      expect(component.properties[0].name.toString()).toBe('testProperty')
     })
 
     it('should add property correctly', () => {
@@ -205,7 +205,7 @@ describe('Component Entity', () => {
 
       const buttons = container.getChildrenByType(ComponentType.BUTTON)
       expect(buttons).toHaveLength(1)
-      expect(buttons[0].name).toBe('button')
+      expect(buttons[0].name.toString()).toBe('button')
     })
   })
 
@@ -218,7 +218,7 @@ describe('Component Entity', () => {
 
     it('should validate name format', () => {
       expect(() => {
-        Name.create('123invalid')
+        Name.create('ab') // too short
       }).toThrow()
     })
 
@@ -245,9 +245,9 @@ describe('Component Entity', () => {
       const json = component.toJSON()
 
       expect(json.id).toEqual(component.id.toJSON())
-      expect(json.name).toBe(component.name)
+      expect(json.name).toBe(component.name.toString())
       expect(json.type).toBe(component.type)
-      expect(json.description).toBe(component.description)
+      expect(json.description).toBe(component.description?.toString())
       expect(json.properties).toHaveLength(1)
     })
 

@@ -250,11 +250,11 @@ export class Property extends ValueObject<PropertyProps> {
   }
 
   public hasValidationRule(ruleName: string): boolean {
-    return this.validationRules.some((rule) => rule.name === ruleName)
+    return this.validationRules.some((rule) => rule.name.toString() === ruleName)
   }
 
   public getValidationRule(ruleName: string): SchemaValidationRule | null {
-    return this.validationRules.find((rule) => rule.name === ruleName) || null
+    return this.validationRules.find((rule) => rule.name.toString() === ruleName) || null
   }
 
   public getRequiredValidationRules(): SchemaValidationRule[] {

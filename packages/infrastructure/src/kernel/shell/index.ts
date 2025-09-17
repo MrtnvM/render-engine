@@ -1,1 +1,1 @@
-export * from "./run-command.service.js"
+export * from './run-command.service.js'

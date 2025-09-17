@@ -1,9 +1,9 @@
-import { injectable } from "tsyringe"
-import { BaseLogger, LogLevel } from "@render-engine/domain"
-import type { LogContext, LoggerOptions } from "@render-engine/domain"
+import { injectable } from 'tsyringe'
+import { BaseLogger, LogLevel } from '@render-engine/domain'
+import type { LogContext, LoggerOptions } from '@render-engine/domain'
 
 export interface CompositeLoggerOptions extends LoggerOptions {
-  loggers: BaseLogger[];
+  loggers: BaseLogger[]
 }
 
 @injectable()

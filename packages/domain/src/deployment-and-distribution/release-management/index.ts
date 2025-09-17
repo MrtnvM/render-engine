@@ -9,7 +9,7 @@ export {
   ReleaseCreatedEvent,
   ReleaseApprovedEvent,
   ReleaseDeployedEvent,
-  ReleaseRolledBackEvent
+  ReleaseRolledBackEvent,
 } from './domain-events/index.js'
 
 // Domain Errors
@@ -27,7 +27,7 @@ export {
   SchemaAlreadyExistsError,
   SchemaNotFoundError,
   InvalidSchemaError,
-  InvalidApprovalError
+  InvalidApprovalError,
 } from './domain-errors/index.js'
 
 // Shared Types
@@ -37,5 +37,5 @@ export type {
   EnvironmentDeployment,
   Approval,
   EnvironmentConfig,
-  ReleaseStatus
+  ReleaseStatus,
 } from './shared/index.js'

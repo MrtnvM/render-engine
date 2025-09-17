@@ -1,25 +1,25 @@
-import { execa } from "execa"
-import { logger } from "@render-engine/domain"
+import { execa } from 'execa'
+import { logger } from '@render-engine/domain'
 
 export interface RunCommandOptions {
-  cwd?: string;
-  stdio?: "inherit" | "pipe" | "ignore";
-  timeout?: number;
+  cwd?: string
+  stdio?: 'inherit' | 'pipe' | 'ignore'
+  timeout?: number
 }
 
 export interface RunCommandResult {
-  stdout: string;
-  stderr: string;
-  exitCode: number;
+  stdout: string
+  stderr: string
+  exitCode: number
 }
 
 export class RunCommandService {
   private readonly logger = logger(RunCommandService)
 
   async runCommand(command: string, args: string[] = [], options: RunCommandOptions = {}): Promise<RunCommandResult> {
-    const { cwd = process.cwd(), stdio = "inherit", timeout = 30000 } = options
+    const { cwd = process.cwd(), stdio = 'inherit', timeout = 30000 } = options
 
-    this.logger.debug("Running command", {
+    this.logger.debug('Running command', {
       command,
       args,
       cwd,
@@ -34,7 +34,7 @@ export class RunCommandService {
         timeout,
       })
 
-      this.logger.debug("Command completed successfully", {
+      this.logger.debug('Command completed successfully', {
         command,
         exitCode: result.exitCode,
         stdout: result.stdout,
@@ -42,12 +42,12 @@ export class RunCommandService {
       })
 
       return {
-        stdout: result.stdout || "",
-        stderr: result.stderr || "",
+        stdout: result.stdout || '',
+        stderr: result.stderr || '',
         exitCode: result.exitCode || 0,
       }
     } catch (error: any) {
-      this.logger.error("Command failed", {
+      this.logger.error('Command failed', {
         command,
         args,
         cwd,
@@ -58,7 +58,7 @@ export class RunCommandService {
       })
 
       // Re-throw with more context
-      const enhancedError = new Error(`Command failed: ${command} ${args.join(" ")}`)
+      const enhancedError = new Error(`Command failed: ${command} ${args.join(' ')}`)
       enhancedError.cause = error
       throw enhancedError
     }

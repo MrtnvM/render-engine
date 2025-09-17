@@ -1,19 +1,19 @@
-import { injectable } from "tsyringe"
-import { promises as fs } from "node:fs"
-import path from "node:path"
-import { createHash } from "node:crypto"
-import { Buffer } from "node:buffer"
-import { globby } from "globby"
-import type { IFileCacheService, CacheMetadata, CacheStats } from "@render-engine/domain"
-import { logger } from "@render-engine/domain"
+import { injectable } from 'tsyringe'
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
+import { createHash } from 'node:crypto'
+import { Buffer } from 'node:buffer'
+import { globby } from 'globby'
+import type { IFileCacheService, CacheMetadata, CacheStats } from '@render-engine/domain'
+import { logger } from '@render-engine/domain'
 
 export interface FileCacheServiceOptions {
   /** Cache directory path (defaults to ~/.render-engine/cache) */
-  cacheDir?: string;
+  cacheDir?: string
   /** Default TTL in seconds (defaults to 3600 = 1 hour) */
-  defaultTtl?: number;
+  defaultTtl?: number
   /** Maximum cache size in bytes (defaults to 100MB) */
-  maxCacheSize?: number;
+  maxCacheSize?: number
 }
 
 @injectable()
@@ -31,14 +31,14 @@ export class FileCacheService implements IFileCacheService {
 
   constructor(options: FileCacheServiceOptions = {}) {
     this.cacheDir =
-      options.cacheDir ?? path.resolve(process.env.HOME || process.env.USERPROFILE || "./", ".render-engine", "cache")
+      options.cacheDir ?? path.resolve(process.env.HOME || process.env.USERPROFILE || './', '.render-engine', 'cache')
     this.defaultTtl = options.defaultTtl ?? 3600 // 1 hour
     this.maxCacheSize = options.maxCacheSize ?? 100 * 1024 * 1024 // 100MB
   }
 
   async get<T>(cacheKey: string): Promise<T | null> {
     try {
-      this.logger.debug("Getting cache value", { cacheKey })
+      this.logger.debug('Getting cache value', { cacheKey })
 
       const cachePath = this.getCachePath(cacheKey)
       const metadataPath = this.getMetadataPath(cacheKey)
@@ -64,22 +64,22 @@ export class FileCacheService implements IFileCacheService {
 
       // Check if expired
       if (metadata.expiresAt && Date.now() > metadata.expiresAt.getTime()) {
-        this.logger.debug("Cache entry expired", { cacheKey, expiresAt: metadata.expiresAt })
+        this.logger.debug('Cache entry expired', { cacheKey, expiresAt: metadata.expiresAt })
         this.stats.misses++
         await this.deleteCacheFiles(cacheKey)
         return null
       }
 
       // Read cached content
-      const content = await fs.readFile(cachePath, "utf8")
+      const content = await fs.readFile(cachePath, 'utf8')
       const parsedContent = JSON.parse(content)
 
       this.stats.hits++
-      this.logger.debug("Cache hit", { cacheKey })
+      this.logger.debug('Cache hit', { cacheKey })
 
       return parsedContent as T
     } catch (error) {
-      this.logger.error("Error getting cache value", { cacheKey, error })
+      this.logger.error('Error getting cache value', { cacheKey, error })
       this.stats.misses++
       return null
     }
@@ -87,7 +87,7 @@ export class FileCacheService implements IFileCacheService {
 
   async set<T>(cacheKey: string, content: T, ttl?: number): Promise<void> {
     try {
-      this.logger.debug("Setting cache value", { cacheKey, ttl })
+      this.logger.debug('Setting cache value', { cacheKey, ttl })
 
       // Ensure cache directory exists
       await this.ensureCacheDirectory()
@@ -100,7 +100,7 @@ export class FileCacheService implements IFileCacheService {
 
       const contentString = JSON.stringify(content)
       const contentHash = this.hashContent(contentString)
-      const size = Buffer.byteLength(contentString, "utf8")
+      const size = Buffer.byteLength(contentString, 'utf8')
 
       const metadata: CacheMetadata = {
         cacheKey,
@@ -115,32 +115,32 @@ export class FileCacheService implements IFileCacheService {
 
       // Write content and metadata atomically
       await Promise.all([
-        fs.writeFile(cachePath, contentString, "utf8"),
-        fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2), "utf8"),
+        fs.writeFile(cachePath, contentString, 'utf8'),
+        fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2), 'utf8'),
       ])
 
       this.stats.sets++
-      this.logger.debug("Cache set successfully", { cacheKey, size })
+      this.logger.debug('Cache set successfully', { cacheKey, size })
     } catch (error) {
-      this.logger.error("Error setting cache value", { cacheKey, error })
+      this.logger.error('Error setting cache value', { cacheKey, error })
       throw error
     }
   }
 
   async delete(cacheKey: string): Promise<void> {
     try {
-      this.logger.debug("Deleting cache value", { cacheKey })
+      this.logger.debug('Deleting cache value', { cacheKey })
       await this.deleteCacheFiles(cacheKey)
       this.stats.deletes++
     } catch (error) {
-      this.logger.error("Error deleting cache value", { cacheKey, error })
+      this.logger.error('Error deleting cache value', { cacheKey, error })
       throw error
     }
   }
 
   async clear(): Promise<void> {
     try {
-      this.logger.debug("Clearing cache")
+      this.logger.debug('Clearing cache')
 
       if (await this.pathExists(this.cacheDir)) {
         const files = await fs.readdir(this.cacheDir)
@@ -153,9 +153,9 @@ export class FileCacheService implements IFileCacheService {
       this.stats.sets = 0
       this.stats.deletes = 0
 
-      this.logger.debug("Cache cleared successfully")
+      this.logger.debug('Cache cleared successfully')
     } catch (error) {
-      this.logger.error("Error clearing cache", { error })
+      this.logger.error('Error clearing cache', { error })
       throw error
     }
   }
@@ -187,7 +187,7 @@ export class FileCacheService implements IFileCacheService {
 
       return true
     } catch (error) {
-      this.logger.error("Error checking cache key", { cacheKey, error })
+      this.logger.error('Error checking cache key', { cacheKey, error })
       return false
     }
   }
@@ -202,14 +202,14 @@ export class FileCacheService implements IFileCacheService {
 
       return await this.readMetadata(metadataPath)
     } catch (error) {
-      this.logger.error("Error getting cache metadata", { cacheKey, error })
+      this.logger.error('Error getting cache metadata', { cacheKey, error })
       return null
     }
   }
 
   async invalidatePattern(pattern: string): Promise<void> {
     try {
-      this.logger.debug("Invalidating cache pattern", { pattern })
+      this.logger.debug('Invalidating cache pattern', { pattern })
 
       if (!(await this.pathExists(this.cacheDir))) {
         return
@@ -223,9 +223,9 @@ export class FileCacheService implements IFileCacheService {
       const allFiles = [...cacheFiles, ...metadataFiles]
       await Promise.all(allFiles.map((file) => fs.unlink(file)))
 
-      this.logger.debug("Cache pattern invalidated", { pattern, filesDeleted: allFiles.length })
+      this.logger.debug('Cache pattern invalidated', { pattern, filesDeleted: allFiles.length })
     } catch (error) {
-      this.logger.error("Error invalidating cache pattern", { pattern, error })
+      this.logger.error('Error invalidating cache pattern', { pattern, error })
       throw error
     }
   }
@@ -238,7 +238,7 @@ export class FileCacheService implements IFileCacheService {
 
       if (await this.pathExists(this.cacheDir)) {
         const files = await fs.readdir(this.cacheDir)
-        const metadataFiles = files.filter((file) => file.endsWith(".meta"))
+        const metadataFiles = files.filter((file) => file.endsWith('.meta'))
 
         for (const metaFile of metadataFiles) {
           const metadataPath = path.join(this.cacheDir, metaFile)
@@ -265,7 +265,7 @@ export class FileCacheService implements IFileCacheService {
         hitRate,
       }
     } catch (error) {
-      this.logger.error("Error getting cache stats", { error })
+      this.logger.error('Error getting cache stats', { error })
       return {
         entryCount: 0,
         totalSize: 0,
@@ -287,11 +287,11 @@ export class FileCacheService implements IFileCacheService {
 
   private sanitizeCacheKey(cacheKey: string): string {
     // Replace invalid filename characters with underscores
-    return cacheKey.replace(/[<>:"/\\|?*]/g, "_")
+    return cacheKey.replace(/[<>:"/\\|?*]/g, '_')
   }
 
   private hashContent(content: string): string {
-    return createHash("sha256").update(content).digest("hex")
+    return createHash('sha256').update(content).digest('hex')
   }
 
   private async pathExists(filePath: string): Promise<boolean> {
@@ -307,14 +307,14 @@ export class FileCacheService implements IFileCacheService {
     try {
       await fs.mkdir(this.cacheDir, { recursive: true })
     } catch (error) {
-      this.logger.error("Failed to create cache directory", { cacheDir: this.cacheDir, error })
+      this.logger.error('Failed to create cache directory', { cacheDir: this.cacheDir, error })
       throw error
     }
   }
 
   private async readMetadata(metadataPath: string): Promise<CacheMetadata | null> {
     try {
-      const content = await fs.readFile(metadataPath, "utf8")
+      const content = await fs.readFile(metadataPath, 'utf8')
       const metadata = JSON.parse(content) as CacheMetadata
 
       // Convert date strings back to Date objects
@@ -325,7 +325,7 @@ export class FileCacheService implements IFileCacheService {
 
       return metadata
     } catch (error) {
-      this.logger.warn("Error reading cache metadata", { metadataPath, error })
+      this.logger.warn('Error reading cache metadata', { metadataPath, error })
       return null
     }
   }
@@ -344,14 +344,14 @@ export class FileCacheService implements IFileCacheService {
     const stats = await this.getStats()
 
     if (stats.totalSize > this.maxCacheSize) {
-      this.logger.warn("Cache size limit exceeded, cleaning up old entries", {
+      this.logger.warn('Cache size limit exceeded, cleaning up old entries', {
         currentSize: stats.totalSize,
         maxSize: this.maxCacheSize,
       })
 
       // Get all metadata files and sort by creation date
       const metadataFiles = await fs.readdir(this.cacheDir)
-      const metaFiles = metadataFiles.filter((file) => file.endsWith(".meta"))
+      const metaFiles = metadataFiles.filter((file) => file.endsWith('.meta'))
 
       const entries: Array<{ path: string; metadata: CacheMetadata }> = []
 
@@ -378,7 +378,7 @@ export class FileCacheService implements IFileCacheService {
         await this.deleteCacheFiles(cacheKey)
         currentSize -= entry.metadata.size
 
-        this.logger.debug("Evicted cache entry due to size limit", {
+        this.logger.debug('Evicted cache entry due to size limit', {
           cacheKey,
           size: entry.metadata.size,
           createdAt: entry.metadata.createdAt,

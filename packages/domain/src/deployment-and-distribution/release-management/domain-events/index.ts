@@ -16,7 +16,7 @@ export class ReleaseCreatedEvent extends DomainEvent<ReleaseCreatedPayload> {
     public readonly version: string,
     public readonly name: string,
     public readonly createdBy: ID,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
   ) {
     super({
       aggregateId: releaseId,
@@ -26,8 +26,8 @@ export class ReleaseCreatedEvent extends DomainEvent<ReleaseCreatedPayload> {
         version,
         name,
         createdBy,
-        createdAt
-      }
+        createdAt,
+      },
     })
   }
 }
@@ -45,7 +45,7 @@ export class ReleaseApprovedEvent extends DomainEvent<ReleaseApprovedPayload> {
     public readonly releaseId: ID,
     public readonly version: string,
     public readonly approvedBy: ID[],
-    public readonly approvedAt: Date
+    public readonly approvedAt: Date,
   ) {
     super({
       aggregateId: releaseId,
@@ -54,8 +54,8 @@ export class ReleaseApprovedEvent extends DomainEvent<ReleaseApprovedPayload> {
         releaseId,
         version,
         approvedBy,
-        approvedAt
-      }
+        approvedAt,
+      },
     })
   }
 }
@@ -75,7 +75,7 @@ export class ReleaseDeployedEvent extends DomainEvent<ReleaseDeployedPayload> {
     public readonly version: string,
     public readonly environment: string,
     public readonly deployedAt: Date,
-    public readonly deployedBy: ID
+    public readonly deployedBy: ID,
   ) {
     super({
       aggregateId: releaseId,
@@ -85,8 +85,8 @@ export class ReleaseDeployedEvent extends DomainEvent<ReleaseDeployedPayload> {
         version,
         environment,
         deployedAt,
-        deployedBy
-      }
+        deployedBy,
+      },
     })
   }
 }
@@ -108,7 +108,7 @@ export class ReleaseRolledBackEvent extends DomainEvent<ReleaseRolledBackPayload
     public readonly environment: string,
     public readonly rolledBackAt: Date,
     public readonly rolledBackBy: ID,
-    public readonly previousVersion: string
+    public readonly previousVersion: string,
   ) {
     super({
       aggregateId: releaseId,
@@ -119,8 +119,8 @@ export class ReleaseRolledBackEvent extends DomainEvent<ReleaseRolledBackPayload
         environment,
         rolledBackAt,
         rolledBackBy,
-        previousVersion
-      }
+        previousVersion,
+      },
     })
   }
 }

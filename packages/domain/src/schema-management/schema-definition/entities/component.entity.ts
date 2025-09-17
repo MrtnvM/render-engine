@@ -44,7 +44,7 @@ export class Component extends Entity<ComponentData> {
     }
 
     const nameStr = props.name.toString()
-    if (!/^[a-zA-Z]/.test(nameStr)) {
+    if (!/^[a-z]/i.test(nameStr)) {
       throw ValidationError.invalidFormat('name', nameStr, 'must start with a letter')
     }
 
@@ -154,10 +154,10 @@ export class Component extends Entity<ComponentData> {
   }
 
   public addProperty(property: Property): void {
-    const existingProperty = this.properties.find((p) => p.name === property.name)
+    const existingProperty = this.properties.find((p) => p.name.toString() === property.name.toString())
     if (existingProperty) {
       throw ValidationError.duplicate(
-        property.name,
+        property.name.toString(),
         `Property '${property.name}' already exists in component '${this.name}'`,
       )
     }
@@ -167,7 +167,7 @@ export class Component extends Entity<ComponentData> {
   }
 
   public removeProperty(propertyName: string): void {
-    const propertyIndex = this.data.properties.findIndex((p) => p.name === propertyName)
+    const propertyIndex = this.data.properties.findIndex((p) => p.name.toString() === propertyName)
     if (propertyIndex === -1) {
       throw new Error(`Property '${propertyName}' not found in component '${this.name}'`)
     }
@@ -177,12 +177,12 @@ export class Component extends Entity<ComponentData> {
   }
 
   public updateProperty(propertyName: string, updates: Partial<Property>): void {
-    const property = this.properties.find((p) => p.name === propertyName)
+    const property = this.properties.find((p) => p.name.toString() === propertyName)
     if (!property) {
       throw new Error(`Property '${propertyName}' not found in component '${this.name}'`)
     }
 
-    const propertyIndex = this.data.properties.findIndex((p) => p.name === propertyName)
+    const propertyIndex = this.data.properties.findIndex((p) => p.name.toString() === propertyName)
     if (propertyIndex === -1) {
       throw new Error(`Property '${propertyName}' not found in component '${this.name}'`)
     }
@@ -205,7 +205,7 @@ export class Component extends Entity<ComponentData> {
       return
     }
 
-    const ruleIndex = this.data.validationRules.findIndex((r) => r.name === ruleName)
+    const ruleIndex = this.data.validationRules.findIndex((r) => r.name.toString() === ruleName)
     if (ruleIndex === -1) {
       throw new Error(`Validation rule '${ruleName}' not found in component '${this.name}'`)
     }
@@ -261,11 +261,11 @@ export class Component extends Entity<ComponentData> {
   }
 
   public getProperty(propertyName: string): Property | null {
-    return this.properties.find((p) => p.name === propertyName) || null
+    return this.properties.find((p) => p.name.toString() === propertyName) || null
   }
 
   public hasProperty(propertyName: string): boolean {
-    return this.properties.some((p) => p.name === propertyName)
+    return this.properties.some((p) => p.name.toString() === propertyName)
   }
 
   public getChildrenByType(type: ComponentType): Component[] {
@@ -276,17 +276,33 @@ export class Component extends Entity<ComponentData> {
     this.data.updatedAt = new Date()
   }
 
+  public toJSON(): Record<string, unknown> {
+    const json = super.toJSON()
+
+    // Convert Name and Description value objects to strings for JSON serialization
+    if (json.name && typeof json.name === 'object' && 'value' in json.name) {
+      json.name = (json.name as { value: string }).value
+    }
+
+    if (json.description && typeof json.description === 'object' && 'value' in json.description) {
+      json.description = (json.description as { value: string }).value
+    }
+
+    return json
+  }
+
   public validateInvariants(): void {
     const propertyNames = new Set<string>()
 
     for (const property of this.properties) {
-      if (propertyNames.has(property.name)) {
+      const propertyName = property.name.toString()
+      if (propertyNames.has(propertyName)) {
         throw ValidationError.duplicate(
-          property.name,
-          `Duplicate property name '${property.name}' in component '${this.name}'`,
+          property.name.toString(),
+          `Duplicate property name '${propertyName}' in component '${this.name}'`,
         )
       }
-      propertyNames.add(property.name)
+      propertyNames.add(propertyName)
     }
   }
 }

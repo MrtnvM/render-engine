@@ -4,5 +4,5 @@ export type {
   EnvironmentDeployment,
   Approval,
   EnvironmentConfig,
-  ReleaseStatus
+  ReleaseStatus,
 } from './types.js'

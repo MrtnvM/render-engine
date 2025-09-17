@@ -1,14 +1,14 @@
-import { injectable } from "tsyringe"
-import { promises as fs } from "node:fs"
-import { join } from "node:path"
-import { BaseLogger, LogLevel } from "@render-engine/domain"
-import type { LogContext, LoggerOptions } from "@render-engine/domain"
-import { Buffer } from "node:buffer"
+import { injectable } from 'tsyringe'
+import { promises as fs } from 'node:fs'
+import { join } from 'node:path'
+import { BaseLogger, LogLevel } from '@render-engine/domain'
+import type { LogContext, LoggerOptions } from '@render-engine/domain'
+import { Buffer } from 'node:buffer'
 
 export interface FileLoggerOptions extends LoggerOptions {
-  logDir?: string;
-  maxFileSize?: number; // in bytes
-  maxFiles?: number;
+  logDir?: string
+  maxFileSize?: number // in bytes
+  maxFiles?: number
 }
 
 @injectable()
@@ -49,13 +49,13 @@ export class FileLoggerService extends BaseLogger<FileLoggerOptions> {
       await this.writeToLogFile(logEntry)
     } catch (error) {
       // Fallback to console if file logging fails
-      console.error("File logging failed:", error)
+      console.error('File logging failed:', error)
       console.log(logEntry.trim())
     }
   }
 
   get logDir(): string {
-    return this.options.logDir ?? "./logs"
+    return this.options.logDir ?? './logs'
   }
 
   get maxFileSize(): number {
@@ -90,7 +90,7 @@ export class FileLoggerService extends BaseLogger<FileLoggerOptions> {
   }
 
   private async rotateLogFile(): Promise<void> {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
     this._currentLogFile = join(this.logDir, `app-${timestamp}.log`)
     this._currentFileSize = 0
 
@@ -102,7 +102,7 @@ export class FileLoggerService extends BaseLogger<FileLoggerOptions> {
     try {
       const files = await fs.readdir(this.logDir)
       const logFiles = files
-        .filter((file) => file.startsWith("app-") && file.endsWith(".log"))
+        .filter((file) => file.startsWith('app-') && file.endsWith('.log'))
         .map((file) => ({ name: file, path: join(this.logDir, file) }))
         .sort((a, b) => a.name.localeCompare(b.name))
 
@@ -127,7 +127,7 @@ export class FileLoggerService extends BaseLogger<FileLoggerOptions> {
       await this.rotateLogFile()
     }
 
-    await fs.appendFile(this._currentLogFile!, logEntry, "utf8")
-    this._currentFileSize += Buffer.byteLength(logEntry, "utf8")
+    await fs.appendFile(this._currentLogFile!, logEntry, 'utf8')
+    this._currentFileSize += Buffer.byteLength(logEntry, 'utf8')
   }
 }

@@ -1,14 +1,7 @@
 import { Entity, EntityData } from '../../../kernel/entities/base.entity.js'
 import { ID } from '../../../kernel/value-objects/id.value-object.js'
 import { SemanticVersion } from '../../../kernel/value-objects/semantic-version.value-object.js'
-import {
-  CreateReleaseParams,
-  SchemaRelease,
-  EnvironmentDeployment,
-  Approval,
-  EnvironmentConfig,
-  ReleaseStatus,
-} from '../shared/types.js'
+import { SchemaRelease, EnvironmentDeployment, Approval, EnvironmentConfig, ReleaseStatus } from '../shared/types.js'
 import {
   InvalidReleaseError,
   ReleaseAlreadyApprovedError,
@@ -52,18 +45,20 @@ interface ReleaseData extends EntityData {
  * Manages the lifecycle of schema deployments from creation through approval to deployment across environments.
  */
 export class Release extends Entity<ReleaseData> {
-  private constructor(props: ReleaseData) {
-    super(props)
+  private constructor(
+    data: Omit<ReleaseData, 'id' | 'createdAt' | 'updatedAt'> & { id?: ID; createdAt?: Date; updatedAt?: Date },
+  ) {
+    super(data)
   }
 
-  static create(params: CreateReleaseParams): Release {
+  static create(params: { name: string; description?: string; schemas: SchemaRelease[]; createdBy: ID }): Release {
     // Business Rule: Release must have at least one schema
     if (!params.schemas || params.schemas.length === 0) {
       throw new InvalidReleaseError('Release must contain at least one schema')
     }
 
     // Business Rule: Release name must be non-empty
-    if (!params.name || params.name.trim() === '') {
+    if (!params.name || params.name.toString().trim() === '') {
       throw new InvalidReleaseError('Release name cannot be empty')
     }
 
@@ -325,15 +320,15 @@ export class Release extends Entity<ReleaseData> {
     return this.data.status
   }
 
-  get schemas(): SchemaRelease[] {
+  get schemas(): readonly SchemaRelease[] {
     return [...this.data.schemas]
   }
 
-  get environments(): EnvironmentDeployment[] {
+  get environments(): readonly EnvironmentDeployment[] {
     return [...this.data.environments]
   }
 
-  get approvals(): Approval[] {
+  get approvals(): readonly Approval[] {
     return [...this.data.approvals]
   }
 

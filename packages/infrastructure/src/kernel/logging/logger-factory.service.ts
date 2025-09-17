@@ -1,17 +1,17 @@
-import { injectable } from "tsyringe"
-import type { BaseLogger, LogContext, LoggerOptions } from "@render-engine/domain"
-import { LogLevel } from "@render-engine/domain"
-import { ConsoleLoggerService } from "./console-logger.service.js"
-import type { FileLoggerOptions } from "./file-logger.service.js"
-import { FileLoggerService } from "./file-logger.service.js"
-import { CompositeLoggerService } from "./composite-logger.service.js"
+import { injectable } from 'tsyringe'
+import type { BaseLogger, LogContext, LoggerOptions } from '@render-engine/domain'
+import { LogLevel } from '@render-engine/domain'
+import { ConsoleLoggerService } from './console-logger.service.js'
+import type { FileLoggerOptions } from './file-logger.service.js'
+import { FileLoggerService } from './file-logger.service.js'
+import { CompositeLoggerService } from './composite-logger.service.js'
 
 export interface LoggerConfig {
-  level?: LogLevel;
-  console?: boolean;
-  file?: FileLoggerOptions;
-  context?: Record<string, unknown>;
-  traceId?: string;
+  level?: LogLevel
+  console?: boolean
+  file?: FileLoggerOptions
+  context?: Record<string, unknown>
+  traceId?: string
 }
 
 @injectable()
@@ -89,26 +89,26 @@ export class LoggerFactoryService {
     const envLevel = process.env.LOG_LEVEL?.toUpperCase()
 
     switch (envLevel) {
-      case "DEBUG":
+      case 'DEBUG':
         return LogLevel.DEBUG
-      case "INFO":
+      case 'INFO':
         return LogLevel.INFO
-      case "WARN":
+      case 'WARN':
         return LogLevel.WARN
-      case "ERROR":
+      case 'ERROR':
         return LogLevel.ERROR
       default:
         // Default based on NODE_ENV
-        return process.env.NODE_ENV === "production" ? LogLevel.INFO : LogLevel.DEBUG
+        return process.env.NODE_ENV === 'production' ? LogLevel.INFO : LogLevel.DEBUG
     }
   }
 
   private getConsoleLoggerFromEnv(): boolean {
-    return process.env.LOG_CONSOLE === "true"
+    return process.env.LOG_CONSOLE === 'true'
   }
 
   private getLogDirFromEnv(): string {
-    return process.env.LOG_DIR || "./logs"
+    return process.env.LOG_DIR || './logs'
   }
 
   private getMaxFileSizeFromEnv(): number {
@@ -135,7 +135,7 @@ export class LoggerFactoryService {
 
   private getEnvContext(): LogContext {
     const context: LogContext = {
-      env: process.env.NODE_ENV || "development",
+      env: process.env.NODE_ENV || 'development',
       pid: process.pid,
     }
 
@@ -163,7 +163,7 @@ export class LoggerFactoryService {
     }
 
     // Generate new trace ID if not provided
-    if (process.env.LOG_TRACE_ID === "true") {
+    if (process.env.LOG_TRACE_ID === 'true') {
       return this.generateTraceId()
     }
 
@@ -177,17 +177,17 @@ export class LoggerFactoryService {
   // Static method to show available environment variables
   static getEnvVars(): Record<string, string> {
     return {
-      LOG_LEVEL: "DEBUG|INFO|WARN|ERROR (default: INFO in prod, DEBUG in dev)",
-      LOG_CONSOLE: "true|false (default: true in dev, false in prod)",
-      LOG_FILE: "true|false (default: false)",
-      LOG_DIR: "Directory for log files (default: ./logs)",
-      LOG_MAX_FILE_SIZE: "Max file size in bytes (default: 10485760 = 10MB)",
-      LOG_MAX_FILES: "Max number of log files to keep (default: 5)",
-      LOG_TRACE_ID: "true|false (default: false) - auto-generate trace IDs",
-      APP_NAME: "Application name for logging context",
-      APP_VERSION: "Application version for logging context",
-      DEPLOYMENT_ID: "Deployment identifier for logging context",
-      TRACE_ID: "External trace ID to use (overrides auto-generation)",
+      LOG_LEVEL: 'DEBUG|INFO|WARN|ERROR (default: INFO in prod, DEBUG in dev)',
+      LOG_CONSOLE: 'true|false (default: true in dev, false in prod)',
+      LOG_FILE: 'true|false (default: false)',
+      LOG_DIR: 'Directory for log files (default: ./logs)',
+      LOG_MAX_FILE_SIZE: 'Max file size in bytes (default: 10485760 = 10MB)',
+      LOG_MAX_FILES: 'Max number of log files to keep (default: 5)',
+      LOG_TRACE_ID: 'true|false (default: false) - auto-generate trace IDs',
+      APP_NAME: 'Application name for logging context',
+      APP_VERSION: 'Application version for logging context',
+      DEPLOYMENT_ID: 'Deployment identifier for logging context',
+      TRACE_ID: 'External trace ID to use (overrides auto-generation)',
     }
   }
 }

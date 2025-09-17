@@ -1,1 +1,1 @@
-export * from "./file-cache.service.js"
+export * from './file-cache.service.js'

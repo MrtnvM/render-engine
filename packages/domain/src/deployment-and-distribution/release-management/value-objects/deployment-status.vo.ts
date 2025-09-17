@@ -17,7 +17,7 @@ export enum DeploymentStatusEnum {
   FAILED = 'FAILED',
   CANCELLED = 'CANCELLED',
   ROLLING_BACK = 'ROLLING_BACK',
-  ROLLED_BACK = 'ROLLED_BACK'
+  ROLLED_BACK = 'ROLLED_BACK',
 }
 
 interface DeploymentStatusProps {
@@ -35,11 +35,7 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
   /**
    * Create a new DeploymentStatus instance
    */
-  static create(
-    status: DeploymentStatusEnum,
-    message?: string,
-    details?: Record<string, unknown>
-  ): DeploymentStatus {
+  static create(status: DeploymentStatusEnum, message?: string, details?: Record<string, unknown>): DeploymentStatus {
     // Business Rule: Status message must be non-empty when provided
     if (message && message.trim() === '') {
       throw ValidationError.emptyValue('message')
@@ -54,7 +50,7 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
       status,
       timestamp: new Date(),
       message: message?.trim(),
-      details
+      details,
     })
   }
 
@@ -66,12 +62,16 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
     const transitions: Record<DeploymentStatusEnum, DeploymentStatusEnum[]> = {
       [DeploymentStatusEnum.DRAFT]: [DeploymentStatusEnum.PENDING, DeploymentStatusEnum.CANCELLED],
       [DeploymentStatusEnum.PENDING]: [DeploymentStatusEnum.IN_PROGRESS, DeploymentStatusEnum.CANCELLED],
-      [DeploymentStatusEnum.IN_PROGRESS]: [DeploymentStatusEnum.SUCCESS, DeploymentStatusEnum.FAILED, DeploymentStatusEnum.CANCELLED],
+      [DeploymentStatusEnum.IN_PROGRESS]: [
+        DeploymentStatusEnum.SUCCESS,
+        DeploymentStatusEnum.FAILED,
+        DeploymentStatusEnum.CANCELLED,
+      ],
       [DeploymentStatusEnum.SUCCESS]: [DeploymentStatusEnum.ROLLING_BACK],
       [DeploymentStatusEnum.FAILED]: [DeploymentStatusEnum.PENDING], // Retry
       [DeploymentStatusEnum.CANCELLED]: [], // Terminal state
       [DeploymentStatusEnum.ROLLING_BACK]: [DeploymentStatusEnum.ROLLED_BACK, DeploymentStatusEnum.FAILED],
-      [DeploymentStatusEnum.ROLLED_BACK]: [DeploymentStatusEnum.PENDING] // Redeploy
+      [DeploymentStatusEnum.ROLLED_BACK]: [DeploymentStatusEnum.PENDING], // Redeploy
     }
 
     return transitions[current].includes(newStatus)
@@ -80,16 +80,12 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
   /**
    * Creates a new DeploymentStatus instance with the updated status
    */
-  transitionTo(
-    newStatus: DeploymentStatusEnum,
-    message?: string,
-    details?: Record<string, unknown>
-  ): DeploymentStatus {
+  transitionTo(newStatus: DeploymentStatusEnum, message?: string, details?: Record<string, unknown>): DeploymentStatus {
     // Business Rule: Status transitions must follow the defined workflow
     if (!this.canTransitionTo(newStatus)) {
       throw BusinessRuleViolationError.forRule('STATUS_TRANSITION', {
         from: this.value.status,
-        to: newStatus
+        to: newStatus,
       })
     }
 
@@ -107,11 +103,9 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
    * Check if the current status indicates an active deployment
    */
   isActive(): boolean {
-    return [
-      DeploymentStatusEnum.PENDING,
-      DeploymentStatusEnum.IN_PROGRESS,
-      DeploymentStatusEnum.ROLLING_BACK
-    ].includes(this.value.status)
+    return [DeploymentStatusEnum.PENDING, DeploymentStatusEnum.IN_PROGRESS, DeploymentStatusEnum.ROLLING_BACK].includes(
+      this.value.status,
+    )
   }
 
   /**
@@ -136,8 +130,7 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
       return false
     }
     return (
-      this.value.status === other.value.status &&
-      this.value.timestamp.getTime() === other.value.timestamp.getTime()
+      this.value.status === other.value.status && this.value.timestamp.getTime() === other.value.timestamp.getTime()
     )
   }
 
@@ -237,7 +230,7 @@ export class DeploymentStatus extends ValueObject<DeploymentStatusProps> {
       status: this.value.status,
       timestamp: this.value.timestamp.toISOString(),
       message: this.value.message,
-      details: this.value.details
+      details: this.value.details,
     }
   }
 }

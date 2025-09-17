@@ -46,8 +46,8 @@ export class OnboardUserService {
   ) {}
 
   async execute(command: OnboardUserCommand): Promise<void> {
-    const user = await this.registerUser.execute(command);
-    await this.sendWelcome.execute({ email: user.email });
+    const user = await this.registerUser.execute(command)
+    await this.sendWelcome.execute({ email: user.email })
   }
 }
 ```
