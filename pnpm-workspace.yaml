@@ -3,5 +3,8 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
+  - '@swc/core'
+  - '@tailwindcss/oxide'
   - esbuild
+  - oxc-resolver
   - unrs-resolver

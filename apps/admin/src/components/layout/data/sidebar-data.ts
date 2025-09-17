@@ -3,6 +3,7 @@ import {
   IconBrowserCheck,
   IconBug,
   IconChecklist,
+  IconCode,
   IconError404,
   IconHelp,
   IconLayoutDashboard,
@@ -74,6 +75,11 @@ export const sidebarData: SidebarData = {
           title: 'Users',
           url: '/users',
           icon: IconUsers,
+        },
+        {
+          title: 'Editor',
+          url: '/editor',
+          icon: IconCode,
         },
         // Clerk demo group removed
       ],
