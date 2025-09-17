@@ -26,6 +26,7 @@ import { Route as AuthAuthenticatedRouteRouteImport } from './routes/auth/_authe
 import { Route as AuthauthRouteRouteImport } from './routes/auth/(auth)/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedEditorRouteRouteImport } from './routes/_authenticated/editor/route'
+import { Route as AuthenticatedAvitoDesignSystemRouteRouteImport } from './routes/_authenticated/avito-design-system/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
@@ -124,6 +125,12 @@ const AuthenticatedEditorRouteRoute =
     path: '/editor',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAvitoDesignSystemRouteRoute =
+  AuthenticatedAvitoDesignSystemRouteRouteImport.update({
+    id: '/avito-design-system',
+    path: '/avito-design-system',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -199,6 +206,7 @@ const AuthenticatedSettingsAccountRoute =
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthAuthenticatedRouteRouteWithChildren
+  '/avito-design-system': typeof AuthenticatedAvitoDesignSystemRouteRoute
   '/editor': typeof AuthenticatedEditorRouteRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/auth/': typeof AuthauthRouteRouteWithChildren
@@ -228,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/avito-design-system': typeof AuthenticatedAvitoDesignSystemRouteRoute
   '/editor': typeof AuthenticatedEditorRouteRoute
   '/auth': typeof AuthAuthenticatedRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
@@ -259,6 +268,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
+  '/_authenticated/avito-design-system': typeof AuthenticatedAvitoDesignSystemRouteRoute
   '/_authenticated/editor': typeof AuthenticatedEditorRouteRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/auth/(auth)': typeof AuthauthRouteRouteWithChildren
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/auth'
+    | '/avito-design-system'
     | '/editor'
     | '/settings'
     | '/auth/'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/users'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/avito-design-system'
     | '/editor'
     | '/auth'
     | '/forgot-password'
@@ -351,6 +363,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/avito-design-system'
     | '/_authenticated/editor'
     | '/_authenticated/settings'
     | '/auth/(auth)'
@@ -517,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEditorRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/avito-design-system': {
+      id: '/_authenticated/avito-design-system'
+      path: '/avito-design-system'
+      fullPath: '/avito-design-system'
+      preLoaderRoute: typeof AuthenticatedAvitoDesignSystemRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
@@ -635,6 +655,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAvitoDesignSystemRouteRoute: typeof AuthenticatedAvitoDesignSystemRouteRoute
   AuthenticatedEditorRouteRoute: typeof AuthenticatedEditorRouteRoute
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -646,6 +667,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAvitoDesignSystemRouteRoute:
+    AuthenticatedAvitoDesignSystemRouteRoute,
   AuthenticatedEditorRouteRoute: AuthenticatedEditorRouteRoute,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,

@@ -1,0 +1,71 @@
+/* Avito Design System - CSS Variables */
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/border-radius.css';
+@import './tokens/shadows.css';
+
+/* Base styles */
+.avito-theme {
+  font-family: var(--avito-font-sans);
+  color: var(--avito-color-neutral-900);
+  background-color: var(--avito-color-white);
+  line-height: var(--avito-line-height-normal);
+}
+
+/* Utility classes */
+.avito-text-primary {
+  color: var(--avito-color-primary-600);
+}
+
+.avito-text-success {
+  color: var(--avito-color-success-600);
+}
+
+.avito-text-warning {
+  color: var(--avito-color-warning-600);
+}
+
+.avito-text-error {
+  color: var(--avito-color-error-600);
+}
+
+.avito-bg-primary {
+  background-color: var(--avito-color-primary-600);
+}
+
+.avito-bg-success {
+  background-color: var(--avito-color-success-600);
+}
+
+.avito-bg-warning {
+  background-color: var(--avito-color-warning-600);
+}
+
+.avito-bg-error {
+  background-color: var(--avito-color-error-600);
+}
+
+.avito-bg-neutral {
+  background-color: var(--avito-color-neutral-100);
+}
+
+.avito-border-primary {
+  border-color: var(--avito-color-primary-600);
+}
+
+.avito-border-success {
+  border-color: var(--avito-color-success-600);
+}
+
+.avito-border-warning {
+  border-color: var(--avito-color-warning-600);
+}
+
+.avito-border-error {
+  border-color: var(--avito-color-error-600);
+}
+
+.avito-border-neutral {
+  border-color: var(--avito-color-neutral-300);
+}

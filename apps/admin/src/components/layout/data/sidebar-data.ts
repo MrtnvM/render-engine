@@ -81,6 +81,11 @@ export const sidebarData: SidebarData = {
           url: '/editor',
           icon: IconCode,
         },
+        {
+          title: 'Avito Design System',
+          url: '/avito-design-system',
+          icon: IconPalette,
+        },
         // Clerk demo group removed
       ],
     },

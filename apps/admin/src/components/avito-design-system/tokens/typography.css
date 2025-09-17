@@ -1,0 +1,67 @@
+:root {
+  --avito-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --avito-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --avito-font-size-xs: 0.75rem;
+  --avito-font-size-sm: 0.875rem;
+  --avito-font-size-base: 1rem;
+  --avito-font-size-lg: 1.125rem;
+  --avito-font-size-xl: 1.25rem;
+  --avito-font-size-2xl: 1.5rem;
+  --avito-font-size-3xl: 1.875rem;
+  --avito-font-size-4xl: 2.25rem;
+
+  --avito-font-weight-normal: 400;
+  --avito-font-weight-medium: 500;
+  --avito-font-weight-semibold: 600;
+  --avito-font-weight-bold: 700;
+
+  --avito-line-height-tight: 1.25;
+  --avito-line-height-normal: 1.5;
+  --avito-line-height-relaxed: 1.75;
+
+  --avito-letter-spacing-tight: -0.025em;
+  --avito-letter-spacing-normal: 0;
+  --avito-letter-spacing-wide: 0.025em;
+}
+
+.avito-body {
+  font-family: var(--avito-font-sans);
+  font-size: var(--avito-font-size-base);
+  line-height: var(--avito-line-height-normal);
+  color: var(--avito-color-neutral-900);
+}
+
+.avito-heading-1 {
+  font-family: var(--avito-font-sans);
+  font-size: var(--avito-font-size-4xl);
+  font-weight: var(--avito-font-weight-bold);
+  line-height: var(--avito-line-height-tight);
+  color: var(--avito-color-neutral-950);
+}
+
+.avito-heading-2 {
+  font-family: var(--avito-font-sans);
+  font-size: var(--avito-font-size-3xl);
+  font-weight: var(--avito-font-weight-bold);
+  line-height: var(--avito-line-height-tight);
+  color: var(--avito-color-neutral-950);
+}
+
+.avito-heading-3 {
+  font-family: var(--avito-font-sans);
+  font-size: var(--avito-font-size-2xl);
+  font-weight: var(--avito-font-weight-semibold);
+  line-height: var(--avito-line-height-tight);
+  color: var(--avito-color-neutral-950);
+}
+
+.avito-text-sm {
+  font-size: var(--avito-font-size-sm);
+  line-height: var(--avito-line-height-normal);
+}
+
+.avito-text-xs {
+  font-size: var(--avito-font-size-xs);
+  line-height: var(--avito-line-height-normal);
+}

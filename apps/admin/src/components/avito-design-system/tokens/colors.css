@@ -1,0 +1,60 @@
+:root {
+  --avito-color-primary-50: #f0fdf4;
+  --avito-color-primary-100: #dcfce7;
+  --avito-color-primary-200: #bbf7d0;
+  --avito-color-primary-300: #86efac;
+  --avito-color-primary-400: #4ade80;
+  --avito-color-primary-500: #22c55e;
+  --avito-color-primary-600: #16a34a;
+  --avito-color-primary-700: #15803d;
+  --avito-color-primary-800: #166534;
+  --avito-color-primary-900: #14532d;
+
+  --avito-color-success-50: #f0fdf4;
+  --avito-color-success-100: #dcfce7;
+  --avito-color-success-200: #bbf7d0;
+  --avito-color-success-300: #86efac;
+  --avito-color-success-400: #4ade80;
+  --avito-color-success-500: #22c55e;
+  --avito-color-success-600: #16a34a;
+  --avito-color-success-700: #15803d;
+  --avito-color-success-800: #166534;
+  --avito-color-success-900: #14532d;
+
+  --avito-color-warning-50: #fffbeb;
+  --avito-color-warning-100: #fef3c7;
+  --avito-color-warning-200: #fde68a;
+  --avito-color-warning-300: #fcd34d;
+  --avito-color-warning-400: #fbbf24;
+  --avito-color-warning-500: #f59e0b;
+  --avito-color-warning-600: #d97706;
+  --avito-color-warning-700: #b45309;
+  --avito-color-warning-800: #92400e;
+  --avito-color-warning-900: #78350f;
+
+  --avito-color-error-50: #fef2f2;
+  --avito-color-error-100: #fee2e2;
+  --avito-color-error-200: #fecaca;
+  --avito-color-error-300: #fca5a5;
+  --avito-color-error-400: #f87171;
+  --avito-color-error-500: #ef4444;
+  --avito-color-error-600: #dc2626;
+  --avito-color-error-700: #b91c1c;
+  --avito-color-error-800: #991b1b;
+  --avito-color-error-900: #7f1d1d;
+
+  --avito-color-neutral-50: #fafafa;
+  --avito-color-neutral-100: #f4f4f5;
+  --avito-color-neutral-200: #e4e4e7;
+  --avito-color-neutral-300: #d4d4d8;
+  --avito-color-neutral-400: #a1a1aa;
+  --avito-color-neutral-500: #71717a;
+  --avito-color-neutral-600: #52525b;
+  --avito-color-neutral-700: #3f3f46;
+  --avito-color-neutral-800: #27272a;
+  --avito-color-neutral-900: #18181b;
+  --avito-color-neutral-950: #09090b;
+
+  --avito-color-white: #ffffff;
+  --avito-color-black: #000000;
+}
