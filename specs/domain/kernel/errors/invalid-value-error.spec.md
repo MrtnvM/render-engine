@@ -72,6 +72,7 @@ InvalidValueError represents failures that occur when field values are invalid o
 ### Static Factory Methods
 
 - `static forField(fieldName: string, value: unknown, expectedFormat: string): InvalidValueError`
+
   - **Purpose**: Creates an invalid value error for a field with invalid value
   - **Parameters**: Field name, actual value, expected format or constraint
   - **Returns**: InvalidValueError with detailed value validation failure information
@@ -150,3 +151,4 @@ InvalidValueError represents failures that occur when field values are invalid o
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/invalid-value.error.ts`

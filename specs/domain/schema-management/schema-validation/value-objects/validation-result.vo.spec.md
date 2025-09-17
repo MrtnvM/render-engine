@@ -10,29 +10,29 @@ ValidationResult enables detailed feedback about validation failures, supports m
 
 ### Core Properties
 
-| Property | Type | Description | Constraints |
-|----------|------|-------------|-------------|
-| `isValid` | `boolean` | Whether validation passed | Required |
-| `errors` | `ValidationError[]` | Array of validation errors | Required array (can be empty) |
-| `warnings` | `ValidationWarning[]` | Array of validation warnings | Required array (can be empty) |
-| `info` | `ValidationInfo[]` | Array of validation info messages | Required array (can be empty) |
-| `context` | `ValidationContext | null` | Context in which validation was performed | Optional |
-| `duration` | `number | null` | Validation duration in milliseconds | Optional, non-negative |
-| `metadata` | `ValidationResultMetadata` | Additional result metadata | Required |
+| Property   | Type                       | Description                       | Constraints                               |
+| ---------- | -------------------------- | --------------------------------- | ----------------------------------------- | ---------------------- |
+| `isValid`  | `boolean`                  | Whether validation passed         | Required                                  |
+| `errors`   | `ValidationError[]`        | Array of validation errors        | Required array (can be empty)             |
+| `warnings` | `ValidationWarning[]`      | Array of validation warnings      | Required array (can be empty)             |
+| `info`     | `ValidationInfo[]`         | Array of validation info messages | Required array (can be empty)             |
+| `context`  | `ValidationContext         | null`                             | Context in which validation was performed | Optional               |
+| `duration` | `number                    | null`                             | Validation duration in milliseconds       | Optional, non-negative |
+| `metadata` | `ValidationResultMetadata` | Additional result metadata        | Required                                  |
 
 ### Derived Properties
 
-| Property | Type | Description | Calculation |
-|----------|------|-------------|-------------|
-| `hasErrors` | `boolean` | Whether validation has errors | `errors.length > 0` |
-| `hasWarnings` | `boolean` | Whether validation has warnings | `warnings.length > 0` |
-| `hasInfo` | `boolean` | Whether validation has info messages | `info.length > 0` |
-| `errorCount` | `number` | Total number of errors | `errors.length` |
-| `warningCount` | `number` | Total number of warnings | `warnings.length` |
-| `infoCount` | `number` | Total number of info messages | `info.length` |
-| `totalMessageCount` | `number` | Total number of all messages | `errors.length + warnings.length + info.length` |
-| `severityLevel` | `ValidationSeverity` | Highest severity level in result | Computed from messages |
-| `hasCriticalErrors` | `boolean` | Whether validation has critical errors | Based on error severity |
+| Property            | Type                 | Description                            | Calculation                                     |
+| ------------------- | -------------------- | -------------------------------------- | ----------------------------------------------- |
+| `hasErrors`         | `boolean`            | Whether validation has errors          | `errors.length > 0`                             |
+| `hasWarnings`       | `boolean`            | Whether validation has warnings        | `warnings.length > 0`                           |
+| `hasInfo`           | `boolean`            | Whether validation has info messages   | `info.length > 0`                               |
+| `errorCount`        | `number`             | Total number of errors                 | `errors.length`                                 |
+| `warningCount`      | `number`             | Total number of warnings               | `warnings.length`                               |
+| `infoCount`         | `number`             | Total number of info messages          | `info.length`                                   |
+| `totalMessageCount` | `number`             | Total number of all messages           | `errors.length + warnings.length + info.length` |
+| `severityLevel`     | `ValidationSeverity` | Highest severity level in result       | Computed from messages                          |
+| `hasCriticalErrors` | `boolean`            | Whether validation has critical errors | Based on error severity                         |
 
 ## Methods
 
@@ -43,6 +43,7 @@ ValidationResult enables detailed feedback about validation failures, supports m
 Creates a new ValidationResult instance with the provided properties.
 
 **Parameters:**
+
 - `props.isValid`: Whether validation passed (required)
 - `props.errors`: Array of validation errors (required, can be empty)
 - `props.warnings`: Array of validation warnings (required, can be empty)
@@ -54,6 +55,7 @@ Creates a new ValidationResult instance with the provided properties.
 **Returns:** New ValidationResult instance
 
 **Business Rules:**
+
 - isValid must accurately reflect presence of errors
 - All messages must be properly structured
 - Duration must be non-negative if provided
@@ -66,6 +68,7 @@ Creates a new ValidationResult instance with the provided properties.
 Creates a successful validation result.
 
 **Parameters:**
+
 - `context`: Optional validation context
 - `metadata`: Optional result metadata
 
@@ -76,6 +79,7 @@ Creates a successful validation result.
 Creates a failed validation result with errors.
 
 **Parameters:**
+
 - `errors`: Array of validation errors
 - `context`: Optional validation context
 - `metadata`: Optional result metadata
@@ -83,6 +87,7 @@ Creates a failed validation result with errors.
 **Returns:** New ValidationResult instance indicating failure
 
 **Business Rules:**
+
 - Errors array must not be empty
 - All errors must be valid ValidationError instances
 - isValid will be automatically set to false
@@ -92,6 +97,7 @@ Creates a failed validation result with errors.
 Creates a validation result with additional errors.
 
 **Parameters:**
+
 - `errors`: Array of validation errors to add
 - `baseResult`: Optional base result to extend
 
@@ -102,6 +108,7 @@ Creates a validation result with additional errors.
 Creates a validation result with additional warnings.
 
 **Parameters:**
+
 - `warnings`: Array of validation warnings to add
 - `baseResult`: Optional base result to extend
 
@@ -112,6 +119,7 @@ Creates a validation result with additional warnings.
 Creates a validation result with additional info messages.
 
 **Parameters:**
+
 - `info`: Array of validation info messages to add
 - `baseResult`: Optional base result to extend
 
@@ -124,11 +132,13 @@ Creates a validation result with additional info messages.
 Creates a new ValidationResult with additional error.
 
 **Parameters:**
+
 - `error`: Validation error to add
 
 **Returns:** New ValidationResult instance with added error
 
 **Business Rules:**
+
 - Error must be valid ValidationError instance
 - isValid will be updated to false
 - Original result remains unchanged (immutability)
@@ -138,11 +148,13 @@ Creates a new ValidationResult with additional error.
 Creates a new ValidationResult with additional warning.
 
 **Parameters:**
+
 - `warning`: Validation warning to add
 
 **Returns:** New ValidationResult instance with added warning
 
 **Business Rules:**
+
 - Warning must be valid ValidationWarning instance
 - isValid is not affected by warnings
 - Original result remains unchanged (immutability)
@@ -152,11 +164,13 @@ Creates a new ValidationResult with additional warning.
 Creates a new ValidationResult with additional info message.
 
 **Parameters:**
+
 - `info`: Validation info message to add
 
 **Returns:** New ValidationResult instance with added info message
 
 **Business Rules:**
+
 - Info must be valid ValidationInfo instance
 - isValid is not affected by info messages
 - Original result remains unchanged (immutability)
@@ -166,11 +180,13 @@ Creates a new ValidationResult with additional info message.
 Creates a new ValidationResult with message removed.
 
 **Parameters:**
+
 - `messageId`: ID of message to remove
 
 **Returns:** New ValidationResult instance with message removed
 
 **Business Rules:**
+
 - Message must exist in the result
 - All message types can be removed
 - isValid will be recalculated if errors are removed
@@ -183,6 +199,7 @@ Creates a new ValidationResult with message removed.
 Gets a validation message by ID.
 
 **Parameters:**
+
 - `messageId`: ID of message to retrieve
 
 **Returns:** Message if found, null otherwise
@@ -192,6 +209,7 @@ Gets a validation message by ID.
 Gets all messages with a specific severity level.
 
 **Parameters:**
+
 - `severity`: Severity level to filter by
 
 **Returns:** Array of messages with specified severity
@@ -201,6 +219,7 @@ Gets all messages with a specific severity level.
 Gets all messages related to a specific path.
 
 **Parameters:**
+
 - `path`: Path to filter messages by
 
 **Returns:** Array of messages related to the path
@@ -236,11 +255,13 @@ Gets all messages as strings.
 Merges this validation result with another.
 
 **Parameters:**
+
 - `other`: Validation result to merge with
 
 **Returns:** New ValidationResult instance with combined messages
 
 **Business Rules:**
+
 - Messages from both results are combined
 - isValid is true only if both results are valid
 - Context and duration are handled appropriately
@@ -251,6 +272,7 @@ Merges this validation result with another.
 Filters messages based on a predicate function.
 
 **Parameters:**
+
 - `predicate`: Function to filter messages
 
 **Returns:** New ValidationResult instance with filtered messages
@@ -268,6 +290,7 @@ Creates a new ValidationResult with messages sorted by severity.
 **Returns:** New ValidationResult instance with sorted messages
 
 **Business Rules:**
+
 - Messages are sorted by severity (errors first, then warnings, then info)
 - Within each severity, messages maintain original order
 - Original result remains unchanged (immutability)
@@ -277,6 +300,7 @@ Creates a new ValidationResult with messages sorted by severity.
 Checks if any message has a specific error code.
 
 **Parameters:**
+
 - `code`: Error code to search for
 
 **Returns:** True if message with code exists, false otherwise
@@ -286,6 +310,7 @@ Checks if any message has a specific error code.
 Gets all messages with a specific error code.
 
 **Parameters:**
+
 - `code`: Error code to search for
 
 **Returns:** Array of messages with the specified code
@@ -315,12 +340,14 @@ Creates a detailed validation report.
 ### Result Integrity Invariants
 
 1. **Validity Consistency**: isValid must accurately reflect result state
+
    - isValid must be true only if there are no errors
    - isValid must be false if there are any errors
    - Warnings and info do not affect isValid
    - Validity must be maintained through all operations
 
 2. **Message Structure**: All validation messages must be properly structured
+
    - Messages must have valid IDs
    - Messages must have valid severity levels
    - Messages must have meaningful content
@@ -335,6 +362,7 @@ Creates a detailed validation report.
 ### Context and Metadata Invariants
 
 1. **Context Integrity**: Validation context must be properly maintained
+
    - Context must be valid if provided
    - Context must be relevant to validation
    - Context must provide meaningful information
@@ -386,6 +414,7 @@ Creates a detailed validation report.
 ### Unit Tests
 
 1. **Result Creation**
+
    - Should create successful validation result
    - Should create failed validation result with errors
    - Should create result with warnings only
@@ -393,6 +422,7 @@ Creates a detailed validation report.
    - Should handle result metadata properly
 
 2. **Message Management**
+
    - Should add error messages
    - Should add warning messages
    - Should add info messages
@@ -400,6 +430,7 @@ Creates a detailed validation report.
    - Should maintain immutability
 
 3. **Message Querying**
+
    - Should get message by ID
    - Should filter messages by severity
    - Should filter messages by path
@@ -407,6 +438,7 @@ Creates a detailed validation report.
    - Should handle missing messages
 
 4. **Result Operations**
+
    - Should merge validation results
    - Should filter messages by predicate
    - Should group messages by path
@@ -423,12 +455,14 @@ Creates a detailed validation report.
 ### Integration Tests
 
 1. **Schema Validation Integration**
+
    - Should integrate with schema validation
    - Should handle schema-specific errors
    - Should maintain schema context
    - Should provide schema-specific feedback
 
 2. **Component Validation Integration**
+
    - Should integrate with component validation
    - Should handle component-specific errors
    - Should maintain component context
@@ -446,18 +480,18 @@ Creates a detailed validation report.
 
 ```typescript
 interface ValidationResultJSON {
-  isValid: boolean;
-  errors: ValidationErrorJSON[];
-  warnings: ValidationWarningJSON[];
-  info: ValidationInfoJSON[];
-  context?: ValidationContextJSON;
-  duration?: number;
+  isValid: boolean
+  errors: ValidationErrorJSON[]
+  warnings: ValidationWarningJSON[]
+  info: ValidationInfoJSON[]
+  context?: ValidationContextJSON
+  duration?: number
   metadata: {
-    timestamp: string;
-    validator: string;
-    version: string;
-    [key: string]: any;
-  };
+    timestamp: string
+    validator: string
+    version: string
+    [key: string]: any
+  }
 }
 ```
 
@@ -480,15 +514,16 @@ interface ValidationResultJSON {
 
 ## Metadata
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Last Updated** | 2025-09-15 |
-| **Author** | Schema Management Domain Team |
-| **Status** | Draft |
-| **Dependencies** | ValidationError, ValidationWarning, ValidationInfo, ValidationContext |
-| **Complexity** | Medium |
-| **Testing Priority** | High |
-| **Review Required** | Yes |
-| **Documentation** | Complete |
-| **Breaking Changes** | None |
+| Field                | Value                                                                                                     |
+| -------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Version**          | 1.0.0                                                                                                     |
+| **Last Updated**     | 2025-09-15                                                                                                |
+| **Author**           | Schema Management Domain Team                                                                             |
+| **Status**           | Draft                                                                                                     |
+| **Dependencies**     | ValidationError, ValidationWarning, ValidationInfo, ValidationContext                                     |
+| **Complexity**       | Medium                                                                                                    |
+| **Location**         | `packages/domain/src/schema-management/schema-validation/value-objects/validation-result.value-object.ts` |
+| **Testing Priority** | High                                                                                                      |
+| **Review Required**  | Yes                                                                                                       |
+| **Documentation**    | Complete                                                                                                  |
+| **Breaking Changes** | None                                                                                                      |

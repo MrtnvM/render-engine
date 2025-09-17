@@ -64,6 +64,7 @@ This guide provides a simplified template for writing domain error specification
 
 Version: 1.0.0
 Last Updated: [Date]
+Location: `packages/domain/src/<module>/errors/<error-name>.error.ts`
 ```
 
 ## Specification Levels

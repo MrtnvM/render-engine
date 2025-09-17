@@ -1,4 +1,5 @@
 import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
+import { Name } from '../../../kernel/value-objects/name.value-object.js'
 import { DataTypeCategory, PlatformSupport } from '../../shared/enums/index.js'
 
 export interface DataTypeConstraint {
@@ -15,7 +16,7 @@ export interface DataTypeMetadata {
 }
 
 export interface DataTypeProps {
-  name: string
+  name: Name
   type: DataTypeCategory
   baseType?: DataType | null
   constraints?: DataTypeConstraint[]
@@ -53,7 +54,7 @@ export class DataType extends ValueObject<DataTypeProps> {
     super(props)
   }
 
-  get name(): string {
+  get name(): Name {
     return this.value.name
   }
 
@@ -406,13 +407,14 @@ export class DataType extends ValueObject<DataTypeProps> {
   }
 
   public static primitive(name: string, defaultValue?: unknown): DataType {
+    const nameValueObject = Name.create(name)
     const type = this.getPrimitiveType(name)
     if (!type) {
       throw new Error(`Invalid primitive type: ${name}`)
     }
 
     return DataType.create({
-      name,
+      name: nameValueObject,
       type,
       defaultValue,
       isBuiltIn: true,
@@ -421,8 +423,9 @@ export class DataType extends ValueObject<DataTypeProps> {
   }
 
   public static complex(name: string, baseType?: DataType): DataType {
+    const nameValueObject = Name.create(name)
     return DataType.create({
-      name,
+      name: nameValueObject,
       type: DataTypeCategory.OBJECT,
       baseType,
       platformSupport: baseType?.platformSupport || [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID],
@@ -435,8 +438,9 @@ export class DataType extends ValueObject<DataTypeProps> {
     validator: (value: unknown) => boolean,
     platformSupport: PlatformSupport[] = [PlatformSupport.WEB, PlatformSupport.IOS, PlatformSupport.ANDROID],
   ): DataType {
+    const nameValueObject = Name.create(name)
     return DataType.create({
-      name,
+      name: nameValueObject,
       type: category,
       platformSupport,
     })

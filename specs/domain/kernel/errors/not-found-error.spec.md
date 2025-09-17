@@ -70,6 +70,7 @@ NotFoundError represents failures that occur when a requested resource, entity, 
 ### Static Factory Methods
 
 - `static forEntity(entityType: string, entityId: string): NotFoundError`
+
   - **Purpose**: Creates a not found error for a missing entity
   - **Parameters**: Entity type and entity identifier
   - **Returns**: NotFoundError with detailed entity not found information
@@ -147,3 +148,4 @@ NotFoundError represents failures that occur when a requested resource, entity, 
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/not-found.error.ts`

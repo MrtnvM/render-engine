@@ -150,3 +150,4 @@ BusinessRuleViolationError represents failures that occur when business rules or
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/business-rule-violation.error.ts`

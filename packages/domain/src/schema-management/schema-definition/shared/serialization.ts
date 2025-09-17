@@ -133,7 +133,7 @@ export class SchemaSerializer {
     }
 
     // Check for any circular references in the schema object itself
-    for (const [key, value] of Object.entries(schema)) {
+    for (const [, value] of Object.entries(schema)) {
       if (typeof value === 'object' && value !== null && seen.has(value)) {
         throw new Error('Circular reference detected')
       }

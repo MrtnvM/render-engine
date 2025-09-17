@@ -1,7 +1,9 @@
 import { SchemaStatus } from '../enums/index.js'
+import { Name } from '../../../kernel/value-objects/name.value-object.js'
+import { Description } from '../../../kernel/value-objects/description.value-object.js'
 
 export interface SchemaValidationRuleInterface {
-  name: string
+  name: Name
   toJSON(): any
 }
 
@@ -42,6 +44,6 @@ export interface SchemaChange {
   type: 'add' | 'remove' | 'update' | 'rename'
   target: 'component' | 'property' | 'validation'
   targetId: string
-  description: string
+  description: Description
   impact: 'low' | 'medium' | 'high'
 }

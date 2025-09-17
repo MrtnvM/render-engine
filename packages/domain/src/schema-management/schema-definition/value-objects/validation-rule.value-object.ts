@@ -1,4 +1,5 @@
 import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
+import { Name } from '../../../kernel/value-objects/name.value-object.js'
 import { DataType } from './data-type.value-object.js'
 import { SchemaValidationRuleType, SchemaValidationSeverity } from '../../shared/enums/index.js'
 
@@ -18,7 +19,7 @@ export interface SchemaValidationRuleMetadata {
 }
 
 export interface SchemaValidationRuleProps {
-  name: string
+  name: Name
   type: SchemaValidationRuleType
   displayName: string
   description?: string | null
@@ -63,7 +64,7 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
     super(props)
   }
 
-  get name(): string {
+  get name(): Name {
     return this.value.name
   }
 
@@ -609,8 +610,9 @@ export class SchemaValidationRule extends ValueObject<SchemaValidationRuleProps>
     displayName: string,
     parameters: SchemaValidationRuleParameter[] = [],
   ): SchemaValidationRule {
+    const nameValueObject = Name.create(name)
     return SchemaValidationRule.create({
-      name,
+      name: nameValueObject,
       type,
       displayName,
       parameters,

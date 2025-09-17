@@ -1,6 +1,6 @@
-import { injectable } from "tsyringe"
-import { BaseLogger, LogLevel } from "@render-engine/domain"
-import type { LoggerOptions, LogContext } from "@render-engine/domain"
+import { injectable } from 'tsyringe'
+import { BaseLogger, LogLevel } from '@render-engine/domain'
+import type { LoggerOptions, LogContext } from '@render-engine/domain'
 
 @injectable()
 export class ConsoleLoggerService extends BaseLogger<LoggerOptions> {

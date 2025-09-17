@@ -71,7 +71,7 @@ describe('Validation System', () => {
 
         expect(rule.validate(123).isValid).toBe(true)
         expect(rule.validate('123').isValid).toBe(false)
-        expect(rule.validate(NaN).isValid).toBe(false)
+        expect(rule.validate(Number.NaN).isValid).toBe(false)
       })
 
       it('should validate boolean type', () => {

@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import 'reflect-metadata'
 
 // Mock console methods to suppress debug output during tests
 export const originalConsole = {

@@ -62,6 +62,7 @@ This guide provides a simplified template for writing value object specification
 
 Version: 1.0.0
 Last Updated: [Date]
+Location: `packages/domain/src/<module>/value-objects/<value-object-name>.value-object.ts`
 ```
 
 ## Specification Levels

@@ -10,18 +10,18 @@ Properties are fundamental building blocks that enable dynamic configuration of 
 
 ### Core Properties
 
-| Property          | Type                   | Description                                       | Constraints                                                          |
-| ----------------- | ---------------------- | ------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------ |
-| `name`            | `PropertyName`         | Unique name for the property within the component | Required, min 1 char, max 50 chars, alphanumeric + underscore/hyphen |
-| `type`            | `DataType`             | Data type of the property                         | Required, must be valid DataType                                     |
-| `description`     | `ComponentDescription` | Description of the property                       | Can be empty, max 500 chars                                          |
-| `defaultValue`    | `unknown               | null`                                             | Default value for the property                                       | Optional, must match data type |
-| `isRequired`      | `boolean`              | Whether the property is required                  | Required, default: false                                             |
-| `isReadOnly`      | `boolean`              | Whether the property is read-only                 | Required, default: false                                             |
-| `validationRules` | `ValidationRule[]`     | Array of validation rules for the property        | Optional array                                                       |
-| `bindingOptions`  | `BindingOptions        | null`                                             | Data binding configuration                                           | Optional                       |
-| `uiHint`          | `UIHint                | null`                                             | UI rendering hints                                                   | Optional                       |
-| `metadata`        | `PropertyMetadata`     | Additional property metadata                      | Required                                                             |
+| Property          | Type               | Description                                       | Constraints                                 |
+| ----------------- | ------------------ | ------------------------------------------------- | ------------------------------------------- | ------------------------------ |
+| `name`            | `Name`             | Unique name for the property within the component | Required, uses Name value object validation |
+| `type`            | `DataType`         | Data type of the property                         | Required, must be valid DataType            |
+| `description`     | `Description`      | Description of the property                       | Optional, uses Description value object     |
+| `defaultValue`    | `unknown           | null`                                             | Default value for the property              | Optional, must match data type |
+| `isRequired`      | `boolean`          | Whether the property is required                  | Required, default: false                    |
+| `isReadOnly`      | `boolean`          | Whether the property is read-only                 | Required, default: false                    |
+| `validationRules` | `ValidationRule[]` | Array of validation rules for the property        | Optional array                              |
+| `bindingOptions`  | `BindingOptions    | null`                                             | Data binding configuration                  | Optional                       |
+| `uiHint`          | `UIHint            | null`                                             | UI rendering hints                          | Optional                       |
+| `metadata`        | `PropertyMetadata` | Additional property metadata                      | Required                                    |
 
 ### Derived Properties
 
@@ -363,6 +363,8 @@ Creates a clone of an existing property with optional new name.
 ### Internal Dependencies
 
 - `DataType`: Value object for data type definitions
+- `Name`: Value object for property names from kernel
+- `Description`: Value object for property descriptions from kernel
 - `ValidationRule`: Value object for validation rules
 - `BindingOptions`: Value object for binding configuration
 - `UIHint`: Value object for UI rendering hints
@@ -498,15 +500,16 @@ interface PropertyJSON {
 
 ## Metadata
 
-| Field                | Value                                            |
-| -------------------- | ------------------------------------------------ |
-| **Version**          | 1.0.0                                            |
-| **Last Updated**     | 2025-09-15                                       |
-| **Author**           | Schema Management Domain Team                    |
-| **Status**           | Draft                                            |
-| **Dependencies**     | DataType, ValidationRule, BindingOptions, UIHint |
-| **Complexity**       | Medium                                           |
-| **Testing Priority** | High                                             |
-| **Review Required**  | Yes                                              |
-| **Documentation**    | Complete                                         |
-| **Breaking Changes** | None                                             |
+| Field                | Value                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| **Version**          | 1.0.0                                                                                            |
+| **Last Updated**     | 2025-09-15                                                                                       |
+| **Author**           | Schema Management Domain Team                                                                    |
+| **Status**           | Draft                                                                                            |
+| **Dependencies**     | DataType, ValidationRule, BindingOptions, UIHint                                                 |
+| **Complexity**       | Medium                                                                                           |
+| **Location**         | `packages/domain/src/schema-management/schema-definition/value-objects/property.value-object.ts` |
+| **Testing Priority** | High                                                                                             |
+| **Review Required**  | Yes                                                                                              |
+| **Documentation**    | Complete                                                                                         |
+| **Breaking Changes** | None                                                                                             |

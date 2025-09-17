@@ -71,3 +71,4 @@ console.log(desc1.equals(desc2)) // false
 
 Version: 1.0.0
 Last Updated: 2025-09-16
+Location: `packages/domain/src/kernel/value-objects/description.value-object.ts`

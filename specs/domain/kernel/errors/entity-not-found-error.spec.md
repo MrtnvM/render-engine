@@ -144,3 +144,4 @@ EntityNotFoundError represents failures that occur when an entity cannot be foun
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/entity-not-found.error.ts`

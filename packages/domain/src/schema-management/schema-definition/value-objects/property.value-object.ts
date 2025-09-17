@@ -1,4 +1,5 @@
 import { ValueObject } from '../../../kernel/value-objects/base.value-object.js'
+import { Name } from '../../../kernel/value-objects/name.value-object.js'
 import { DataType } from './data-type.value-object.js'
 import { SchemaValidationRule } from './validation-rule.value-object.js'
 
@@ -26,7 +27,7 @@ export interface PropertyMetadata {
 }
 
 export interface PropertyProps {
-  name: string
+  name: Name
   type: DataType
   displayName: string
   description?: string | null
@@ -69,7 +70,7 @@ export class Property extends ValueObject<PropertyProps> {
     super(props)
   }
 
-  get name(): string {
+  get name(): Name {
     return this.value.name
   }
 
@@ -249,11 +250,11 @@ export class Property extends ValueObject<PropertyProps> {
   }
 
   public hasValidationRule(ruleName: string): boolean {
-    return this.validationRules.some((rule) => rule.name === ruleName)
+    return this.validationRules.some((rule) => rule.name.toString() === ruleName)
   }
 
   public getValidationRule(ruleName: string): SchemaValidationRule | null {
-    return this.validationRules.find((rule) => rule.name === ruleName) || null
+    return this.validationRules.find((rule) => rule.name.toString() === ruleName) || null
   }
 
   public getRequiredValidationRules(): SchemaValidationRule[] {
@@ -268,16 +269,10 @@ export class Property extends ValueObject<PropertyProps> {
     return this.value
   }
 
-  private static validateName(name: string): void {
-    const nameRegex = /^[a-z][\w-]*$/i
-    if (!nameRegex.test(name)) {
-      throw new Error(
-        `Property name '${name}' is invalid. Must start with a letter and contain only letters, numbers, underscores, and hyphens.`,
-      )
-    }
-
-    if (name.length < 1 || name.length > 50) {
-      throw new Error(`Property name '${name}' must be between 1 and 50 characters long`)
+  private static validateName(name: Name): void {
+    // Name value object already handles validation
+    if (!name) {
+      throw new Error('Property name is required')
     }
   }
 
@@ -314,6 +309,7 @@ export class Property extends ValueObject<PropertyProps> {
   }
 
   public static fromType(type: DataType, name: string, displayName: string): Property {
+    const nameValueObject = Name.create(name)
     const defaultValue = type.defaultValue
     const uiHint: UIHint = {
       widget: this.getDefaultWidget(type.type),
@@ -321,7 +317,7 @@ export class Property extends ValueObject<PropertyProps> {
     }
 
     return Property.create({
-      name,
+      name: nameValueObject,
       type,
       displayName,
       defaultValue,

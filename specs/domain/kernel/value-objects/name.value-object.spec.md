@@ -68,3 +68,4 @@ console.log(name1.equals(name2)) // false
 
 Version: 1.0.0
 Last Updated: 2025-09-16
+Location: `packages/domain/src/kernel/value-objects/name.value-object.ts`

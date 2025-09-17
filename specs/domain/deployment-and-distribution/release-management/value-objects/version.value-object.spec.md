@@ -6,34 +6,37 @@ The Version value object represents a semantic version number following the Sema
 
 ## Properties
 
-| Name | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| major | number | Yes | - | Major version number (incompatible API changes) |
-| minor | number | Yes | - | Minor version number (add functionality in backward compatible manner) |
-| patch | number | Yes | - | Patch version number (backward compatible bug fixes) |
-| preRelease | string | No | null | Pre-release identifier (e.g., "alpha", "beta.1") |
-| buildMetadata | string | No | null | Build metadata (e.g., "build.123", "exp.sha.5114f85") |
+- major: number - Major version number (incompatible API changes)
+- minor: number - Minor version number (add functionality in backward compatible manner)
+- patch: number - Patch version number (backward compatible bug fixes)
+- preRelease: string | null - Pre-release identifier (e.g., "alpha", "beta.1")
+- buildMetadata: string | null - Build metadata (e.g., "build.123", "exp.sha.5114f85")
 
 ## Methods
 
-### create(versionString: string): Version
+### Factory Methods
+
+#### create(versionString: string): Version
 
 Creates a new Version instance from a version string.
 
 **Parameters:**
+
 - `versionString`: String in format "MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]"
 
 **Returns:** New Version instance
 
 **Throws:**
+
 - `InvalidVersionError` if version string format is invalid
 - `InvalidVersionComponentError` if any version component is invalid
 
-### fromComponents(major: number, minor: number, patch: number, preRelease?: string, buildMetadata?: string): Version
+#### fromComponents(major: number, minor: number, patch: number, preRelease?: string, buildMetadata?: string): Version
 
 Creates a new Version instance from individual components.
 
 **Parameters:**
+
 - `major`: Major version number (non-negative integer)
 - `minor`: Minor version number (non-negative integer)
 - `patch`: Patch version number (non-negative integer)
@@ -43,84 +46,114 @@ Creates a new Version instance from individual components.
 **Returns:** New Version instance
 
 **Throws:**
+
 - `InvalidVersionComponentError` if any component is invalid
 
-### toString(): string
+#### latest(): Version
+
+Returns the latest stable version (0.0.0).
+
+**Returns:** Version instance representing 0.0.0
+
+#### min(): Version
+
+Returns the minimum possible version (0.0.0).
+
+**Returns:** Version instance representing 0.0.0
+
+#### parse(versionString: string): Version | null
+
+Parses a version string, returning null if invalid.
+
+**Parameters:**
+
+- `versionString`: String to parse
+
+**Returns:** Version instance or null if invalid
+
+### Business Methods
+
+#### toString(): string
 
 Returns the string representation of the version.
 
 **Returns:** Version string in standard format
 
-### equals(other: Version): boolean
+#### equals(other: Version): boolean
 
 Compares this version with another version for equality.
 
 **Parameters:**
+
 - `other`: Version to compare with
 
 **Returns:** True if versions are equal, false otherwise
 
-### compareTo(other: Version): number
+#### compareTo(other: Version): number
 
 Compares this version with another version.
 
 **Parameters:**
+
 - `other`: Version to compare with
 
 **Returns:**
+
 - -1 if this version is older than other
 - 0 if versions are equal
 - 1 if this version is newer than other
 
-### incrementMajor(): Version
+#### incrementMajor(): Version
 
 Returns a new version with incremented major number.
 
 **Returns:** New Version instance with major incremented
 
-### incrementMinor(): Version
+#### incrementMinor(): Version
 
 Returns a new version with incremented minor number.
 
 **Returns:** New Version instance with minor incremented
 
-### incrementPatch(): Version
+#### incrementPatch(): Version
 
 Returns a new version with incremented patch number.
 
 **Returns:** New Version instance with patch incremented
 
-### withPreRelease(preRelease: string): Version
+#### withPreRelease(preRelease: string): Version
 
 Returns a new version with the specified pre-release identifier.
 
 **Parameters:**
+
 - `preRelease`: Pre-release identifier
 
 **Returns:** New Version instance with pre-release identifier
 
-### withBuildMetadata(buildMetadata: string): Version
+#### withBuildMetadata(buildMetadata: string): Version
 
 Returns a new version with the specified build metadata.
 
 **Parameters:**
+
 - `buildMetadata`: Build metadata
 
 **Returns:** New Version instance with build metadata
 
-### isStable(): boolean
+#### isStable(): boolean
 
 Checks if the version is stable (no pre-release identifier).
 
 **Returns:** True if version is stable, false otherwise
 
-### isPreRelease(): boolean
+#### isPreRelease(): boolean
 
 Checks if the version has a pre-release identifier.
 
 **Returns:** True if version is pre-release, false otherwise
 
-## Business Rules & Invariants
+## Business Rules
 
 1. **Version Format**: Must follow Semantic Versioning 2.0.0 format
 2. **Non-Negative Components**: Major, minor, and patch must be non-negative integers
@@ -133,85 +166,24 @@ Checks if the version has a pre-release identifier.
 
 ## Dependencies
 
-- None - This is a primitive value object
-
-## Factory Methods
-
-### latest(): Version
-
-Returns the latest stable version (0.0.0).
-
-**Returns:** Version instance representing 0.0.0
-
-### min(): Version
-
-Returns the minimum possible version (0.0.0).
-
-**Returns:** Version instance representing 0.0.0
-
-### parse(versionString: string): Version | null
-
-Parses a version string, returning null if invalid.
-
-**Parameters:**
-- `versionString`: String to parse
-
-**Returns:** Version instance or null if invalid
+- **ValueObject<T>** - Base class (provides automatic toJSON serialization)
+- **InvalidVersionError** - Thrown when version string format is invalid
+- **InvalidVersionComponentError** - Thrown when version component is invalid
 
 ## Tests
 
-### Unit Tests
+### Essential Tests
 
-1. **Version Creation**
-   - Should create valid version from string
-   - Should throw error for invalid format
-   - Should create version from components
-   - Should handle edge cases
-
-2. **Version Comparison**
-   - Should compare major versions correctly
-   - Should compare minor versions correctly
-   - Should compare patch versions correctly
-   - Should handle pre-release versions
-   - Should ignore build metadata in comparison
-
-3. **Version Increment**
-   - Should increment major version
-   - Should increment minor version
-   - Should increment patch version
-   - Should reset lower versions on increment
-
-4. **Pre-Release Handling**
-   - Should handle pre-release identifiers
-   - Should validate pre-release format
-   - Should compare pre-release versions
-   - Should identify stable vs pre-release
-
-5. **Build Metadata**
-   - Should handle build metadata
-   - Should validate build metadata format
-   - Should ignore build metadata in comparison
-   - Should include build metadata in string representation
-
-6. **Edge Cases**
-   - Should handle maximum version numbers
-   - Should handle minimum version numbers
-   - Should handle empty strings
-   - Should handle null/undefined inputs
-
-### Integration Tests
-
-1. **Semantic Versioning Compliance**
-   - Should comply with SemVer 2.0.0 specification
-   - Should handle standard version ranges
-   - Should work with version comparison libraries
-   - Should integrate with release management
-
-2. **Version Sorting**
-   - Should sort versions correctly
-   - Should handle large version arrays
-   - Should maintain sort stability
-   - Should work with comparison functions
+- Create with valid/invalid version strings
+- Create from individual components with valid/invalid values
+- Equality comparison between versions
+- Version comparison and ordering
+- Serialization/deserialization to/from JSON
+- Version increment operations (major, minor, patch)
+- Pre-release identifier handling and validation
+- Build metadata handling and validation
+- Semantic versioning compliance
+- Edge cases and boundary conditions
 
 ## Serialization
 
@@ -237,7 +209,8 @@ Parses a version string, returning null if invalid.
 ## Metadata
 
 Version: 1.0.0
-Last Updated: 2025-09-15
+Last Updated: 2025-09-16
+Location: `packages/domain/src/deployment-and-distribution/release-management/value-objects/version.value-object.ts`
 Status: Draft
 Author: Deployment Domain Team
 Bounded Context: Release Management

@@ -4,32 +4,35 @@
 
 The Experiment entity manages A/B testing experiments for different schema versions. It handles experiment configuration, variant distribution, user segmentation, and result analysis to enable data-driven schema optimization.
 
-## Fields
+## Data Structure
 
-| Name | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| id | ID | Yes | - | Unique identifier for the experiment |
-| name | string | Yes | - | Human-readable name for the experiment |
-| description | string | No | "" | Detailed description of the experiment |
-| status | ExperimentStatus | Yes | - | Current status of the experiment |
-| variants | Variant[] | Yes | [] | Variants being tested in the experiment |
-| testGroups | TestGroup[] | Yes | [] | User groups participating in the experiment |
-| metrics | TestMetrics | Yes | - | Performance metrics for the experiment |
-| startDate | Date | No | - | Timestamp when the experiment starts |
-| endDate | Date | No | - | Timestamp when the experiment ends |
-| targetAudience | TargetAudience | Yes | - | Target audience for the experiment |
-| successCriteria | SuccessCriteria | Yes | - | Criteria for determining experiment success |
-| createdBy | ID | Yes | - | User who created the experiment |
-| createdAt | Date | Yes | - | Timestamp when the experiment was created |
-| updatedAt | Date | Yes | - | Timestamp when the experiment was last updated |
+| Name            | Type             | Required | Default | Description                                        |
+| --------------- | ---------------- | -------- | ------- | -------------------------------------------------- |
+| id              | ID               | Yes      | -       | Unique identifier for the experiment               |
+| name            | Name             | Yes      | -       | Human-readable name for the experiment             |
+| description     | Description      | No       | -       | Detailed description of the experiment             |
+| status          | ExperimentStatus | Yes      | -       | Current status of the experiment                   |
+| variantIds      | ID[]             | Yes      | []      | IDs of variants being tested in the experiment     |
+| testGroupIds    | ID[]             | Yes      | []      | IDs of user groups participating in the experiment |
+| metrics         | TestMetrics      | Yes      | -       | Performance metrics for the experiment             |
+| startDate       | Date             | No       | -       | Timestamp when the experiment starts               |
+| endDate         | Date             | No       | -       | Timestamp when the experiment ends                 |
+| targetAudience  | TargetAudience   | Yes      | -       | Target audience for the experiment                 |
+| successCriteria | SuccessCriteria  | Yes      | -       | Criteria for determining experiment success        |
+| createdBy       | ID               | Yes      | -       | User who created the experiment                    |
+| createdAt       | Date             | Yes      | -       | Timestamp when the experiment was created          |
+| updatedAt       | Date             | Yes      | -       | Timestamp when the experiment was last updated     |
 
 ## Methods
 
-### create(params: CreateExperimentParams): Experiment
+### Factory Methods
+
+#### create(params: CreateExperimentParams): Experiment
 
 Creates a new experiment with the specified parameters.
 
 **Parameters:**
+
 - `params`: Object containing:
   - `name`: Human-readable name for the experiment
   - `description`: Optional detailed description
@@ -41,88 +44,110 @@ Creates a new experiment with the specified parameters.
 **Returns:** New Experiment instance
 
 **Throws:**
+
 - `InvalidExperimentError` if required parameters are missing or invalid
 - `InsufficientVariantsError` if fewer than 2 variants are provided
 
-### start(): void
+**Emits:** ExperimentCreatedEvent
+
+### Business Methods
+
+#### start(): void
 
 Starts the experiment.
 
 **Returns:** void
 
 **Throws:**
+
 - `ExperimentAlreadyStartedError` if experiment is already started
 - `ExperimentConfigurationError` if experiment is not properly configured
 
-### stop(): void
+**Emits:** ExperimentStartedEvent
+
+#### stop(): void
 
 Stops the experiment and finalizes results.
 
 **Returns:** void
 
 **Throws:**
+
 - `ExperimentNotStartedError` if experiment is not started
 - `ExperimentAlreadyStoppedError` if experiment is already stopped
 
-### addVariant(variant: Variant): void
+**Emits:** ExperimentStoppedEvent
 
-Adds a new variant to the experiment.
+#### addVariant(variantId: ID): void
+
+Adds a new variant to the experiment by ID.
 
 **Parameters:**
-- `variant`: Variant to add to the experiment
+
+- `variantId`: ID of the variant to add to the experiment
 
 **Returns:** void
 
 **Throws:**
+
 - `InvalidVariantError` if variant is invalid
 - `ExperimentAlreadyStartedError` if experiment is already started
 - `DuplicateVariantError` if variant already exists
 
-### removeVariant(variantId: ID): void
+#### removeVariant(variantId: ID): void
 
 Removes a variant from the experiment.
 
 **Parameters:**
+
 - `variantId`: ID of the variant to remove
 
 **Returns:** void
 
 **Throws:**
+
 - `VariantNotFoundError` if variant not found
 - `ExperimentAlreadyStartedError` if experiment is already started
 - `CannotRemoveLastVariantError` if removing the last variant
 
-### updateVariant(variantId: ID, updates: Partial<Variant>): void
+#### updateVariant(variantId: ID, updates: Partial<Variant>): void
 
 Updates a variant in the experiment.
 
 **Parameters:**
+
 - `variantId`: ID of the variant to update
 - `updates`: Partial variant object with updates
 
 **Returns:** void
 
 **Throws:**
+
 - `VariantNotFoundError` if variant not found
 - `ExperimentAlreadyStartedError` if experiment is already started
 
-### assignUserToVariant(userId: ID): Variant | null
+#### assignUserToVariant(userId: ID): ID | null
 
-Assigns a user to a variant based on distribution rules.
+Assigns a user to a variant based on distribution rules using consistent hashing.
 
 **Parameters:**
+
 - `userId`: User ID to assign
 
-**Returns:** Assigned variant or null if user not in target audience
+**Returns:** ID of the assigned variant or null if user not in target audience
 
 **Throws:**
+
 - `ExperimentNotStartedError` if experiment is not started
 
-### recordMetric(userId: ID, metricName: string, value: number): void
+**Emits:** UserAssignedEvent
+
+#### recordMetric(userId: ID, metricName: string, value: number): void
 
 Records a performance metric for a user.
 
 **Parameters:**
+
 - `userId`: User ID
 - `metricName`: Name of the metric
 - `value`: Metric value
@@ -130,38 +155,52 @@ Records a performance metric for a user.
 **Returns:** void
 
 **Throws:**
+
 - `InvalidMetricError` if metric is invalid
 - `UserNotInExperimentError` if user is not in the experiment
 
-### calculateResults(): ExperimentResults
+**Emits:** MetricRecordedEvent
 
-Calculates and returns the experiment results.
+#### validateStatisticalSignificance(): StatisticalSignificance
+
+Validates whether the experiment results meet statistical significance requirements.
+
+**Returns:** StatisticalSignificance object containing validation results
+
+**Throws:**
+
+- `InsufficientDataError` if not enough data is available
+- `ExperimentNotStoppedError` if experiment is still running
+
+**Business Rules:**
+
+- Uses chi-square test for categorical data
+- Uses t-test for continuous data
+- Requires minimum sample size of 1000 users per variant
+- Requires 95% confidence interval (p-value < 0.05)
+
+#### calculateResults(): ExperimentResults
+
+Calculates and returns the experiment results with statistical analysis.
 
 **Returns:** Experiment results with statistical analysis
 
 **Throws:**
+
 - `InsufficientDataError` if not enough data is available
 - `ExperimentNotStoppedError` if experiment is still running
 
-### isUserInExperiment(userId: ID): boolean
+#### getUserVariant(userId: ID): ID | null
 
-Checks if a user is participating in the experiment.
-
-**Parameters:**
-- `userId`: User ID to check
-
-**Returns:** True if user is in the experiment, false otherwise
-
-### getUserVariant(userId: ID): Variant | null
-
-Gets the variant assigned to a user.
+Gets the variant ID assigned to a user.
 
 **Parameters:**
+
 - `userId`: User ID
 
-**Returns:** User's variant or null if not assigned
+**Returns:** User's variant ID or null if not assigned
 
-## Business Rules & Invariants
+## Business Rules
 
 1. **Random Distribution**: Test variants must be randomly distributed among users
 2. **Success Criteria**: Experiments must have clear, measurable success criteria
@@ -174,13 +213,47 @@ Gets the variant assigned to a user.
 
 ## Dependencies
 
-- **ID**: From `@render-engine/domain` - Unique identifier
-- **ExperimentStatus**: Value object for experiment status
-- **Variant**: Entity for experiment variants
-- **TestGroup**: Entity for user test groups
-- **TestMetrics**: Value object for test metrics
-- **TargetAudience**: Value object for target audience
-- **SuccessCriteria**: Value object for success criteria
+### Base Classes
+
+- `Entity`
+
+### Value Objects
+
+- `ID` - Unique identifier
+- `Name` - Human-readable name from kernel
+- `Description` - Human-readable description from kernel
+- `SemanticVersion` - Semantic versioning from kernel
+- `ExperimentStatus`, `TestMetrics`, `TargetAudience`, `SuccessCriteria`
+- `DistributionPercentage`, `ConversionRate`, `StatisticalSignificance`
+
+### Domain Events
+
+- `ExperimentCreatedEvent`, `ExperimentStartedEvent`, `ExperimentStoppedEvent`, `UserAssignedEvent`, `MetricRecordedEvent`
+
+### Domain Errors
+
+- `InvalidExperimentError`, `InsufficientVariantsError`, `ExperimentAlreadyStartedError`, `ExperimentConfigurationError`, `ExperimentNotStartedError`, `ExperimentAlreadyStoppedError`, `InvalidVariantError`, `DuplicateVariantError`, `VariantNotFoundError`, `CannotRemoveLastVariantError`, `InvalidMetricError`, `UserNotInExperimentError`, `InsufficientDataError`, `ExperimentNotStoppedError`
+
+### Repository Interface
+
+```typescript
+interface IExperimentRepository {
+  // CRUD operations
+  findById(id: ID): Promise<Experiment | null>
+  save(experiment: Experiment): Promise<void>
+  delete(id: ID): Promise<void>
+
+  // Query operations
+  findByStatus(status: ExperimentStatus): Promise<Experiment[]>
+  findByVariant(variantId: ID): Promise<Experiment[]>
+  findActiveExperiments(): Promise<Experiment[]>
+  findExperimentsByUser(userId: ID): Promise<Experiment[]>
+
+  // Statistics operations
+  getExperimentStatistics(experimentId: ID): Promise<ExperimentResults>
+  getUserAssignmentHistory(userId: ID, experimentId: ID): Promise<UserAssignment[]>
+}
+```
 
 ## Events
 
@@ -189,11 +262,12 @@ Gets the variant assigned to a user.
 Emitted when a new experiment is created.
 
 **Payload:**
+
 ```typescript
 {
   experimentId: ID;
   name: string;
-  variants: string[];
+  variantIds: ID[];
   targetAudience: string;
   createdBy: ID;
   createdAt: Date;
@@ -205,6 +279,7 @@ Emitted when a new experiment is created.
 Emitted when an experiment is started.
 
 **Payload:**
+
 ```typescript
 {
   experimentId: ID;
@@ -218,11 +293,12 @@ Emitted when an experiment is started.
 Emitted when an experiment is stopped.
 
 **Payload:**
+
 ```typescript
 {
-  experimentId: ID;
-  stoppedAt: Date;
-  finalResults: ExperimentResults;
+  experimentId: ID
+  stoppedAt: Date
+  finalResults: ExperimentResults
 }
 ```
 
@@ -231,12 +307,13 @@ Emitted when an experiment is stopped.
 Emitted when a user is assigned to a variant.
 
 **Payload:**
+
 ```typescript
 {
-  experimentId: ID;
-  userId: ID;
-  variantId: ID;
-  assignedAt: Date;
+  experimentId: ID
+  userId: ID
+  variantId: ID
+  assignedAt: Date
 }
 ```
 
@@ -245,69 +322,31 @@ Emitted when a user is assigned to a variant.
 Emitted when a metric is recorded.
 
 **Payload:**
+
 ```typescript
 {
-  experimentId: ID;
-  userId: ID;
-  metricName: string;
-  value: number;
-  recordedAt: Date;
+  experimentId: ID
+  userId: ID
+  metricName: string
+  value: number
+  recordedAt: Date
 }
 ```
 
 ## Tests
 
-### Unit Tests
+### Essential Tests
 
-1. **Experiment Creation**
-   - Should create experiment with valid parameters
-   - Should throw error with missing required parameters
-   - Should validate minimum variants
-   - Should set initial status to DRAFT
-
-2. **Experiment Lifecycle**
-   - Should start experiment when configured
-   - Should stop experiment and finalize results
-   - Should handle lifecycle state transitions
-   - Should validate configuration before starting
-
-3. **Variant Management**
-   - Should add variant to experiment
-   - Should remove variant from experiment
-   - Should update variant configuration
-   - Should handle variant validation
-
-4. **User Assignment**
-   - Should assign users to variants randomly
-   - Should maintain user consistency
-   - Should handle target audience filtering
-   - Should track user assignments
-
-5. **Metrics Collection**
-   - Should record user metrics
-   - Should validate metric format
-   - Should aggregate metrics by variant
-   - Should handle metric persistence
-
-6. **Results Calculation**
-   - Should calculate experiment results
-   - Should perform statistical analysis
-   - Should determine statistical significance
-   - Should handle insufficient data
-
-### Integration Tests
-
-1. **End-to-End Experiment**
-   - Should handle complete experiment lifecycle
-   - Should integrate with user management
-   - Should handle real-time data collection
-   - Should support result analysis
-
-2. **Multi-Variant Testing**
-   - Should handle multiple variants
-   - Should maintain distribution balance
-   - Should handle variant performance tracking
-   - Should support dynamic variant allocation
+- Factory method with valid/invalid parameters
+- Business method behavior and events
+- Serialization and equality
+- Variant management operations
+- User assignment and consistency
+- Metrics collection and validation
+- Results calculation and analysis
+- Statistical significance validation
+- User assignment consistency across multiple requests
+- Experiment isolation and contamination prevention
 
 ## Serialization
 
@@ -319,30 +358,17 @@ Emitted when a metric is recorded.
   "name": "Button Color A/B Test",
   "description": "Testing different button colors for conversion optimization",
   "status": "RUNNING",
-  "variants": [
-    {
-      "id": "550e8400-e29b-41d4-a716-446655440001",
-      "name": "Control",
-      "schemaVersion": "1.0.0",
-      "distribution": 0.5
-    },
-    {
-      "id": "550e8400-e29b-41d4-a716-446655440002",
-      "name": "Variant A",
-      "schemaVersion": "1.1.0",
-      "distribution": 0.5
-    }
-  ],
-  "testGroups": [],
+  "variantIds": ["550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002"],
+  "testGroupIds": [],
   "metrics": {
     "totalUsers": 1000,
     "conversions": {
-      "Control": 150,
-      "Variant A": 175
+      "550e8400-e29b-41d4-a716-446655440001": 150,
+      "550e8400-e29b-41d4-a716-446655440002": 175
     },
     "conversionRates": {
-      "Control": 0.15,
-      "Variant A": 0.175
+      "550e8400-e29b-41d4-a716-446655440001": 0.15,
+      "550e8400-e29b-41d4-a716-446655440002": 0.175
     }
   },
   "startDate": "2025-01-15T08:00:00Z",
@@ -374,7 +400,8 @@ Emitted when a metric is recorded.
 ## Metadata
 
 Version: 1.0.0
-Last Updated: 2025-09-15
+Last Updated: 2025-09-16
+Location: `packages/domain/src/deployment-and-distribution/ab-testing/entities/experiment.entity.ts`
 Status: Draft
 Author: Deployment Domain Team
 Bounded Context: A/B Testing

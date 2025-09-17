@@ -10,30 +10,30 @@ DataType supports primitive types, complex types, platform-specific types, and c
 
 ### Core Properties
 
-| Property | Type | Description | Constraints |
-|----------|------|-------------|-------------|
-| `name` | `string` | Name of the data type | Required, min 1 char, max 50 chars |
-| `type` | `DataTypeCategory` | Category of the data type | Required, must be valid DataTypeCategory |
-| `baseType` | `DataType | null` | Base type for inheritance | Optional, must be valid if present |
-| `constraints` | `DataTypeConstraint[]` | Type-specific constraints | Optional array |
-| `defaultValue` | `unknown | null` | Default value for the type | Optional, must match type |
-| `isBuiltIn` | `boolean` | Whether this is a built-in type | Required, default: false |
-| `isAbstract` | `boolean` | Whether this is an abstract type | Required, default: false |
-| `platformSupport` | `PlatformSupport[]` | Platforms that support this type | Required array |
-| `metadata` | `DataTypeMetadata` | Additional type metadata | Required |
+| Property          | Type                   | Description                      | Constraints                                 |
+| ----------------- | ---------------------- | -------------------------------- | ------------------------------------------- | ---------------------------------- |
+| `name`            | `Name`                 | Name of the data type            | Required, uses Name value object validation |
+| `type`            | `DataTypeCategory`     | Category of the data type        | Required, must be valid DataTypeCategory    |
+| `baseType`        | `DataType              | null`                            | Base type for inheritance                   | Optional, must be valid if present |
+| `constraints`     | `DataTypeConstraint[]` | Type-specific constraints        | Optional array                              |
+| `defaultValue`    | `unknown               | null`                            | Default value for the type                  | Optional, must match type          |
+| `isBuiltIn`       | `boolean`              | Whether this is a built-in type  | Required, default: false                    |
+| `isAbstract`      | `boolean`              | Whether this is an abstract type | Required, default: false                    |
+| `platformSupport` | `PlatformSupport[]`    | Platforms that support this type | Required array                              |
+| `metadata`        | `DataTypeMetadata`     | Additional type metadata         | Required                                    |
 
 ### Derived Properties
 
-| Property | Type | Description | Calculation |
-|----------|------|-------------|-------------|
-| `constraintCount` | `number` | Number of constraints | `constraints.length` |
-| `hasConstraints` | `boolean` | Whether type has constraints | `constraints.length > 0` |
-| `hasDefaultValue` | `boolean` | Whether type has default value | `defaultValue !== null` |
-| `isPrimitive` | `boolean` | Whether type is primitive | Based on DataTypeCategory |
-| `isComplex` | `boolean` | Whether type is complex | Based on DataTypeCategory |
-| `isPlatformSpecific` | `boolean` | Whether type is platform-specific | Based on platformSupport |
-| `supportedOnWeb` | `boolean` | Whether type supports web platform | PlatformSupport includes 'web' |
-| `supportedOnIOS` | `boolean` | Whether type supports iOS platform | PlatformSupport includes 'ios' |
+| Property             | Type      | Description                            | Calculation                        |
+| -------------------- | --------- | -------------------------------------- | ---------------------------------- |
+| `constraintCount`    | `number`  | Number of constraints                  | `constraints.length`               |
+| `hasConstraints`     | `boolean` | Whether type has constraints           | `constraints.length > 0`           |
+| `hasDefaultValue`    | `boolean` | Whether type has default value         | `defaultValue !== null`            |
+| `isPrimitive`        | `boolean` | Whether type is primitive              | Based on DataTypeCategory          |
+| `isComplex`          | `boolean` | Whether type is complex                | Based on DataTypeCategory          |
+| `isPlatformSpecific` | `boolean` | Whether type is platform-specific      | Based on platformSupport           |
+| `supportedOnWeb`     | `boolean` | Whether type supports web platform     | PlatformSupport includes 'web'     |
+| `supportedOnIOS`     | `boolean` | Whether type supports iOS platform     | PlatformSupport includes 'ios'     |
 | `supportedOnAndroid` | `boolean` | Whether type supports Android platform | PlatformSupport includes 'android' |
 
 ## Methods
@@ -45,6 +45,7 @@ DataType supports primitive types, complex types, platform-specific types, and c
 Creates a new DataType instance with the provided properties.
 
 **Parameters:**
+
 - `props.name`: Type name (required)
 - `props.type`: Type category (required)
 - `props.baseType`: Base type for inheritance (optional)
@@ -58,6 +59,7 @@ Creates a new DataType instance with the provided properties.
 **Returns:** New DataType instance
 
 **Business Rules:**
+
 - Type name must be valid (1-50 characters)
 - Type category must be valid DataTypeCategory
 - Base type must be compatible if present
@@ -71,11 +73,13 @@ Creates a new DataType instance with the provided properties.
 Validates a value against this data type.
 
 **Parameters:**
+
 - `value`: Value to validate
 
 **Returns:** TypeValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Value must match type category
 - Value must satisfy all constraints
 - Null/undefined handling based on type requirements
@@ -86,6 +90,7 @@ Validates a value against this data type.
 Checks if a value is valid for this data type.
 
 **Parameters:**
+
 - `value`: Value to check
 
 **Returns:** True if value is valid, false otherwise
@@ -95,11 +100,13 @@ Checks if a value is valid for this data type.
 Checks if this data type is compatible with another.
 
 **Parameters:**
+
 - `other`: Data type to check compatibility with
 
 **Returns:** True if types are compatible, false otherwise
 
 **Business Rules:**
+
 - Types must have compatible categories
 - Constraints must be compatible
 - Platform support must overlap
@@ -112,11 +119,13 @@ Checks if this data type is compatible with another.
 Coerces a value to match this data type.
 
 **Parameters:**
+
 - `value`: Value to coerce
 
 **Returns:** Coerced value or original value if coercion fails
 
 **Business Rules:**
+
 - Should attempt safe conversion when possible
 - Should return original value if coercion is not possible
 - Should not throw exceptions for invalid values
@@ -127,11 +136,13 @@ Coerces a value to match this data type.
 Converts a string value to this data type.
 
 **Parameters:**
+
 - `value`: String value to convert
 
 **Returns:** Converted value or null if conversion fails
 
 **Business Rules:**
+
 - Should handle common string formats
 - Should be consistent with JSON parsing rules
 - Should handle locale-specific formats when applicable
@@ -142,11 +153,13 @@ Converts a string value to this data type.
 Converts a value of this type to string representation.
 
 **Parameters:**
+
 - `value`: Value to convert
 
 **Returns:** String representation of the value
 
 **Business Rules:**
+
 - Should produce human-readable output
 - Should be consistent with JavaScript toString behavior
 - Should handle special cases (null, undefined)
@@ -159,11 +172,13 @@ Converts a value of this type to string representation.
 Creates a new DataType with additional constraint.
 
 **Parameters:**
+
 - `constraint`: Constraint to add
 
 **Returns:** New DataType instance with added constraint
 
 **Business Rules:**
+
 - Constraint must be valid for type category
 - Constraint must not conflict with existing constraints
 - Returns new instance (immutability)
@@ -174,11 +189,13 @@ Creates a new DataType with additional constraint.
 Creates a new DataType with constraint removed.
 
 **Parameters:**
+
 - `name`: Name of constraint to remove
 
 **Returns:** New DataType instance with constraint removed
 
 **Business Rules:**
+
 - Constraint must exist in the type
 - Cannot remove built-in constraints
 - Returns new instance (immutability)
@@ -189,6 +206,7 @@ Creates a new DataType with constraint removed.
 Gets a constraint by name.
 
 **Parameters:**
+
 - `name`: Name of constraint to retrieve
 
 **Returns:** Constraint if found, null otherwise
@@ -198,6 +216,7 @@ Gets a constraint by name.
 Checks if the type has a specific constraint.
 
 **Parameters:**
+
 - `name`: Name of constraint to check
 
 **Returns:** True if constraint exists, false otherwise
@@ -209,6 +228,7 @@ Checks if the type has a specific constraint.
 Checks if the type is supported on a specific platform.
 
 **Parameters:**
+
 - `platform`: Platform to check support for
 
 **Returns:** True if supported, false otherwise
@@ -224,11 +244,13 @@ Gets platforms that do not support this type.
 Creates a new DataType with additional platform support.
 
 **Parameters:**
+
 - `platform`: Platform to add support for
 
 **Returns:** New DataType instance with added platform support
 
 **Business Rules:**
+
 - Platform must be valid PlatformSupport enum value
 - Cannot add platform already supported
 - Returns new instance (immutability)
@@ -247,6 +269,7 @@ Gets the complete inheritance chain for this type.
 Checks if this type is an instance of a specific type.
 
 **Parameters:**
+
 - `typeName`: Name of type to check
 
 **Returns:** True if this type is an instance, false otherwise
@@ -270,6 +293,7 @@ Converts the data type to a JSON representation.
 Creates a new data type with auto-generated metadata.
 
 **Parameters:**
+
 - `props`: Data type properties (excluding metadata)
 
 **Returns:** New DataType instance
@@ -279,12 +303,14 @@ Creates a new data type with auto-generated metadata.
 Creates a primitive data type.
 
 **Parameters:**
+
 - `name`: Type name
 - `defaultValue`: Optional default value
 
 **Returns:** New DataType instance for primitive type
 
 **Business Rules:**
+
 - Automatically sets type category to primitive
 - Adds appropriate primitive constraints
 - Sets platform support to all platforms
@@ -295,12 +321,14 @@ Creates a primitive data type.
 Creates a complex data type.
 
 **Parameters:**
+
 - `name`: Type name
 - `baseType`: Optional base type for inheritance
 
 **Returns:** New DataType instance for complex type
 
 **Business Rules:**
+
 - Automatically sets type category to complex
 - Handles inheritance from base type
 - Adds appropriate complex constraints
@@ -311,6 +339,7 @@ Creates a complex data type.
 Creates a custom data type with custom validator.
 
 **Parameters:**
+
 - `name`: Type name
 - `category`: Type category
 - `validator`: Custom validation function
@@ -318,6 +347,7 @@ Creates a custom data type with custom validator.
 **Returns:** New DataType instance with custom validator
 
 **Business Rules:**
+
 - Custom types can have custom validation logic
 - Custom types must be properly documented
 - Custom types must specify platform support
@@ -328,12 +358,14 @@ Creates a custom data type with custom validator.
 ### Type Definition Invariants
 
 1. **Name Uniqueness**: Type names must be unique within context
+
    - Names must be valid (1-50 characters)
    - Names must be case-sensitive
    - Built-in types have reserved names
    - Custom types must avoid naming conflicts
 
 2. **Category Consistency**: Type categories must be consistent and valid
+
    - Category must be valid DataTypeCategory enum value
    - Category determines type behavior
    - Category cannot be changed after creation
@@ -348,6 +380,7 @@ Creates a custom data type with custom validator.
 ### Constraint Invariants
 
 1. **Constraint Validity**: Constraints must be valid and applicable
+
    - Constraints must be valid for type category
    - Constraints must not conflict with each other
    - Constraints must be enforceable
@@ -397,6 +430,7 @@ Creates a custom data type with custom validator.
 ### Unit Tests
 
 1. **Type Creation**
+
    - Should create type with valid properties
    - Should throw error for invalid names
    - Should throw error for invalid categories
@@ -404,6 +438,7 @@ Creates a custom data type with custom validator.
    - Should auto-generate metadata
 
 2. **Value Validation**
+
    - Should validate values correctly
    - Should handle different type categories
    - Should apply constraints properly
@@ -411,6 +446,7 @@ Creates a custom data type with custom validator.
    - Should provide validation results
 
 3. **Type Conversion**
+
    - Should coerce values correctly
    - Should convert from strings
    - Should convert to strings
@@ -418,6 +454,7 @@ Creates a custom data type with custom validator.
    - Should provide conversion feedback
 
 4. **Constraint Management**
+
    - Should add constraints
    - Should remove constraints
    - Should get constraints by name
@@ -433,12 +470,14 @@ Creates a custom data type with custom validator.
 ### Integration Tests
 
 1. **Property Integration**
+
    - Should integrate with property types
    - Should handle property validation
    - Should support property inheritance
    - Should handle property serialization
 
 2. **Validation Integration**
+
    - Should integrate with validation rules
    - Should handle rule applicability
    - Should support rule composition
@@ -456,20 +495,20 @@ Creates a custom data type with custom validator.
 
 ```typescript
 interface DataTypeJSON {
-  name: string;
-  type: string;
-  baseType?: string;
-  constraints?: DataTypeConstraintJSON[];
-  defaultValue?: unknown;
-  isBuiltIn: boolean;
-  isAbstract: boolean;
-  platformSupport: string[];
+  name: string
+  type: string
+  baseType?: string
+  constraints?: DataTypeConstraintJSON[]
+  defaultValue?: unknown
+  isBuiltIn: boolean
+  isAbstract: boolean
+  platformSupport: string[]
   metadata: {
-    createdAt: string;
-    updatedAt: string;
-    version: string;
-    [key: string]: any;
-  };
+    createdAt: string
+    updatedAt: string
+    version: string
+    [key: string]: any
+  }
 }
 ```
 
@@ -492,15 +531,16 @@ interface DataTypeJSON {
 
 ## Metadata
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Last Updated** | 2025-09-15 |
-| **Author** | Schema Management Domain Team |
-| **Status** | Draft |
-| **Dependencies** | DataTypeCategory, DataTypeConstraint, PlatformSupport |
-| **Complexity** | Medium |
-| **Testing Priority** | High |
-| **Review Required** | Yes |
-| **Documentation** | Complete |
-| **Breaking Changes** | None |
+| Field                | Value                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| **Version**          | 1.0.0                                                                                             |
+| **Last Updated**     | 2025-09-15                                                                                        |
+| **Author**           | Schema Management Domain Team                                                                     |
+| **Status**           | Draft                                                                                             |
+| **Dependencies**     | DataTypeCategory, DataTypeConstraint, PlatformSupport                                             |
+| **Complexity**       | Medium                                                                                            |
+| **Location**         | `packages/domain/src/schema-management/schema-definition/value-objects/data-type.value-object.ts` |
+| **Testing Priority** | High                                                                                              |
+| **Review Required**  | Yes                                                                                               |
+| **Documentation**    | Complete                                                                                          |
+| **Breaking Changes** | None                                                                                              |

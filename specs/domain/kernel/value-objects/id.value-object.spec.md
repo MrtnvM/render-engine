@@ -69,3 +69,4 @@ export class User extends BaseEntity<ID> {
 
 Version: 1.0.0
 Last Updated: 2025-09-16
+Location: `packages/domain/src/kernel/value-objects/id.value-object.ts`

@@ -113,17 +113,17 @@ export class SendOverdueRemindersJob {
     private fetchOverdueUsers: FetchOverdueUsersUseCase,
     @inject(FetchOverdueUsersUseCase)
     private readonly sendReminder: SendReminderUseCase,
-    @inject("ILogger")
+    @inject('ILogger')
     private readonly logger: ILogger,
   ) {}
 
   async run(): Promise<void> {
-    const users = await this.fetchOverdueUsers.execute();
+    const users = await this.fetchOverdueUsers.execute()
     for (const user of users) {
       try {
-        await this.sendReminder.execute({ userId: user.id });
+        await this.sendReminder.execute({ userId: user.id })
       } catch (err) {
-        this.logger.warn(`Reminder failed for ${user.id}: ${err}`);
+        this.logger.warn(`Reminder failed for ${user.id}: ${err}`)
       }
     }
   }

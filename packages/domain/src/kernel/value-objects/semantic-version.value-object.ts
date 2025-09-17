@@ -58,9 +58,9 @@ export class SemanticVersion extends ValueObject<SemanticVersionProps> {
       throw FormatError.forField('versionString', versionString, 'major.minor.patch')
     }
 
-    const major = parseInt(match[1], 10)
-    const minor = parseInt(match[2], 10)
-    const patch = parseInt(match[3], 10)
+    const major = Number.parseInt(match[1], 10)
+    const minor = Number.parseInt(match[2], 10)
+    const patch = Number.parseInt(match[3], 10)
 
     return SemanticVersion.create(major, minor, patch)
   }

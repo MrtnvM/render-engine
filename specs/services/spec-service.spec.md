@@ -231,3 +231,9 @@ The SpecService integrates with the existing codegen architecture:
 - **Custom spec formats** - Support for different spec file formats
 - **Dependency validation** - Validate dependency references
 - **Build optimization** - Suggest optimal build strategies
+
+## Metadata
+
+Version: 1.0.0
+Last Updated: 2025-09-16
+Location: `packages/application/src/services/spec.service.ts`

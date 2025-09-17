@@ -19,6 +19,7 @@ Guide for writing component specifications in the project. Follow the templates 
 - **Template**: [Value Object Guide](specs/domain/value-object.spec.md)
 - **Base Class**: `ValueObject<T>`
 - **Sections**: Overview, Properties, Methods, Business Rules, Dependencies, Tests
+- **Naming Convention**: `*.value-object.spec.md` (e.g., `validation-rule.value-object.spec.md`)
 
 **Domain Service**: Stateless business logic
 
@@ -81,7 +82,8 @@ All specifications follow this basic structure:
 
 ### Value Objects
 
-- Type1, Type2
+- Type1
+- Type2
 
 ### Domain Events
 
@@ -103,6 +105,7 @@ All specifications follow this basic structure:
 
 Version: 1.0.0
 Last Updated: 2025-09-16
+Location: `packages/domain/src/user-management/entities/user.entity.ts`
 ```
 
 ## Writing Guidelines
@@ -122,6 +125,7 @@ Last Updated: 2025-09-16
 - [ ] Dependencies are properly documented
 - [ ] Tests are comprehensive and specific
 - [ ] Metadata is current and accurate
+- [ ] Added location to metadata (`packages/<package>/src/<module>/<component-name-group>/<name>.<type>.ts`, e.g. `packages/domain/src/user-management/entities/user.entity.ts`)
 
 ## Metadata
 

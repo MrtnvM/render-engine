@@ -19,12 +19,14 @@ The Validator service orchestrates validation logic, applies validation rules, p
 Validates a complete schema against all validation rules and constraints.
 
 **Parameters:**
+
 - `schema`: Schema to validate
 - `options`: Optional validation configuration
 
 **Returns:** Promise resolving to ValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Must validate all components in the schema
 - Must validate component relationships and hierarchies
 - Must validate schema-level constraints
@@ -37,12 +39,14 @@ Validates a complete schema against all validation rules and constraints.
 Validates a single component against its type-specific and custom validation rules.
 
 **Parameters:**
+
 - `component`: Component to validate
 - `context`: Optional validation context
 
 **Returns:** Promise resolving to ValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Must validate component properties and their values
 - Must validate component children and relationships
 - Must validate component-specific constraints
@@ -55,12 +59,14 @@ Validates a single component against its type-specific and custom validation rul
 Validates a property value against the property definition and validation rules.
 
 **Parameters:**
+
 - `property`: Property definition to validate against
 - `value`: Value to validate
 
 **Returns:** ValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Must validate value type matches property type
 - Must apply all property validation rules
 - Must check required property constraints
@@ -73,11 +79,13 @@ Validates a property value against the property definition and validation rules.
 Validates a template definition and its content.
 
 **Parameters:**
+
 - `template`: Template to validate
 
 **Returns:** Promise resolving to ValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Must validate template parameters and their types
 - Must validate template content structure
 - Must validate parameter usage in content
@@ -90,12 +98,14 @@ Validates a template definition and its content.
 Validates template instantiation parameters.
 
 **Parameters:**
+
 - `template`: Template to instantiate
 - `parameters`: Parameters for instantiation
 
 **Returns:** ValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Must validate all required parameters are provided
 - Must validate parameter types match expectations
 - Must apply parameter validation rules
@@ -110,9 +120,11 @@ Validates template instantiation parameters.
 Registers a new validation rule with the validator service.
 
 **Parameters:**
+
 - `rule`: Validation rule to register
 
 **Business Rules:**
+
 - Rule must have unique name within registry
 - Rule must be properly structured and valid
 - Rule must be applicable to supported data types
@@ -124,11 +136,13 @@ Registers a new validation rule with the validator service.
 Unregisters a validation rule from the validator service.
 
 **Parameters:**
+
 - `ruleName`: Name of rule to unregister
 
 **Returns:** True if rule was unregistered, false if not found
 
 **Business Rules:**
+
 - Cannot unregister built-in validation rules
 - Rule must exist in registry
 - Unregistration must be atomic
@@ -139,6 +153,7 @@ Unregisters a validation rule from the validator service.
 Gets a validation rule by name.
 
 **Parameters:**
+
 - `ruleName`: Name of rule to retrieve
 
 **Returns:** ValidationRule if found, null otherwise
@@ -154,6 +169,7 @@ Gets all registered validation rules.
 Gets validation rules applicable to a specific data type.
 
 **Parameters:**
+
 - `dataType`: Data type to get rules for
 
 **Returns:** Array of applicable ValidationRule instances
@@ -165,6 +181,7 @@ Gets validation rules applicable to a specific data type.
 Executes a specific validation rule against a value.
 
 **Parameters:**
+
 - `rule`: Validation rule to execute
 - `value`: Value to validate
 - `context`: Optional validation context
@@ -172,6 +189,7 @@ Executes a specific validation rule against a value.
 **Returns:** Promise resolving to ValidationResult from rule execution
 
 **Business Rules:**
+
 - Must respect rule parameters and configuration
 - Must handle rule-specific validation logic
 - Must provide rule-specific error messages
@@ -183,6 +201,7 @@ Executes a specific validation rule against a value.
 Executes multiple validation rules against a value.
 
 **Parameters:**
+
 - `rules`: Array of validation rules to execute
 - `value`: Value to validate
 - `context`: Optional validation context
@@ -190,6 +209,7 @@ Executes multiple validation rules against a value.
 **Returns:** Promise resolving to combined ValidationResult
 
 **Business Rules:**
+
 - Must execute all rules in sequence
 - Must combine results from all rules
 - Must handle rule dependencies
@@ -203,6 +223,7 @@ Executes multiple validation rules against a value.
 Creates a validation context for validation operations.
 
 **Parameters:**
+
 - `type`: Type of validation context
 - `target`: Target object being validated
 - `options`: Optional validation options
@@ -210,6 +231,7 @@ Creates a validation context for validation operations.
 **Returns:** New ValidationContext instance
 
 **Business Rules:**
+
 - Context must be properly typed and structured
 - Context must include relevant target information
 - Context must include validation options
@@ -220,6 +242,7 @@ Creates a validation context for validation operations.
 Extends an existing validation context with additional information.
 
 **Parameters:**
+
 - `base`: Base validation context to extend
 - `additions`: Additional context information
 
@@ -232,6 +255,7 @@ Extends an existing validation context with additional information.
 Performs optimized validation using caching and other performance optimizations.
 
 **Parameters:**
+
 - `target`: Target object to validate
 - `rules`: Array of validation rules to apply
 - `options`: Optional validation options
@@ -239,6 +263,7 @@ Performs optimized validation using caching and other performance optimizations.
 **Returns:** Promise resolving to ValidationResult
 
 **Business Rules:**
+
 - Should use validation caching when appropriate
 - Should parallelize independent validation rules
 - Should optimize rule execution order
@@ -252,6 +277,7 @@ Gets validation performance metrics and statistics.
 **Returns:** ValidationMetrics with performance data
 
 **Business Rules:**
+
 - Should track validation execution times
 - Should track rule execution counts
 - Should track cache hit/miss ratios
@@ -265,6 +291,7 @@ Gets validation performance metrics and statistics.
 Validates that a value is provided (not null/undefined).
 
 **Parameters:**
+
 - `value`: Value to validate
 - `context`: Optional validation context
 
@@ -275,6 +302,7 @@ Validates that a value is provided (not null/undefined).
 Validates that a value matches the expected data type.
 
 **Parameters:**
+
 - `value`: Value to validate
 - `expectedType`: Expected data type
 - `context`: Optional validation context
@@ -286,6 +314,7 @@ Validates that a value matches the expected data type.
 Validates that a numeric value is within the specified range.
 
 **Parameters:**
+
 - `value`: Numeric value to validate
 - `min`: Minimum allowed value
 - `max`: Maximum allowed value
@@ -298,6 +327,7 @@ Validates that a numeric value is within the specified range.
 Validates that a string or array length is within the specified range.
 
 **Parameters:**
+
 - `value`: String or array to validate
 - `minLength`: Minimum allowed length
 - `maxLength`: Maximum allowed length
@@ -310,6 +340,7 @@ Validates that a string or array length is within the specified range.
 Validates that a string matches the specified pattern.
 
 **Parameters:**
+
 - `value`: String to validate
 - `pattern`: Regular expression pattern to match
 - `context`: Optional validation context
@@ -321,6 +352,7 @@ Validates that a string matches the specified pattern.
 Validates a value using a custom validator function.
 
 **Parameters:**
+
 - `value`: Value to validate
 - `validator`: Custom validator function
 - `message`: Error message for validation failures
@@ -333,12 +365,14 @@ Validates a value using a custom validator function.
 ### Validation Quality Invariants
 
 1. **Comprehensive Coverage**: Validation must cover all aspects of domain objects
+
    - Must validate structural integrity
    - Must validate business rules
    - Must validate type safety
    - Must validate relationships and dependencies
 
 2. **Accurate Reporting**: Validation results must be accurate and actionable
+
    - Must provide clear error messages
    - Must include context information
    - Must suggest corrective actions
@@ -353,6 +387,7 @@ Validates a value using a custom validator function.
 ### Rule Management Invariants
 
 1. **Rule Integrity**: Validation rules must be properly managed
+
    - Rules must have unique names
    - Rules must be properly structured
    - Rules must be applicable to target types
@@ -410,11 +445,13 @@ Validates a value using a custom validator function.
 Creates a new Validator service instance.
 
 **Parameters:**
+
 - `options`: Optional validator configuration options
 
 **Returns:** New Validator service instance
 
 **Business Rules:**
+
 - Must initialize with built-in validation rules
 - Must set up validation caching if configured
 - Must configure performance thresholds
@@ -425,12 +462,14 @@ Creates a new Validator service instance.
 Creates a Validator service with custom validation rules.
 
 **Parameters:**
+
 - `customRules`: Array of custom validation rules
 - `options`: Optional validator configuration options
 
 **Returns:** New Validator service instance with custom rules
 
 **Business Rules:**
+
 - Must include built-in rules plus custom rules
 - Must validate custom rule integrity
 - Must handle rule conflicts appropriately
@@ -441,6 +480,7 @@ Creates a Validator service with custom validation rules.
 ### Unit Tests
 
 1. **Service Initialization**
+
    - Should create validator with default configuration
    - Should create validator with custom options
    - Should initialize built-in validation rules
@@ -448,6 +488,7 @@ Creates a Validator service with custom validation rules.
    - Should set up caching and performance
 
 2. **Schema Validation**
+
    - Should validate valid schema successfully
    - Should detect invalid schema structure
    - Should validate component relationships
@@ -455,6 +496,7 @@ Creates a Validator service with custom validation rules.
    - Should provide comprehensive feedback
 
 3. **Component Validation**
+
    - Should validate valid component successfully
    - Should detect invalid component properties
    - Should validate component children
@@ -462,6 +504,7 @@ Creates a Validator service with custom validation rules.
    - Should provide detailed error messages
 
 4. **Property Validation**
+
    - Should validate property values correctly
    - Should apply validation rules properly
    - Should handle type checking
@@ -469,6 +512,7 @@ Creates a Validator service with custom validation rules.
    - Should handle complex data types
 
 5. **Template Validation**
+
    - Should validate template structure
    - Should validate template parameters
    - Should validate template content
@@ -485,12 +529,14 @@ Creates a Validator service with custom validation rules.
 ### Integration Tests
 
 1. **Domain Object Integration**
+
    - Should integrate with all domain objects
    - Should handle domain object relationships
    - Should maintain domain invariants
    - Should support domain events
 
 2. **Performance Integration**
+
    - Should handle large validation scenarios
    - Should support parallel validation
    - Should provide performance metrics
@@ -527,15 +573,16 @@ Creates a Validator service with custom validation rules.
 
 ## Metadata
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Last Updated** | 2025-09-15 |
-| **Author** | Schema Management Domain Team |
-| **Status** | Draft |
-| **Dependencies** | Schema, Component, Property, Template, ValidationRule, ValidationResult |
-| **Complexity** | High |
-| **Testing Priority** | Critical |
-| **Review Required** | Yes |
-| **Documentation** | Complete |
-| **Breaking Changes** | None |
+| Field                | Value                                                                                   |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| **Version**          | 1.0.0                                                                                   |
+| **Last Updated**     | 2025-09-15                                                                              |
+| **Author**           | Schema Management Domain Team                                                           |
+| **Status**           | Draft                                                                                   |
+| **Dependencies**     | Schema, Component, Property, Template, ValidationRule, ValidationResult                 |
+| **Complexity**       | High                                                                                    |
+| **Location**         | `packages/domain/src/schema-management/schema-validation/services/validator.service.ts` |
+| **Testing Priority** | Critical                                                                                |
+| **Review Required**  | Yes                                                                                     |
+| **Documentation**    | Complete                                                                                |
+| **Breaking Changes** | None                                                                                    |

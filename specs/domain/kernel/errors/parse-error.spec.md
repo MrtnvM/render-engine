@@ -72,12 +72,14 @@ ParseError represents failures that occur when data cannot be parsed into the ex
 ### Static Factory Methods
 
 - `static forData(data: unknown, expectedFormat: string, parseContext: string): ParseError`
+
   - **Purpose**: Creates a parse error for general data parsing failures
   - **Parameters**: Raw data, expected format description, parse context
   - **Returns**: ParseError with detailed parsing failure information
   - **Usage**: When general data parsing fails
 
 - `static invalidUUID(input: string): ParseError`
+
   - **Purpose**: Creates a parse error for UUID parsing failures
   - **Parameters**: Input string that failed UUID parsing
   - **Returns**: ParseError with UUID-specific parsing failure information
@@ -155,3 +157,4 @@ ParseError represents failures that occur when data cannot be parsed into the ex
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/parse.error.ts`

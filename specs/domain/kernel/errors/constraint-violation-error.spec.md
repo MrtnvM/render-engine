@@ -142,3 +142,4 @@ ConstraintViolationError represents failures that occur when domain constraints 
 
 Version: 1.0.0
 Last Updated: 2025-09-13
+Location: `packages/domain/src/kernel/errors/constraint-violation.error.ts`

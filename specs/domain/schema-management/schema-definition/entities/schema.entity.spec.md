@@ -10,16 +10,16 @@ The Schema entity manages the entire lifecycle of UI definitions, including vers
 
 ### Core Fields
 
-| Field              | Type               | Description                                         | Constraints                          |
-| ------------------ | ------------------ | --------------------------------------------------- | ------------------------------------ |
-| `id`               | `ID`               | Unique identifier for the schema                    | Auto-generated, immutable            |
-| `name`             | `string`           | Human-readable name for the schema                  | Required, min 3 chars, max 100 chars |
-| `version`          | `SemanticVersion`  | Version of the schema following semantic versioning | Required, format: major.minor.patch  |
-| `description`      | `string \| null`   | Optional description of the schema purpose          | Optional, max 500 chars              |
-| `components`       | `Component[]`      | Collection of UI components defined in the schema   | Required, non-empty array            |
-| `globalProperties` | `Property[]`       | Global properties available to all components       | Optional array                       |
-| `validationRules`  | `ValidationRule[]` | Schema-level validation rules                       | Optional array                       |
-| `metadata`         | `SchemaMetadata`   | Additional schema metadata                          | Required                             |
+| Field              | Type               | Description                                         | Constraints                                 |
+| ------------------ | ------------------ | --------------------------------------------------- | ------------------------------------------- |
+| `id`               | `ID`               | Unique identifier for the schema                    | Auto-generated, immutable                   |
+| `name`             | `Name`             | Human-readable name for the schema                  | Required, uses Name value object validation |
+| `version`          | `SemanticVersion`  | Version of the schema following semantic versioning | Required, format: major.minor.patch         |
+| `description`      | `Description`      | Optional description of the schema purpose          | Optional, uses Description value object     |
+| `components`       | `Component[]`      | Collection of UI components defined in the schema   | Required, non-empty array                   |
+| `globalProperties` | `Property[]`       | Global properties available to all components       | Optional array                              |
+| `validationRules`  | `ValidationRule[]` | Schema-level validation rules                       | Optional array                              |
+| `metadata`         | `SchemaMetadata`   | Additional schema metadata                          | Required                                    |
 
 ### Derived Fields
 
@@ -54,7 +54,7 @@ Creates a new Schema instance with the provided properties.
 
 **Business Rules:**
 
-- Schema must have a valid name (3-100 characters)
+- Schema must have a valid name (uses Name value object validation)
 - Schema must have at least one component
 - Schema version must follow semantic versioning
 - All components must be valid and have unique names within the schema
@@ -240,7 +240,7 @@ Converts the schema to a JSON representation suitable for client applications.
 
 1. **Schema Validity**: A schema must always be structurally valid
 
-   - Must have a valid name (3-100 characters)
+   - Must have a valid name (uses Name value object validation)
    - Must have at least one component
    - All components must have unique names within the schema
    - Version must follow semantic versioning
@@ -299,6 +299,8 @@ Converts the schema to a JSON representation suitable for client applications.
 ### Internal Dependencies
 
 - `ID`: Value object for schema and component identification
+- `Name`: Value object for schema names from kernel
+- `Description`: Value object for schema descriptions from kernel
 - `Component`: Entity for UI components
 - `Property`: Value object for component properties
 - `ValidationRule`: Value object for validation rules
@@ -515,15 +517,16 @@ interface SchemaJSON {
 
 ## Metadata
 
-| Field                | Value                                                |
-| -------------------- | ---------------------------------------------------- |
-| **Version**          | 1.0.0                                                |
-| **Last Updated**     | 2025-09-15                                           |
-| **Author**           | Schema Management Domain Team                        |
-| **Status**           | Draft                                                |
-| **Dependencies**     | Component, Property, ValidationRule, SemanticVersion |
-| **Complexity**       | High                                                 |
-| **Testing Priority** | Critical                                             |
-| **Review Required**  | Yes                                                  |
-| **Documentation**    | Complete                                             |
-| **Breaking Changes** | None                                                 |
+| Field                | Value                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| **Version**          | 1.0.0                                                                               |
+| **Last Updated**     | 2025-09-15                                                                          |
+| **Location**         | `packages/domain/src/schema-management/schema-definition/entities/schema.entity.ts` |
+| **Author**           | Schema Management Domain Team                                                       |
+| **Status**           | Draft                                                                               |
+| **Dependencies**     | Component, Property, ValidationRule, SemanticVersion                                |
+| **Complexity**       | High                                                                                |
+| **Testing Priority** | Critical                                                                            |
+| **Review Required**  | Yes                                                                                 |
+| **Documentation**    | Complete                                                                            |
+| **Breaking Changes** | None                                                                                |

@@ -1,1 +1,1 @@
-export * from "./time.utils.js"
+export * from './time.utils.js'

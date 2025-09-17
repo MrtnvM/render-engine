@@ -70,6 +70,7 @@ This guide provides a simplified template for writing domain event specification
 
 Version: 1.0.0
 Last Updated: [Date]
+Location: `packages/domain/src/<module>/events/<event-name>.event.ts`
 ```
 
 ## Specification Levels

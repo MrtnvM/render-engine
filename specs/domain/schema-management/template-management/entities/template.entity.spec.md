@@ -10,32 +10,32 @@ Templates serve as blueprints for creating consistent UI components and layouts.
 
 ### Core Fields
 
-| Field | Type | Description | Constraints |
-|-------|------|-------------|-------------|
-| `id` | `TemplateId` | Unique identifier for the template | Auto-generated, immutable |
-| `name` | `string` | Unique name for the template | Required, min 3 chars, max 50 chars, alphanumeric + underscore/hyphen |
-| `version` | `SemanticVersion` | Template version following semantic versioning | Required, format: major.minor.patch |
-| `displayName` | `string` | Human-readable display name | Required, min 3 chars, max 100 chars |
-| `description` | `string | null` | Optional description of the template purpose | Optional, max 500 chars |
-| `parameters` | `TemplateParameter[]` | Template parameters for configuration | Required array (can be empty) |
-| `content` | `TemplateContent` | Template content definition | Required |
-| `parentTemplateId` | `TemplateId | null` | Parent template for inheritance | Optional, must be valid if present |
-| `inheritance` | `TemplateInheritance | null` | Inheritance configuration | Optional |
-| `compilation` | `TemplateCompilation | null` | Compilation result and metadata | Optional |
-| `metadata` | `TemplateMetadata` | Additional template metadata | Required |
+| Field              | Type                  | Description                                    | Constraints                                 |
+| ------------------ | --------------------- | ---------------------------------------------- | ------------------------------------------- | ---------------------------------- |
+| `id`               | `TemplateId`          | Unique identifier for the template             | Auto-generated, immutable                   |
+| `name`             | `Name`                | Unique name for the template                   | Required, uses Name value object validation |
+| `version`          | `SemanticVersion`     | Template version following semantic versioning | Required, format: major.minor.patch         |
+| `displayName`      | `string`              | Human-readable display name                    | Required, min 3 chars, max 100 chars        |
+| `description`      | `Description`         | Optional description of the template purpose   | Optional, uses Description value object     |
+| `parameters`       | `TemplateParameter[]` | Template parameters for configuration          | Required array (can be empty)               |
+| `content`          | `TemplateContent`     | Template content definition                    | Required                                    |
+| `parentTemplateId` | `TemplateId           | null`                                          | Parent template for inheritance             | Optional, must be valid if present |
+| `inheritance`      | `TemplateInheritance  | null`                                          | Inheritance configuration                   | Optional                           |
+| `compilation`      | `TemplateCompilation  | null`                                          | Compilation result and metadata             | Optional                           |
+| `metadata`         | `TemplateMetadata`    | Additional template metadata                   | Required                                    |
 
 ### Derived Fields
 
-| Field | Type | Description | Calculation |
-|-------|------|-------------|-------------|
-| `parameterCount` | `number` | Total number of parameters | `parameters.length` |
-| `hasParameters` | `boolean` | Whether template has parameters | `parameters.length > 0` |
-| `hasParent` | `boolean` | Whether template has a parent | `parentTemplateId !== null` |
-| `isCompiled` | `boolean` | Whether template is compiled | `compilation !== null` |
-| `isRoot` | `boolean` | Whether template is a root template | `parentTemplateId === null` |
-| `inheritanceDepth` | `number` | Depth in inheritance hierarchy | Computed from parent relationships |
-| `lastModified` | `DateTime` | Last modification timestamp | Automatically updated |
-| `status` | `TemplateStatus` | Current status of the template | Managed through state transitions |
+| Field              | Type             | Description                         | Calculation                        |
+| ------------------ | ---------------- | ----------------------------------- | ---------------------------------- |
+| `parameterCount`   | `number`         | Total number of parameters          | `parameters.length`                |
+| `hasParameters`    | `boolean`        | Whether template has parameters     | `parameters.length > 0`            |
+| `hasParent`        | `boolean`        | Whether template has a parent       | `parentTemplateId !== null`        |
+| `isCompiled`       | `boolean`        | Whether template is compiled        | `compilation !== null`             |
+| `isRoot`           | `boolean`        | Whether template is a root template | `parentTemplateId === null`        |
+| `inheritanceDepth` | `number`         | Depth in inheritance hierarchy      | Computed from parent relationships |
+| `lastModified`     | `DateTime`       | Last modification timestamp         | Automatically updated              |
+| `status`           | `TemplateStatus` | Current status of the template      | Managed through state transitions  |
 
 ## Methods
 
@@ -46,6 +46,7 @@ Templates serve as blueprints for creating consistent UI components and layouts.
 Creates a new Template instance with the provided properties.
 
 **Parameters:**
+
 - `props.id`: Optional TemplateId (generated if not provided)
 - `props.name`: Template name (required)
 - `props.version`: Template version (required)
@@ -61,6 +62,7 @@ Creates a new Template instance with the provided properties.
 **Returns:** New Template instance
 
 **Business Rules:**
+
 - Template name must be unique within template registry
 - Template version must follow semantic versioning
 - Parameters must be unique within template
@@ -74,9 +76,11 @@ Creates a new Template instance with the provided properties.
 Adds a new parameter to the template.
 
 **Parameters:**
+
 - `parameter`: Parameter to add
 
 **Business Rules:**
+
 - Parameter name must be unique within template
 - Parameter type must be valid
 - Parameter must have valid default value if required
@@ -88,9 +92,11 @@ Adds a new parameter to the template.
 Removes a parameter from the template.
 
 **Parameters:**
+
 - `parameterName`: Name of parameter to remove
 
 **Business Rules:**
+
 - Parameter must exist in template
 - Cannot remove parameters used in template content
 - Cannot remove inherited parameters
@@ -101,10 +107,12 @@ Removes a parameter from the template.
 Updates an existing parameter in the template.
 
 **Parameters:**
+
 - `parameterName`: Name of parameter to update
 - `updates`: Parameter updates to apply
 
 **Business Rules:**
+
 - Parameter must exist in template
 - Updates must maintain parameter validity
 - Type changes must be compatible with existing usage
@@ -116,6 +124,7 @@ Updates an existing parameter in the template.
 Gets a parameter by name.
 
 **Parameters:**
+
 - `parameterName`: Name of parameter to retrieve
 
 **Returns:** Parameter if found, null otherwise
@@ -133,9 +142,11 @@ Gets all parameters including inherited ones.
 Updates the template content.
 
 **Parameters:**
+
 - `content`: New template content
 
 **Business Rules:**
+
 - Content must be valid template definition
 - Content must use valid parameter references
 - Content must be compatible with parent template content
@@ -149,6 +160,7 @@ Validates the template content against parameters and constraints.
 **Returns:** TemplateValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Content must reference valid parameters
 - Content must follow template syntax rules
 - Content must be compatible with inheritance
@@ -161,10 +173,12 @@ Validates the template content against parameters and constraints.
 Sets the parent template for inheritance.
 
 **Parameters:**
+
 - `parentTemplateId`: Parent template ID
 - `inheritance`: Optional inheritance configuration
 
 **Business Rules:**
+
 - Parent template must exist
 - Cannot create circular dependencies
 - Must maintain parameter compatibility
@@ -176,6 +190,7 @@ Sets the parent template for inheritance.
 Removes the parent template relationship.
 
 **Business Rules:**
+
 - Cannot remove parent if template has children
 - Must handle inherited parameters appropriately
 - Must validate template remains valid
@@ -202,6 +217,7 @@ Compiles the template for optimal performance.
 **Returns:** TemplateCompilation with compilation result and metadata
 
 **Business Rules:**
+
 - Template must be valid before compilation
 - Compilation must optimize parameter usage
 - Compilation must resolve inheritance
@@ -215,6 +231,7 @@ Recompiles an already compiled template.
 **Returns:** Updated TemplateCompilation
 
 **Business Rules:**
+
 - Template must already be compiled
 - Recompilation should handle changes gracefully
 - Should maintain compatibility with previous compilation
@@ -227,6 +244,7 @@ Checks if the compilation is stale and needs recompilation.
 **Returns:** True if compilation is stale, false otherwise
 
 **Business Rules:**
+
 - Should consider template modifications
 - Should consider parent template changes
 - Should consider parameter changes
@@ -239,11 +257,13 @@ Checks if the compilation is stale and needs recompilation.
 Creates a template instance with provided parameters.
 
 **Parameters:**
+
 - `parameters`: Parameter values for instantiation
 
 **Returns:** TemplateInstance with resolved content
 
 **Business Rules:**
+
 - All required parameters must be provided
 - Parameter values must match parameter types
 - Parameter values must pass validation rules
@@ -255,11 +275,13 @@ Creates a template instance with provided parameters.
 Validates parameters for template instantiation.
 
 **Parameters:**
+
 - `parameters`: Parameters to validate
 
 **Returns:** TemplateValidationResult with validation status and errors
 
 **Business Rules:**
+
 - Must validate all provided parameters
 - Must check for missing required parameters
 - Must validate parameter types and values
@@ -272,6 +294,7 @@ Validates parameters for template instantiation.
 Gets usage information for a specific parameter.
 
 **Parameters:**
+
 - `parameterName`: Name of parameter to analyze
 
 **Returns:** ParameterUsage with usage statistics and locations
@@ -287,6 +310,7 @@ Gets all template dependencies.
 Checks if this template depends on another template.
 
 **Parameters:**
+
 - `templateId`: Template ID to check dependency on
 
 **Returns:** True if dependent, false otherwise
@@ -302,18 +326,21 @@ Converts the template to a JSON representation.
 ### Structural Invariants
 
 1. **Template Identity**: Each template must have a unique identity
+
    - Name must be unique within template registry
    - ID must be unique across all templates
    - Version must follow semantic versioning
    - Identity must remain consistent throughout lifecycle
 
 2. **Parameter Integrity**: Template parameters must be valid and consistent
+
    - Parameters must have unique names within template
    - Parameters must have valid types and default values
    - Required parameters must have valid defaults
    - Parameter references in content must be valid
 
 3. **Content Validity**: Template content must be valid and executable
+
    - Content must follow template syntax rules
    - Content must reference valid parameters
    - Content must be compatible with inheritance
@@ -328,6 +355,7 @@ Converts the template to a JSON representation.
 ### Compilation Invariants
 
 1. **Compilation Consistency**: Template compilation must be consistent
+
    - Compilation must reflect current template state
    - Compilation must resolve inheritance properly
    - Compilation must optimize parameter usage
@@ -350,6 +378,8 @@ Converts the template to a JSON representation.
 ### Internal Dependencies
 
 - `TemplateId`: Value object for template identification
+- `Name`: Value object for template names from kernel
+- `Description`: Value object for template descriptions from kernel
 - `TemplateParameter`: Value object for template parameters
 - `TemplateContent`: Value object for template content
 - `TemplateInheritance`: Value object for inheritance configuration
@@ -403,6 +433,7 @@ Converts the template to a JSON representation.
 Creates a new template with auto-generated ID.
 
 **Parameters:**
+
 - `props`: Template properties (excluding ID)
 
 **Returns:** New Template instance
@@ -412,6 +443,7 @@ Creates a new template with auto-generated ID.
 Creates a template from a schema definition.
 
 **Parameters:**
+
 - `schema`: Schema to convert to template
 - `name`: Template name
 - `displayName`: Template display name
@@ -419,6 +451,7 @@ Creates a template from a schema definition.
 **Returns:** New Template instance based on schema
 
 **Business Rules:**
+
 - Schema components become template content
 - Schema properties become template parameters
 - Schema validation rules become template constraints
@@ -429,6 +462,7 @@ Creates a template from a schema definition.
 Creates a template that inherits from a parent template.
 
 **Parameters:**
+
 - `parent`: Parent template to inherit from
 - `name`: Child template name
 - `displayName`: Child template display name
@@ -437,6 +471,7 @@ Creates a template that inherits from a parent template.
 **Returns:** New Template instance that inherits from parent
 
 **Business Rules:**
+
 - Child template inherits parent parameters
 - Child template can override parent content
 - Child template must maintain compatibility with parent
@@ -447,6 +482,7 @@ Creates a template that inherits from a parent template.
 ### Unit Tests
 
 1. **Template Creation**
+
    - Should create template with valid properties
    - Should auto-generate ID when not provided
    - Should throw error for invalid names
@@ -454,6 +490,7 @@ Creates a template that inherits from a parent template.
    - Should throw error for duplicate names
 
 2. **Parameter Management**
+
    - Should add valid parameter to template
    - Should throw error for duplicate parameter names
    - Should remove parameter from template
@@ -461,6 +498,7 @@ Creates a template that inherits from a parent template.
    - Should update existing parameter
 
 3. **Content Management**
+
    - Should update template content
    - Should validate content against parameters
    - Should handle content syntax errors
@@ -468,6 +506,7 @@ Creates a template that inherits from a parent template.
    - Should handle content inheritance
 
 4. **Inheritance Management**
+
    - Should set parent template
    - Should remove parent template
    - Should get inheritance chain
@@ -475,6 +514,7 @@ Creates a template that inherits from a parent template.
    - Should resolve effective content
 
 5. **Compilation**
+
    - Should compile valid template
    - Should recompile compiled template
    - Should check compilation staleness
@@ -491,12 +531,14 @@ Creates a template that inherits from a parent template.
 ### Integration Tests
 
 1. **Schema Integration**
+
    - Should create templates from schemas
    - Should handle schema updates
    - Should maintain compatibility with schemas
    - Should handle schema versioning
 
 2. **Template Registry Integration**
+
    - Should register templates with registry
    - Should handle template lookups
    - Should manage template versions
@@ -511,6 +553,7 @@ Creates a template that inherits from a parent template.
 ### Performance Tests
 
 1. **Large Template Performance**
+
    - Should handle templates with many parameters
    - Should compile large templates efficiently
    - Should instantiate large templates quickly
@@ -528,23 +571,23 @@ Creates a template that inherits from a parent template.
 
 ```typescript
 interface TemplateJSON {
-  id: string;
-  name: string;
-  version: string;
-  displayName: string;
-  description?: string;
-  parameters: TemplateParameterJSON[];
-  content: TemplateContentJSON;
-  parentTemplateId?: string;
-  inheritance?: TemplateInheritanceJSON;
-  compilation?: TemplateCompilationJSON;
+  id: string
+  name: string
+  version: string
+  displayName: string
+  description?: string
+  parameters: TemplateParameterJSON[]
+  content: TemplateContentJSON
+  parentTemplateId?: string
+  inheritance?: TemplateInheritanceJSON
+  compilation?: TemplateCompilationJSON
   metadata: {
-    createdAt: string;
-    updatedAt: string;
-    version: string;
-    [key: string]: any;
-  };
-  status: 'draft' | 'published' | 'deprecated';
+    createdAt: string
+    updatedAt: string
+    version: string
+    [key: string]: any
+  }
+  status: 'draft' | 'published' | 'deprecated'
 }
 ```
 
@@ -570,15 +613,12 @@ interface TemplateJSON {
 
 ## Metadata
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Last Updated** | 2025-09-15 |
-| **Author** | Schema Management Domain Team |
-| **Status** | Draft |
-| **Dependencies** | TemplateParameter, TemplateContent, TemplateInheritance, TemplateCompilation |
-| **Complexity** | High |
-| **Testing Priority** | Critical |
-| **Review Required** | Yes |
-| **Documentation** | Complete |
-| **Breaking Changes** | None |
+| Field            | Value                                                                                   |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| **Version**      | 1.0.0                                                                                   |
+| **Last Updated** | 2025-09-15                                                                              |
+| **Author**       | Schema Management Domain Team                                                           |
+| **Status**       | Draft                                                                                   |
+| **Dependencies** | TemplateParameter, TemplateContent, TemplateInheritance, TemplateCompilation            |
+| **Complexity**   | High                                                                                    |
+| **Location**     | `packages/domain/src/schema-management/template-management/entities/template.entity.ts` |

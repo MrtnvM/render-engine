@@ -89,3 +89,4 @@ const compatible = version.isCompatibleWith(nextMinor) // true (same major)
 
 Version: 1.0.0
 Last Updated: 2025-09-16
+Location: `packages/domain/src/kernel/value-objects/semantic-version.value-object.ts`

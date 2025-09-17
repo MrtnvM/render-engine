@@ -1,15 +1,15 @@
-import type { z } from "zod"
-import fs from "node:fs/promises"
+import type { z } from 'zod'
+import fs from 'node:fs/promises'
 
-import path from "node:path"
-import { fileURLToPath } from "node:url"
-import type { SystemModelMessage, UserModelMessage, AssistantModelMessage, ToolModelMessage, LanguageModel } from "ai"
-import * as ai from "ai"
-import { createOpenRouter } from "@openrouter/ai-sdk-provider"
-import { createOpenAI } from "@ai-sdk/openai"
-import { logger } from "@render-engine/domain"
-import { wrapAISDK } from "langsmith/experimental/vercel"
-import { wait } from "../time/index.js"
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import type { SystemModelMessage, UserModelMessage, AssistantModelMessage, ToolModelMessage, LanguageModel } from 'ai'
+import * as ai from 'ai'
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'
+import { createOpenAI } from '@ai-sdk/openai'
+import { logger } from '@render-engine/domain'
+import { wrapAISDK } from 'langsmith/experimental/vercel'
+import { wait } from '../time/index.js'
 
 export abstract class BaseLlmCall<T extends z.ZodSchema> {
   protected readonly logger = logger(BaseLlmCall)
@@ -34,7 +34,7 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
   }
 
   get modelName(): string {
-    return "openai/gpt-5-mini"
+    return 'openai/gpt-5-mini'
   }
 
   get maxRetries(): number {
@@ -44,9 +44,9 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
   async getModel(): Promise<LanguageModel> {
     return this.openrouter.chat(this.modelName, {
       provider: {
-        sort: "throughput",
+        sort: 'throughput',
         allow_fallbacks: true,
-        data_collection: "allow",
+        data_collection: 'allow',
       },
       usage: {
         include: true,
@@ -63,14 +63,14 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
   async loadPrompt(name: string): Promise<string> {
     const filename = fileURLToPath(import.meta.url)
     const dirname = path.dirname(filename)
-    const baseDir = path.join(dirname, "..", "..", "..", "prompts")
+    const baseDir = path.join(dirname, '..', '..', '..', 'prompts')
 
-    const nameParts = name.split("/")
-    nameParts[nameParts.length - 1] = nameParts[nameParts.length - 1].replace("_", "-")
+    const nameParts = name.split('/')
+    nameParts[nameParts.length - 1] = nameParts[nameParts.length - 1].replace('_', '-')
     const namePartsStr = nameParts.join(path.sep)
 
     const filePath = path.join(baseDir, `${namePartsStr}.prompt.md`)
-    const fileContent = await fs.readFile(filePath, "utf8")
+    const fileContent = await fs.readFile(filePath, 'utf8')
     return fileContent
   }
 
@@ -86,7 +86,7 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
     ])
 
     const systemMessage: SystemModelMessage = {
-      role: "system",
+      role: 'system',
       content: systemPrompt,
     }
 
@@ -100,7 +100,7 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
       })
 
       for await (const chunk of partialObjectStream) {
-        this.logger.info("LLM call chunk", { chunk })
+        this.logger.info('LLM call chunk', { chunk })
       }
 
       const result = await object
@@ -114,7 +114,7 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
           messages: [systemMessage, ...restMessages],
           schema: this.outputSchema as any,
         })
-        this.logger.info("LLM call result", { result })
+        this.logger.info('LLM call result', { result })
         const object = result.object
         return object
       } catch (error) {
@@ -130,6 +130,6 @@ export abstract class BaseLlmCall<T extends z.ZodSchema> {
       }
     }
 
-    throw new Error("LLM call failed after all retries")
+    throw new Error('LLM call failed after all retries')
   }
 }

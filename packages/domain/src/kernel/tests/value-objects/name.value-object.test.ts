@@ -316,7 +316,7 @@ describe('Name value object', () => {
       const userName = Name.create('John Doe')
 
       // Simulate user entity usage
-      expect(userName.toString()).toMatch(/^[a-zA-Z\s]+$/)
+      expect(userName.toString()).toMatch(/^[a-z\s]+$/i)
     })
 
     it('should work with repository pattern', () => {

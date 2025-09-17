@@ -4,31 +4,34 @@
 
 The Release entity represents a deployment release containing schema versions, approval status, and deployment state. It manages the lifecycle of schema deployments from creation through approval to deployment across environments. Each release contains a collection of schemas with specific versions that are deployed together as a unit.
 
-## Fields
+## Data Structure
 
-| Name | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| id | ID | Yes | - | Unique identifier for the release |
-| version | Version | Yes | - | Semantic version of the release |
-| name | string | Yes | - | Human-readable name for the release |
-| description | string | No | "" | Detailed description of the release |
-| status | ReleaseStatus | Yes | - | Current status of the release |
-| schemas | SchemaRelease[] | Yes | [] | Collection of schemas included in this release |
-| environments | EnvironmentDeployment[] | Yes | [] | Deployment status across environments |
-| approvals | Approval[] | Yes | [] | Approval workflow status |
-| createdBy | ID | Yes | - | User who created the release |
-| createdAt | Date | Yes | - | Timestamp when the release was created |
-| updatedAt | Date | Yes | - | Timestamp when the release was last updated |
-| scheduledAt | Date | No | - | Timestamp for scheduled deployment |
-| deployedAt | Date | No | - | Timestamp when the release was deployed |
+| Name         | Type                    | Required | Default | Description                                    |
+| ------------ | ----------------------- | -------- | ------- | ---------------------------------------------- |
+| id           | ID                      | Yes      | -       | Unique identifier for the release              |
+| version      | Version                 | Yes      | -       | Semantic version of the release                |
+| name         | Name                    | Yes      | -       | Human-readable name for the release            |
+| description  | Description             | No       | -       | Detailed description of the release            |
+| status       | ReleaseStatus           | Yes      | -       | Current status of the release                  |
+| schemas      | SchemaRelease[]         | Yes      | []      | Collection of schemas included in this release |
+| environments | EnvironmentDeployment[] | Yes      | []      | Deployment status across environments          |
+| approvals    | Approval[]              | Yes      | []      | Approval workflow status                       |
+| createdBy    | ID                      | Yes      | -       | User who created the release                   |
+| createdAt    | Date                    | Yes      | -       | Timestamp when the release was created         |
+| updatedAt    | Date                    | Yes      | -       | Timestamp when the release was last updated    |
+| scheduledAt  | Date                    | No       | -       | Timestamp for scheduled deployment             |
+| deployedAt   | Date                    | No       | -       | Timestamp when the release was deployed        |
 
 ## Methods
 
-### create(params: CreateReleaseParams): Release
+### Factory Methods
+
+#### create(params: CreateReleaseParams): Release
 
 Creates a new release with the specified parameters.
 
 **Parameters:**
+
 - `params`: Object containing:
   - `name`: Human-readable name for the release
   - `description`: Optional detailed description
@@ -38,90 +41,113 @@ Creates a new release with the specified parameters.
 **Returns:** New Release instance
 
 **Throws:**
+
 - `InvalidReleaseError` if required parameters are missing or invalid
 
-### approve(approval: Approval): void
+**Emits:** ReleaseCreatedEvent
+
+### Business Methods
+
+#### approve(approval: Approval): void
 
 Adds an approval to the release and updates status if all required approvals are received.
 
 **Parameters:**
+
 - `approval`: Approval object containing approver, status, and comments
 
 **Returns:** void
 
 **Throws:**
+
 - `InvalidApprovalError` if approval is invalid
 - `ReleaseAlreadyApprovedError` if release is already approved
 
-### deployToEnvironment(environment: Environment, config: EnvironmentConfig): void
+**Emits:** ReleaseApprovedEvent (when all approvals received)
+
+#### deployToEnvironment(environment: Environment, config: EnvironmentConfig): void
 
 Deploys the release to a specific environment with the given configuration.
 
 **Parameters:**
+
 - `environment`: Target environment for deployment
 - `config`: Environment-specific deployment configuration
 
 **Returns:** void
 
 **Throws:**
+
 - `ReleaseNotApprovedError` if release is not approved
 - `EnvironmentAlreadyDeployedError` if already deployed to environment
 - `DeploymentFailedError` if deployment fails
 
-### rollback(environment: Environment): void
+**Emits:** ReleaseDeployedEvent
+
+#### rollback(environment: Environment): void
 
 Rolls back the release in the specified environment to the previous version.
 
 **Parameters:**
+
 - `environment`: Environment to rollback
 
 **Returns:** void
 
 **Throws:**
+
 - `NoPreviousVersionError` if no previous version exists
 - `RollbackFailedError` if rollback fails
 
-### addSchema(schema: SchemaRelease): void
+**Emits:** ReleaseRolledBackEvent
+
+#### addSchema(schema: SchemaRelease): void
 
 Adds a schema to the release.
 
 **Parameters:**
+
 - `schema`: Schema to add to the release
 
 **Returns:** void
 
 **Throws:**
+
 - `SchemaAlreadyExistsError` if schema already exists in release
 - `InvalidSchemaError` if schema is invalid
 
-### removeSchema(schemaId: ID): void
+#### removeSchema(schemaId: ID): void
 
 Removes a schema from the release.
 
 **Parameters:**
+
 - `schemaId`: ID of the schema to remove
 
 **Returns:** void
 
 **Throws:**
+
 - `SchemaNotFoundError` if schema not found in release
 - `CannotModifyApprovedReleaseError` if release is already approved
 
-### scheduleDeployment(environment: Environment, scheduledAt: Date): void
+#### scheduleDeployment(environment: Environment, scheduledAt: Date): void
 
 Schedules the release for deployment at a specific time.
 
 **Parameters:**
+
 - `environment`: Environment to schedule deployment for
 - `scheduledAt`: Timestamp for scheduled deployment
 
 **Returns:** void
 
 **Throws:**
+
 - `InvalidScheduleError` if scheduled time is in the past
 - `ReleaseNotApprovedError` if release is not approved
 
-## Business Rules & Invariants
+## Business Rules
 
 1. **Version Uniqueness**: Each release must have a unique version number
 2. **Approval Workflow**: Releases must follow the defined approval workflow before deployment
@@ -134,13 +160,41 @@ Schedules the release for deployment at a specific time.
 
 ## Dependencies
 
-- **ID**: From `@render-engine/domain` - Unique identifier
-- **Version**: Value object for semantic versioning
-- **ReleaseStatus**: Value object for release status
-- **SchemaRelease**: Entity representing a schema in a release
-- **Environment**: Entity representing deployment environments
-- **EnvironmentConfig**: Value object for environment configuration
-- **Approval**: Entity for approval workflow
+### Base Classes
+
+- `Entity<ID>` - Base entity class
+
+### Value Objects
+
+- `ID` - Unique identifier
+- `Name` - Human-readable name from kernel
+- `Description` - Human-readable description from kernel
+- `Version` - Semantic versioning
+- `ReleaseStatus` - Release status enumeration
+- `EnvironmentConfig` - Environment configuration
+
+### Domain Events
+
+- `ReleaseCreatedEvent` - Emitted when release is created
+- `ReleaseApprovedEvent` - Emitted when release is approved
+- `ReleaseDeployedEvent` - Emitted when release is deployed
+- `ReleaseRolledBackEvent` - Emitted when release is rolled back
+
+### Domain Errors
+
+- `InvalidReleaseError` - Invalid release parameters
+- `InvalidApprovalError` - Invalid approval
+- `ReleaseAlreadyApprovedError` - Release already approved
+- `ReleaseNotApprovedError` - Release not approved
+- `EnvironmentAlreadyDeployedError` - Environment already deployed
+- `DeploymentFailedError` - Deployment failed
+- `NoPreviousVersionError` - No previous version for rollback
+- `RollbackFailedError` - Rollback failed
+- `SchemaAlreadyExistsError` - Schema already exists
+- `InvalidSchemaError` - Invalid schema
+- `SchemaNotFoundError` - Schema not found
+- `CannotModifyApprovedReleaseError` - Cannot modify approved release
+- `InvalidScheduleError` - Invalid schedule time
 
 ## Events
 
@@ -149,13 +203,14 @@ Schedules the release for deployment at a specific time.
 Emitted when a new release is created.
 
 **Payload:**
+
 ```typescript
 {
-  releaseId: ID;
-  version: string;
-  name: string;
-  createdBy: ID;
-  createdAt: Date;
+  releaseId: ID
+  version: string
+  name: string
+  createdBy: ID
+  createdAt: Date
 }
 ```
 
@@ -164,6 +219,7 @@ Emitted when a new release is created.
 Emitted when a release receives all required approvals.
 
 **Payload:**
+
 ```typescript
 {
   releaseId: ID;
@@ -178,13 +234,14 @@ Emitted when a release receives all required approvals.
 Emitted when a release is successfully deployed to an environment.
 
 **Payload:**
+
 ```typescript
 {
-  releaseId: ID;
-  version: string;
-  environment: string;
-  deployedAt: Date;
-  deployedBy: ID;
+  releaseId: ID
+  version: string
+  environment: string
+  deployedAt: Date
+  deployedBy: ID
 }
 ```
 
@@ -193,70 +250,56 @@ Emitted when a release is successfully deployed to an environment.
 Emitted when a release is rolled back in an environment.
 
 **Payload:**
+
 ```typescript
 {
-  releaseId: ID;
-  version: string;
-  environment: string;
-  rolledBackAt: Date;
-  rolledBackBy: ID;
-  previousVersion: string;
+  releaseId: ID
+  version: string
+  environment: string
+  rolledBackAt: Date
+  rolledBackBy: ID
+  previousVersion: string
 }
 ```
 
 ## Tests
 
-### Unit Tests
+### Essential Tests
 
-1. **Release Creation**
-   - Should create release with valid parameters
-   - Should throw error with missing required parameters
-   - Should set initial status to DRAFT
-   - Should generate unique ID
+- **Factory Methods**
 
-2. **Approval Workflow**
-   - Should add approval to release
-   - Should update status when all approvals received
-   - Should throw error for duplicate approvals
-   - Should throw error for release already approved
+  - Create release with valid parameters
+  - Create release with invalid parameters (should throw errors)
+  - Create release with empty schemas array
 
-3. **Environment Deployment**
-   - Should deploy to environment when approved
-   - Should throw error when not approved
-   - Should throw error for duplicate deployment
-   - Should update deployment status
+- **Business Methods**
 
-4. **Rollback Functionality**
-   - Should rollback to previous version
-   - Should throw error when no previous version
-   - Should update environment status
-   - Should emit rollback event
+  - Add approval to release
+  - Approve release with all required approvals
+  - Deploy to environment when approved
+  - Deploy to environment when not approved (should throw error)
+  - Rollback release in environment
+  - Rollback when no previous version exists (should throw error)
+  - Add schema to release
+  - Remove schema from release
+  - Modify approved release (should throw error)
+  - Schedule deployment for future date
+  - Schedule deployment for past date (should throw error)
 
-5. **Schema Management**
-   - Should add schema to release
-   - Should remove schema from release
-   - Should throw error for duplicate schema
-   - Should throw error for modifying approved release
+- **Domain Events**
 
-6. **Scheduling**
-   - Should schedule deployment for future date
-   - Should throw error for past date
-   - Should throw error for unapproved release
-   - Should update scheduled timestamp
+  - ReleaseCreatedEvent emitted on creation
+  - ReleaseApprovedEvent emitted when fully approved
+  - ReleaseDeployedEvent emitted on successful deployment
+  - ReleaseRolledBackEvent emitted on rollback
 
-### Integration Tests
-
-1. **End-to-End Release Workflow**
-   - Should handle complete release lifecycle
-   - Should integrate with approval system
-   - Should handle environment deployments
-   - Should support rollback scenarios
-
-2. **Multi-Environment Deployment**
-   - Should deploy to multiple environments
-   - Should maintain environment isolation
-   - Should handle environment-specific configurations
-   - Should support environment-specific rollbacks
+- **Business Rules**
+  - Version uniqueness validation
+  - Approval workflow enforcement
+  - Environment deployment isolation
+  - Schema compatibility validation
+  - Deployment order enforcement
+  - Schedule validation rules
 
 ## Serialization
 
@@ -312,7 +355,6 @@ Emitted when a release is rolled back in an environment.
 ## Metadata
 
 Version: 1.0.0
-Last Updated: 2025-09-15
-Status: Draft
-Author: Deployment Domain Team
+Last Updated: 2025-09-16
+Location: `packages/domain/src/deployment-and-distribution/release-management/entities/release.entity.ts`
 Bounded Context: Release Management
