@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as EditorPageRouteRouteImport } from './routes/editor-page/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
@@ -41,11 +40,6 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 
-const EditorPageRouteRoute = EditorPageRouteRouteImport.update({
-  id: '/editor-page',
-  path: '/editor-page',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -205,7 +199,6 @@ const AuthenticatedSettingsAccountRoute =
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthAuthenticatedRouteRouteWithChildren
-  '/editor-page': typeof EditorPageRouteRoute
   '/editor': typeof AuthenticatedEditorRouteRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/auth/': typeof AuthauthRouteRouteWithChildren
@@ -235,7 +228,6 @@ export interface FileRoutesByFullPath {
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
-  '/editor-page': typeof EditorPageRouteRoute
   '/editor': typeof AuthenticatedEditorRouteRoute
   '/auth': typeof AuthAuthenticatedRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
@@ -267,7 +259,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/editor-page': typeof EditorPageRouteRoute
   '/_authenticated/editor': typeof AuthenticatedEditorRouteRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/auth/(auth)': typeof AuthauthRouteRouteWithChildren
@@ -301,7 +292,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/auth'
-    | '/editor-page'
     | '/editor'
     | '/settings'
     | '/auth/'
@@ -331,7 +321,6 @@ export interface FileRouteTypes {
     | '/users'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/editor-page'
     | '/editor'
     | '/auth'
     | '/forgot-password'
@@ -362,7 +351,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/auth'
-    | '/editor-page'
     | '/_authenticated/editor'
     | '/_authenticated/settings'
     | '/auth/(auth)'
@@ -396,7 +384,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  EditorPageRouteRoute: typeof EditorPageRouteRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authOtpRoute: typeof authOtpRoute
   authSignInRoute: typeof authSignInRoute
@@ -411,13 +398,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/editor-page': {
-      id: '/editor-page'
-      path: '/editor-page'
-      fullPath: '/editor-page'
-      preLoaderRoute: typeof EditorPageRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -724,7 +704,6 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  EditorPageRouteRoute: EditorPageRouteRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,
