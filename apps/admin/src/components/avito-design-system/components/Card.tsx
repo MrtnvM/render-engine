@@ -8,9 +8,9 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles = {
-  default: 'bg-white border border-avito-neutral-200',
-  outlined: 'bg-white border-2 border-avito-neutral-300',
-  elevated: 'bg-white shadow-md border border-avito-neutral-100',
+  default: 'bg-white border border-avito-neutral-100',
+  outlined: 'bg-white border-2 border-avito-neutral-200',
+  elevated: 'bg-white shadow-sm border border-avito-neutral-50',
 };
 
 const paddingStyles = {
@@ -22,9 +22,9 @@ const paddingStyles = {
 
 const roundedStyles = {
   none: 'rounded-none',
-  sm: 'rounded-sm',
-  md: 'rounded-lg',
-  lg: 'rounded-xl',
+  sm: 'rounded-lg',
+  md: 'rounded-xl',
+  lg: 'rounded-2xl',
 };
 
 export const Card: React.FC<CardProps> = ({

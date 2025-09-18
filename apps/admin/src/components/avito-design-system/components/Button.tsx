@@ -10,10 +10,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantStyles = {
-  primary: 'bg-avito-primary-600 text-white hover:bg-avito-primary-700 active:bg-avito-primary-800 disabled:bg-avito-neutral-300',
-  secondary: 'bg-white text-avito-neutral-900 border border-avito-neutral-300 hover:bg-avito-neutral-50 active:bg-avito-neutral-100 disabled:bg-avito-neutral-100',
-  outline: 'bg-transparent text-avito-primary-600 border border-avito-primary-600 hover:bg-avito-primary-50 active:bg-avito-primary-100 disabled:text-avito-neutral-400',
-  ghost: 'bg-transparent text-avito-neutral-700 hover:bg-avito-neutral-100 active:bg-avito-neutral-200 disabled:text-avito-neutral-400',
+  primary: 'bg-avito-primary-600 text-white hover:bg-avito-primary-700 active:bg-avito-primary-800 disabled:bg-avito-neutral-300 shadow-sm hover:shadow-md transition-shadow',
+  secondary: 'bg-white text-avito-neutral-900 border border-avito-neutral-200 hover:bg-avito-neutral-50 active:bg-avito-neutral-100 disabled:bg-avito-neutral-100 shadow-sm',
+  outline: 'bg-transparent text-avito-primary-600 border border-avito-primary-200 hover:bg-avito-primary-50 active:bg-avito-primary-100 disabled:text-avito-neutral-400 hover:border-avito-primary-300',
+  ghost: 'bg-transparent text-avito-neutral-600 hover:bg-avito-neutral-100 active:bg-avito-neutral-200 disabled:text-avito-neutral-400',
 };
 
 const sizeStyles = {
@@ -44,7 +44,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-avito-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-avito-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed',
         variantStyles[variant],
         sizeStyles[size],
         className

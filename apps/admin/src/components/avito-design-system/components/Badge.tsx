@@ -8,11 +8,11 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles = {
-  default: 'bg-avito-primary-100 text-avito-primary-700 border border-avito-primary-200',
-  secondary: 'bg-avito-neutral-100 text-avito-neutral-700 border border-avito-neutral-200',
-  success: 'bg-avito-success-100 text-avito-success-700 border border-avito-success-200',
-  warning: 'bg-avito-warning-100 text-avito-warning-700 border border-avito-warning-200',
-  error: 'bg-avito-error-100 text-avito-error-700 border border-avito-error-200',
+  default: 'bg-blue-50 text-blue-700 border border-blue-200',
+  secondary: 'bg-gray-50 text-gray-700 border border-gray-200',
+  success: 'bg-green-50 text-green-700 border border-green-200',
+  warning: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+  error: 'bg-red-50 text-red-700 border border-red-200',
 };
 
 const sizeStyles = {
@@ -23,8 +23,8 @@ const sizeStyles = {
 
 const roundedStyles = {
   none: 'rounded-none',
-  sm: 'rounded-sm',
-  md: 'rounded-md',
+  sm: 'rounded-md',
+  md: 'rounded-lg',
   full: 'rounded-full',
 };
 
@@ -58,12 +58,12 @@ export interface StatusBadgeProps extends Omit<BadgeProps, 'variant'> {
 }
 
 const statusStyles = {
-  active: 'bg-avito-success-100 text-avito-success-700 border-avito-success-200',
-  inactive: 'bg-avito-neutral-100 text-avito-neutral-700 border-avito-neutral-200',
-  pending: 'bg-avito-warning-100 text-avito-warning-700 border-avito-warning-200',
-  completed: 'bg-avito-success-100 text-avito-success-700 border-avito-success-200',
-  failed: 'bg-avito-error-100 text-avito-error-700 border-avito-error-200',
-  new: 'bg-avito-primary-100 text-avito-primary-700 border-avito-primary-200',
+  active: 'bg-green-50 text-green-700 border-green-200',
+  inactive: 'bg-gray-50 text-gray-700 border-gray-200',
+  pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  completed: 'bg-green-50 text-green-700 border-green-200',
+  failed: 'bg-red-50 text-red-700 border-red-200',
+  new: 'bg-blue-50 text-blue-700 border-blue-200',
 };
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({
@@ -91,11 +91,11 @@ export interface DotBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const dotVariantStyles = {
-  default: 'bg-avito-primary-600',
-  secondary: 'bg-avito-neutral-600',
-  success: 'bg-avito-success-600',
-  warning: 'bg-avito-warning-600',
-  error: 'bg-avito-error-600',
+  default: 'bg-blue-600',
+  secondary: 'bg-gray-600',
+  success: 'bg-green-600',
+  warning: 'bg-yellow-600',
+  error: 'bg-red-600',
 };
 
 const dotSizeStyles = {
