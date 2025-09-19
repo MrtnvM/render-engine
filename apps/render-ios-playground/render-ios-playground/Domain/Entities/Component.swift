@@ -40,11 +40,7 @@ class Component: Equatable {
     }
     
     func addChild(_ child: Component) throws {
-        // Check for circular dependencies
-        if child.containsComponent(with: self.id) {
-            throw DomainError.renderingError("Circular dependency detected")
-        }
-        
+        try self.checkCircularDependencies(child)
         children.append(child)
     }
     
@@ -58,6 +54,12 @@ class Component: Equatable {
         }
         
         return children.contains { $0.containsComponent(with: id) }
+    }
+
+    private checkCircularDependencies(_ child: Component) throws {
+        if child.containsComponent(with: self.id) {
+            throw DomainError.renderingError("Circular dependency detected")
+        }
     }
     
     static func == (lhs: Component, rhs: Component) -> Bool {

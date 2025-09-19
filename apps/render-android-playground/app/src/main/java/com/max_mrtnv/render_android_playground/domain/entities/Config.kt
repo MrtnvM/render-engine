@@ -1,7 +1,5 @@
 package com.max_mrtnv.render_android_playground.domain.entities
 
-import androidx.compose.ui.graphics.Color
-
 /**
  * Configuration wrapper for handling JSON data with type safety
  */

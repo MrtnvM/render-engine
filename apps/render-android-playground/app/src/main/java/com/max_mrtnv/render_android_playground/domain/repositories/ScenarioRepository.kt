@@ -1,9 +1,10 @@
 package com.max_mrtnv.render_android_playground.domain.repositories
 
-/**
- * Repository interface for fetching scenarios
- */
+import com.max_mrtnv.render_android_playground.application.errors.ApplicationError
+import com.max_mrtnv.render_android_playground.domain.entities.Scenario
+import com.max_mrtnv.render_android_playground.domain.errors.DomainError
+
 interface ScenarioRepository {
-    suspend fun fetchScenario(): Map<String, Any?>
-    suspend fun fetchScenario(url: String): Map<String, Any?>
+    @Throws(ApplicationError::class, DomainError::class)
+    suspend fun fetchScenario(url: String): Scenario
 }

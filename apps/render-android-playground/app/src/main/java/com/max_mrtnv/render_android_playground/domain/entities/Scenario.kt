@@ -23,6 +23,7 @@ data class Scenario(
             val mainComponent = try {
                 Component.create(mainComponentConfig)
             } catch (e: Exception) {
+                println("Error creating main component: ${e.message}")
                 return null
             }
             

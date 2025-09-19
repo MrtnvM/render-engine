@@ -1,7 +1,6 @@
 package com.max_mrtnv.render_android_playground.infrastructure.network
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.max_mrtnv.render_android_playground.application.errors.ApplicationError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

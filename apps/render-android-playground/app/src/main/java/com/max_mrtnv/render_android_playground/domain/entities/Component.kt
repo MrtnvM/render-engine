@@ -1,5 +1,6 @@
 package com.max_mrtnv.render_android_playground.domain.entities
 
+import android.content.Context
 import com.max_mrtnv.render_android_playground.domain.errors.DomainError
 import java.util.UUID
 
@@ -10,6 +11,7 @@ data class Component(
     val id: String,
     val type: String,
     val style: ViewStyle,
+    val context: Context? = null,
     private val _children: MutableList<Component> = mutableListOf()
 ) {
     val children: List<Component> get() = _children.toList()
@@ -30,21 +32,21 @@ data class Component(
     
     companion object {
         @Throws(DomainError::class)
-        fun create(config: Config): Component {
-            val type = config.getString("type") 
+        fun create(config: Config, context: Context? = null): Component {
+            val type = config.getString("type")
                 ?: throw DomainError.InvalidSchemaStructure("Missing 'type' field in component config")
-            
+
             val id = config.getString("id") ?: UUID.randomUUID().toString()
             val styleConfig = config.getConfig("style")
             val style = ViewStyle(styleConfig)
-            
-            val component = Component(id, type, style)
-            
+
+            val component = Component(id, type, style, context)
+
             config.getConfigArray("children")?.forEach { childConfig ->
-                val childComponent = create(childConfig)
+                val childComponent = create(childConfig, context)
                 component.addChild(childComponent)
             }
-            
+
             return component
         }
     }

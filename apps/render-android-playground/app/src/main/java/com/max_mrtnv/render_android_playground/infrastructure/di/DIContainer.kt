@@ -2,52 +2,51 @@ package com.max_mrtnv.render_android_playground.infrastructure.di
 
 import com.max_mrtnv.render_android_playground.application.services.ScenarioService
 import com.max_mrtnv.render_android_playground.application.usecases.FetchScenarioUseCase
-import com.max_mrtnv.render_android_playground.application.usecases.RenderComponentUseCase
 import com.max_mrtnv.render_android_playground.domain.repositories.ScenarioRepository
-import com.max_mrtnv.render_android_playground.domain.services.ComponentRenderingService
+import com.max_mrtnv.render_android_playground.domain.services.RenderController
 import com.max_mrtnv.render_android_playground.domain.services.Renderer
+import com.max_mrtnv.render_android_playground.infrastructure.network.NetworkClient
 import com.max_mrtnv.render_android_playground.infrastructure.repositories.HttpScenarioRepository
-import com.max_mrtnv.render_android_playground.presentation.renderers.ButtonRenderer
-import com.max_mrtnv.render_android_playground.presentation.renderers.ContainerRenderer
-import com.max_mrtnv.render_android_playground.presentation.renderers.InputRenderer
-import com.max_mrtnv.render_android_playground.presentation.renderers.TextRenderer
+import com.max_mrtnv.render_android_playground.presentation.renderers.ButtonViewRenderer
+import com.max_mrtnv.render_android_playground.presentation.renderers.EditTextRenderer
+import com.max_mrtnv.render_android_playground.presentation.renderers.TextViewRenderer
+import com.max_mrtnv.render_android_playground.presentation.renderers.ViewRenderer
 
 /**
  * Dependency injection container for the application
  */
 object DIContainer {
-    
+    val networkClient: NetworkClient by lazy {
+        NetworkClient()
+    }
+
     // Repositories
     val scenarioRepository: ScenarioRepository by lazy {
-        HttpScenarioRepository()
+        HttpScenarioRepository(networkClient)
     }
-    
+
     // Renderers
     private val renderers: Map<String, Renderer> by lazy {
         mapOf(
-            "container" to ContainerRenderer(),
-            "button" to ButtonRenderer(),
-            "text" to TextRenderer(),
-            "input" to InputRenderer()
+            "view" to ViewRenderer(),
+            "button" to ButtonViewRenderer(),
+            "label" to TextViewRenderer(),
+            "input" to EditTextRenderer()
         )
     }
-    
+
     // Domain Services
-    val componentRenderingService: ComponentRenderingService by lazy {
-        ComponentRenderingService(renderers)
+    val renderController: RenderController by lazy {
+        RenderController(renderers)
     }
-    
+
     // Use Cases
     val fetchScenarioUseCase: FetchScenarioUseCase by lazy {
         FetchScenarioUseCase(scenarioRepository)
     }
-    
-    val renderComponentUseCase: RenderComponentUseCase by lazy {
-        RenderComponentUseCase(componentRenderingService)
-    }
-    
+
     // Application Services
     val scenarioService: ScenarioService by lazy {
-        ScenarioService(fetchScenarioUseCase, renderComponentUseCase)
+        ScenarioService(fetchScenarioUseCase)
     }
 }

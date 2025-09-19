@@ -1,8 +1,6 @@
 package com.max_mrtnv.render_android_playground.domain.entities
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import android.graphics.Color
 
 /**
  * Domain entity representing view styling properties
@@ -10,29 +8,29 @@ import androidx.compose.ui.unit.dp
 class ViewStyle(private val config: Config?) {
     private val cache = mutableMapOf<String, Any?>()
     
-    val backgroundColor: Color?
+    val backgroundColor: Int?
         get() = get("bgColor") { parseColor(it) }
-    
-    val cornerRadius: Dp?
-        get() = get("cornerRadius") { (it as? Number)?.toFloat()?.dp }
-    
-    val borderWidth: Dp?
-        get() = get("borderWidth") { (it as? Number)?.toFloat()?.dp }
-    
-    val borderColor: Color?
+
+    val cornerRadius: Float?
+        get() = get("cornerRadius") { (it as? Number)?.toFloat() }
+
+    val borderWidth: Float?
+        get() = get("borderWidth") { (it as? Number)?.toFloat() }
+
+    val borderColor: Int?
         get() = get("borderColor") { parseColor(it) }
-    
-    val x: Dp?
-        get() = get("x") { (it as? Number)?.toFloat()?.dp }
-    
-    val y: Dp?
-        get() = get("y") { (it as? Number)?.toFloat()?.dp }
-    
-    val width: Dp?
-        get() = get("width") { (it as? Number)?.toFloat()?.dp }
-    
-    val height: Dp?
-        get() = get("height") { (it as? Number)?.toFloat()?.dp }
+
+    val x: Float?
+        get() = get("x") { (it as? Number)?.toFloat() }
+
+    val y: Float?
+        get() = get("y") { (it as? Number)?.toFloat() }
+
+    val width: Float?
+        get() = get("width") { (it as? Number)?.toFloat() }
+
+    val height: Float?
+        get() = get("height") { (it as? Number)?.toFloat() }
     
     val title: String?
         get() = get("title") { it as? String }
@@ -43,14 +41,20 @@ class ViewStyle(private val config: Config?) {
     val placeholder: String?
         get() = get("placeholder") { it as? String }
     
-    val textColor: Color?
+    val textColor: Int?
         get() = get("textColor") { parseColor(it) }
-    
-    val titleColor: Color?
+
+    val titleColor: Int?
         get() = get("titleColor") { parseColor(it) }
     
     val fontSize: Float?
         get() = get("fontSize") { (it as? Number)?.toFloat() }
+
+    val fontWeight: String?
+        get() = get("fontWeight") { it as? String }
+
+    val textAlign: String?
+        get() = get("textAlign") { it as? String }
     
     private fun <T> get(key: String, transform: (Any) -> T?): T? {
         if (cache.containsKey(key)) {
@@ -64,29 +68,28 @@ class ViewStyle(private val config: Config?) {
         return value
     }
     
-    private fun parseColor(value: Any?): Color? {
+    private fun parseColor(value: Any?): Int? {
         return when (value) {
             is String -> {
                 try {
                     when {
                         value.startsWith("#") && value.length == 7 -> {
-                            val colorInt = value.substring(1).toLong(16)
-                            Color(colorInt or 0xFF000000)
+                            Color.parseColor(value)
                         }
                         value.startsWith("#") && value.length == 9 -> {
-                            val colorInt = value.substring(1).toLong(16)
-                            Color(colorInt)
+                            Color.parseColor(value)
                         }
-                        value.equals("red", ignoreCase = true) -> Color.Red
-                        value.equals("blue", ignoreCase = true) -> Color.Blue
-                        value.equals("green", ignoreCase = true) -> Color.Green
-                        value.equals("yellow", ignoreCase = true) -> Color.Yellow
-                        value.equals("black", ignoreCase = true) -> Color.Black
-                        value.equals("white", ignoreCase = true) -> Color.White
-                        value.equals("gray", ignoreCase = true) -> Color.Gray
+                        value.equals("red", ignoreCase = true) -> Color.RED
+                        value.equals("blue", ignoreCase = true) -> Color.BLUE
+                        value.equals("green", ignoreCase = true) -> Color.GREEN
+                        value.equals("yellow", ignoreCase = true) -> Color.YELLOW
+                        value.equals("black", ignoreCase = true) -> Color.BLACK
+                        value.equals("white", ignoreCase = true) -> Color.WHITE
+                        value.equals("gray", ignoreCase = true) -> Color.GRAY
                         else -> null
                     }
                 } catch (e: Exception) {
+                    println("Error parsing color: $value")
                     null
                 }
             }
