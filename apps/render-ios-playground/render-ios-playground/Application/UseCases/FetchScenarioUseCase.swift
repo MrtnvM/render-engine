@@ -4,8 +4,8 @@ import Foundation
 class FetchScenarioUseCase {
     private let schemaRepository: ScenarioRepository
     
-    init(schemaRepository: ScenarioRepository) {
-        self.schemaRepository = schemaRepository
+    init(scenarioRepository: ScenarioRepository) {
+        self.schemaRepository = scenarioRepository
     }
     
     func execute() async throws -> Scenario? {
@@ -16,7 +16,7 @@ class FetchScenarioUseCase {
             if error is DomainError {
                 throw error
             } else {
-                throw ApplicationError.schemaFetchFailed(error.localizedDescription)
+                throw ApplicationError.scenarioFetchFailed(error.localizedDescription)
             }
         }
     }
@@ -29,7 +29,7 @@ class FetchScenarioUseCase {
             if error is DomainError {
                 throw error
             } else {
-                throw ApplicationError.schemaFetchFailed(error.localizedDescription)
+                throw ApplicationError.scenarioFetchFailed(error.localizedDescription)
             }
         }
     }

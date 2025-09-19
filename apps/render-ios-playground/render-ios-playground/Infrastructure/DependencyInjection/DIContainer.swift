@@ -8,36 +8,39 @@ class DIContainer {
     
     // MARK: - Repositories
     
-    lazy var schemaRepository: ScenarioRepository = {
-        return HttpSchemaRepository()
+    lazy var networkClient: NetworkClient = {
+        return NetworkClient()
     }()
     
-    // MARK: - Domain Services
-    
-    lazy var componentRenderingService: ComponentRenderingService = {
-        return ComponentRenderingService(renderers: [
-            UIViewRenderer(),
-            UILabelRenderer(),
-            UIButtonRenderer()
-        ])
+    lazy var scenarioRepository: ScenarioRepository = {
+        return ScenarioRepositoryImpl(
+            networkClient: networkClient
+        )
     }()
     
     // MARK: - Use Cases
     
     lazy var fetchScenarioUseCase: FetchScenarioUseCase = {
-        return FetchScenarioUseCase(schemaRepository: schemaRepository)
-    }()
-    
-    lazy var renderComponentUseCase: RenderComponentUseCase = {
-        return RenderComponentUseCase(renderingService: componentRenderingService)
+        return FetchScenarioUseCase(
+            scenarioRepository: scenarioRepository
+        )
     }()
     
     // MARK: - Application Services
     
     lazy var scenarioService: ScenarioService = {
         return ScenarioService(
-            fetchScenarioUseCase: fetchScenarioUseCase,
-            renderComponentUseCase: renderComponentUseCase
+            fetchScenarioUseCase: fetchScenarioUseCase
         )
+    }()
+    
+    // MARK: Controllers
+    
+    lazy var renderController: RenderController = {
+        return RenderController(renderers: [
+            UIViewRenderer(),
+            UILabelRenderer(),
+            UIButtonRenderer()
+        ])
     }()
 }

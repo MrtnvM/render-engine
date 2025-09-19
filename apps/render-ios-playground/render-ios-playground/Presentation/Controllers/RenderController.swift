@@ -1,7 +1,12 @@
 import UIKit
 
-/// Domain service responsible for rendering components to UIViews
-class ComponentRenderingService {
+protocol Renderer {
+    var type: String { get }
+    func render(component: Component) -> UIView?
+}
+
+/// Controller responsible for rendering components to UIViews
+class RenderController {
     private var renderers: [String: Renderer] = [:]
     
     init(renderers: [Renderer]) {
@@ -9,7 +14,6 @@ class ComponentRenderingService {
             self.renderers[renderer.type] = renderer
         }
     }
-    
     
     func render(_ component: Component) -> UIView? {
         guard let renderer = renderers[component.type] else {

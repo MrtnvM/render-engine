@@ -5,24 +5,10 @@ class MainViewController: UIViewController {
     
     // MARK: - Dependencies
     private let schemaService = DIContainer.shared.scenarioService
+    private let renderController = DIContainer.shared.renderController
     
     // MARK: - UI Components
-    private var contentView: UIView?
-    private lazy var fetchButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Fetch Schema", for: .normal)
-        button.backgroundColor = UIColor.systemBlue
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(fetchSchemaButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.hidesWhenStopped = true
-        return indicator
-    }()
+    private var mainView: MainView!
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -32,100 +18,45 @@ class MainViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        view.backgroundColor = UIColor.systemBackground
-        
-        setupFetchButton()
-        setupActivityIndicator()
-    }
-    
-    private func setupFetchButton() {
-        view.addSubview(fetchButton)
-        fetchButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            fetchButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            fetchButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            fetchButton.widthAnchor.constraint(equalToConstant: 150),
-            fetchButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
-    private func setupActivityIndicator() {
-        view.addSubview(activityIndicator)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
-    
-    // MARK: - Actions
-    @objc private func fetchSchemaButtonTapped() {
-        Task {
-            await fetchAndRenderSchema()
-        }
+        mainView = MainView()
+        mainView.delegate = self
+        view = mainView
     }
     
     // MARK: - Business Logic
     private func fetchAndRenderSchema() async {
         await MainActor.run {
-            showLoading(true)
+            mainView.showLoading(true)
         }
         
         do {
-            let renderedView = try await schemaService.fetchAndRenderScenario()
+            let url = URL(string: "http://localhost:3050/json-schema")!
+            let scenario = try await schemaService.fetchScenario(from: url)
             
             await MainActor.run {
-                showLoading(false)
-                displayContent(renderedView)
+                if let view = renderController.render(scenario.mainComponent) {
+                    mainView.displayContent(view)
+                }
+                mainView.showLoading(false)
             }
         } catch {
             await MainActor.run {
-                showLoading(false)
-                showError(error)
+                mainView.showLoading(false)
+                mainView.showError(error)
             }
         }
     }
-    
-    // MARK: - UI Updates
-    private func showLoading(_ isLoading: Bool) {
-        fetchButton.isEnabled = !isLoading
-        
-        if isLoading {
-            activityIndicator.startAnimating()
-        } else {
-            activityIndicator.stopAnimating()
+}
+
+// MARK: - MainViewDelegate
+extension MainViewController: MainViewDelegate {
+    func mainViewDidTapFetchButton(_ mainView: MainView) {
+        Task {
+            await fetchAndRenderSchema()
         }
     }
     
-    private func displayContent(_ content: UIView) {
-        // Remove existing content view if any
-        contentView?.removeFromSuperview()
-        
-        // Set new content view
-        contentView = content
-        view.addSubview(content)
-        
-        // Position content above the button
-        content.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            content.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            content.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            content.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            content.bottomAnchor.constraint(equalTo: fetchButton.topAnchor, constant: -20)
-        ])
-    }
-    
-    private func showError(_ error: Error) {
-        let alert = UIAlertController(
-            title: "Error",
-            message: error.localizedDescription,
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+    func mainView(_ mainView: MainView, shouldPresentAlert alert: UIAlertController) {
         present(alert, animated: true)
-        
-        // Also log the error
-        print("Error occurred: \(error)")
     }
 }

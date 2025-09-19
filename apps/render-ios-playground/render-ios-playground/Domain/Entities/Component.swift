@@ -14,11 +14,13 @@ class Component: Equatable {
     }
     
     static func create(from config: Config) throws -> Component {
-        guard let typeString = config.get(forKey: "type") as? String else {
-            throw DomainError.invalidSchemaStructure("Missing 'type' field in component config")
+        guard let typeString = config.getString(forKey: "type") else {
+            throw DomainError.invalidScenarioStructure(
+                "Missing 'type' field in component config"
+            )
         }
         
-        let id: String = config.getString(forKey: "id") ?? UUID().uuidString
+        let id = config.getString(forKey: "id") ?? UUID().uuidString
         let style = ViewStyle(config.getConfig(forKey: "style"))
 
         let component = Component(

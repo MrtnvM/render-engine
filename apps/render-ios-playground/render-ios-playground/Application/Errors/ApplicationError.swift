@@ -1,7 +1,7 @@
 /// Application-specific errors
 enum ApplicationError: Error {
     case networkError(String)
-    case schemaFetchFailed(String)
+    case scenarioFetchFailed(String)
     case invalidResponse(String)
     case parsingError(String)
     case renderingError(String)
@@ -10,8 +10,8 @@ enum ApplicationError: Error {
         switch self {
         case .networkError(let message):
             return "Network error: \(message)"
-        case .schemaFetchFailed(let message):
-            return "Schema fetch failed: \(message)"
+        case .scenarioFetchFailed(let message):
+            return "Scenario fetch failed: \(message)"
         case .invalidResponse(let message):
             return "Invalid response: \(message)"
         case .parsingError(let message):
