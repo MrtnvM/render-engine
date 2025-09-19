@@ -1,61 +1,98 @@
 import UIKit
 
-/// Renderer for UIButton components
 class UIButtonRenderer: Renderer {
-    var type: String {
-        return "button"
-    }
+    let type = "button"
     
     func render(component: Component) -> UIView? {
-        let button = UIButton(type: .system)
-        
-        // Apply styling
-        applyStyle(to: button, from: component.style)
-        button.translatesAutoresizingMaskIntoConstraints = false
+        return RenderUIButton(component: component)
+    }
+}
 
-        let x: CGFloat = component.style.x ?? 0
-        let y: CGFloat = component.style.y ?? 0
-        let width: CGFloat = component.style.width ?? 0
-        let height: CGFloat = component.style.height ?? 0
-        button.frame = CGRect(x: x, y: y, width: width, height: height)
-        
-        return button
+class RenderUIButton: UIButton {
+    private let component: Component
+    
+    init(component: Component) {
+        self.component = component
+        super.init(frame: .zero)
+        setupButton()
     }
     
-    private func applyStyle(to button: UIButton, from style: ViewStyle) {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyFrameLayout()
+    }
+    
+    private func setupButton() {
+        applyStyle()
+    }
+    
+    private func applyFrameLayout() {
+        let style = component.style
+        
+        // Calculate frame based on component style
+        var newFrame = self.frame
+        
+        // Set position
+        if let x = style.x {
+            newFrame.origin.x = x
+        }
+        
+        if let y = style.y {
+            newFrame.origin.y = y
+        }
+        
+        // Set size
+        if let width = style.width, width > 0 {
+            newFrame.size.width = width
+        }
+        
+        if let height = style.height, height > 0 {
+            newFrame.size.height = height
+        }
+        
+        self.frame = newFrame
+    }
+    
+    private func applyStyle() {
+        let style = component.style
+        
         // Background color
         if let backgroundColor = style.backgroundColor {
-            button.backgroundColor = backgroundColor
+            self.backgroundColor = backgroundColor
         }
         
         // Corner radius
         if let cornerRadius = style.cornerRadius {
-            button.layer.cornerRadius = cornerRadius
-            button.layer.masksToBounds = cornerRadius > 0
+            self.layer.cornerRadius = cornerRadius
+            self.layer.masksToBounds = cornerRadius > 0
         }
         
         // Border
         if let borderWidth = style.borderWidth {
-            button.layer.borderWidth = borderWidth
+            self.layer.borderWidth = borderWidth
         }
         
         if let borderColor = style.borderColor {
-            button.layer.borderColor = borderColor.cgColor
+            self.layer.borderColor = borderColor.cgColor
         }
         
         // Title color
         if let titleColor = style.get(forKey: "titleColor", ofType: UIColor.self) {
-            button.setTitleColor(titleColor, for: .normal)
+            self.setTitleColor(titleColor, for: .normal)
         }
         
         // Font size
         if let fontSize = style.get(forKey: "fontSize", ofType: CGFloat.self) {
-            button.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+            self.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
         }
         
         // Button title
         if let title = style.get(forKey: "title", ofType: String.self) {
-            button.setTitle(title, for: .normal)
+            self.setTitle(title, for: .normal)
         }
         
         // Button type (if specified)

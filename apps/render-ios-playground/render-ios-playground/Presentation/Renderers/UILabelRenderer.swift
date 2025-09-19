@@ -1,70 +1,108 @@
 import UIKit
 
-/// Renderer for UILabel components
 class UILabelRenderer: Renderer {
-    var type: String {
-        return "label"
-    }
+    let type = "label"
     
     func render(component: Component) -> UIView? {
-        let label = UILabel()
-        
-        applyStyle(to: label, from: component.style)
-        label.translatesAutoresizingMaskIntoConstraints = false
+        return RenderUILabel(component: component)
+    }
+}
 
-        let x: CGFloat = component.style.x ?? 0
-        let y: CGFloat = component.style.y ?? 0
-        let width: CGFloat = component.style.width ?? 0
-        let height: CGFloat = component.style.height ?? 0
-        label.frame = CGRect(x: x, y: y, width: width, height: height)
-        
-        return label
+class RenderUILabel: UILabel {
+    private let component: Component
+    
+    init(component: Component) {
+        self.component = component
+        super.init(frame: .zero)
+        setupLabel()
     }
     
-    private func applyStyle(to label: UILabel, from style: ViewStyle) {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyFrameLayout()
+    }
+    
+    private func setupLabel() {
+        applyStyle()
+    }
+    
+    private func applyFrameLayout() {
+        let style = component.style
+        
+        // Calculate frame based on component style
+        var newFrame = self.frame
+        
+        // Set position
+        if let x = style.x {
+            newFrame.origin.x = x
+        }
+        
+        if let y = style.y {
+            newFrame.origin.y = y
+        }
+        
+        // Set size
+        if let width = style.width, width > 0 {
+            newFrame.size.width = width
+        }
+        
+        if let height = style.height, height > 0 {
+            newFrame.size.height = height
+        }
+        
+        self.frame = newFrame
+    }
+    
+    private func applyStyle() {
+        let style = component.style
+        
         // Background color
         if let backgroundColor = style.backgroundColor {
-            label.backgroundColor = backgroundColor
+            self.backgroundColor = backgroundColor
         }
         
         // Corner radius
         if let cornerRadius = style.cornerRadius {
-            label.layer.cornerRadius = cornerRadius
-            label.layer.masksToBounds = cornerRadius > 0
+            self.layer.cornerRadius = cornerRadius
+            self.layer.masksToBounds = cornerRadius > 0
         }
         
         // Border
         if let borderWidth = style.borderWidth {
-            label.layer.borderWidth = borderWidth
+            self.layer.borderWidth = borderWidth
         }
         
         if let borderColor = style.borderColor {
-            label.layer.borderColor = borderColor.cgColor
+            self.layer.borderColor = borderColor.cgColor
         }
         
         // Text color
         if let textColor = style.get(forKey: "textColor", ofType: UIColor.self) {
-            label.textColor = textColor
+            self.textColor = textColor
         }
         
         // Font size
         if let fontSize = style.get(forKey: "fontSize", ofType: CGFloat.self) {
-            label.font = UIFont.systemFont(ofSize: fontSize)
+            self.font = UIFont.systemFont(ofSize: fontSize)
         }
         
         // Text alignment
         if let textAlignmentString = style.get(forKey: "textAlignment", ofType: String.self) {
-            label.textAlignment = parseTextAlignment(from: textAlignmentString)
+            self.textAlignment = parseTextAlignment(from: textAlignmentString)
         }
         
         // Text content
         if let text = style.get(forKey: "text", ofType: String.self) {
-            label.text = text
+            self.text = text
         }
         
         // Number of lines
         if let numberOfLines = style.get(forKey: "numberOfLines", ofType: Int.self) {
-            label.numberOfLines = numberOfLines
+            self.numberOfLines = numberOfLines
         }
     }
     

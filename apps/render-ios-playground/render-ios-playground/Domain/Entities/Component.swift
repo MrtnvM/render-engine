@@ -56,7 +56,7 @@ class Component: Equatable {
         return children.contains { $0.containsComponent(with: id) }
     }
 
-    private checkCircularDependencies(_ child: Component) throws {
+    private func checkCircularDependencies(_ child: Component) throws {
         if child.containsComponent(with: self.id) {
             throw DomainError.renderingError("Circular dependency detected")
         }

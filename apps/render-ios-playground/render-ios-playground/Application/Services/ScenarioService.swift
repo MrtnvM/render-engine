@@ -9,7 +9,7 @@ class ScenarioService {
     }
     
     func fetchScenario(from url: URL) async throws -> Scenario {
-        guard let scenario = try? await fetchScenarioUseCase.execute() else {
+        guard let scenario = try? await fetchScenarioUseCase.execute(from: url) else {
             throw ApplicationError.scenarioFetchFailed("No scenario recieved")
         }
         
