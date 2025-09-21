@@ -11,49 +11,106 @@ const SectionHeader: React.FC = () => (
   </div>
 )
 
-// Column Headers Component
-const ColumnHeaders: React.FC = () => (
-  <div className='mb-6 grid grid-cols-6 gap-8 text-center'>
-    <div className='border-b-2 border-gray-200 pb-2'>
-      <h3 className='text-sm font-medium text-gray-900'>Default</h3>
+// Column Header Item Component
+interface ColumnHeaderItemProps {
+  title: string
+  subLabels?: string[]
+  className?: string
+  width?: string
+}
+
+const ColumnHeaderItem: React.FC<ColumnHeaderItemProps> = ({
+  title,
+  subLabels,
+  className = 'flex-1',
+  width = 'w-48',
+}) => (
+  <div className={`${width} ${className} border-b-2 border-gray-200 pb-2`}>
+    <h3 className='text-sm font-medium text-gray-900'>{title}</h3>
+    {subLabels && subLabels.length > 0 && (
       <div className='mt-1 grid grid-cols-2 gap-1'>
-        <span className='text-xs text-gray-600'>Default</span>
-        <span className='text-xs text-gray-600'>Disabled</span>
+        {subLabels.map((label, index) => (
+          <span key={index} className='text-xs text-gray-600'>
+            {label}
+          </span>
+        ))}
       </div>
-    </div>
-    <div className='border-b-2 border-gray-200 pb-2'>
-      <h3 className='text-sm font-medium text-gray-900'>Accent</h3>
-      <div className='mt-1 grid grid-cols-2 gap-1'>
-        <span className='text-xs text-gray-600'>Default</span>
-        <span className='text-xs text-gray-600'>Disabled</span>
-      </div>
-    </div>
-    <div className='border-b-2 border-gray-200 pb-2'>
-      <h3 className='text-sm font-medium text-gray-900'>Pay</h3>
-      <div className='mt-1 grid grid-cols-2 gap-1'>
-        <span className='text-xs text-gray-600'>Default</span>
-        <span className='text-xs text-gray-600'>Disabled</span>
-      </div>
-    </div>
-    <div className='border-b-2 border-gray-200 pb-2'>
-      <h3 className='text-sm font-medium text-gray-900'>Success</h3>
-      <div className='mt-1 grid grid-cols-2 gap-1'>
-        <span className='text-xs text-gray-600'>Default</span>
-        <span className='text-xs text-gray-600'>Disabled</span>
-      </div>
-    </div>
-    <div className='border-b-2 border-gray-200 pb-2'>
-      <h3 className='text-sm font-medium text-gray-900'>Danger</h3>
-      <div className='mt-1 grid grid-cols-2 gap-1'>
-        <span className='text-xs text-gray-600'>Default</span>
-        <span className='text-xs text-gray-600'>Disabled</span>
-      </div>
-    </div>
-    <div className='border-b-2 border-gray-200 pb-2'>
-      <h3 className='text-sm font-medium text-gray-900'>Ghost</h3>
-    </div>
+    )}
   </div>
 )
+
+// Column Headers Component
+const ColumnHeaders: React.FC = () => (
+  <div className='mb-6 flex gap-8 text-center'>
+    <ColumnHeaderItem title='Size' className='flex-shrink-0' width='w-20' />
+    <ColumnHeaderItem title='Default' subLabels={['Secondary', 'Primary']} />
+    <ColumnHeaderItem title='Accent' subLabels={['Primary', 'Secondary']} />
+    <ColumnHeaderItem title='Pay' subLabels={['Primary', 'Secondary']} />
+    <ColumnHeaderItem title='Success' subLabels={['Primary', 'Secondary']} />
+    <ColumnHeaderItem title='Danger' subLabels={['Primary', 'Secondary']} />
+    <ColumnHeaderItem title='Ghost' />
+  </div>
+)
+
+// Button Variant Group Item Component
+interface ButtonVariantGroupItemProps {
+  size: 'xs' | 's' | 'm' | 'l' | 'xl'
+  variantType: 'default' | 'accent' | 'pay' | 'success' | 'danger' | 'ghost'
+}
+
+const ButtonVariantGroupItem: React.FC<ButtonVariantGroupItemProps> = ({ size, variantType }) => {
+  const getButtonConfig = () => {
+    switch (variantType) {
+      case 'default':
+        return [
+          { variant: 'secondary' as const, color: 'default' as const },
+          { variant: 'primary' as const, color: 'default' as const },
+        ]
+      case 'accent':
+        return [
+          { variant: 'primary' as const, color: 'accent' as const },
+          { variant: 'secondary' as const, color: 'accent' as const },
+        ]
+      case 'pay':
+        return [
+          { variant: 'primary' as const, color: 'pay' as const },
+          { variant: 'secondary' as const, color: 'pay' as const },
+        ]
+      case 'success':
+        return [
+          { variant: 'primary' as const, color: 'success' as const },
+          { variant: 'secondary' as const, color: 'success' as const },
+        ]
+      case 'danger':
+        return [
+          { variant: 'primary' as const, color: 'danger' as const },
+          { variant: 'secondary' as const, color: 'danger' as const },
+        ]
+      case 'ghost':
+        return [{ variant: 'ghost' as const, color: 'default' as const }]
+      default:
+        return []
+    }
+  }
+
+  const buttonConfigs = getButtonConfig()
+
+  return (
+    <div
+      className={
+        variantType === 'ghost'
+          ? 'flex w-48 items-center justify-center'
+          : 'flex w-48 items-center justify-around gap-4'
+      }
+    >
+      {buttonConfigs.map((config, index) => (
+        <Button key={index} size={size} variant={config.variant} color={config.color}>
+          Текст
+        </Button>
+      ))}
+    </div>
+  )
+}
 
 // Button Variant Group Component
 interface ButtonVariantGroupProps {
@@ -61,95 +118,9 @@ interface ButtonVariantGroupProps {
   variantType: 'default' | 'accent' | 'pay' | 'success' | 'danger' | 'ghost'
 }
 
-const ButtonVariantGroup: React.FC<ButtonVariantGroupProps> = ({ size, variantType }) => {
-  switch (variantType) {
-    case 'default':
-      return (
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='primary' color='default'>
-              Текст
-            </Button>
-          </div>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='primary' color='default' disabled>
-              Текст
-            </Button>
-          </div>
-        </div>
-      )
-    case 'accent':
-      return (
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='primary' color='accent'>
-              Текст
-            </Button>
-          </div>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='secondary' color='accent'>
-              Текст
-            </Button>
-          </div>
-        </div>
-      )
-    case 'pay':
-      return (
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='primary' color='pay'>
-              Текст
-            </Button>
-          </div>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='secondary' color='pay'>
-              Текст
-            </Button>
-          </div>
-        </div>
-      )
-    case 'success':
-      return (
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='primary' color='success'>
-              Текст
-            </Button>
-          </div>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='secondary' color='success'>
-              Текст
-            </Button>
-          </div>
-        </div>
-      )
-    case 'danger':
-      return (
-        <div className='grid grid-cols-2 gap-2'>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='primary' color='danger'>
-              Текст
-            </Button>
-          </div>
-          <div className='flex items-center justify-center'>
-            <Button size={size} variant='secondary' color='danger'>
-              Текст
-            </Button>
-          </div>
-        </div>
-      )
-    case 'ghost':
-      return (
-        <div className='flex items-center justify-center'>
-          <Button size={size} variant='ghost' color='default'>
-            Текст
-          </Button>
-        </div>
-      )
-    default:
-      return null
-  }
-}
+const ButtonVariantGroup: React.FC<ButtonVariantGroupProps> = ({ size, variantType }) => (
+  <ButtonVariantGroupItem size={size} variantType={variantType} />
+)
 
 // Button Size Row Component
 interface ButtonSizeRowProps {
@@ -157,7 +128,10 @@ interface ButtonSizeRowProps {
 }
 
 const ButtonSizeRow: React.FC<ButtonSizeRowProps> = ({ size }) => (
-  <div key={`rect-${size}`} className='grid grid-cols-6 items-center gap-8'>
+  <div key={`rect-${size}`} className='flex items-center gap-8'>
+    <div className='flex w-20 flex-shrink-0 items-center justify-center'>
+      <span className='text-sm font-medium text-gray-900 uppercase'>{size}</span>
+    </div>
     <ButtonVariantGroup size={size} variantType='default' />
     <ButtonVariantGroup size={size} variantType='accent' />
     <ButtonVariantGroup size={size} variantType='pay' />
