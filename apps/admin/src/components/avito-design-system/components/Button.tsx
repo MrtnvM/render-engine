@@ -34,7 +34,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       xl: 'avito-button--xl',
     }
 
-    // Variant and color classes based on Figma design
+    // Variant and color classes based on Avito Design System
     const getVariantClasses = () => {
       if (isDisabled) {
         if (preset === 'overlay') {
@@ -99,8 +99,22 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
     )
 
+    const handleClick = (_event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!isDisabled && onClick) {
+        onClick()
+      }
+    }
+
     return (
-      <button ref={ref} type={type} disabled={isDisabled} onClick={onClick} className={buttonClasses} {...props}>
+      <button 
+        ref={ref} 
+        type={type} 
+        disabled={isDisabled} 
+        onClick={handleClick} 
+        className={buttonClasses} 
+        aria-disabled={isDisabled}
+        {...props}
+      >
         {children}
       </button>
     )

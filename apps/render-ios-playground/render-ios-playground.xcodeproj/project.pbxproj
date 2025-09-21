@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8AD2DA242E801FAB001729D2 /* FlexLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 8AD2DA232E801FAB001729D2 /* FlexLayout */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		8AD2D8002E7C052A001729D2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AD2DA242E801FAB001729D2 /* FlexLayout in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = "render-ios-playground";
 			packageProductDependencies = (
+				8AD2DA232E801FAB001729D2 /* FlexLayout */,
 			);
 			productName = "render-ios-playground";
 			productReference = 8AD2D7E92E7C0528001729D2 /* render-ios-playground.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = 8AD2D7E02E7C0528001729D2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8AD2DA222E801FAB001729D2 /* XCRemoteSwiftPackageReference "FlexLayout" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8AD2D7EA2E7C0528001729D2 /* Products */;
 			projectDirPath = "";
@@ -569,6 +578,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8AD2DA222E801FAB001729D2 /* XCRemoteSwiftPackageReference "FlexLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/layoutBox/FlexLayout.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8AD2DA232E801FAB001729D2 /* FlexLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8AD2DA222E801FAB001729D2 /* XCRemoteSwiftPackageReference "FlexLayout" */;
+			productName = FlexLayout;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8AD2D7E12E7C0528001729D2 /* Project object */;
 }

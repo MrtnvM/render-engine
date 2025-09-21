@@ -3,6 +3,7 @@ import UIKit
 // MARK: - MainViewDelegate Protocol
 protocol MainViewDelegate: AnyObject {
     func mainViewDidTapFetchButton(_ mainView: MainView)
+    func mainViewDidTapDesignSystemButton(_ mainView: MainView)
     func mainView(_ mainView: MainView, shouldPresentAlert alert: UIAlertController)
 }
 
@@ -21,6 +22,16 @@ class MainView: UIView {
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(fetchButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var designSystemButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("💎 Design System", for: .normal)
+        button.backgroundColor = UIColor(red: 0.59, green: 0.37, blue: 0.92, alpha: 1.0) // Avito pay color
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(designSystemButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -47,18 +58,23 @@ class MainView: UIView {
     private func setupUI() {
         backgroundColor = UIColor.systemBackground
         
-        setupFetchButton()
+        setupButtons()
         setupActivityIndicator()
     }
     
-    private func setupFetchButton() {
-        addSubview(fetchButton)
-        fetchButton.translatesAutoresizingMaskIntoConstraints = false
+    private func setupButtons() {
+        let buttonStack = UIStackView(arrangedSubviews: [designSystemButton, fetchButton])
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 16
+        buttonStack.distribution = .fillEqually
+        
+        addSubview(buttonStack)
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            fetchButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            fetchButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            fetchButton.widthAnchor.constraint(equalToConstant: 150),
-            fetchButton.heightAnchor.constraint(equalToConstant: 50)
+            buttonStack.centerXAnchor.constraint(equalTo: centerXAnchor),
+            buttonStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            buttonStack.widthAnchor.constraint(equalToConstant: 320),
+            buttonStack.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -74,6 +90,10 @@ class MainView: UIView {
     // MARK: - Actions
     @objc private func fetchButtonTapped() {
         delegate?.mainViewDidTapFetchButton(self)
+    }
+    
+    @objc private func designSystemButtonTapped() {
+        delegate?.mainViewDidTapDesignSystemButton(self)
     }
     
     // MARK: - Public Methods
@@ -95,13 +115,13 @@ class MainView: UIView {
         contentView = content
         addSubview(content)
         
-        // Position content above the button
+        // Position content above the buttons
         content.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             content.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
             content.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             content.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            content.bottomAnchor.constraint(equalTo: fetchButton.topAnchor, constant: -20)
+            content.bottomAnchor.constraint(equalTo: designSystemButton.topAnchor, constant: -20)
         ])
     }
     

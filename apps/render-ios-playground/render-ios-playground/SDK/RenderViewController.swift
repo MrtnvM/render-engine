@@ -1,100 +1,102 @@
 import UIKit
-import YogaKit
+import FlexLayout
 
-protocol RenderViewControllerDelegate: AnyObject {
+public protocol Action {}
+
+public protocol RenderViewControllerDelegate: AnyObject {
     func didTrigger(action: Action, from viewController: RenderViewController)
 }
 
 public class RenderViewController: UIViewController {
-    
     weak public var delegate: RenderViewControllerDelegate?
     
     private let scenarioID: String
-    private let fetcher: ScenarioFetcher
+    private let service: ScenarioService
     private let registry: ComponentRegistry
     
-    // The root view that Yoga will manage
-    private let yogaRootView = UIView()
+    // Root flex container
+    private let rootFlexContainer = UIView()
 
-    init(scenarioID: String, fetcher: ScenarioFetcher, registry: ComponentRegistry) {
+    init(scenarioID: String, service: ScenarioService, registry: ComponentRegistry) {
         self.scenarioID = scenarioID
-        self.fetcher = fetcher
+        self.service = service
         self.registry = registry
         super.init(nibName: nil, bundle: nil)
     }
 
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        setupYogaRootView()
+        setupFlexContainer()
         loadScenario()
     }
 
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // This is the key! Whenever the view's size changes (e.g., rotation),
-        // we re-calculate and apply the layout for the entire hierarchy.
-        yogaRootView.yoga.applyLayout(preservingOrigin: false)
+
+        // Position the container to fill safe area
+        rootFlexContainer.frame = CGRect(
+            x: view.safeAreaInsets.left,
+            y: view.safeAreaInsets.top,
+            width: view.frame.width - (view.safeAreaInsets.left + view.safeAreaInsets.right),
+            height: view.frame.height - (view.safeAreaInsets.top + view.safeAreaInsets.bottom)
+        )
+
+        // Let flexbox layout itself
+        rootFlexContainer.flex.layout(mode: .fitContainer)
     }
 
-    private func setupYogaRootView() {
-        self.view.addSubview(yogaRootView)
-        yogaRootView.configureLayout { layout in
-            layout.isEnabled = true
-            // The root view fills the safe area of the screen
-            layout.width = YGValue(self.view.bounds.width)
-            layout.height = YGValue(self.view.bounds.height)
-            layout.justifyContent = .center // Example default
-            layout.alignItems = .center     // Example default
-        }
+    private func setupFlexContainer() {
+        view.addSubview(rootFlexContainer)
+        rootFlexContainer.flex
+            .direction(.column)
+            .justifyContent(.center)
+            .alignItems(.center)
     }
 
     private func loadScenario() {
-        fetcher.fetch(id: scenarioID) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let scenario):
-                    self?.buildViewHierarchy(from: scenario.root)
-                case .failure(let error):
-                    // Show an error view
-                    print("Failed to load scenario: \(error)")
-                }
+        let url = URL(string: "https://localhost:3035/json-schema")!
+        Task {
+            guard let scenario = try? await service.fetchScenario(from: url) else {
+                print("FAILED TO LOAD SCENARIO")
+                return
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.buildViewHierarchy(from: scenario.mainComponent)
             }
         }
     }
 
-    private func buildViewHierarchy(from rootNode: ComponentNode) {
-        // Recursively build the views and add them to the yogaRootView
-        guard let rootView = buildView(from: rootNode) else { return }
-        yogaRootView.addSubview(rootView)
-        
-        // Trigger the initial layout pass
-        yogaRootView.yoga.applyLayout(preservingOrigin: false)
+    private func buildViewHierarchy(from component: Component) {
+        rootFlexContainer.flex.define { flex in
+            if let view = buildView(from: component) {
+                flex.addItem(view).grow(1)
+            }
+        }
+        rootFlexContainer.setNeedsLayout()
     }
 
-    private func buildView(from node: ComponentNode) -> UIView? {
-        guard let renderer = registry.renderer(for: node.type) else {
-            print("Warning: No renderer found for type '\(node.type)'")
+    private func buildView(from component: Component) -> UIView? {
+        guard let renderer = registry.renderer(for: component.type) else {
+            print("Warning: No renderer found for type '\(component.type)'")
             return nil
         }
-        
-        // 1. Renderer creates the native view
-        guard let view = renderer.render(node: node, actionHandler: self) else { return nil }
-        
-        // 2. Recursively build children
-        node.children?.forEach { childNode in
+
+        guard let view = renderer.render(component: component) else {
+            return nil
+        }
+
+        // Recursively add children
+        component.getChildren().forEach { childNode in
             if let childView = buildView(from: childNode) {
-                view.addSubview(childView) // Add native child
+                view.flex.addItem(childView)
             }
         }
-        
-        return view
-    }
-}
 
-// Action Handling Conformance
-extension RenderViewController: ActionHandler {
-    func handle(action: Action) {
-        // Forward the action to the application layer via delegate
-        delegate?.didTrigger(action: action, from: self)
+        return view
     }
 }

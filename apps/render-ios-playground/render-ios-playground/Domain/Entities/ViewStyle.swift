@@ -3,6 +3,7 @@ import UIKit
 protocol ViewStyleEnum {
     static func from(string: String) -> Self
     static var defaultValue: Self { get }
+}
 
 enum FlexDirection: ViewStyleEnum {
     case row
@@ -29,7 +30,6 @@ enum ContentAlignment: ViewStyleEnum {
     case spaceAround
     case spaceEvenly
     case center
-    case stretch
 
     static let defaultValue: ContentAlignment = .flexStart
 
@@ -47,8 +47,6 @@ enum ContentAlignment: ViewStyleEnum {
             return .spaceEvenly
         case "center":
             return .center
-        case "stretch":
-            return .stretch
         default:
             return .flexStart
         }
@@ -92,15 +90,15 @@ class ViewStyle {
     }
 
     var direction: FlexDirection {
-        return get(forKey: "direction", ofType: FlexDirection.self)
+        return get(forKey: "direction", ofType: FlexDirection.self) ?? FlexDirection.defaultValue
     }
 
     var contentAlignment: ContentAlignment {
-        return get(forKey: "contentAlignment", ofType: ContentAlignment.self)
+        return get(forKey: "contentAlignment", ofType: ContentAlignment.self) ?? ContentAlignment.defaultValue
     }
 
     var alignItems: AlignItems {
-        return get(forKey: "alignItems", ofType: AlignItems.self)
+        return get(forKey: "alignItems", ofType: AlignItems.self) ?? AlignItems.defaultValue
     }
 
     var backgroundColor: UIColor {
@@ -202,8 +200,15 @@ class ViewStyle {
                 return nil
             }
             value = parseColor(from: colorString) as? T
-        case is ViewStyleEnum.Type:
-            value = type.from(string: config.getString(forKey: key) ?? "") as? T
+        case is FlexDirection.Type:
+            let configValue = config.getString(forKey: key) ?? ""
+            value = FlexDirection.from(string: configValue) as? T
+        case is ContentAlignment.Type:
+            let configValue = config.getString(forKey: key) ?? ""
+            value = ContentAlignment.from(string: configValue) as? T
+        case is AlignItems.Type:
+            let configValue = config.getString(forKey: key) ?? ""
+            value = AlignItems.from(string: configValue) as? T
         default:
             print("Unsupported type: \(type)")
             return nil

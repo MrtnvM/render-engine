@@ -34,13 +34,19 @@ class DIContainer {
         )
     }()
     
-    // MARK: Controllers
+    // MARK: SDK
     
-    lazy var renderController: RenderController = {
-        return RenderController(renderers: [
-            UIViewRenderer(),
+    lazy var componentRegistry: ComponentRegistry = {
+        let registry = ComponentRegistry()
+        let renderers: [Renderer] = [
+            ViewRenderer(),
+            RowRenderer(),
+            ColumnRenderer(),
+            StackRenderer(),
             UILabelRenderer(),
             UIButtonRenderer()
-        ])
-    }()
+        ]
+        renderers.forEach { registry.register(renderer: $0) }
+        return registry
+}()
 }

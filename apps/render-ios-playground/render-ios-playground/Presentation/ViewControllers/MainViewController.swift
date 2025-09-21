@@ -5,7 +5,7 @@ class MainViewController: UIViewController {
     
     // MARK: - Dependencies
     private let schemaService = DIContainer.shared.scenarioService
-    private let renderController = DIContainer.shared.renderController
+    private let renderController = DIContainer.shared.
     
     // MARK: - UI Components
     private var mainView: MainView!
@@ -34,7 +34,7 @@ class MainViewController: UIViewController {
             let scenario = try await schemaService.fetchScenario(from: url)
             
             await MainActor.run {
-                if let view = renderController.render(scenario.mainComponent) {
+                if let view = Render.render(scenario.mainComponent) {
                     mainView.displayContent(view)
                 }
                 mainView.showLoading(false)
@@ -54,6 +54,12 @@ extension MainViewController: MainViewDelegate {
         Task {
             await fetchAndRenderSchema()
         }
+    }
+    
+    func mainViewDidTapDesignSystemButton(_ mainView: MainView) {
+        let showcaseVC = AvitoDesignSystem.showcase()
+        let navController = UINavigationController(rootViewController: showcaseVC)
+        present(navController, animated: true)
     }
     
     func mainView(_ mainView: MainView, shouldPresentAlert alert: UIAlertController) {

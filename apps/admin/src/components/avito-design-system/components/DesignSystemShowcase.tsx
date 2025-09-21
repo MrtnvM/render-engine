@@ -1,14 +1,17 @@
 import React from 'react'
-import { cn } from '@/lib/utils'
 import { Button } from './Button'
+import { cn } from '../utils/cn'
 
 // Section Header Component
 const SectionHeader: React.FC = () => (
   <div className='mb-8'>
     <div className='inline-flex items-center gap-2 text-purple-600'>
       <span className='text-2xl'>💎</span>
-      <h1 className='text-xl font-semibold'>Button</h1>
+      <h1 className='text-2xl font-bold'>Avito Design System</h1>
     </div>
+    <p className='mt-2 text-gray-600'>
+      Comprehensive showcase of button components with all variants, sizes, and states
+    </p>
   </div>
 )
 
@@ -149,14 +152,140 @@ const ButtonVariantsShowcase: React.FC = () => {
   )
 }
 
+// Interactive Button Examples Section
+const InteractiveExamples: React.FC = () => {
+  const [clickedButton, setClickedButton] = React.useState<string | null>(null)
+
+  const handleButtonClick = (buttonId: string) => {
+    setClickedButton(buttonId)
+    setTimeout(() => setClickedButton(null), 1000)
+  }
+
+  return (
+    <div className='mb-8'>
+      <h2 className='mb-4 text-lg font-semibold text-gray-900'>Interactive Examples</h2>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+        <div className='rounded-lg border border-gray-200 p-4'>
+          <h3 className='mb-2 text-sm font-medium text-gray-700'>Primary Actions</h3>
+          <div className='space-y-2'>
+            <Button 
+              variant='primary' 
+              color='default' 
+              size='m'
+              onClick={() => handleButtonClick('primary-default')}
+            >
+              {clickedButton === 'primary-default' ? 'Clicked!' : 'Primary Default'}
+            </Button>
+            <Button 
+              variant='primary' 
+              color='accent' 
+              size='m'
+              onClick={() => handleButtonClick('primary-accent')}
+            >
+              {clickedButton === 'primary-accent' ? 'Clicked!' : 'Primary Accent'}
+            </Button>
+          </div>
+        </div>
+        
+        <div className='rounded-lg border border-gray-200 p-4'>
+          <h3 className='mb-2 text-sm font-medium text-gray-700'>Secondary Actions</h3>
+          <div className='space-y-2'>
+            <Button 
+              variant='secondary' 
+              color='default' 
+              size='m'
+              onClick={() => handleButtonClick('secondary-default')}
+            >
+              {clickedButton === 'secondary-default' ? 'Clicked!' : 'Secondary Default'}
+            </Button>
+            <Button 
+              variant='secondary' 
+              color='success' 
+              size='m'
+              onClick={() => handleButtonClick('secondary-success')}
+            >
+              {clickedButton === 'secondary-success' ? 'Clicked!' : 'Secondary Success'}
+            </Button>
+          </div>
+        </div>
+        
+        <div className='rounded-lg border border-gray-200 p-4'>
+          <h3 className='mb-2 text-sm font-medium text-gray-700'>Ghost & Disabled</h3>
+          <div className='space-y-2'>
+            <Button 
+              variant='ghost' 
+              color='default' 
+              size='m'
+              onClick={() => handleButtonClick('ghost-default')}
+            >
+              {clickedButton === 'ghost-default' ? 'Clicked!' : 'Ghost Button'}
+            </Button>
+            <Button 
+              variant='primary' 
+              color='default' 
+              size='m'
+              disabled
+            >
+              Disabled Button
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Special States Section
+const SpecialStatesSection: React.FC = () => (
+  <div className='mb-8'>
+    <h2 className='mb-4 text-lg font-semibold text-gray-900'>Special States & Presets</h2>
+    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+      <div className='rounded-lg border border-gray-200 p-4'>
+        <h3 className='mb-2 text-sm font-medium text-gray-700'>Round Buttons</h3>
+        <div className='flex flex-wrap gap-2'>
+          <Button variant='primary' color='accent' size='s' round>
+            Round S
+          </Button>
+          <Button variant='primary' color='pay' size='m' round>
+            Round M
+          </Button>
+          <Button variant='secondary' color='success' size='l' round>
+            Round L
+          </Button>
+        </div>
+      </div>
+      
+      <div className='rounded-lg border border-gray-200 p-4 bg-gray-50'>
+        <h3 className='mb-2 text-sm font-medium text-gray-700'>Overlay Preset</h3>
+        <div className='flex flex-wrap gap-2'>
+          <Button variant='primary' color='default' size='s' preset='overlay'>
+            Overlay S
+          </Button>
+          <Button variant='secondary' color='accent' size='m' preset='overlay'>
+            Overlay M
+          </Button>
+          <Button variant='primary' color='default' size='s' preset='overlay' disabled>
+            Disabled
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+
 export const DesignSystemShowcase: React.FC = () => (
   <div className='min-h-screen bg-white p-8' style={{ fontFamily: 'var(--avito-font-family)' }}>
-    <div className='mx-auto max-w-full'>
+    <div className='mx-auto max-w-7xl'>
       <SectionHeader />
+      
+      <InteractiveExamples />
+      <SpecialStatesSection />
+      
       <div className='flex gap-4 overflow-x-auto'>
         <div className='flex-1 overflow-x-auto'>
           <div className='overflow-x-auto rounded-lg border-2 border-dashed border-purple-400 bg-white p-6'>
             <div className='w-full min-w-max'>
+              <h2 className='mb-4 text-lg font-semibold text-gray-900'>Complete Size & Variant Matrix</h2>
               <ColumnHeaders />
               <ButtonVariantsShowcase />
             </div>
