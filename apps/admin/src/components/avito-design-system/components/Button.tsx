@@ -1,93 +1,110 @@
-import React from 'react';
-import { cn } from '../utils/cn';
+import React from 'react'
+import { ButtonProps } from '../types/components'
+import { cn } from '../utils/cn'
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  isLoading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      variant = 'primary',
+      color = 'default',
+      size = 'm',
+      state = 'default',
+      round = false,
+      preset = 'default',
+      onClick,
+      type = 'button',
+      disabled = false,
+      className,
+      ...props
+    },
+    ref,
+  ) => {
+    const isDisabled = disabled || state === 'disabled'
 
-const variantStyles = {
-  primary: 'bg-avito-primary-600 text-white hover:bg-avito-primary-700 active:bg-avito-primary-800 disabled:bg-avito-neutral-300 shadow-sm hover:shadow-md transition-shadow',
-  secondary: 'bg-white text-avito-neutral-900 border border-avito-neutral-200 hover:bg-avito-neutral-50 active:bg-avito-neutral-100 disabled:bg-avito-neutral-100 shadow-sm',
-  outline: 'bg-transparent text-avito-primary-600 border border-avito-primary-200 hover:bg-avito-primary-50 active:bg-avito-primary-100 disabled:text-avito-neutral-400 hover:border-avito-primary-300',
-  ghost: 'bg-transparent text-avito-neutral-600 hover:bg-avito-neutral-100 active:bg-avito-neutral-200 disabled:text-avito-neutral-400',
-};
+    // Base button classes
+    const baseClasses = 'avito-button'
 
-const sizeStyles = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-base',
-  lg: 'px-6 py-3 text-lg',
-};
+    // Size classes
+    const sizeClasses = {
+      xs: 'avito-button--xs',
+      s: 'avito-button--s',
+      m: 'avito-button--m',
+      l: 'avito-button--l',
+      xl: 'avito-button--xl',
+    }
 
-const iconSizes = {
-  sm: 'w-4 h-4',
-  md: 'w-5 h-5',
-  lg: 'w-6 h-6',
-};
+    // Variant and color classes based on Figma design
+    const getVariantClasses = () => {
+      if (isDisabled) {
+        if (preset === 'overlay') {
+          return 'avito-button--overlay-disabled'
+        }
+        return 'avito-button--disabled'
+      }
 
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
-  leftIcon,
-  rightIcon,
-  children,
-  className,
-  disabled,
-  ...props
-}) => {
-  const isDisabled = disabled || isLoading;
+      if (variant === 'primary') {
+        switch (color) {
+          case 'accent':
+            return 'avito-button--primary-accent'
+          case 'pay':
+            return 'avito-button--primary-pay'
+          case 'success':
+            return 'avito-button--primary-success'
+          case 'danger':
+            return 'avito-button--primary-danger'
+          default:
+            return 'avito-button--primary-default'
+        }
+      }
 
-  return (
-    <button
-      className={cn(
-        'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-avito-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed',
-        variantStyles[variant],
-        sizeStyles[size],
-        className
-      )}
-      disabled={isDisabled}
-      {...props}
-    >
-      {isLoading && (
-        <svg
-          className={cn('animate-spin -ml-1 mr-2', iconSizes[size])}
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          />
-        </svg>
-      )}
+      if (variant === 'secondary') {
+        switch (color) {
+          case 'accent':
+            return 'avito-button--secondary-accent'
+          case 'pay':
+            return 'avito-button--secondary-pay'
+          case 'success':
+            return 'avito-button--secondary-success'
+          case 'danger':
+            return 'avito-button--secondary-danger'
+          default:
+            return 'avito-button--secondary-default'
+        }
+      }
 
-      {leftIcon && !isLoading && (
-        <span className={cn('mr-2', iconSizes[size])}>
-          {leftIcon}
-        </span>
-      )}
+      if (variant === 'ghost') {
+        if (preset === 'inverse') {
+          return 'avito-button--ghost-inverse'
+        }
+        return 'avito-button--ghost-default'
+      }
 
-      {children}
+      return 'avito-button--primary-default'
+    }
 
-      {rightIcon && !isLoading && (
-        <span className={cn('ml-2', iconSizes[size])}>
-          {rightIcon}
-        </span>
-      )}
-    </button>
-  );
-};
+    // Preset classes
+    const presetClasses = {
+      default: '',
+      overlay: 'avito-button--preset-overlay',
+      inverse: 'avito-button--preset-inverse',
+    }
+
+    const buttonClasses = cn(
+      baseClasses,
+      sizeClasses[size],
+      getVariantClasses(),
+      round && 'avito-button--round',
+      presetClasses[preset],
+      className,
+    )
+
+    return (
+      <button ref={ref} type={type} disabled={isDisabled} onClick={onClick} className={buttonClasses} {...props}>
+        {children}
+      </button>
+    )
+  },
+)
+
+Button.displayName = 'Button'

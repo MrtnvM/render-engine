@@ -6,10 +6,10 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/authStore'
 import { handleServerError } from '@/utils/handle-server-error'
+import './components/avito-design-system/theme.css'
 import { FontProvider } from './context/font-context'
 import { ThemeProvider } from './context/theme-context'
 import './index.css'
-import './components/avito-design-system/theme.css'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
 

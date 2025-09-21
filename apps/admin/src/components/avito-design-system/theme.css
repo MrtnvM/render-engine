@@ -1,71 +1,360 @@
-/* Avito Design System - CSS Variables */
-@import './tokens/colors.css';
-@import './tokens/typography.css';
-@import './tokens/spacing.css';
-@import './tokens/border-radius.css';
-@import './tokens/shadows.css';
+/* Avito Design System - Theme Variables */
 
-/* Base styles */
-.avito-theme {
-  font-family: var(--avito-font-sans);
-  color: var(--avito-color-neutral-900);
-  background-color: var(--avito-color-white);
-  line-height: var(--avito-line-height-normal);
+/* Colors from Figma */
+:root {
+  /* Primary Colors */
+  --avito-primary-default: #141414;
+  --avito-primary-accent: #00aaff;
+  --avito-primary-pay: #965eeb;
+  --avito-primary-success: #02d15c;
+  --avito-primary-danger: #ff4053;
+
+  /* Secondary Colors */
+  --avito-secondary-default: #f2f1f0;
+  --avito-secondary-accent: #cfedff;
+  --avito-secondary-pay: #e9ddfd;
+  --avito-secondary-success: #e9fdf0;
+  --avito-secondary-danger: #ffe9eb;
+
+  /* Text Colors */
+  --avito-text-primary: #000000;
+  --avito-text-secondary: #a3a3a3;
+  --avito-text-inverse: #ffffff;
+  --avito-text-inverse-disabled: #5c5c5c;
+
+  /* Background Colors */
+  --avito-bg-default: #ffffff;
+  --avito-bg-inverse: #141414;
+  --avito-bg-overlay: #ffffff;
+
+  /* Border Colors */
+  --avito-border-default: #f2f1f0;
+  --avito-border-accent: #cfedff;
+  --avito-border-pay: #e9ddfd;
+
+  /* Typography */
+  --avito-font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --avito-font-weight-medium: 500;
+  --avito-font-weight-semibold: 600;
+
+  /* Font Sizes */
+  --avito-text-xs: 13px;
+  --avito-text-s: 15px;
+  --avito-text-m: 15px;
+  --avito-text-l: 18px;
+  --avito-text-xl: 18px;
+
+  /* Line Heights */
+  --avito-line-height-xs: 1.23;
+  --avito-line-height-s: 1.33;
+  --avito-line-height-m: 1.33;
+  --avito-line-height-l: 1.22;
+  --avito-line-height-xl: 1.22;
+
+  /* Spacing */
+  --avito-spacing-xs: 6px;
+  --avito-spacing-s: 9px;
+  --avito-spacing-m: 11px;
+  --avito-spacing-l: 15px;
+  --avito-spacing-xl: 20px;
+
+  /* Padding */
+  --avito-padding-xs-horizontal: 8px;
+  --avito-padding-xs-vertical: 6px;
+  --avito-padding-s-horizontal: 11px;
+  --avito-padding-s-vertical: 9px;
+  --avito-padding-m-horizontal: 13px;
+  --avito-padding-m-vertical: 11px;
+  --avito-padding-l-horizontal: 15px;
+  --avito-padding-l-vertical: 15px;
+  --avito-padding-xl-horizontal: 21px;
+  --avito-padding-xl-vertical: 20px;
+
+  /* Border Radius */
+  --avito-radius-xs: 10px;
+  --avito-radius-s: 12px;
+  --avito-radius-m: 12px;
+  --avito-radius-l: 16px;
+  --avito-radius-xl: 20px;
+  --avito-radius-round: 32px;
+
+  /* Shadows */
+  --avito-shadow-button: 0px 4px 30px 0px rgba(0, 0, 0, 0.12), 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
+  --avito-shadow-overlay: 0px 4px 30px 0px rgba(0, 0, 0, 0.12), 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
+
+  /* Heights */
+  --avito-height-xs: 30px;
+  --avito-height-s: 36px;
+  --avito-height-m: 44px;
+  --avito-height-l: 52px;
+  --avito-height-xl: 64px;
+
+  /* Transitions */
+  --avito-transition-fast: 150ms ease-in-out;
+  --avito-transition-normal: 200ms ease-in-out;
+  --avito-transition-slow: 300ms ease-in-out;
 }
 
-/* Utility classes */
-.avito-text-primary {
-  color: var(--avito-color-primary-600);
+/* Component-specific CSS Variables */
+:root {
+  /* Button Primary Default */
+  --avito-button-primary-default-bg: var(--avito-primary-default);
+  --avito-button-primary-default-text: var(--avito-text-inverse);
+  --avito-button-primary-default-border: var(--avito-primary-default);
+
+  /* Button Primary Accent */
+  --avito-button-primary-accent-bg: var(--avito-primary-accent);
+  --avito-button-primary-accent-text: var(--avito-text-inverse);
+  --avito-button-primary-accent-border: var(--avito-primary-accent);
+
+  /* Button Primary Pay */
+  --avito-button-primary-pay-bg: var(--avito-primary-pay);
+  --avito-button-primary-pay-text: var(--avito-text-inverse);
+  --avito-button-primary-pay-border: var(--avito-primary-pay);
+
+  /* Button Primary Success */
+  --avito-button-primary-success-bg: var(--avito-primary-success);
+  --avito-button-primary-success-text: var(--avito-text-inverse);
+  --avito-button-primary-success-border: var(--avito-primary-success);
+
+  /* Button Primary Danger */
+  --avito-button-primary-danger-bg: var(--avito-primary-danger);
+  --avito-button-primary-danger-text: var(--avito-text-inverse);
+  --avito-button-primary-danger-border: var(--avito-primary-danger);
+
+  /* Button Secondary Default */
+  --avito-button-secondary-default-bg: var(--avito-secondary-default);
+  --avito-button-secondary-default-text: var(--avito-text-primary);
+  --avito-button-secondary-default-border: var(--avito-secondary-default);
+
+  /* Button Secondary Accent */
+  --avito-button-secondary-accent-bg: var(--avito-secondary-accent);
+  --avito-button-secondary-accent-text: #008aed;
+  --avito-button-secondary-accent-border: var(--avito-secondary-accent);
+
+  /* Button Secondary Pay */
+  --avito-button-secondary-pay-bg: var(--avito-secondary-pay);
+  --avito-button-secondary-pay-text: #8c4fe8;
+  --avito-button-secondary-pay-border: var(--avito-secondary-pay);
+
+  /* Button Secondary Success */
+  --avito-button-secondary-success-bg: var(--avito-secondary-success);
+  --avito-button-secondary-success-text: #00b34e;
+  --avito-button-secondary-success-border: var(--avito-secondary-success);
+
+  /* Button Secondary Danger */
+  --avito-button-secondary-danger-bg: var(--avito-secondary-danger);
+  --avito-button-secondary-danger-text: #e63946;
+  --avito-button-secondary-danger-border: var(--avito-secondary-danger);
+
+  /* Button Ghost Default */
+  --avito-button-ghost-default-bg: transparent;
+  --avito-button-ghost-default-text: var(--avito-text-primary);
+  --avito-button-ghost-default-border: transparent;
+
+  /* Button Ghost Inverse */
+  --avito-button-ghost-inverse-bg: transparent;
+  --avito-button-ghost-inverse-text: var(--avito-text-inverse);
+  --avito-button-ghost-inverse-border: transparent;
+
+  /* Button Disabled */
+  --avito-button-disabled-bg: var(--avito-secondary-default);
+  --avito-button-disabled-text: var(--avito-text-secondary);
+  --avito-button-disabled-border: var(--avito-secondary-default);
+
+  /* Button Overlay Disabled */
+  --avito-button-overlay-disabled-bg: var(--avito-bg-overlay);
+  --avito-button-overlay-disabled-text: var(--avito-text-secondary);
+  --avito-button-overlay-disabled-border: var(--avito-bg-overlay);
 }
 
-.avito-text-success {
-  color: var(--avito-color-success-600);
+/* Base button styles */
+.avito-button {
+  font-family: var(--avito-font-family);
+  font-weight: var(--avito-font-weight-medium);
+  border: none;
+  cursor: pointer;
+  transition: all var(--avito-transition-normal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  outline: none;
+  box-shadow: var(--avito-shadow-button);
 }
 
-.avito-text-warning {
-  color: var(--avito-color-warning-600);
+.avito-button:focus {
+  outline: 2px solid var(--avito-primary-accent);
+  outline-offset: 2px;
 }
 
-.avito-text-error {
-  color: var(--avito-color-error-600);
+.avito-button:disabled {
+  cursor: not-allowed;
+  opacity: 1;
 }
 
-.avito-bg-primary {
-  background-color: var(--avito-color-primary-600);
+/* Size variants */
+.avito-button--xs {
+  height: var(--avito-height-xs);
+  padding: var(--avito-padding-xs-vertical) var(--avito-padding-xs-horizontal);
+  font-size: var(--avito-text-xs);
+  line-height: var(--avito-line-height-xs);
+  border-radius: var(--avito-radius-xs);
 }
 
-.avito-bg-success {
-  background-color: var(--avito-color-success-600);
+.avito-button--s {
+  height: var(--avito-height-s);
+  padding: var(--avito-padding-s-vertical) var(--avito-padding-s-horizontal);
+  font-size: var(--avito-text-s);
+  line-height: var(--avito-line-height-s);
+  border-radius: var(--avito-radius-s);
 }
 
-.avito-bg-warning {
-  background-color: var(--avito-color-warning-600);
+.avito-button--m {
+  height: var(--avito-height-m);
+  padding: var(--avito-padding-m-vertical) var(--avito-padding-m-horizontal);
+  font-size: var(--avito-text-m);
+  line-height: var(--avito-line-height-m);
+  border-radius: var(--avito-radius-m);
 }
 
-.avito-bg-error {
-  background-color: var(--avito-color-error-600);
+.avito-button--l {
+  height: var(--avito-height-l);
+  padding: var(--avito-padding-l-vertical) var(--avito-padding-l-horizontal);
+  font-size: var(--avito-text-l);
+  line-height: var(--avito-line-height-l);
+  border-radius: var(--avito-radius-l);
 }
 
-.avito-bg-neutral {
-  background-color: var(--avito-color-neutral-100);
+.avito-button--xl {
+  height: var(--avito-height-xl);
+  padding: var(--avito-padding-xl-vertical) var(--avito-padding-xl-horizontal);
+  font-size: var(--avito-text-xl);
+  line-height: var(--avito-line-height-xl);
+  border-radius: var(--avito-radius-xl);
 }
 
-.avito-border-primary {
-  border-color: var(--avito-color-primary-600);
+/* Round variant */
+.avito-button--round {
+  border-radius: var(--avito-radius-round);
 }
 
-.avito-border-success {
-  border-color: var(--avito-color-success-600);
+/* Variant styles */
+.avito-button--primary-default {
+  background-color: var(--avito-button-primary-default-bg);
+  color: var(--avito-button-primary-default-text);
 }
 
-.avito-border-warning {
-  border-color: var(--avito-color-warning-600);
+.avito-button--primary-accent {
+  background-color: var(--avito-button-primary-accent-bg);
+  color: var(--avito-button-primary-accent-text);
 }
 
-.avito-border-error {
-  border-color: var(--avito-color-error-600);
+.avito-button--primary-pay {
+  background-color: var(--avito-button-primary-pay-bg);
+  color: var(--avito-button-primary-pay-text);
 }
 
-.avito-border-neutral {
-  border-color: var(--avito-color-neutral-300);
+.avito-button--primary-success {
+  background-color: var(--avito-button-primary-success-bg);
+  color: var(--avito-button-primary-success-text);
+}
+
+.avito-button--primary-danger {
+  background-color: var(--avito-button-primary-danger-bg);
+  color: var(--avito-button-primary-danger-text);
+}
+
+.avito-button--secondary-default {
+  background-color: var(--avito-button-secondary-default-bg);
+  color: var(--avito-button-secondary-default-text);
+}
+
+.avito-button--secondary-accent {
+  background-color: var(--avito-button-secondary-accent-bg);
+  color: var(--avito-button-secondary-accent-text);
+}
+
+.avito-button--secondary-pay {
+  background-color: var(--avito-button-secondary-pay-bg);
+  color: var(--avito-button-secondary-pay-text);
+}
+
+.avito-button--secondary-success {
+  background-color: var(--avito-button-secondary-success-bg);
+  color: var(--avito-button-secondary-success-text);
+}
+
+.avito-button--secondary-danger {
+  background-color: var(--avito-button-secondary-danger-bg);
+  color: var(--avito-button-secondary-danger-text);
+}
+
+.avito-button--ghost-default {
+  background-color: var(--avito-button-ghost-default-bg);
+  color: var(--avito-button-ghost-default-text);
+  box-shadow: none;
+}
+
+.avito-button--ghost-inverse {
+  background-color: var(--avito-button-ghost-inverse-bg);
+  color: var(--avito-button-ghost-inverse-text);
+  box-shadow: none;
+}
+
+/* Disabled states */
+.avito-button--disabled {
+  background-color: var(--avito-button-disabled-bg);
+  color: var(--avito-button-disabled-text);
+}
+
+.avito-button--overlay-disabled {
+  background-color: var(--avito-button-overlay-disabled-bg);
+  color: var(--avito-button-overlay-disabled-text);
+}
+
+/* Preset styles */
+.avito-button--preset-overlay {
+  background-color: var(--avito-bg-overlay);
+  color: var(--avito-text-primary);
+  box-shadow: var(--avito-shadow-overlay);
+}
+
+.avito-button--preset-inverse {
+  background-color: var(--avito-bg-inverse);
+  color: var(--avito-text-inverse);
+}
+
+/* Hover effects */
+.avito-button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0px 6px 40px 0px rgba(0, 0, 0, 0.15),
+    0px 2px 6px 0px rgba(0, 0, 0, 0.08);
+}
+
+.avito-button--ghost-default:not(:disabled):hover,
+.avito-button--ghost-inverse:not(:disabled):hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.avito-button--ghost-inverse:not(:disabled):hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Active effects */
+.avito-button:not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: var(--avito-shadow-button);
+}
+
+.avito-button--ghost-default:not(:disabled):active,
+.avito-button--ghost-inverse:not(:disabled):active {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+}
+
+.avito-button--ghost-inverse:not(:disabled):active {
+  background-color: rgba(255, 255, 255, 0.2);
 }
