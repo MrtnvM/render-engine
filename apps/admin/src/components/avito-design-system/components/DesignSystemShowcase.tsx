@@ -1,4 +1,5 @@
 import React from 'react'
+import { cn } from '@/lib/utils'
 import { Button } from './Button'
 
 // Section Header Component
@@ -96,13 +97,7 @@ const ButtonVariantGroupItem: React.FC<ButtonVariantGroupItemProps> = ({ size, v
   const buttonConfigs = getButtonConfig()
 
   return (
-    <div
-      className={
-        variantType === 'ghost'
-          ? 'flex w-48 items-center justify-center'
-          : 'flex w-48 items-center justify-around gap-4'
-      }
-    >
+    <div className={cn('flex w-48 items-center', variantType === 'ghost' ? 'justify-center' : 'justify-around gap-4')}>
       {buttonConfigs.map((config, index) => (
         <Button key={index} size={size} variant={config.variant} color={config.color}>
           Текст
