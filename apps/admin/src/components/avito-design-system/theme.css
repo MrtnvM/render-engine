@@ -106,8 +106,8 @@
   --avito-radius-round: 32px;
 
   /* Shadows */
-  --avito-shadow-button: 0px 4px 30px 0px rgba(0, 0, 0, 0.12), 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
-  --avito-shadow-overlay: 0px 4px 30px 0px rgba(0, 0, 0, 0.12), 0px 1px 3px 0px rgba(0, 0, 0, 0.05);
+  --avito-shadow-button: none;
+  --avito-shadow-overlay: none;
 
   /* Heights */
   --avito-height-xs: 30px;
@@ -211,8 +211,7 @@
 }
 
 .avito-button:focus {
-  outline: 2px solid var(--avito-primary-accent);
-  outline-offset: 2px;
+  outline: none;
 }
 
 .avito-button:disabled {
@@ -320,13 +319,11 @@
 .avito-button--ghost-default {
   background-color: var(--avito-button-ghost-default-bg);
   color: var(--avito-button-ghost-default-text);
-  box-shadow: none;
 }
 
 .avito-button--ghost-inverse {
   background-color: var(--avito-button-ghost-inverse-bg);
   color: var(--avito-button-ghost-inverse-text);
-  box-shadow: none;
 }
 
 /* Disabled states */
@@ -344,7 +341,6 @@
 .avito-button--preset-overlay {
   background-color: var(--avito-bg-overlay);
   color: var(--avito-text-primary);
-  box-shadow: var(--avito-shadow-overlay);
 }
 
 .avito-button--preset-inverse {
@@ -355,9 +351,6 @@
 /* Hover effects */
 .avito-button:not(:disabled):hover {
   transform: translateY(-1px);
-  box-shadow:
-    0px 6px 40px 0px rgba(0, 0, 0, 0.15),
-    0px 2px 6px 0px rgba(0, 0, 0, 0.08);
 }
 
 .avito-button--ghost-default:not(:disabled):hover,
@@ -373,7 +366,6 @@
 /* Active effects */
 .avito-button:not(:disabled):active {
   transform: translateY(0);
-  box-shadow: var(--avito-shadow-button);
 }
 
 .avito-button--ghost-default:not(:disabled):active,
