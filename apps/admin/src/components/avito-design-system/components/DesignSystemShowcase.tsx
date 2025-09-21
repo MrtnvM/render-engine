@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from './Button'
 import { cn } from '../utils/cn'
+import { Button } from './Button'
 
 // Section Header Component
 const SectionHeader: React.FC = () => (
@@ -168,64 +168,34 @@ const InteractiveExamples: React.FC = () => {
         <div className='rounded-lg border border-gray-200 p-4'>
           <h3 className='mb-2 text-sm font-medium text-gray-700'>Primary Actions</h3>
           <div className='space-y-2'>
-            <Button 
-              variant='primary' 
-              color='default' 
-              size='m'
-              onClick={() => handleButtonClick('primary-default')}
-            >
+            <Button variant='primary' color='default' size='m' onClick={() => handleButtonClick('primary-default')}>
               {clickedButton === 'primary-default' ? 'Clicked!' : 'Primary Default'}
             </Button>
-            <Button 
-              variant='primary' 
-              color='accent' 
-              size='m'
-              onClick={() => handleButtonClick('primary-accent')}
-            >
+            <Button variant='primary' color='accent' size='m' onClick={() => handleButtonClick('primary-accent')}>
               {clickedButton === 'primary-accent' ? 'Clicked!' : 'Primary Accent'}
             </Button>
           </div>
         </div>
-        
+
         <div className='rounded-lg border border-gray-200 p-4'>
           <h3 className='mb-2 text-sm font-medium text-gray-700'>Secondary Actions</h3>
           <div className='space-y-2'>
-            <Button 
-              variant='secondary' 
-              color='default' 
-              size='m'
-              onClick={() => handleButtonClick('secondary-default')}
-            >
+            <Button variant='secondary' color='default' size='m' onClick={() => handleButtonClick('secondary-default')}>
               {clickedButton === 'secondary-default' ? 'Clicked!' : 'Secondary Default'}
             </Button>
-            <Button 
-              variant='secondary' 
-              color='success' 
-              size='m'
-              onClick={() => handleButtonClick('secondary-success')}
-            >
+            <Button variant='secondary' color='success' size='m' onClick={() => handleButtonClick('secondary-success')}>
               {clickedButton === 'secondary-success' ? 'Clicked!' : 'Secondary Success'}
             </Button>
           </div>
         </div>
-        
+
         <div className='rounded-lg border border-gray-200 p-4'>
           <h3 className='mb-2 text-sm font-medium text-gray-700'>Ghost & Disabled</h3>
           <div className='space-y-2'>
-            <Button 
-              variant='ghost' 
-              color='default' 
-              size='m'
-              onClick={() => handleButtonClick('ghost-default')}
-            >
+            <Button variant='ghost' color='default' size='m' onClick={() => handleButtonClick('ghost-default')}>
               {clickedButton === 'ghost-default' ? 'Clicked!' : 'Ghost Button'}
             </Button>
-            <Button 
-              variant='primary' 
-              color='default' 
-              size='m'
-              disabled
-            >
+            <Button variant='primary' color='default' size='m' disabled>
               Disabled Button
             </Button>
           </div>
@@ -254,8 +224,8 @@ const SpecialStatesSection: React.FC = () => (
           </Button>
         </div>
       </div>
-      
-      <div className='rounded-lg border border-gray-200 p-4 bg-gray-50'>
+
+      <div className='rounded-lg border border-gray-200 bg-gray-50 p-4'>
         <h3 className='mb-2 text-sm font-medium text-gray-700'>Overlay Preset</h3>
         <div className='flex flex-wrap gap-2'>
           <Button variant='primary' color='default' size='s' preset='overlay'>
@@ -277,10 +247,10 @@ export const DesignSystemShowcase: React.FC = () => (
   <div className='min-h-screen bg-white p-8' style={{ fontFamily: 'var(--avito-font-family)' }}>
     <div className='mx-auto max-w-7xl'>
       <SectionHeader />
-      
+
       <InteractiveExamples />
       <SpecialStatesSection />
-      
+
       <div className='flex gap-4 overflow-x-auto'>
         <div className='flex-1 overflow-x-auto'>
           <div className='overflow-x-auto rounded-lg border-2 border-dashed border-purple-400 bg-white p-6'>

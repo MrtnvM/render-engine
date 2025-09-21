@@ -106,12 +106,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
-      <button 
-        ref={ref} 
-        type={type} 
-        disabled={isDisabled} 
-        onClick={handleClick} 
-        className={buttonClasses} 
+      <button
+        ref={ref}
+        type={type}
+        disabled={isDisabled}
+        onClick={handleClick}
+        className={buttonClasses}
         aria-disabled={isDisabled}
         {...props}
       >
