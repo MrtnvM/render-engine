@@ -54,6 +54,8 @@ class ScenarioRepositoryImpl: ScenarioRepository {
             return
         }
         
+        observers[scenarioID] = observer
+        
         let channel = supabaseClient.channel("scenario-\(scenarioID)")
         let changes = channel.postgresChange(UpdateAction.self, schema: "public")
         
@@ -73,8 +75,6 @@ class ScenarioRepositoryImpl: ScenarioRepository {
                 
                 observer.onScenarioUpdate(scenario: scenario)
             }
-            
-            observers[scenarioID] = observer
         } catch {
             print("FAILED TO SUBSCRIBE TO CHANNEL FOR SCENARIO ID = \(scenarioID)")
         }

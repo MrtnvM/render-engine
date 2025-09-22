@@ -286,3 +286,124 @@ import { Input } from '@/components/avito-design-system';
 - **Focus Management**: Visual focus indicators
 - **Error States**: Clear error communication
 - **Responsive**: Adapts to different screen sizes
+
+## Select Component
+
+The Select component provides dropdown selection functionality with multiple options, sizes, states, and presets following the Avito Design System specifications.
+
+### Usage
+
+```tsx
+import { Select, SelectOption } from '@/components/avito-design-system';
+
+// Basic usage
+const options: SelectOption[] = [
+  { value: 'option1', label: 'First Option' },
+  { value: 'option2', label: 'Second Option' },
+  { value: 'option3', label: 'Third Option' },
+];
+
+<Select options={options} placeholder="Choose an option" />
+
+// With different sizes
+<Select size="xs" options={options} placeholder="Extra Small" />
+<Select size="s" options={options} placeholder="Small" />
+<Select size="m" options={options} placeholder="Medium" />
+<Select size="l" options={options} placeholder="Large" />
+<Select size="xl" options={options} placeholder="Extra Large" />
+
+// Different states
+<Select state="default" options={options} placeholder="Default state" />
+<Select state="filled" options={options} value="option1" placeholder="Filled state" />
+<Select state="error" options={options} placeholder="Error state" />
+<Select state="error-filled" options={options} value="option2" placeholder="Error filled" />
+<Select state="disabled" options={options} value="option1" placeholder="Disabled state" />
+
+// Different presets
+<Select preset="default" options={options} placeholder="Default preset" />
+<Select preset="overlay" options={options} placeholder="Overlay preset" />
+
+// With disabled options
+const optionsWithDisabled: SelectOption[] = [
+  { value: 'option1', label: 'Available Option' },
+  { value: 'option2', label: 'Disabled Option', disabled: true },
+  { value: 'option3', label: 'Another Option' },
+];
+
+<Select options={optionsWithDisabled} placeholder="Choose an option" />
+
+// Controlled select
+<Select
+  options={options}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  placeholder="Controlled select"
+/>
+
+// With form integration
+<Select
+  name="country"
+  id="country-select"
+  options={countryOptions}
+  required
+  placeholder="Select your country"
+/>
+```
+
+### Props
+
+| Prop           | Type                                                               | Default            | Description                |
+| -------------- | ------------------------------------------------------------------ | ------------------ | -------------------------- |
+| `value`        | `string`                                                           | `''`               | Selected value             |
+| `placeholder`  | `string`                                                           | `'Выберите опцию'` | Placeholder text           |
+| `size`         | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'`                                | `'m'`              | Select size                |
+| `state`        | `'default' \| 'filled' \| 'error' \| 'error-filled' \| 'disabled'` | `'default'`        | Select state               |
+| `preset`       | `'default' \| 'overlay'`                                           | `'default'`        | Select preset theme        |
+| `options`      | `SelectOption[]`                                                   | `[]`               | Array of select options    |
+| `onChange`     | `(value: string) => void`                                          | -                  | Change handler             |
+| `disabled`     | `boolean`                                                          | `false`            | Whether select is disabled |
+| `name`         | `string`                                                           | -                  | Select name attribute      |
+| `id`           | `string`                                                           | -                  | Select id attribute        |
+| `required`     | `boolean`                                                          | `false`            | Whether select is required |
+| `open`         | `boolean`                                                          | -                  | Controlled open state      |
+| `onOpenChange` | `(open: boolean) => void`                                          | -                  | Open state change handler  |
+| `className`    | `string`                                                           | -                  | Additional CSS classes     |
+
+### SelectOption Interface
+
+| Prop       | Type      | Default | Description                |
+| ---------- | --------- | ------- | -------------------------- |
+| `value`    | `string`  | -       | Option value               |
+| `label`    | `string`  | -       | Option display text        |
+| `disabled` | `boolean` | `false` | Whether option is disabled |
+
+### States
+
+- **Default**: Empty select with placeholder
+- **Filled**: Select with selected value
+- **Error**: Select with error styling (red border)
+- **Error-filled**: Select with value and error styling
+- **Disabled**: Disabled select with muted styling
+
+### Sizes
+
+- **XS**: Extra small (30px height, 10px border radius)
+- **S**: Small (36px height, 12px border radius)
+- **M**: Medium (44px height, 12px border radius)
+- **L**: Large (52px height, 16px border radius)
+- **XL**: Extra large (64px height, 20px border radius)
+
+### Presets
+
+- **Default**: Standard select styling with light background
+- **Overlay**: For use over images or colored backgrounds with shadow
+
+### Features
+
+- **Keyboard Navigation**: Full keyboard support with arrow keys, Enter, Space, and Escape
+- **Accessibility**: Proper ARIA attributes and screen reader support
+- **Click Outside**: Closes dropdown when clicking outside
+- **Disabled Options**: Support for individual disabled options
+- **Form Integration**: Hidden input for form submission
+- **Controlled/Uncontrolled**: Supports both controlled and uncontrolled usage
+- **Custom Styling**: Consistent with Avito Design System tokens

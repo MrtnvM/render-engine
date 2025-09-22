@@ -83,3 +83,32 @@ export interface InputFieldSetVariants {
   preset: 'default' | 'overlay'
   statusType: 'error' | 'hint' | 'success'
 }
+
+export interface SelectOption {
+  value: string
+  label: string
+  disabled?: boolean
+}
+
+export interface SelectProps {
+  value?: string
+  placeholder?: string
+  size?: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state?: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
+  preset?: 'default' | 'overlay'
+  options: SelectOption[]
+  onChange?: (value: string) => void
+  disabled?: boolean
+  className?: string
+  name?: string
+  id?: string
+  required?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export interface SelectVariants {
+  size: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
+  preset: 'default' | 'overlay'
+}

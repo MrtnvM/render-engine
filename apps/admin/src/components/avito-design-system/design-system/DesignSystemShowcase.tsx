@@ -3,6 +3,7 @@ import { DesignSystemLayout, ComponentItem } from '.'
 import { ButtonShowcase } from './ButtonShowcase'
 import { InputFieldSetShowcase } from './InputFieldSetShowcase'
 import { InputShowcase } from './InputShowcase'
+import { SelectShowcase } from './SelectShowcase'
 
 // Define available components
 const components: ComponentItem[] = [
@@ -27,6 +28,13 @@ const components: ComponentItem[] = [
     category: 'Forms',
     icon: '📋',
   },
+  {
+    id: 'select',
+    name: 'Select',
+    description: 'Dropdown select component with multiple options and states',
+    category: 'Forms',
+    icon: '📋',
+  },
   // Add more components here as they are created
   // {
   //   id: 'card',
@@ -46,6 +54,8 @@ const renderComponent = (selectedComponent: string | null) => {
       return <InputShowcase />
     case 'input-fieldset':
       return <InputFieldSetShowcase />
+    case 'select':
+      return <SelectShowcase />
     // Add more cases as components are added
     // case 'card':
     //   return <CardShowcase />

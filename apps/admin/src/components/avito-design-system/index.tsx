@@ -1,6 +1,7 @@
 export { Button } from './components/Button'
 export { Input } from './components/Input'
 export { InputFieldSet } from './components/InputFieldSet'
+export { Select } from './components/Select'
 export { DesignSystemShowcase } from './design-system/DesignSystemShowcase'
 export type {
   ButtonProps,
@@ -9,6 +10,9 @@ export type {
   InputVariants,
   InputFieldSetProps,
   InputFieldSetVariants,
+  SelectProps,
+  SelectVariants,
+  SelectOption,
 } from './types/components'
 export { cn } from './utils/cn'
 

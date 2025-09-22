@@ -254,18 +254,6 @@ export const ButtonShowcase: React.FC<ButtonShowcaseProps> = ({ className }) => 
 
       <InteractiveExamples />
       <SpecialStatesSection />
-
-      <div className='flex gap-4 overflow-x-auto'>
-        <div className='flex-1 overflow-x-auto'>
-          <div className='overflow-x-auto rounded-lg border-2 border-dashed border-purple-400 bg-white p-6'>
-            <div className='w-full min-w-max'>
-              <h2 className='mb-4 text-lg font-semibold text-gray-900'>Complete Size & Variant Matrix</h2>
-              <ColumnHeaders />
-              <ButtonVariantsShowcase />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 )

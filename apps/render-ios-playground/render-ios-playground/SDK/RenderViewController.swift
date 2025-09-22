@@ -78,10 +78,10 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     }
     
     func onScenarioUpdate(scenario: Scenario) {
-        Task {
-            await MainActor.run {
-                buildViewHierarchy(from: scenario.mainComponent)
-            }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.scenario = scenario
+            self.buildViewHierarchy(from: scenario.mainComponent)
         }
     }
 
@@ -108,12 +108,21 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     }
 
     private func buildViewHierarchy(from component: Component) {
+        rootFlexContainer.subviews.forEach { $0.removeFromSuperview() }
+        
         rootFlexContainer.flex.define { flex in
             if let view = buildView(from: component) {
                 flex.addItem(view)
             }
         }
+        
+        // Force layout update after rebuilding the hierarchy
         rootFlexContainer.setNeedsLayout()
+        rootFlexContainer.layoutIfNeeded()
+        
+        // Ensure the parent view also updates its layout
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
     }
 
     private func buildView(from component: Component) -> UIView? {
