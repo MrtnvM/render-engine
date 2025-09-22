@@ -35,6 +35,7 @@ public class RenderViewController: UIViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupFlexContainer()
         
         if let scenario = scenario {
@@ -49,10 +50,10 @@ public class RenderViewController: UIViewController {
 
         // Position the container to fill safe area
         rootFlexContainer.frame = CGRect(
-            x: view.safeAreaInsets.left,
-            y: view.safeAreaInsets.top,
-            width: view.frame.width - (view.safeAreaInsets.left + view.safeAreaInsets.right),
-            height: view.frame.height - (view.safeAreaInsets.top + view.safeAreaInsets.bottom)
+            x: 0,
+            y: 0,
+            width: view.frame.width,
+            height: view.frame.height
         )
 
         // Let flexbox layout itself
@@ -63,8 +64,8 @@ public class RenderViewController: UIViewController {
         view.addSubview(rootFlexContainer)
         rootFlexContainer.flex
             .direction(.column)
-            .justifyContent(.center)
-            .alignItems(.center)
+            .justifyContent(.start)
+            .alignItems(.start)
     }
 
     private func loadScenario() {
@@ -84,7 +85,7 @@ public class RenderViewController: UIViewController {
     private func buildViewHierarchy(from component: Component) {
         rootFlexContainer.flex.define { flex in
             if let view = buildView(from: component) {
-                flex.addItem(view).grow(1)
+                flex.addItem(view)
             }
         }
         rootFlexContainer.setNeedsLayout()
