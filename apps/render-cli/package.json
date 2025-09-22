@@ -21,8 +21,10 @@
     "@babel/parser": "^7.28.4",
     "@babel/traverse": "^7.28.4",
     "@babel/types": "^7.28.4",
+    "@supabase/supabase-js": "^2.57.4",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
+    "dotenv": "^17.2.2",
     "inquirer": "^9.2.15",
     "ora": "^8.0.1"
   },
