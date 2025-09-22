@@ -1,4 +1,5 @@
 import Foundation
+import Supabase
 
 /// Dependency injection container for the application
 class DIContainer {
@@ -6,15 +7,23 @@ class DIContainer {
     
     private init() {}
     
-    // MARK: - Repositories
-    
     lazy var networkClient: NetworkClient = {
         return NetworkClient()
     }()
     
+    lazy var supabaseClient: SupabaseClient = {
+        return SupabaseClient(
+            supabaseURL: URL(string: "https://yhfeoztyhuiccuyeghiw.supabase.co")!,
+            supabaseKey: "sb_publishable_8fDYhB0k7n_wuAywpua6vQ_JthMjgzA"
+        )
+    }()
+    
+    // MARK: - Repositories
+    
     lazy var scenarioRepository: ScenarioRepository = {
         return ScenarioRepositoryImpl(
-            networkClient: networkClient
+            networkClient: networkClient,
+            supabaseClient: supabaseClient
         )
     }()
     
@@ -44,7 +53,8 @@ class DIContainer {
             ColumnRenderer(),
             StackRenderer(),
             TextRenderer(),
-            ButtonRenderer()
+            ButtonRenderer(),
+            ImageRenderer()
         ]
         renderers.forEach { registry.register(renderer: $0) }
         return registry

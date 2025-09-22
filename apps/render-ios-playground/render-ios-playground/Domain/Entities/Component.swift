@@ -5,12 +5,14 @@ class Component: Equatable {
     let id: String
     let type: String
     let style: ViewStyle
+    let properties: Config
     private var children: [Component] = []
     
-    init(id: String, type: String, style: ViewStyle) {
+    private init(id: String, type: String, style: ViewStyle, properties: Config) {
         self.id = id
         self.type = type
         self.style = style
+        self.properties = properties
     }
     
     static func create(from config: Config) throws -> Component {
@@ -22,11 +24,13 @@ class Component: Equatable {
         
         let id = config.getString(forKey: "id") ?? UUID().uuidString
         let style = ViewStyle(config.getConfig(forKey: "style"))
+        let properties = config.getConfig(forKey: "properties")
 
         let component = Component(
             id: id,
             type: typeString,
-            style: style
+            style: style,
+            properties: properties
         )
         
         let childrenData = config.getConfigArray(forKey: "children")

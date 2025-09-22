@@ -6,16 +6,11 @@ import Supabase
 class RenderSDK {
     static let shared = RenderSDK()
     
-    private let client: SupabaseClient
+    private let client = DIContainer.shared.supabaseClient
     private let componentRegistry = DIContainer.shared.componentRegistry
     private let scenarioFetcher = DIContainer.shared.scenarioService
 
-    private init() {
-        client = SupabaseClient(
-            supabaseURL: URL(string: "https://yhfeoztyhuiccuyeghiw.supabase.co")!,
-            supabaseKey: "sb_publishable_8fDYhB0k7n_wuAywpua6vQ_JthMjgzA"
-        )
-    }
+    private init() {}
 
     // Option 1: Render into an existing view
     func render(

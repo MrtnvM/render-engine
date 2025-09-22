@@ -7,11 +7,12 @@ public protocol RenderViewControllerDelegate: AnyObject {
     func didTrigger(action: Action, from viewController: RenderViewController)
 }
 
-public class RenderViewController: UIViewController {
+public class RenderViewController: UIViewController, ScenarioObserver {
     weak public var delegate: RenderViewControllerDelegate?
     
-    private let scenarioID: String?
+    let scenarioID: String
     private var scenario: Scenario?
+    private let repository = DIContainer.shared.scenarioRepository
     private let service = DIContainer.shared.scenarioService
     private let registry = DIContainer.shared.componentRegistry
     
@@ -25,7 +26,7 @@ public class RenderViewController: UIViewController {
     
     init(scenario: Scenario) {
         self.scenario = scenario
-        scenarioID = nil
+        scenarioID = scenario.id
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,6 +45,22 @@ public class RenderViewController: UIViewController {
             loadScenario()
         }
     }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        Task {
+            try? await repository.subscribeToScenario(self)
+        }
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        Task {
+            await repository.unsubscribeFromScenario(self)
+        }
+    }
 
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -58,6 +75,14 @@ public class RenderViewController: UIViewController {
 
         // Let flexbox layout itself
         rootFlexContainer.flex.layout(mode: .fitContainer)
+    }
+    
+    func onScenarioUpdate(scenario: Scenario) {
+        Task {
+            await MainActor.run {
+                buildViewHierarchy(from: scenario.mainComponent)
+            }
+        }
     }
 
     private func setupFlexContainer() {

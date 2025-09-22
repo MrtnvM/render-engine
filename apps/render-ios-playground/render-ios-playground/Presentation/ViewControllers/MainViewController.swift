@@ -33,7 +33,7 @@ class MainViewController: UIViewController {
 //            let scenario = try await schemaService.fetchScenario(from: url)
             
             try await RenderSDK.shared.render(
-                scenarioID: "1",
+                scenarioID: "generated-scenario-1",
                 vc: self,
                 containerView: mainView
             )

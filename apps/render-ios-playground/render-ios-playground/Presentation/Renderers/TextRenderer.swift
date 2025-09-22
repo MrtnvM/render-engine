@@ -24,7 +24,8 @@ class RenderableText: UILabel, Renderable {
     }
     
     private func setupLabel() {
-        applyStyle()
+        let text = component.properties.getString(forKey: "text") ?? ""
+        self.text = text
     }
     
     
