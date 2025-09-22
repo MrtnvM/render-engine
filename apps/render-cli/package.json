@@ -1,11 +1,11 @@
 {
   "name": "render-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI tool for Render Engine",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "render-cli": "dist/index.js"
+    "render": "dist/index.js"
   },
   "scripts": {
     "dev": "tsx src/index.ts",
@@ -17,16 +17,23 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/parser": "^7.28.4",
+    "@babel/traverse": "^7.28.4",
+    "@babel/types": "^7.28.4",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
     "inquirer": "^9.2.15",
     "ora": "^8.0.1"
   },
   "devDependencies": {
+    "@types/babel__traverse": "^7.28.0",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^20.0.0",
+    "@types/react": "^19.1.13",
     "eslint": "^8.0.0",
     "prettier": "^3.0.0",
+    "react": "^19.1.1",
     "tsx": "^4.0.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"

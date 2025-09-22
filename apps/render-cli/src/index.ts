@@ -3,6 +3,7 @@
 import { Command } from 'commander'
 import chalk from 'chalk'
 import { renderCommand } from './commands/render.js'
+import { compileCommand } from './commands/compile.js'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
@@ -14,10 +15,11 @@ const version = packageJson.version
 
 const program = new Command()
 
-program.name('render-cli').description('CLI tool for Render Engine').version(version)
+program.name('render').description('CLI tool for Render Engine').version(version)
 
 // Add commands
 program.addCommand(renderCommand)
+program.addCommand(compileCommand)
 
 // Global error handling
 program.configureHelp({
