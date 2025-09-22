@@ -62,6 +62,7 @@
   /* Typography */
   --avito-font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --avito-font-weight-medium: 500;
+  --avito-font-weight-bold: 800;
   --avito-font-weight-extrabold: 800;
 
   /* Font Sizes */
@@ -193,6 +194,145 @@
   --avito-button-overlay-disabled-bg: var(--avito-bg-overlay);
   --avito-button-overlay-disabled-text: var(--avito-text-secondary);
   --avito-button-overlay-disabled-border: var(--avito-bg-overlay);
+
+  /* Input Default */
+  --avito-input-default-bg: var(--avito-secondary-default);
+  --avito-input-default-text: var(--avito-text-primary);
+  --avito-input-default-placeholder: #757575;
+  --avito-input-default-border: var(--avito-secondary-default);
+
+  /* Input Filled */
+  --avito-input-filled-bg: var(--avito-secondary-default);
+  --avito-input-filled-text: var(--avito-text-primary);
+  --avito-input-filled-border: var(--avito-secondary-default);
+
+  /* Input Error */
+  --avito-input-error-bg: var(--avito-secondary-default);
+  --avito-input-error-text: var(--avito-text-primary);
+  --avito-input-error-placeholder: #757575;
+  --avito-input-error-border: var(--avito-primary-danger);
+
+  /* Input Error Filled */
+  --avito-input-error-filled-bg: var(--avito-secondary-default);
+  --avito-input-error-filled-text: var(--avito-text-primary);
+  --avito-input-error-filled-border: var(--avito-primary-danger);
+
+  /* Input Disabled */
+  --avito-input-disabled-bg: var(--avito-secondary-default);
+  --avito-input-disabled-text: var(--avito-text-secondary);
+  --avito-input-disabled-border: var(--avito-secondary-default);
+
+  /* Input Overlay Default */
+  --avito-input-overlay-default-bg: var(--avito-bg-overlay);
+  --avito-input-overlay-default-text: var(--avito-text-primary);
+  --avito-input-overlay-default-placeholder: #757575;
+  --avito-input-overlay-default-border: var(--avito-bg-overlay);
+
+  /* Input Overlay Filled */
+  --avito-input-overlay-filled-bg: var(--avito-bg-overlay);
+  --avito-input-overlay-filled-text: var(--avito-text-primary);
+  --avito-input-overlay-filled-border: var(--avito-bg-overlay);
+
+  /* Input Overlay Error */
+  --avito-input-overlay-error-bg: var(--avito-bg-overlay);
+  --avito-input-overlay-error-text: var(--avito-text-primary);
+  --avito-input-overlay-error-placeholder: #757575;
+  --avito-input-overlay-error-border: var(--avito-primary-danger);
+
+  /* Input Overlay Error Filled */
+  --avito-input-overlay-error-filled-bg: var(--avito-bg-overlay);
+  --avito-input-overlay-error-filled-text: var(--avito-text-primary);
+  --avito-input-overlay-error-filled-border: var(--avito-primary-danger);
+
+  /* Input Overlay Disabled */
+  --avito-input-overlay-disabled-bg: var(--avito-bg-overlay);
+  --avito-input-overlay-disabled-text: var(--avito-text-secondary);
+  --avito-input-overlay-disabled-border: var(--avito-bg-overlay);
+
+  /* InputFieldSet Label */
+  --avito-input-fieldset-label-text: var(--avito-text-primary);
+  --avito-input-fieldset-label-disabled-text: var(--avito-text-secondary);
+
+  /* InputFieldSet Status Text */
+  --avito-input-fieldset-status-error-text: #ff4053;
+  --avito-input-fieldset-status-hint-text: var(--avito-text-secondary);
+  --avito-input-fieldset-status-success-text: var(--avito-success);
+
+  /* InputFieldSet Spacing */
+  --avito-input-fieldset-label-gap: 12px;
+  --avito-input-fieldset-status-gap: 6px;
+
+  /* Select Default */
+  --avito-select-default-bg: var(--avito-secondary-default);
+  --avito-select-default-text: var(--avito-text-primary);
+  --avito-select-default-placeholder: #757575;
+  --avito-select-default-border: var(--avito-secondary-default);
+  --avito-select-default-arrow: var(--avito-text-secondary);
+
+  /* Select Filled */
+  --avito-select-filled-bg: var(--avito-secondary-default);
+  --avito-select-filled-text: var(--avito-text-primary);
+  --avito-select-filled-border: var(--avito-secondary-default);
+  --avito-select-filled-arrow: var(--avito-text-primary);
+
+  /* Select Error */
+  --avito-select-error-bg: var(--avito-secondary-default);
+  --avito-select-error-text: var(--avito-text-primary);
+  --avito-select-error-placeholder: #757575;
+  --avito-select-error-border: var(--avito-primary-danger);
+  --avito-select-error-arrow: var(--avito-text-secondary);
+
+  /* Select Error Filled */
+  --avito-select-error-filled-bg: var(--avito-secondary-default);
+  --avito-select-error-filled-text: var(--avito-text-primary);
+  --avito-select-error-filled-border: var(--avito-primary-danger);
+  --avito-select-error-filled-arrow: var(--avito-text-primary);
+
+  /* Select Disabled */
+  --avito-select-disabled-bg: var(--avito-secondary-default);
+  --avito-select-disabled-text: var(--avito-text-secondary);
+  --avito-select-disabled-border: var(--avito-secondary-default);
+  --avito-select-disabled-arrow: var(--avito-text-secondary);
+
+  /* Select Overlay Default */
+  --avito-select-overlay-default-bg: var(--avito-bg-overlay);
+  --avito-select-overlay-default-text: var(--avito-text-primary);
+  --avito-select-overlay-default-placeholder: #757575;
+  --avito-select-overlay-default-border: var(--avito-bg-overlay);
+  --avito-select-overlay-default-arrow: var(--avito-text-secondary);
+
+  /* Select Overlay Filled */
+  --avito-select-overlay-filled-bg: var(--avito-bg-overlay);
+  --avito-select-overlay-filled-text: var(--avito-text-primary);
+  --avito-select-overlay-filled-border: var(--avito-bg-overlay);
+  --avito-select-overlay-filled-arrow: var(--avito-text-primary);
+
+  /* Select Overlay Error */
+  --avito-select-overlay-error-bg: var(--avito-bg-overlay);
+  --avito-select-overlay-error-text: var(--avito-text-primary);
+  --avito-select-overlay-error-placeholder: #757575;
+  --avito-select-overlay-error-border: var(--avito-primary-danger);
+  --avito-select-overlay-error-arrow: var(--avito-text-secondary);
+
+  /* Select Overlay Error Filled */
+  --avito-select-overlay-error-filled-bg: var(--avito-bg-overlay);
+  --avito-select-overlay-error-filled-text: var(--avito-text-primary);
+  --avito-select-overlay-error-filled-border: var(--avito-primary-danger);
+  --avito-select-overlay-error-filled-arrow: var(--avito-text-primary);
+
+  /* Select Overlay Disabled */
+  --avito-select-overlay-disabled-bg: var(--avito-bg-overlay);
+  --avito-select-overlay-disabled-text: var(--avito-text-secondary);
+  --avito-select-overlay-disabled-border: var(--avito-bg-overlay);
+  --avito-select-overlay-disabled-arrow: var(--avito-text-secondary);
+
+  /* Select Dropdown */
+  --avito-select-dropdown-bg: var(--avito-bg-default);
+  --avito-select-dropdown-border: var(--avito-border-default);
+  --avito-select-dropdown-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --avito-select-dropdown-item-hover-bg: var(--avito-secondary-default);
+  --avito-select-dropdown-item-selected-bg: var(--avito-secondary-accent);
+  --avito-select-dropdown-item-selected-text: var(--avito-text-primary);
 }
 
 /* Base button styles */
@@ -376,4 +516,285 @@
 
 .avito-button--ghost-inverse:not(:disabled):active {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Base input styles */
+.avito-input {
+  font-family: var(--avito-font-family);
+  font-weight: var(--avito-font-weight-medium);
+  border: 1px solid;
+  outline: none;
+  transition: all var(--avito-transition-normal);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.avito-input:focus {
+  outline: none;
+}
+
+.avito-input:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.avito-input::placeholder {
+  color: var(--avito-input-default-placeholder);
+}
+
+/* Size variants */
+.avito-input--xs {
+  height: var(--avito-height-xs);
+  padding: var(--avito-padding-xs-vertical) var(--avito-padding-xs-horizontal);
+  font-size: var(--avito-text-xs);
+  line-height: var(--avito-line-height-xs);
+  border-radius: var(--avito-radius-xs);
+}
+
+.avito-input--s {
+  height: var(--avito-height-s);
+  padding: var(--avito-padding-s-vertical) var(--avito-padding-s-horizontal);
+  font-size: var(--avito-text-s);
+  line-height: var(--avito-line-height-s);
+  border-radius: var(--avito-radius-s);
+}
+
+.avito-input--m {
+  height: var(--avito-height-m);
+  padding: var(--avito-padding-m-vertical) var(--avito-padding-m-horizontal);
+  font-size: var(--avito-text-m);
+  line-height: var(--avito-line-height-m);
+  border-radius: var(--avito-radius-m);
+}
+
+.avito-input--l {
+  height: var(--avito-height-l);
+  padding: var(--avito-padding-l-vertical) var(--avito-padding-l-horizontal);
+  font-size: var(--avito-text-l);
+  line-height: var(--avito-line-height-l);
+  border-radius: var(--avito-radius-l);
+}
+
+.avito-input--xl {
+  height: var(--avito-height-xl);
+  padding: var(--avito-padding-xl-vertical) var(--avito-padding-xl-horizontal);
+  font-size: var(--avito-text-xl);
+  line-height: var(--avito-line-height-xl);
+  border-radius: var(--avito-radius-xl);
+}
+
+/* State styles */
+.avito-input--default {
+  background-color: var(--avito-input-default-bg);
+  color: var(--avito-input-default-text);
+  border-color: var(--avito-input-default-border);
+}
+
+.avito-input--filled {
+  background-color: var(--avito-input-filled-bg);
+  color: var(--avito-input-filled-text);
+  border-color: var(--avito-input-filled-border);
+}
+
+.avito-input--error {
+  background-color: var(--avito-input-error-bg);
+  color: var(--avito-input-error-text);
+  border-color: var(--avito-input-error-border);
+}
+
+.avito-input--error-filled {
+  background-color: var(--avito-input-error-filled-bg);
+  color: var(--avito-input-error-filled-text);
+  border-color: var(--avito-input-error-filled-border);
+}
+
+.avito-input--disabled {
+  background-color: var(--avito-input-disabled-bg);
+  color: var(--avito-input-disabled-text);
+  border-color: var(--avito-input-disabled-border);
+}
+
+/* Preset styles */
+.avito-input--preset-overlay {
+  background-color: var(--avito-input-overlay-default-bg);
+  color: var(--avito-input-overlay-default-text);
+  border-color: var(--avito-input-overlay-default-border);
+  box-shadow: var(--avito-shadow-overlay);
+}
+
+.avito-input--preset-overlay.avito-input--filled {
+  background-color: var(--avito-input-overlay-filled-bg);
+  color: var(--avito-input-overlay-filled-text);
+  border-color: var(--avito-input-overlay-filled-border);
+}
+
+.avito-input--preset-overlay.avito-input--error {
+  background-color: var(--avito-input-overlay-error-bg);
+  color: var(--avito-input-overlay-error-text);
+  border-color: var(--avito-input-overlay-error-border);
+}
+
+.avito-input--preset-overlay.avito-input--error-filled {
+  background-color: var(--avito-input-overlay-error-filled-bg);
+  color: var(--avito-input-overlay-error-filled-text);
+  border-color: var(--avito-input-overlay-error-filled-border);
+}
+
+.avito-input--preset-overlay.avito-input--disabled {
+  background-color: var(--avito-input-overlay-disabled-bg);
+  color: var(--avito-input-overlay-disabled-text);
+  border-color: var(--avito-input-overlay-disabled-border);
+}
+
+/* Input container for close button */
+.avito-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.avito-input-container .avito-input {
+  padding-right: 40px; /* Space for close button */
+}
+
+.avito-input-close-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--avito-text-primary);
+  transition: color var(--avito-transition-fast);
+}
+
+.avito-input-close-button:hover {
+  color: var(--avito-text-secondary);
+}
+
+.avito-input-close-button:disabled {
+  cursor: not-allowed;
+  color: var(--avito-text-secondary);
+}
+
+/* Close button sizes */
+.avito-input-close-button--xs {
+  width: 10px;
+  height: 16px;
+}
+
+.avito-input-close-button--s {
+  width: 10px;
+  height: 16px;
+}
+
+.avito-input-close-button--m {
+  width: 14px;
+  height: 20px;
+}
+
+.avito-input-close-button--l {
+  width: 14px;
+  height: 20px;
+}
+
+.avito-input-close-button--xl {
+  width: 14px;
+  height: 20px;
+}
+
+/* InputFieldSet Base Styles */
+.avito-input-fieldset {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.avito-input-fieldset__label {
+  font-family: var(--avito-font-family);
+  font-weight: var(--avito-font-weight-bold);
+  color: var(--avito-input-fieldset-label-text);
+  margin-bottom: var(--avito-input-fieldset-label-gap);
+}
+
+.avito-input-fieldset__label--disabled {
+  color: var(--avito-input-fieldset-label-disabled-text);
+}
+
+/* Label size variants */
+.avito-input-fieldset__label--xs {
+  font-size: 14px;
+  line-height: 1.29;
+}
+
+.avito-input-fieldset__label--s {
+  font-size: 14px;
+  line-height: 1.29;
+}
+
+.avito-input-fieldset__label--m {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.avito-input-fieldset__label--l {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.avito-input-fieldset__label--xl {
+  font-size: 21px;
+  line-height: 1.24;
+}
+
+.avito-input-fieldset__status {
+  margin-top: var(--avito-input-fieldset-status-gap);
+  font-family: var(--avito-font-family);
+  font-weight: var(--avito-font-weight-medium);
+}
+
+.avito-input-fieldset__status--error {
+  color: var(--avito-input-fieldset-status-error-text);
+}
+
+.avito-input-fieldset__status--hint {
+  color: var(--avito-input-fieldset-status-hint-text);
+}
+
+.avito-input-fieldset__status--success {
+  color: var(--avito-input-fieldset-status-success-text);
+}
+
+/* Status text size variants */
+.avito-input-fieldset__status--xs {
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+.avito-input-fieldset__status--s {
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+.avito-input-fieldset__status--m {
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+.avito-input-fieldset__status--l {
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+.avito-input-fieldset__status--xl {
+  font-size: 15px;
+  line-height: 1.33;
 }

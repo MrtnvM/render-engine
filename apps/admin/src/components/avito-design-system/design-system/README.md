@@ -10,6 +10,8 @@ This directory contains the refactored design system components that provide a m
 - **`ComponentShowcase.tsx`** - Main content area that displays the selected component's showcase
 - **`DesignSystemLayout.tsx`** - Main layout component that combines the component list and showcase
 - **`ButtonShowcase.tsx`** - Specific showcase for the Button component
+- **`InputShowcase.tsx`** - Specific showcase for the Input component
+- **`InputFieldSetShowcase.tsx`** - Specific showcase for the InputFieldSet component
 
 ### Key Features
 
@@ -27,6 +29,7 @@ This directory contains the refactored design system components that provide a m
 import { DesignSystemShowcase } from '../components/DesignSystemShowcase'
 
 // Use the main showcase component
+
 ;<DesignSystemShowcase />
 ```
 

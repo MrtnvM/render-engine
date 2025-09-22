@@ -20,3 +20,66 @@ export interface ButtonVariants {
   round: boolean
   preset: 'default' | 'overlay' | 'inverse'
 }
+
+export interface InputProps {
+  value?: string
+  placeholder?: string
+  size?: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state?: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
+  preset?: 'default' | 'overlay'
+  showCloseButton?: boolean
+  onChange?: (value: string) => void
+  onClear?: () => void
+  disabled?: boolean
+  className?: string
+  type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url'
+  name?: string
+  id?: string
+  autoComplete?: string
+  autoFocus?: boolean
+  maxLength?: number
+  minLength?: number
+  pattern?: string
+  required?: boolean
+  readOnly?: boolean
+}
+
+export interface InputVariants {
+  size: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
+  preset: 'default' | 'overlay'
+  showCloseButton: boolean
+}
+
+export interface InputFieldSetProps {
+  label?: string
+  value?: string
+  placeholder?: string
+  size?: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state?: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
+  preset?: 'default' | 'overlay'
+  statusText?: string
+  statusType?: 'error' | 'hint' | 'success'
+  showCloseButton?: boolean
+  onChange?: (value: string) => void
+  onClear?: () => void
+  disabled?: boolean
+  type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url'
+  name?: string
+  id?: string
+  autoComplete?: string
+  autoFocus?: boolean
+  maxLength?: number
+  minLength?: number
+  pattern?: string
+  required?: boolean
+  readOnly?: boolean
+  className?: string
+}
+
+export interface InputFieldSetVariants {
+  size: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
+  preset: 'default' | 'overlay'
+  statusType: 'error' | 'hint' | 'success'
+}

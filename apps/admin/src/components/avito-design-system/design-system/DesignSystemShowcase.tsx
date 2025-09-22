@@ -1,7 +1,8 @@
 import React from 'react'
-import { DesignSystemLayout, ComponentItem } from '../design-system'
-import { ButtonShowcase } from '../design-system/ButtonShowcase'
-import { InputShowcase } from '../design-system/InputShowcase'
+import { DesignSystemLayout, ComponentItem } from '.'
+import { ButtonShowcase } from './ButtonShowcase'
+import { InputFieldSetShowcase } from './InputFieldSetShowcase'
+import { InputShowcase } from './InputShowcase'
 
 // Define available components
 const components: ComponentItem[] = [
@@ -18,6 +19,13 @@ const components: ComponentItem[] = [
     description: 'Text input component with validation states',
     category: 'Forms',
     icon: '📝',
+  },
+  {
+    id: 'input-fieldset',
+    name: 'InputFieldSet',
+    description: 'Complete input field with label and status text',
+    category: 'Forms',
+    icon: '📋',
   },
   // Add more components here as they are created
   // {
@@ -36,6 +44,8 @@ const renderComponent = (selectedComponent: string | null) => {
       return <ButtonShowcase />
     case 'input':
       return <InputShowcase />
+    case 'input-fieldset':
+      return <InputFieldSetShowcase />
     // Add more cases as components are added
     // case 'card':
     //   return <CardShowcase />
