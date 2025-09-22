@@ -130,4 +130,9 @@ dist
 .pnp.*
 
 .DS_Store
+
+# Xcode user-specific files
 apps/render-ios-playground/render-ios-playground.xcodeproj/project.xcworkspace/xcuserdata/
+apps/render-ios-playground/render-ios-playground.xcodeproj/xcuserdata/
+*.xcuserstate
+*.xcbkptlist
