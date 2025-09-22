@@ -33,7 +33,7 @@ const components: ComponentItem[] = [
     name: 'Select',
     description: 'Dropdown select component with multiple options and states',
     category: 'Forms',
-    icon: '📋',
+    icon: '🔽',
   },
   // Add more components here as they are created
   // {

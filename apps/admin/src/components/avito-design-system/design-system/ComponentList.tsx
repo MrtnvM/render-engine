@@ -34,31 +34,31 @@ export const ComponentList: React.FC<ComponentListProps> = ({
   )
 
   return (
-    <div className={cn('w-80 flex-shrink-0 border-r border-gray-200 bg-gray-50', className)}>
-      <div className='p-6'>
-        <h2 className='mb-4 text-lg font-semibold text-gray-900'>Components</h2>
-        <div className='space-y-6'>
+    <div className={cn('w-72 flex-shrink-0 border-r border-l border-gray-200 bg-gray-50', className)}>
+      <div className='p-4'>
+        <h2 className='mb-3 text-base font-semibold text-gray-900'>Components</h2>
+        <div className='space-y-4'>
           {Object.entries(groupedComponents).map(([category, categoryComponents]) => (
             <div key={category}>
-              <h3 className='mb-3 text-sm font-medium tracking-wide text-gray-500 uppercase'>{category}</h3>
-              <div className='space-y-1'>
+              <h3 className='mb-2 text-xs font-medium tracking-wide text-gray-500 uppercase'>{category}</h3>
+              <div className='space-y-0.5'>
                 {categoryComponents.map((component) => (
                   <button
                     key={component.id}
                     onClick={() => onComponentSelect(component.id)}
                     className={cn(
-                      'w-full rounded-lg p-3 text-left transition-colors duration-200',
-                      'hover:bg-gray-100 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:outline-none',
+                      'w-full rounded-md p-2 text-left transition-colors duration-200',
+                      'hover:bg-gray-100 focus:ring-1 focus:ring-purple-500 focus:ring-offset-1 focus:outline-none',
                       selectedComponent === component.id
                         ? 'border border-purple-200 bg-purple-50 text-purple-900'
                         : 'text-gray-700 hover:text-gray-900',
                     )}
                   >
-                    <div className='flex items-start gap-3'>
-                      {component.icon && <span className='mt-0.5 flex-shrink-0 text-lg'>{component.icon}</span>}
+                    <div className='flex items-center gap-2'>
+                      {component.icon && <span className='flex-shrink-0 text-sm'>{component.icon}</span>}
                       <div className='min-w-0 flex-1'>
-                        <div className='text-sm font-medium'>{component.name}</div>
-                        <div className='mt-1 line-clamp-2 text-xs text-gray-500'>{component.description}</div>
+                        <div className='text-xs font-medium tracking-wide'>{component.name}</div>
+                        <div className='mt-0.5 line-clamp-2 text-xs text-gray-500'>{component.description}</div>
                       </div>
                     </div>
                   </button>
