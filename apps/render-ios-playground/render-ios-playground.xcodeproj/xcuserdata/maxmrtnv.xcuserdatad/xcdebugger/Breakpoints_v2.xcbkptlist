@@ -3,4 +3,52 @@
    uuid = "0BC739FD-8519-4D8C-8D68-22F3422788E4"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F78A9288-97D6-4722-A823-700EBD794C3B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "render-ios-playground/SDK/RenderSDK.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "render(scenarioID:vc:containerView:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F78A9288-97D6-4722-A823-700EBD794C3B - baeb3b53ff5b9da2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for render_ios_playground.RenderSDK.render(scenarioID: Swift.String, vc: __C.UIViewController, containerView: Swift.Optional&lt;__C.UIView&gt;) async throws -&gt; ()"
+                  moduleName = "render-ios-playground.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/maxmrtnv/Projects/render-engine/apps/render-ios-playground/render-ios-playground/SDK/RenderSDK.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65">
+               </Location>
+               <Location
+                  uuid = "F78A9288-97D6-4722-A823-700EBD794C3B - 6c3630f5828a1873"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(12) suspend resume partial function for render_ios_playground.RenderSDK.render(scenarioID: Swift.String, vc: __C.UIViewController, containerView: Swift.Optional&lt;__C.UIView&gt;) async throws -&gt; ()"
+                  moduleName = "render-ios-playground.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/maxmrtnv/Projects/render-engine/apps/render-ios-playground/render-ios-playground/SDK/RenderSDK.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

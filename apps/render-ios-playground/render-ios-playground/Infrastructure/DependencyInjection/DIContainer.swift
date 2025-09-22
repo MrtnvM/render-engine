@@ -43,8 +43,8 @@ class DIContainer {
             RowRenderer(),
             ColumnRenderer(),
             StackRenderer(),
-            UILabelRenderer(),
-            UIButtonRenderer()
+            TextRenderer(),
+            ButtonRenderer()
         ]
         renderers.forEach { registry.register(renderer: $0) }
         return registry

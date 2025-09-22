@@ -5,8 +5,8 @@ import UIKit
 public class AvitoButton: UIButton {
     
     // MARK: - Properties
-    private var config: AvitoButtonConfiguration
-    private var onTapAction: (() -> Void)?
+    var config: AvitoButtonConfiguration
+    var onTapAction: (() -> Void)?
     
     // MARK: - Initialization
     public init(

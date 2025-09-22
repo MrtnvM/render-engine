@@ -378,7 +378,7 @@ public class AvitoDesignSystemShowcase: UIViewController {
         
         // Overlay Buttons
         let overlayS = AvitoButton(
-            configuration: AvitoButtonConfiguration(
+            config: AvitoButtonConfiguration(
                 variant: .primary,
                 color: .default,
                 size: .s,
@@ -388,7 +388,7 @@ public class AvitoDesignSystemShowcase: UIViewController {
         )
         
         let overlayM = AvitoButton(
-            configuration: AvitoButtonConfiguration(
+            config: AvitoButtonConfiguration(
                 variant: .secondary,
                 color: .accent,
                 size: .m,
@@ -398,7 +398,7 @@ public class AvitoDesignSystemShowcase: UIViewController {
         )
         
         let overlayDisabled = AvitoButton(
-            configuration: AvitoButtonConfiguration(
+            config: AvitoButtonConfiguration(
                 variant: .primary,
                 color: .default,
                 size: .s,
@@ -522,8 +522,8 @@ public class AvitoDesignSystemShowcase: UIViewController {
         for size in sizes {
             let buttonStack = UIStackView(arrangedSubviews: buttons.map { button in
                 let sizedButton = AvitoButton(
-                    variant: button.configuration.variant,
-                    color: button.configuration.color,
+                    variant: button.config.variant,
+                    color: button.config.color,
                     size: size,
                     title: "Текст"
                 )

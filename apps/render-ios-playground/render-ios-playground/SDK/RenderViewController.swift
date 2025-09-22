@@ -10,17 +10,22 @@ public protocol RenderViewControllerDelegate: AnyObject {
 public class RenderViewController: UIViewController {
     weak public var delegate: RenderViewControllerDelegate?
     
-    private let scenarioID: String
-    private let service: ScenarioService
-    private let registry: ComponentRegistry
+    private let scenarioID: String?
+    private var scenario: Scenario?
+    private let service = DIContainer.shared.scenarioService
+    private let registry = DIContainer.shared.componentRegistry
     
     // Root flex container
     private let rootFlexContainer = UIView()
 
-    init(scenarioID: String, service: ScenarioService, registry: ComponentRegistry) {
+    init(scenarioID: String) {
         self.scenarioID = scenarioID
-        self.service = service
-        self.registry = registry
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(scenario: Scenario) {
+        self.scenario = scenario
+        scenarioID = nil
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,7 +36,12 @@ public class RenderViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupFlexContainer()
-        loadScenario()
+        
+        if let scenario = scenario {
+            buildViewHierarchy(from: scenario.mainComponent)
+        } else {
+            loadScenario()
+        }
     }
 
     override public func viewDidLayoutSubviews() {

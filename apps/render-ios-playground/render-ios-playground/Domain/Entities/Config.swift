@@ -3,7 +3,7 @@ import Foundation
 class Config {
     private let config: [String: Any?]
 
-    init(_ config: Any?) {
+    init(_ config: Any? = nil) {
         guard let config = config as? [String: Any?] else {
             self.config = [:]
             return
@@ -12,6 +12,10 @@ class Config {
         self.config = config
     }
 
+    var isEmpty: Bool {
+        return config.isEmpty
+    }
+    
     func get(forKey key: String) -> Any? {
         return config[key] ?? nil
     }
@@ -67,31 +71,36 @@ class Config {
         return defaultValue
     }
     
-    func getArray(forKey key: String, defaultValue: [Any]? = nil) -> [Any]? {
-        if let value = config[key] as? [Any] {
-            return value
+    func getArray(forKey key: String, defaultValue: [Any] = []) -> [Any] {
+        if let value = config[key], let array = value as? [Any] {
+            return array
         }
         return defaultValue
     }
     
-    func getConfigArray(forKey key: String, defaultValue: [Config]? = nil) -> [Config]? {
-        if let value = config[key] as? [Any] {
-            return value.map(Config.init)
+    func getConfigArray(forKey key: String, defaultValue: [Config] = []) -> [Config] {
+        if let value = config[key], let array = value as? [Any] {
+            return array.map(Config.init)
         }
         return defaultValue
     }
     
     func getDictionary(forKey key: String, defaultValue: [String: Any]? = nil) -> [String: Any]? {
-        if let value = config[key] as? [String: Any] {
-            return value
+        if let value = config[key], let dict = value as? [String: Any] {
+            return dict
         }
         return defaultValue
     }
 
-    func getConfig(forKey key: String, defaultValue: Config? = nil) -> Config? {
-        if let value = config[key] as? [String: Any?] {
-            return Config(value)
+    func getConfig(forKey key: String) -> Config {
+        guard let value = config[key] else {
+            return Config()
         }
-        return defaultValue
+        
+        guard let dict = value as? [String: Any?] else {
+            return Config()
+        }
+        
+        return Config(dict)
     }
 }

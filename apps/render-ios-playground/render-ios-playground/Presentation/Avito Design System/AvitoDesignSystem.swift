@@ -56,7 +56,7 @@ public struct AvitoDesignSystem {
         onTap: (() -> Void)? = nil
     ) -> AvitoButton {
         return AvitoButton(
-            configuration: configuration,
+            config: configuration,
             title: title,
             onTap: onTap
         )

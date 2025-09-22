@@ -5,7 +5,6 @@ class MainViewController: UIViewController {
     
     // MARK: - Dependencies
     private let schemaService = DIContainer.shared.scenarioService
-    private let renderController = DIContainer.shared.
     
     // MARK: - UI Components
     private var mainView: MainView!
@@ -30,13 +29,16 @@ class MainViewController: UIViewController {
         }
         
         do {
-            let url = URL(string: "http://localhost:3050/json-schema")!
-            let scenario = try await schemaService.fetchScenario(from: url)
+//            let url = URL(string: "http://localhost:3050/json-schema")!
+//            let scenario = try await schemaService.fetchScenario(from: url)
+            
+            try await RenderSDK.shared.render(
+                scenarioID: "1",
+                vc: self,
+                containerView: mainView
+            )
             
             await MainActor.run {
-                if let view = Render.render(scenario.mainComponent) {
-                    mainView.displayContent(view)
-                }
                 mainView.showLoading(false)
             }
         } catch {

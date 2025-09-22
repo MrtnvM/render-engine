@@ -29,11 +29,10 @@ class Component: Equatable {
             style: style
         )
         
-        if let childrenData = config.getConfigArray(forKey: "children") {
-            for childConfig in childrenData {
-                let childComponent = try Component.create(from: childConfig)
-                try component.addChild(childComponent)
-            }
+        let childrenData = config.getConfigArray(forKey: "children")
+        for childConfig in childrenData {
+            let childComponent = try Component.create(from: childConfig)
+            try component.addChild(childComponent)
         }
         
         return component

@@ -1,14 +1,14 @@
 import UIKit
 
-class UIButtonRenderer: Renderer {
+class ButtonRenderer: Renderer {
     let type = "button"
     
     func render(component: Component) -> UIView? {
-        return RenderUIButton(component: component)
+        return RenderableButton(component: component)
     }
 }
 
-class RenderUIButton: UIButton {
+class RenderableButton: UIButton {
     private let component: Component
     
     init(component: Component) {
@@ -61,24 +61,15 @@ class RenderUIButton: UIButton {
         let style = component.style
         
         // Background color
-        if let backgroundColor = style.backgroundColor {
-            self.backgroundColor = backgroundColor
-        }
+        self.backgroundColor = style.backgroundColor
         
         // Corner radius
-        if let cornerRadius = style.cornerRadius {
-            self.layer.cornerRadius = cornerRadius
-            self.layer.masksToBounds = cornerRadius > 0
-        }
+        self.layer.cornerRadius = style.cornerRadius
+        self.layer.masksToBounds = style.cornerRadius > 0
         
         // Border
-        if let borderWidth = style.borderWidth {
-            self.layer.borderWidth = borderWidth
-        }
-        
-        if let borderColor = style.borderColor {
-            self.layer.borderColor = borderColor.cgColor
-        }
+        self.layer.borderWidth = style.borderWidth
+        self.layer.borderColor = style.borderColor.cgColor
         
         // Title color
         if let titleColor = style.get(forKey: "titleColor", ofType: UIColor.self) {
