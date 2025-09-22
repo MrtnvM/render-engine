@@ -130,5 +130,4 @@ dist
 .pnp.*
 
 .DS_Store
-apps/render-ios-playground/render-ios-playground.xcodeproj/project.xcworkspace/xcuserdata/maxmrtnv.xcuserdatad/UserInterfaceState.xcuserstate
-apps/render-ios-playground/render-ios-playground.xcodeproj/project.xcworkspace/xcuserdata/maxmrtnv.xcuserdatad/UserInterfaceState.xcuserstate
+apps/render-ios-playground/render-ios-playground.xcodeproj/project.xcworkspace/xcuserdata/
