@@ -3,6 +3,7 @@ export { Input } from './components/Input'
 export { InputFieldSet } from './components/InputFieldSet'
 export { Select } from './components/Select'
 export { SelectFieldset } from './components/SelectFieldset'
+export { SegmentedControl } from './components/SegmentedControl'
 export { DesignSystemShowcase } from './design-system/DesignSystemShowcase'
 export type {
   ButtonProps,
@@ -16,6 +17,9 @@ export type {
   SelectOption,
   SelectFieldsetProps,
   SelectFieldsetVariants,
+  SegmentedControlProps,
+  SegmentedControlVariants,
+  SegmentedControlOption,
 } from './types/components'
 export { cn } from './utils/cn'
 

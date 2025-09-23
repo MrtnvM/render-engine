@@ -5,6 +5,7 @@ import { InputFieldSetShowcase } from './InputFieldSetShowcase'
 import { InputShowcase } from './InputShowcase'
 import { SelectShowcase } from './SelectShowcase'
 import { SelectFieldsetShowcase } from './SelectFieldsetShowcase'
+import { SegmentedControlShowcase } from './SegmentedControlShowcase'
 
 // Define available components
 const components: ComponentItem[] = [
@@ -43,6 +44,13 @@ const components: ComponentItem[] = [
     category: 'Forms',
     icon: '📋',
   },
+  {
+    id: 'segmented-control',
+    name: 'SegmentedControl',
+    description: 'Segmented control for selecting one option from mutually exclusive choices',
+    category: 'Forms',
+    icon: '📊',
+  },
   // Add more components here as they are created
   // {
   //   id: 'card',
@@ -66,6 +74,8 @@ const renderComponent = (selectedComponent: string | null) => {
       return <SelectShowcase />
     case 'select-fieldset':
       return <SelectFieldsetShowcase />
+    case 'segmented-control':
+      return <SegmentedControlShowcase />
     // Add more cases as components are added
     // case 'card':
     //   return <CardShowcase />

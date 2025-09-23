@@ -333,6 +333,59 @@
   --avito-select-dropdown-item-hover-bg: var(--avito-secondary-default);
   --avito-select-dropdown-item-selected-bg: var(--avito-secondary-accent);
   --avito-select-dropdown-item-selected-text: var(--avito-text-primary);
+
+  /* SegmentedControl Default */
+  --avito-segmented-control-default-bg: var(--avito-secondary-default);
+  --avito-segmented-control-default-text: var(--avito-text-primary);
+  --avito-segmented-control-default-border: var(--avito-secondary-default);
+  --avito-segmented-control-default-selected-bg: var(--avito-bg-default);
+  --avito-segmented-control-default-selected-text: var(--avito-text-primary);
+  --avito-segmented-control-default-selected-border: var(--avito-border-default);
+
+  /* SegmentedControl Accent */
+  --avito-segmented-control-accent-bg: var(--avito-secondary-accent);
+  --avito-segmented-control-accent-text: var(--avito-text-primary);
+  --avito-segmented-control-accent-border: var(--avito-secondary-accent);
+  --avito-segmented-control-accent-selected-bg: var(--avito-bg-default);
+  --avito-segmented-control-accent-selected-text: var(--avito-primary-accent);
+  --avito-segmented-control-accent-selected-border: var(--avito-primary-accent);
+
+  /* SegmentedControl Pay */
+  --avito-segmented-control-pay-bg: var(--avito-secondary-pay);
+  --avito-segmented-control-pay-text: var(--avito-text-primary);
+  --avito-segmented-control-pay-border: var(--avito-secondary-pay);
+  --avito-segmented-control-pay-selected-bg: var(--avito-bg-default);
+  --avito-segmented-control-pay-selected-text: var(--avito-primary-pay);
+  --avito-segmented-control-pay-selected-border: var(--avito-primary-pay);
+
+  /* SegmentedControl Success */
+  --avito-segmented-control-success-bg: var(--avito-secondary-success);
+  --avito-segmented-control-success-text: var(--avito-text-primary);
+  --avito-segmented-control-success-border: var(--avito-secondary-success);
+  --avito-segmented-control-success-selected-bg: var(--avito-bg-default);
+  --avito-segmented-control-success-selected-text: var(--avito-primary-success);
+  --avito-segmented-control-success-selected-border: var(--avito-primary-success);
+
+  /* SegmentedControl Danger */
+  --avito-segmented-control-danger-bg: var(--avito-secondary-danger);
+  --avito-segmented-control-danger-text: var(--avito-text-primary);
+  --avito-segmented-control-danger-border: var(--avito-secondary-danger);
+  --avito-segmented-control-danger-selected-bg: var(--avito-bg-default);
+  --avito-segmented-control-danger-selected-text: var(--avito-primary-danger);
+  --avito-segmented-control-danger-selected-border: var(--avito-primary-danger);
+
+  /* SegmentedControl Disabled */
+  --avito-segmented-control-disabled-bg: var(--avito-secondary-default);
+  --avito-segmented-control-disabled-text: var(--avito-text-secondary);
+  --avito-segmented-control-disabled-border: var(--avito-secondary-default);
+
+  /* SegmentedControl Overlay */
+  --avito-segmented-control-overlay-bg: var(--avito-bg-overlay);
+  --avito-segmented-control-overlay-text: var(--avito-text-primary);
+  --avito-segmented-control-overlay-border: var(--avito-bg-overlay);
+  --avito-segmented-control-overlay-selected-bg: var(--avito-bg-default);
+  --avito-segmented-control-overlay-selected-text: var(--avito-text-primary);
+  --avito-segmented-control-overlay-selected-border: var(--avito-border-default);
 }
 
 /* Base button styles */
@@ -1056,4 +1109,247 @@
 
 .avito-select-dropdown__item--disabled:hover {
   background-color: transparent;
+}
+
+/* Base SegmentedControl styles */
+.avito-segmented-control {
+  font-family: var(--avito-font-family);
+  font-weight: var(--avito-font-weight-medium);
+  display: inline-flex;
+  border-radius: var(--avito-radius-s);
+  overflow: hidden;
+  outline: none;
+  transition: all var(--avito-transition-normal);
+}
+
+.avito-segmented-control:focus {
+  outline: none;
+}
+
+.avito-segmented-control:focus-visible {
+  outline: 2px solid var(--avito-primary-accent);
+  outline-offset: 2px;
+}
+
+/* Size variants */
+.avito-segmented-control--xs {
+  height: var(--avito-height-xs);
+  border-radius: var(--avito-radius-xs);
+}
+
+.avito-segmented-control--xs .avito-segmented-control__option {
+  padding: var(--avito-padding-xs-vertical) var(--avito-padding-xs-horizontal);
+  font-size: var(--avito-text-xs);
+  line-height: var(--avito-line-height-xs);
+}
+
+.avito-segmented-control--s {
+  height: var(--avito-height-s);
+  border-radius: var(--avito-radius-s);
+}
+
+.avito-segmented-control--s .avito-segmented-control__option {
+  padding: var(--avito-padding-s-vertical) var(--avito-padding-s-horizontal);
+  font-size: var(--avito-text-s);
+  line-height: var(--avito-line-height-s);
+}
+
+.avito-segmented-control--m {
+  height: var(--avito-height-m);
+  border-radius: var(--avito-radius-m);
+}
+
+.avito-segmented-control--m .avito-segmented-control__option {
+  padding: var(--avito-padding-m-vertical) var(--avito-padding-m-horizontal);
+  font-size: var(--avito-text-m);
+  line-height: var(--avito-line-height-m);
+}
+
+.avito-segmented-control--l {
+  height: var(--avito-height-l);
+  border-radius: var(--avito-radius-l);
+}
+
+.avito-segmented-control--l .avito-segmented-control__option {
+  padding: var(--avito-padding-l-vertical) var(--avito-padding-l-horizontal);
+  font-size: var(--avito-text-l);
+  line-height: var(--avito-line-height-l);
+}
+
+.avito-segmented-control--xl {
+  height: var(--avito-height-xl);
+  border-radius: var(--avito-radius-xl);
+}
+
+.avito-segmented-control--xl .avito-segmented-control__option {
+  padding: var(--avito-padding-xl-vertical) var(--avito-padding-xl-horizontal);
+  font-size: var(--avito-text-xl);
+  line-height: var(--avito-line-height-xl);
+}
+
+/* Option styles */
+.avito-segmented-control__option {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--avito-transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.avito-segmented-control__option:focus {
+  outline: none;
+}
+
+.avito-segmented-control__option:not(:disabled):hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.avito-segmented-control__option:not(:disabled):active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.avito-segmented-control__option:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* First and last option border radius */
+.avito-segmented-control__option--first {
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+
+.avito-segmented-control__option--last {
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+/* Variant styles */
+.avito-segmented-control--default {
+  background-color: var(--avito-segmented-control-default-bg);
+  border: 1px solid var(--avito-segmented-control-default-border);
+}
+
+.avito-segmented-control--default .avito-segmented-control__option {
+  color: var(--avito-segmented-control-default-text);
+}
+
+.avito-segmented-control--default .avito-segmented-control__option--selected {
+  background-color: var(--avito-segmented-control-default-selected-bg);
+  color: var(--avito-segmented-control-default-selected-text);
+  border: 1px solid var(--avito-segmented-control-default-selected-border);
+  margin: -1px;
+  z-index: 1;
+}
+
+.avito-segmented-control--accent {
+  background-color: var(--avito-segmented-control-accent-bg);
+  border: 1px solid var(--avito-segmented-control-accent-border);
+}
+
+.avito-segmented-control--accent .avito-segmented-control__option {
+  color: var(--avito-segmented-control-accent-text);
+}
+
+.avito-segmented-control--accent .avito-segmented-control__option--selected {
+  background-color: var(--avito-segmented-control-accent-selected-bg);
+  color: var(--avito-segmented-control-accent-selected-text);
+  border: 1px solid var(--avito-segmented-control-accent-selected-border);
+  margin: -1px;
+  z-index: 1;
+}
+
+.avito-segmented-control--pay {
+  background-color: var(--avito-segmented-control-pay-bg);
+  border: 1px solid var(--avito-segmented-control-pay-border);
+}
+
+.avito-segmented-control--pay .avito-segmented-control__option {
+  color: var(--avito-segmented-control-pay-text);
+}
+
+.avito-segmented-control--pay .avito-segmented-control__option--selected {
+  background-color: var(--avito-segmented-control-pay-selected-bg);
+  color: var(--avito-segmented-control-pay-selected-text);
+  border: 1px solid var(--avito-segmented-control-pay-selected-border);
+  margin: -1px;
+  z-index: 1;
+}
+
+.avito-segmented-control--success {
+  background-color: var(--avito-segmented-control-success-bg);
+  border: 1px solid var(--avito-segmented-control-success-border);
+}
+
+.avito-segmented-control--success .avito-segmented-control__option {
+  color: var(--avito-segmented-control-success-text);
+}
+
+.avito-segmented-control--success .avito-segmented-control__option--selected {
+  background-color: var(--avito-segmented-control-success-selected-bg);
+  color: var(--avito-segmented-control-success-selected-text);
+  border: 1px solid var(--avito-segmented-control-success-selected-border);
+  margin: -1px;
+  z-index: 1;
+}
+
+.avito-segmented-control--danger {
+  background-color: var(--avito-segmented-control-danger-bg);
+  border: 1px solid var(--avito-segmented-control-danger-border);
+}
+
+.avito-segmented-control--danger .avito-segmented-control__option {
+  color: var(--avito-segmented-control-danger-text);
+}
+
+.avito-segmented-control--danger .avito-segmented-control__option--selected {
+  background-color: var(--avito-segmented-control-danger-selected-bg);
+  color: var(--avito-segmented-control-danger-selected-text);
+  border: 1px solid var(--avito-segmented-control-danger-selected-border);
+  margin: -1px;
+  z-index: 1;
+}
+
+/* Disabled state */
+.avito-segmented-control--disabled {
+  background-color: var(--avito-segmented-control-disabled-bg);
+  border: 1px solid var(--avito-segmented-control-disabled-border);
+}
+
+.avito-segmented-control--disabled .avito-segmented-control__option {
+  color: var(--avito-segmented-control-disabled-text);
+  cursor: not-allowed;
+}
+
+.avito-segmented-control--disabled .avito-segmented-control__option:not(:disabled):hover {
+  background-color: transparent;
+}
+
+.avito-segmented-control--disabled .avito-segmented-control__option:not(:disabled):active {
+  background-color: transparent;
+}
+
+/* Preset styles */
+.avito-segmented-control--preset-overlay {
+  background-color: var(--avito-segmented-control-overlay-bg);
+  border: 1px solid var(--avito-segmented-control-overlay-border);
+  box-shadow: var(--avito-shadow-overlay);
+}
+
+.avito-segmented-control--preset-overlay .avito-segmented-control__option {
+  color: var(--avito-segmented-control-overlay-text);
+}
+
+.avito-segmented-control--preset-overlay .avito-segmented-control__option--selected {
+  background-color: var(--avito-segmented-control-overlay-selected-bg);
+  color: var(--avito-segmented-control-overlay-selected-text);
+  border: 1px solid var(--avito-segmented-control-overlay-selected-border);
+  margin: -1px;
+  z-index: 1;
 }

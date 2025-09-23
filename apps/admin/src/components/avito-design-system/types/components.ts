@@ -133,3 +133,29 @@ export interface SelectFieldsetVariants {
   size: 'xs' | 's' | 'm' | 'l' | 'xl'
   state: 'default' | 'filled' | 'disabled' | 'error' | 'active'
 }
+
+export interface SegmentedControlOption {
+  value: string
+  label: string
+  disabled?: boolean
+}
+
+export interface SegmentedControlProps {
+  options: SegmentedControlOption[]
+  value?: string
+  onChange?: (value: string) => void
+  disabled?: boolean
+  size?: 'xs' | 's' | 'm' | 'l' | 'xl'
+  variant?: 'default' | 'accent' | 'pay' | 'success' | 'danger'
+  preset?: 'default' | 'overlay'
+  className?: string
+  name?: string
+  id?: string
+  ariaLabel?: string
+}
+
+export interface SegmentedControlVariants {
+  size: 'xs' | 's' | 'm' | 'l' | 'xl'
+  variant: 'default' | 'accent' | 'pay' | 'success' | 'danger'
+  preset: 'default' | 'overlay'
+}

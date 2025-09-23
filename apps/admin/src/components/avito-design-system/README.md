@@ -407,3 +407,117 @@ const optionsWithDisabled: SelectOption[] = [
 - **Form Integration**: Hidden input for form submission
 - **Controlled/Uncontrolled**: Supports both controlled and uncontrolled usage
 - **Custom Styling**: Consistent with Avito Design System tokens
+
+## SegmentedControl Component
+
+The SegmentedControl component allows users to select one option from a set of mutually exclusive choices. It displays options as connected segments with a single selected state, following the Avito Design System patterns.
+
+### Usage
+
+```tsx
+import { SegmentedControl, SegmentedControlOption } from '@/components/avito-design-system';
+
+// Basic usage
+const options: SegmentedControlOption[] = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' },
+];
+
+<SegmentedControl options={options} value="option2" onChange={setValue} />
+
+// With different sizes
+<SegmentedControl size="xs" options={options} value="option1" onChange={setValue} />
+<SegmentedControl size="s" options={options} value="option1" onChange={setValue} />
+<SegmentedControl size="m" options={options} value="option1" onChange={setValue} />
+<SegmentedControl size="l" options={options} value="option1" onChange={setValue} />
+<SegmentedControl size="xl" options={options} value="option1" onChange={setValue} />
+
+// Different variants
+<SegmentedControl variant="default" options={options} value="option1" onChange={setValue} />
+<SegmentedControl variant="accent" options={options} value="option1" onChange={setValue} />
+<SegmentedControl variant="pay" options={options} value="option1" onChange={setValue} />
+<SegmentedControl variant="success" options={options} value="option1" onChange={setValue} />
+<SegmentedControl variant="danger" options={options} value="option1" onChange={setValue} />
+
+// Different presets
+<SegmentedControl preset="default" options={options} value="option1" onChange={setValue} />
+<SegmentedControl preset="overlay" options={options} value="option1" onChange={setValue} />
+
+// Disabled state
+<SegmentedControl disabled options={options} value="option1" onChange={setValue} />
+
+// With disabled options
+const optionsWithDisabled: SegmentedControlOption[] = [
+  { value: 'option1', label: 'Available Option' },
+  { value: 'option2', label: 'Disabled Option', disabled: true },
+  { value: 'option3', label: 'Another Option' },
+];
+
+<SegmentedControl options={optionsWithDisabled} value="option1" onChange={setValue} />
+
+// With accessibility attributes
+<SegmentedControl
+  options={options}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  ariaLabel="Choose an option"
+  name="segmented-choice"
+  id="segmented-control-1"
+/>
+```
+
+### Props
+
+| Prop        | Type                                                               | Default     | Description                    |
+| ----------- | ------------------------------------------------------------------ | ----------- | ------------------------------ |
+| `options`   | `SegmentedControlOption[]`                                         | -           | Array of selectable options    |
+| `value`     | `string`                                                           | -           | Currently selected option value |
+| `onChange`  | `(value: string) => void`                                          | -           | Change handler                 |
+| `disabled`  | `boolean`                                                          | `false`     | Whether control is disabled    |
+| `size`      | `'xs' \| 's' \| 'm' \| 'l' \| 'xl'`                                | `'m'`       | Control size                   |
+| `variant`   | `'default' \| 'accent' \| 'pay' \| 'success' \| 'danger'`         | `'default'` | Color variant                  |
+| `preset`    | `'default' \| 'overlay'`                                           | `'default'` | Preset theme                   |
+| `name`      | `string`                                                           | -           | Form field name                |
+| `id`        | `string`                                                           | -           | Unique identifier              |
+| `ariaLabel` | `string`                                                           | -           | Accessible label               |
+| `className` | `string`                                                           | -           | Additional CSS classes        |
+
+### SegmentedControlOption Interface
+
+| Prop       | Type      | Default | Description                |
+| ---------- | --------- | ------- | -------------------------- |
+| `value`    | `string`  | -       | Option value               |
+| `label`    | `string`  | -       | Option display text        |
+| `disabled` | `boolean` | `false` | Whether option is disabled |
+
+### Variants
+
+- **Default**: Standard segmented control styling
+- **Accent**: Blue accent color theme
+- **Pay**: Purple pay color theme
+- **Success**: Green success color theme
+- **Danger**: Red danger color theme
+
+### Sizes
+
+- **XS**: Extra small (30px height, 10px border radius)
+- **S**: Small (36px height, 12px border radius)
+- **M**: Medium (44px height, 12px border radius)
+- **L**: Large (52px height, 16px border radius)
+- **XL**: Extra large (64px height, 20px border radius)
+
+### Presets
+
+- **Default**: Standard segmented control styling
+- **Overlay**: For use over images or colored backgrounds with shadow
+
+### Features
+
+- **Single Selection**: Only one option can be selected at a time
+- **Keyboard Navigation**: Arrow keys, Home, End for navigation
+- **Accessibility**: Proper ARIA attributes and screen reader support
+- **Disabled States**: Support for disabled control and individual disabled options
+- **Visual Feedback**: Clear indication of selected and hover states
+- **Responsive**: Adapts to different screen sizes
+- **Custom Styling**: Consistent with Avito Design System tokens
