@@ -188,7 +188,6 @@ export const InputShowcase: React.FC<InputShowcaseProps> = ({ className }) => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

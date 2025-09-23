@@ -65,7 +65,6 @@ const ColumnHeaderItem: React.FC<ColumnHeaderItemProps> = ({
   </div>
 )
 
-
 // Select Variant Group Item Component
 interface SelectVariantGroupItemProps {
   size: 'xs' | 's' | 'm' | 'l' | 'xl'
@@ -152,7 +151,6 @@ const SelectSizeRow: React.FC<SelectSizeRowProps> = ({ size }) => (
     <SelectVariantGroup size={size} variantType='overlay' />
   </div>
 )
-
 
 // Interactive Select Examples Section
 const InteractiveExamples: React.FC = () => {
@@ -287,7 +285,6 @@ const SpecialStatesSection: React.FC = () => (
     </div>
   </div>
 )
-
 
 export const SelectShowcase: React.FC<SelectShowcaseProps> = ({ className }) => (
   <div className={cn('min-h-screen bg-white', className)} style={{ fontFamily: 'var(--avito-font-family)' }}>

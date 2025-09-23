@@ -153,7 +153,6 @@ const SpecialStatesSection: React.FC = () => {
   )
 }
 
-
 export const SelectFieldsetShowcase: React.FC<SelectFieldsetShowcaseProps> = ({ className }) => (
   <div className={cn('min-h-screen bg-white', className)} style={{ fontFamily: 'var(--avito-font-family)' }}>
     <div className='mx-auto max-w-7xl'>
