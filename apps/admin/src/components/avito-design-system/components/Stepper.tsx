@@ -1,27 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { cn } from '../utils/cn'
 import type { StepperProps } from '../types/components'
+import { cn } from '../utils/cn'
 
 // Minus Icon Component
 const MinusIcon: React.FC<{ size: 's' | 'm' | 'l' }> = ({ size }) => {
   const iconSize = size === 's' ? 10 : 12
   const iconHeight = size === 's' ? 16 : 20
-  
+
   return (
-    <svg
-      width={iconSize}
-      height={iconHeight}
-      viewBox="0 0 12 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M2 10H10"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width={iconSize} height={iconHeight} viewBox='0 0 12 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <path d='M2 10H10' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
     </svg>
   )
 }
@@ -30,22 +18,10 @@ const MinusIcon: React.FC<{ size: 's' | 'm' | 'l' }> = ({ size }) => {
 const AddIcon: React.FC<{ size: 's' | 'm' | 'l' }> = ({ size }) => {
   const iconSize = size === 's' ? 11 : 13
   const iconHeight = size === 's' ? 16 : 20
-  
+
   return (
-    <svg
-      width={iconSize}
-      height={iconHeight}
-      viewBox="0 0 13 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M6.5 2V18M2 10H11"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width={iconSize} height={iconHeight} viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <path d='M6 2V20M2 10H20' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
     </svg>
   )
 }
@@ -54,26 +30,27 @@ const AddIcon: React.FC<{ size: 's' | 'm' | 'l' }> = ({ size }) => {
 const SpinnerIcon: React.FC<{ size: 's' | 'm' | 'l' }> = ({ size }) => {
   const iconSize = size === 's' ? 14 : 16
   const iconHeight = size === 's' ? 16 : 20
-  
+
   return (
     <svg
       width={iconSize}
       height={iconHeight}
-      viewBox="0 0 16 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="avito-stepper__spinner"
+      viewBox='0 0 16 20'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      className='avito-stepper__spinner'
+      style={{ display: 'block', margin: '0 auto' }}
     >
       <circle
-        cx="8"
-        cy="10"
-        r="6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeDasharray="31.416"
-        strokeDashoffset="31.416"
-        fill="none"
+        cx='8'
+        cy='10'
+        r='6'
+        stroke='currentColor'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeDasharray='31.416'
+        strokeDashoffset='31.416'
+        fill='none'
       />
     </svg>
   )
@@ -102,7 +79,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
       readOnly = false,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [internalValue, setInternalValue] = useState(value)
     const [isActive, setIsActive] = useState(false)
@@ -141,7 +118,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     // Handle input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value
-      
+
       if (inputValue === '') {
         setInternalValue(0)
         onChange?.(0)
@@ -183,24 +160,23 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     const currentState = disabled ? 'disabled' : state
 
     // Determine if plus button is disabled
-    const isPlusDisabled = disabled || 
-      currentState === 'disabled' || 
-      currentState === 'loading' || 
+    const isPlusDisabled =
+      disabled ||
+      currentState === 'disabled' ||
+      currentState === 'loading' ||
       currentState === 'plus-disabled' ||
       internalValue >= max
 
     // Determine if minus button is disabled
-    const isMinusDisabled = disabled || 
-      currentState === 'disabled' || 
-      currentState === 'loading' || 
+    const isMinusDisabled =
+      disabled ||
+      currentState === 'disabled' ||
+      currentState === 'loading' ||
       currentState === 'minus-disabled' ||
       internalValue <= min
 
     // Determine if input is disabled
-    const isInputDisabled = disabled || 
-      currentState === 'disabled' || 
-      currentState === 'loading' ||
-      readOnly
+    const isInputDisabled = disabled || currentState === 'disabled' || currentState === 'loading' || readOnly
 
     // Build CSS classes
     const stepperClasses = cn(
@@ -210,47 +186,37 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
       preset !== 'default' && `avito-stepper--preset-${preset}`,
       isActive && 'avito-stepper--active',
       isFocused && 'avito-stepper--focus',
-      className
+      className,
     )
 
-    const minusIconClasses = cn(
-      'avito-stepper__icon',
-      isMinusDisabled && 'avito-stepper__icon--disabled'
-    )
+    const minusIconClasses = cn('avito-stepper__icon', isMinusDisabled && 'avito-stepper__icon--disabled')
 
-    const plusIconClasses = cn(
-      'avito-stepper__icon',
-      isPlusDisabled && 'avito-stepper__icon--disabled'
-    )
+    const plusIconClasses = cn('avito-stepper__icon', isPlusDisabled && 'avito-stepper__icon--disabled')
 
     return (
-      <div className="avito-stepper-wrapper">
-        <div
-          ref={ref}
-          className={stepperClasses}
-          {...props}
-        >
-          <div className="avito-stepper__container">
+      <div className='avito-stepper-wrapper'>
+        <div ref={ref} className={stepperClasses} {...props}>
+          <div className='avito-stepper__container'>
             {/* Minus Button */}
             <button
-              type="button"
+              type='button'
               className={minusIconClasses}
               onClick={handleDecrement}
               disabled={isMinusDisabled}
-              aria-label="Decrease value"
+              aria-label='Decrease value'
             >
               <MinusIcon size={size} />
             </button>
 
             {/* Quantity Display */}
-            <div className="avito-stepper__quantity">
+            <div className='avito-stepper__quantity'>
               {currentState === 'loading' ? (
                 <SpinnerIcon size={size} />
               ) : (
                 <>
                   <input
                     ref={inputRef}
-                    type="text"
+                    type='text'
                     value={internalValue}
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
@@ -258,27 +224,25 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
                     onKeyDown={handleKeyDown}
                     disabled={isInputDisabled}
                     placeholder={placeholder}
-                    className="avito-stepper__quantity-input"
+                    className='avito-stepper__quantity-input'
                     name={name}
                     id={id}
                     required={required}
                     readOnly={readOnly}
-                    aria-label="Quantity"
+                    aria-label='Quantity'
                   />
-                  {isActive && (
-                    <div className="avito-stepper__cursor" />
-                  )}
+                  {isActive && <div className='avito-stepper__cursor' />}
                 </>
               )}
             </div>
 
             {/* Add Button */}
             <button
-              type="button"
+              type='button'
               className={plusIconClasses}
               onClick={handleIncrement}
               disabled={isPlusDisabled}
-              aria-label="Increase value"
+              aria-label='Increase value'
             >
               <AddIcon size={size} />
             </button>
@@ -286,14 +250,10 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
         </div>
 
         {/* Error Message */}
-        {errorMessage && currentState === 'error' && (
-          <div className="avito-stepper__error">
-            {errorMessage}
-          </div>
-        )}
+        {errorMessage && currentState === 'error' && <div className='avito-stepper__error'>{errorMessage}</div>}
       </div>
     )
-  }
+  },
 )
 
 Stepper.displayName = 'Stepper'
