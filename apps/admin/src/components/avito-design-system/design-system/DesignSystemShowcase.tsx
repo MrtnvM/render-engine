@@ -4,6 +4,7 @@ import { ButtonShowcase } from './ButtonShowcase'
 import { InputFieldSetShowcase } from './InputFieldSetShowcase'
 import { InputShowcase } from './InputShowcase'
 import { SelectShowcase } from './SelectShowcase'
+import { SelectFieldsetShowcase } from './SelectFieldsetShowcase'
 
 // Define available components
 const components: ComponentItem[] = [
@@ -35,6 +36,13 @@ const components: ComponentItem[] = [
     category: 'Forms',
     icon: '🔽',
   },
+  {
+    id: 'select-fieldset',
+    name: 'SelectFieldset',
+    description: 'Complete select field with label and status text',
+    category: 'Forms',
+    icon: '📋',
+  },
   // Add more components here as they are created
   // {
   //   id: 'card',
@@ -56,6 +64,8 @@ const renderComponent = (selectedComponent: string | null) => {
       return <InputFieldSetShowcase />
     case 'select':
       return <SelectShowcase />
+    case 'select-fieldset':
+      return <SelectFieldsetShowcase />
     // Add more cases as components are added
     // case 'card':
     //   return <CardShowcase />

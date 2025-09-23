@@ -112,3 +112,24 @@ export interface SelectVariants {
   state: 'default' | 'filled' | 'error' | 'error-filled' | 'disabled'
   preset: 'default' | 'overlay'
 }
+
+export interface SelectFieldsetProps {
+  label: string
+  placeholder?: string
+  value?: string
+  options?: Array<{ value: string; label: string }>
+  size?: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state?: 'default' | 'filled' | 'disabled' | 'error' | 'active'
+  errorText?: string
+  hintText?: string
+  successText?: string
+  className?: string
+  onChange?: (value: string) => void
+  onOpen?: () => void
+  onClose?: () => void
+}
+
+export interface SelectFieldsetVariants {
+  size: 'xs' | 's' | 'm' | 'l' | 'xl'
+  state: 'default' | 'filled' | 'disabled' | 'error' | 'active'
+}
