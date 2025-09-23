@@ -282,7 +282,6 @@ import { Input } from '@/components/avito-design-system';
 ### Features
 
 - **Close Button**: Optional close button for filled inputs
-- **Accessibility**: Proper ARIA attributes and keyboard navigation
 - **Focus Management**: Visual focus indicators
 - **Error States**: Clear error communication
 - **Responsive**: Adapts to different screen sizes
@@ -401,7 +400,6 @@ const optionsWithDisabled: SelectOption[] = [
 ### Features
 
 - **Keyboard Navigation**: Full keyboard support with arrow keys, Enter, Space, and Escape
-- **Accessibility**: Proper ARIA attributes and screen reader support
 - **Click Outside**: Closes dropdown when clicking outside
 - **Disabled Options**: Support for individual disabled options
 - **Form Integration**: Hidden input for form submission

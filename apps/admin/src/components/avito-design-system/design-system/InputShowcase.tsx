@@ -189,20 +189,6 @@ export const InputShowcase: React.FC<InputShowcaseProps> = ({ className }) => {
             </div>
           </div>
 
-          {/* Accessibility Notes */}
-          <div>
-            <h2 className='mb-6 text-xl font-semibold text-gray-900'>Accessibility Features</h2>
-            <div className='rounded-lg border border-gray-200 p-6'>
-              <ul className='space-y-2 text-sm text-gray-600'>
-                <li>• Proper ARIA attributes for screen readers</li>
-                <li>• Keyboard navigation support</li>
-                <li>• Clear button with proper labeling</li>
-                <li>• Focus management and visual indicators</li>
-                <li>• Disabled state handling</li>
-                <li>• Error state communication</li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>

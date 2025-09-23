@@ -65,16 +65,6 @@ const ColumnHeaderItem: React.FC<ColumnHeaderItemProps> = ({
   </div>
 )
 
-// Column Headers Component
-const ColumnHeaders: React.FC = () => (
-  <div className='mb-6 flex gap-8 text-center'>
-    <ColumnHeaderItem title='Size' className='flex-shrink-0' width='w-20' />
-    <ColumnHeaderItem title='Default' subLabels={['Empty', 'Filled']} />
-    <ColumnHeaderItem title='Error' subLabels={['Empty', 'Filled']} />
-    <ColumnHeaderItem title='Disabled' />
-    <ColumnHeaderItem title='Overlay' subLabels={['Default', 'Filled']} />
-  </div>
-)
 
 // Select Variant Group Item Component
 interface SelectVariantGroupItemProps {
@@ -163,18 +153,6 @@ const SelectSizeRow: React.FC<SelectSizeRowProps> = ({ size }) => (
   </div>
 )
 
-// Select Variants Showcase Component
-const SelectVariantsShowcase: React.FC = () => {
-  const sizes = ['m', 'xl', 'l', 's', 'xs'] as const
-
-  return (
-    <div className='space-y-3'>
-      {sizes.map((size) => (
-        <SelectSizeRow key={`row-${size}`} size={size} />
-      ))}
-    </div>
-  )
-}
 
 // Interactive Select Examples Section
 const InteractiveExamples: React.FC = () => {
@@ -310,36 +288,6 @@ const SpecialStatesSection: React.FC = () => (
   </div>
 )
 
-// Accessibility Section
-const AccessibilitySection: React.FC = () => (
-  <div className='mb-8'>
-    <h2 className='mb-4 text-lg font-semibold text-gray-900'>Accessibility Features</h2>
-    <div className='rounded-lg border border-gray-200 bg-blue-50 p-4'>
-      <h3 className='mb-2 text-sm font-medium text-blue-900'>Keyboard Navigation</h3>
-      <ul className='mb-3 text-sm text-blue-800'>
-        <li>
-          • <strong>Enter/Space:</strong> Open/close dropdown
-        </li>
-        <li>
-          • <strong>Escape:</strong> Close dropdown
-        </li>
-        <li>
-          • <strong>Arrow Down:</strong> Open dropdown
-        </li>
-        <li>
-          • <strong>Arrow Up:</strong> Close dropdown
-        </li>
-      </ul>
-      <h3 className='mb-2 text-sm font-medium text-blue-900'>Screen Reader Support</h3>
-      <ul className='text-sm text-blue-800'>
-        <li>• Proper ARIA attributes (role, aria-expanded, aria-haspopup)</li>
-        <li>• Option selection with aria-selected</li>
-        <li>• Disabled state with aria-disabled</li>
-        <li>• Required field indication with aria-required</li>
-      </ul>
-    </div>
-  </div>
-)
 
 export const SelectShowcase: React.FC<SelectShowcaseProps> = ({ className }) => (
   <div className={cn('min-h-screen bg-white', className)} style={{ fontFamily: 'var(--avito-font-family)' }}>
@@ -348,7 +296,6 @@ export const SelectShowcase: React.FC<SelectShowcaseProps> = ({ className }) => 
 
       <InteractiveExamples />
       <SpecialStatesSection />
-      <AccessibilitySection />
     </div>
   </div>
 )

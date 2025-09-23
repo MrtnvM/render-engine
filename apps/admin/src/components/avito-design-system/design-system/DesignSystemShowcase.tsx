@@ -3,8 +3,8 @@ import { DesignSystemLayout, ComponentItem } from '.'
 import { ButtonShowcase } from './ButtonShowcase'
 import { InputFieldSetShowcase } from './InputFieldSetShowcase'
 import { InputShowcase } from './InputShowcase'
-import { SelectShowcase } from './SelectShowcase'
 import { SelectFieldsetShowcase } from './SelectFieldsetShowcase'
+import { SelectShowcase } from './SelectShowcase'
 
 // Define available components
 const components: ComponentItem[] = [

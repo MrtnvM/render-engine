@@ -196,11 +196,11 @@ export const SelectFieldset: React.FC<SelectFieldsetProps> = ({
             {selectedOption ? selectedOption.label : placeholder}
           </span>
 
-          <div className={cn('flex-shrink-0', currentSize.icon)}>
+          <div className={cn('flex flex-shrink-0 items-center justify-center', currentSize.icon)}>
             {isOpen ? (
-              <ChevronUpIcon className={cn('h-full w-full', currentState.icon)} />
+              <ChevronUpIcon className={cn('w-full h-full', currentState.icon)} />
             ) : (
-              <ChevronDownIcon className={cn('h-full w-full', currentState.icon)} />
+              <ChevronDownIcon className={cn('w-full h-full', currentState.icon)} />
             )}
           </div>
         </button>

@@ -45,7 +45,7 @@ const InteractiveExamples: React.FC = () => {
             onChange={setSelectedValue}
           />
         </div>
-        
+
         <div className='space-y-4'>
           <h3 className='text-base font-medium text-gray-700'>With Error</h3>
           <SelectFieldset
@@ -78,7 +78,9 @@ const SizeVariantsSection: React.FC = () => {
       <div className='space-y-6'>
         {sizes.map(({ size, label }) => (
           <div key={size} className='space-y-2'>
-            <h3 className='text-sm font-medium text-gray-600'>{label} ({size.toUpperCase()})</h3>
+            <h3 className='text-sm font-medium text-gray-600'>
+              {label} ({size.toUpperCase()})
+            </h3>
             <SelectFieldset
               label='Заголовок'
               placeholder='Выберите'
@@ -133,14 +135,9 @@ const SpecialStatesSection: React.FC = () => {
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
         <div className='space-y-4'>
           <h3 className='text-base font-medium text-gray-700'>With Hint Text</h3>
-          <SelectFieldset
-            label='Заголовок'
-            placeholder='Выберите'
-            options={sampleOptions}
-            hintText='Подсказка'
-          />
+          <SelectFieldset label='Заголовок' placeholder='Выберите' options={sampleOptions} hintText='Подсказка' />
         </div>
-        
+
         <div className='space-y-4'>
           <h3 className='text-base font-medium text-gray-700'>With Success Text</h3>
           <SelectFieldset
@@ -156,23 +153,6 @@ const SpecialStatesSection: React.FC = () => {
   )
 }
 
-// Accessibility Section
-const AccessibilitySection: React.FC = () => {
-  return (
-    <div className='mb-8'>
-      <h2 className='mb-4 text-lg font-semibold text-gray-900'>Accessibility Features</h2>
-      <div className='rounded-lg bg-gray-50 p-6'>
-        <ul className='space-y-2 text-sm text-gray-700'>
-          <li>• Keyboard navigation support (Arrow keys, Enter, Escape)</li>
-          <li>• Screen reader compatible with proper ARIA labels</li>
-          <li>• Focus management and visual focus indicators</li>
-          <li>• High contrast support for better visibility</li>
-          <li>• Semantic HTML structure for better accessibility</li>
-        </ul>
-      </div>
-    </div>
-  )
-}
 
 export const SelectFieldsetShowcase: React.FC<SelectFieldsetShowcaseProps> = ({ className }) => (
   <div className={cn('min-h-screen bg-white', className)} style={{ fontFamily: 'var(--avito-font-family)' }}>
@@ -183,7 +163,6 @@ export const SelectFieldsetShowcase: React.FC<SelectFieldsetShowcaseProps> = ({ 
       <SizeVariantsSection />
       <StateVariantsSection />
       <SpecialStatesSection />
-      <AccessibilitySection />
     </div>
   </div>
 )
