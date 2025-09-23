@@ -133,3 +133,30 @@ export interface SelectFieldsetVariants {
   size: 'xs' | 's' | 'm' | 'l' | 'xl'
   state: 'default' | 'filled' | 'disabled' | 'error' | 'active'
 }
+
+export interface StepperProps {
+  value?: number
+  min?: number
+  max?: number
+  step?: number
+  size?: 's' | 'm' | 'l'
+  state?: 'default' | 'active' | 'focus' | 'loading' | 'plus-disabled' | 'minus-disabled' | 'disabled' | 'error'
+  preset?: 'default' | 'overlay'
+  onChange?: (value: number) => void
+  onIncrement?: () => void
+  onDecrement?: () => void
+  disabled?: boolean
+  className?: string
+  errorMessage?: string
+  placeholder?: string
+  name?: string
+  id?: string
+  required?: boolean
+  readOnly?: boolean
+}
+
+export interface StepperVariants {
+  size: 's' | 'm' | 'l'
+  state: 'default' | 'active' | 'focus' | 'loading' | 'plus-disabled' | 'minus-disabled' | 'disabled' | 'error'
+  preset: 'default' | 'overlay'
+}

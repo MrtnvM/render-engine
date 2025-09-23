@@ -5,6 +5,7 @@ import { InputFieldSetShowcase } from './InputFieldSetShowcase'
 import { InputShowcase } from './InputShowcase'
 import { SelectFieldsetShowcase } from './SelectFieldsetShowcase'
 import { SelectShowcase } from './SelectShowcase'
+import { StepperShowcase } from './StepperShowcase'
 
 // Define available components
 const components: ComponentItem[] = [
@@ -43,6 +44,13 @@ const components: ComponentItem[] = [
     category: 'Forms',
     icon: '📋',
   },
+  {
+    id: 'stepper',
+    name: 'Stepper',
+    description: 'Quantity selector with increment/decrement controls',
+    category: 'Forms',
+    icon: '🔢',
+  },
   // Add more components here as they are created
   // {
   //   id: 'card',
@@ -66,6 +74,8 @@ const renderComponent = (selectedComponent: string | null) => {
       return <SelectShowcase />
     case 'select-fieldset':
       return <SelectFieldsetShowcase />
+    case 'stepper':
+      return <StepperShowcase />
     // Add more cases as components are added
     // case 'card':
     //   return <CardShowcase />

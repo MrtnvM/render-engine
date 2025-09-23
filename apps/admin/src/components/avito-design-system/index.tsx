@@ -3,6 +3,7 @@ export { Input } from './components/Input'
 export { InputFieldSet } from './components/InputFieldSet'
 export { Select } from './components/Select'
 export { SelectFieldset } from './components/SelectFieldset'
+export { Stepper } from './components/Stepper'
 export { DesignSystemShowcase } from './design-system/DesignSystemShowcase'
 export type {
   ButtonProps,
@@ -16,6 +17,8 @@ export type {
   SelectOption,
   SelectFieldsetProps,
   SelectFieldsetVariants,
+  StepperProps,
+  StepperVariants,
 } from './types/components'
 export { cn } from './utils/cn'
 
