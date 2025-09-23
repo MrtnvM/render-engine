@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import { SelectOption } from '../types/components'
 import { cn } from '../utils/cn'
 import { Select } from './Select'
-import { SelectOption } from '../types/components'
 
 export interface SelectFieldsetProps {
   label: string
@@ -61,7 +61,9 @@ const stateClasses = {
 }
 
 // Map SelectFieldset states to Select component states
-const mapStateToSelectState = (state: SelectFieldsetProps['state']): 'default' | 'filled' | 'error' | 'error-filled' | 'disabled' => {
+const mapStateToSelectState = (
+  state: SelectFieldsetProps['state'],
+): 'default' | 'filled' | 'error' | 'error-filled' | 'disabled' => {
   switch (state) {
     case 'filled':
       return 'filled'
