@@ -43,8 +43,18 @@ class DIContainer {
         )
     }()
     
+    // MARK: - Store
+
+    lazy var storeFactory: StoreFactory = {
+        return DefaultStoreFactory(version: "1.0.0")
+    }()
+
+    lazy var storeManager: StoreManager = {
+        return DefaultStoreManager(storeFactory: storeFactory)
+    }()
+
     // MARK: SDK
-    
+
     lazy var componentRegistry: ComponentRegistry = {
         let registry = ComponentRegistry()
         let renderers: [Renderer] = [
