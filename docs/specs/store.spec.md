@@ -1,17 +1,16 @@
-# 📑 Store API for Scenario Data (iOS Render SDK)
+# 📑 Store API for Scenario Data (iOS Render SDK) — Instance-Scoped
 
 ## 1. Purpose
 
 The **Store API** manages **scenario data**: key–value state used by components for rendering. It provides:
 
-- App-level access (memory, user prefs, file, backend, scenario session).
+- Scope-bound and storage-bound store instances.
 - Safe updates (serial queue).
 - **Combine publishers** for observation.
 - Automatic re-render when bound data changes.
-- Support for **live expressions**.
-- **Validation + persistent cache** options.
+- **Validation** of stored values.
 - Simple lifecycle rules (drop on major version change, no migrations).
-- Debug inspector.
+- Debug inspector for development.
 
 ---
 
@@ -25,28 +24,29 @@ The **Store API** manages **scenario data**: key–value state used by component
 
 ### 2.2 Scopes
 
-- **AppMemory** — ephemeral, in-memory.
-- **UserPrefs** — stored in `UserDefaults`.
+- **App** — global application-level state.
+- **Scenario(scenarioID)** — data tied to a specific scenario session.
+
+### 2.3 Storage mechanisms
+
+- **Memory** — ephemeral, cleared when app terminates.
+- **UserPrefs** — persisted in `UserDefaults`.
 - **File** — persisted JSON file.
-- **ScenarioSession** — per-scenario ephemeral.
-- **Backend** — optional remote sync.
+- **Backend** — optional remote sync adapter.
+- **ScenarioSession** — ephemeral, cleared when scenario ends.
 
-### 2.3 Versioning
+### 2.4 Versioning
 
-- `SemanticVersion(major, minor, patch)`.
-- On **major change**: scenario data is dropped and reset. No migrations.
-
-### 2.4 Expressions
-
-- **Live Expressions** recompute outputs when dependencies change.
-- Explicitly registered; not automatic.
+- Controlled via `SemanticVersion(major, minor, patch)`.
+- On **major bump**: scenario data is dropped and reset.
+- No migrations.
 
 ### 2.5 Re-render Strategy
 
-- Component binds to key paths.
+- Components bind to key paths.
 - On appear → subscribe.
 - On disappear → unsubscribe.
-- When store publishes a change, only affected components update.
+- Store publishes changes only to affected components.
 
 ---
 
@@ -68,7 +68,6 @@ public struct StorePatch: Equatable {
 }
 
 public struct StoreChange: Equatable {
-    public let scenarioID: String
     public let patches: [StorePatch]
     public let transactionID: UUID?
 }
@@ -79,26 +78,22 @@ public struct StoreChange: Equatable {
 ## 4. Store API
 
 ```swift
-public protocol Store: AnyObject {
-    var appID: String { get }
-    func named(_ scope: Scope) -> KeyValueStore
+public enum Scope: Equatable {
+    case app
+    case scenario(id: String)
 }
 
-public enum Scope: Equatable {
-    case appMemory
+public enum Storage: Equatable {
+    case memory
     case userPrefs(suite: String? = nil)
     case file(url: URL)
-    case scenarioSession(id: String)
-    case backend(namespace: String, scenarioID: String? = nil)
+    case backend(namespace: String)
+    case scenarioSession
 }
-```
 
-### KeyValueStore
-
-```swift
-public protocol KeyValueStore: AnyObject {
+public protocol Store: AnyObject {
     var scope: Scope { get }
-    var scenarioID: String? { get }
+    var storage: Storage { get }
 
     // IO
     func get(_ keyPath: String) -> StoreValue?
@@ -111,7 +106,7 @@ public protocol KeyValueStore: AnyObject {
     func remove(_ keyPath: String)
 
     // Batch
-    func transaction(_ block: (KeyValueStore) -> Void)
+    func transaction(_ block: (Store) -> Void)
 
     // Observation
     func publisher(for keyPath: String) -> AnyPublisher<StoreValue?, Never>
@@ -124,10 +119,6 @@ public protocol KeyValueStore: AnyObject {
     // Validation
     func configureValidation(_ options: ValidationOptions)
     func validateWrite(_ keyPath: String, _ value: StoreValue) -> ValidationResult
-
-    // Expressions
-    func registerLiveExpression(_ expr: LiveExpression)
-    func unregisterLiveExpression(id: String)
 }
 ```
 
@@ -135,29 +126,11 @@ public protocol KeyValueStore: AnyObject {
 
 ## 5. Validation
 
-Validation is the mechanism that ensures values written into the store conform to expected **types, ranges, and constraints**.
+Validation enforces that data in the store conforms to expected **types, ranges, and constraints**.
 
-### Why?
-
-- Prevents UI/runtime errors (e.g. component expecting a number but store has a string).
-- Provides safe defaults when values are missing or invalid.
-- Ensures consistency across backends (memory, file, prefs).
-
-### How it works
-
-- When you call `set(keyPath, value)` or `merge(...)`, the store:
-
-  1. Looks up the **rule** for that keyPath (if defined).
-  2. Checks type, required-ness, min/max, regex pattern, etc.
-  3. If validation passes → value is stored.
-  4. If validation fails:
-
-     - In **strict mode** → reject mutation, return `ValidationResult.failed`.
-     - In **lenient mode** → attempt coercion (e.g. `"1"` → `1`), or fall back to default, log a warning.
-
-👉 In short:
-
-- **Validation** = runtime rules for what’s allowed into the store.
+- On `set` / `merge`: rules are checked.
+- **Strict mode** → reject invalid data.
+- **Lenient mode** → coerce or fallback to defaults.
 
 ```swift
 public struct ValidationOptions: Equatable {
@@ -184,121 +157,80 @@ public enum ValidationResult {
 
 ---
 
-## 6. Expressions
+## 6. Concurrency
+
+- Each `Store` has its own **serial DispatchQueue** for mutations.
+- Reads are thread-safe.
+- `transaction { … }` batches writes into one `StoreChange`.
+
+---
+
+## 7. Backends
+
+- **Memory** — fast, ephemeral.
+- **UserPrefs** — persisted in `UserDefaults`.
+- **File** — JSON file, atomic writes.
+- **ScenarioSession** — cleared after session ends.
+- **Backend** — optional push/pull adapter.
+
+---
+
+## 8. Renderer Integration
+
+- Renderer subscribes to key paths using `publisher(for:)`.
+- Subscriptions bound to component lifecycle.
+- Updates trigger minimal re-renders.
+
+---
+
+## 9. Lifecycle
+
+- Scenario start → init session store.
+- Scenario end → clear session store.
+- Major version bump → drop caches.
+
+---
+
+## 10. Debugging
+
+- Debug Inspector:
+
+  - Browse key paths and values.
+  - Inspect subscriptions.
+  - View mutation log.
+  - Manual test writes.
+
+---
+
+## 11. Example
 
 ```swift
-public struct LiveExpression: Equatable {
-    public let id: String
-    public let outputKeyPath: String
-    public let dependsOn: Set<String>
-    public let compute: (_ get: (String) -> StoreValue?) -> StoreValue?
-    public let policy: LiveExpressionPolicy
+let store = DefaultStore(scope: .scenario(id: "checkout"), storage: .memory)
+
+// Write
+store.set("cart.total", .number(100))
+
+// Read
+if let total = store.get("cart.total") {
+    print("Cart total:", total)
 }
 
-public enum LiveExpressionPolicy {
-    case writeIfChanged
-    case alwaysWrite
-}
-```
-
-- Store subscribes internally to `dependsOn`.
-- Recomputes synchronously on serial queue when dependencies change.
-- Writes result back through `set`.
-
----
-
-## 7. Concurrency
-
-- Mutations run on a **serial DispatchQueue** per store instance.
-- Reads thread-safe (sync or async hop).
-- Transactions group writes into one `StoreChange`.
-
----
-
-## 8. Backends
-
-- **Memory** — always present, source of truth.
-- **UserPrefs** — small data persisted in `UserDefaults`.
-- **File** — persisted JSON file, atomic writes.
-- **ScenarioSession** — ephemeral, cleared when scenario ends or major version changes.
-- **Backend** — optional adapter with `pull` / `push`.
-
----
-
-## 9. Renderer Integration
-
-- Components declare key path bindings.
-- Renderer subscribes via `store.publisher(for: Set<String>)`.
-- On appear → subscribe; on disappear → cancel.
-- When patch intersects bindings:
-
-  - Simple prop updates directly applied.
-  - Complex components → subtree re-render scheduled on main runloop.
-
----
-
-## 10. Lifecycle
-
-- On scenario start: init session store, load cache if configured.
-- On scenario end: clear session store.
-- On major version bump: drop scenario store & caches.
-
----
-
-## 11. Debugging
-
-- **Inspector only**:
-
-  - List current values by keyPath.
-  - Show active subscriptions.
-  - Show recent mutations (patch log).
-  - Allow manual writes (test UI updates).
-
-- Enabled only in debug builds.
-
----
-
-## 12. Example
-
-```swift
-let store = DefaultStore(appID: "com.acme.app")
-let s = store.named(.scenarioSession(id: "checkout"))
-
-s.configureValidation(.init(
-    mode: .strict,
-    schema: [
-      "cart.total": Rule(kind: .number, required: true, defaultValue: .number(0)),
-      "user.name": Rule(kind: .string, required: false)
-    ],
-))
-
-// Live expression: cart.total = sum(items[*].price)
-s.registerLiveExpression(.init(
-    id: "sum-total",
-    outputKeyPath: "cart.total",
-    dependsOn: ["items[*].price"],
-    compute: { get in
-        guard case let .array(arr)? = get("items") else { return .number(0) }
-        let sum = arr.compactMap {
-            if case let .object(obj) = $0, case let .number(p)? = obj["price"] { return p }
-            return nil
-        }.reduce(0, +)
-        return .number(sum)
-    },
-    policy: .writeIfChanged
-))
+// Subscribe
+let cancellable = store.publisher(for: "cart.total")
+    .sink { value in
+        print("Cart total updated:", value ?? .null)
+    }
 ```
 
 ---
 
-## 13. Acceptance Criteria
+## 12. Acceptance Criteria
 
-- ✅ Multiple backends (memory, prefs, file, session, backend).
-- ✅ Combine observation per keyPath.
-- ✅ Auto subscribe/unsubscribe with component lifecycle.
-- ✅ Serial queue guarantees thread safety.
+- ✅ Store instances are bound to scope + storage.
+- ✅ Multiple storages supported (memory, prefs, file, session, backend).
+- ✅ Combine publishers for observation.
+- ✅ Serial queue for thread safety.
 - ✅ Transactions coalesce patches.
-- ✅ Live expressions recompute on dependencies.
-- ✅ Validation with persistent cache policy.
+- ✅ Validation with strict/lenient modes.
 - ✅ Drop scenario data on major version bump.
-- ✅ Debug inspector only.
+- ✅ Debug inspector in debug builds only.
