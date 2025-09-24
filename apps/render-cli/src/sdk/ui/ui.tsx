@@ -1,0 +1,89 @@
+import React from 'react'
+import { ImageStyle, TextStyle, ViewStyle } from './stylesheet.types'
+
+// ---------------- VIEW ----------------
+export interface ViewProps {
+  id?: string
+  children?: React.ReactNode
+  style?: ViewStyle
+}
+
+export const View = (props: ViewProps): null => null
+
+// ---------------- CONTAINERS ----------------
+
+export const Row = (props: ViewProps): null => null
+
+export const Column = (props: ViewProps): null => null
+
+export const Stack = (props: ViewProps): null => null
+
+// ---------------- TEXT ----------------
+
+export interface TextProps extends ViewStyle {
+  style?: TextStyle
+  properties?: {
+    text: string
+  }
+}
+
+export const Text = (props: TextProps): null => null
+
+// ---------------- IMAGE ----------------
+
+export interface ImageProps extends ViewStyle {
+  style?: ImageStyle
+  properties?: {
+    source: string
+  }
+}
+
+export const Image = (props: ImageProps): null => null
+
+// ---------------- BUTTON ----------------
+
+export interface ButtonProps extends ViewStyle {
+  style?: ViewStyle
+  properties?: {
+    title: string
+  }
+}
+
+export const Button = (props: ButtonProps): null => null
+
+// ---------------- CHECKBOX ----------------
+
+export interface CheckboxProps extends ViewStyle {
+  style?: ViewStyle
+  properties?: {
+    checked: boolean
+    disabled: boolean
+  }
+}
+
+export const Checkbox = (props: CheckboxProps): null => null
+
+// ---------------- STEPPER ----------------
+
+export interface StepperProps extends ViewStyle {
+  style?: ViewStyle
+  properties?: {
+    value: number
+    minimumValue: number
+    maximumValue: number
+    disabled: boolean
+  }
+}
+
+export const Stepper = (props: StepperProps): null => null
+
+// ---------------- RATING ----------------
+
+export interface RatingProps extends ViewStyle {
+  style?: ViewStyle
+  properties?: {
+    rating: number
+    maxRating: number
+    interactive: boolean
+  }
+}

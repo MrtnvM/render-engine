@@ -1,18 +1,15 @@
-import { Column, Row, Stack } from './sdk/layout.js'
-import { Text, Image, Button } from './sdk/ui.js'
+import { Column, Row, Stack, Text, Image, Button } from './sdk/ui/index.js'
 
 export const MyScreen = () => (
-  <Column padding={16} backgroundColor="#F5F5F5">
-    <Row justifyContent="space-between" alignItems="center">
-      <Text>Welcome</Text>
-      <Image src="avatar.png" width={40} height={40} cornerRadius={20} />
+  <Column style={{ padding: 16, backgroundColor: '#F5F5F5' }}>
+    <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+      <Text properties={{ text: 'Welcome' }} style={{ fontSize: 16, fontWeight: 'bold' }} />
+      <Image properties={{ source: 'avatar.png' }} style={{ width: 40, height: 40, borderRadius: '20px' }} />
     </Row>
 
-    <Stack marginVertical={20}>
-      <Image src="background.png" cornerRadius={8} />
-      <Button position="absolute" bottom={10} right={10}>
-        Learn More
-      </Button>
+    <Stack style={{ marginVertical: 20, position: 'relative' }}>
+      <Image properties={{ source: 'background.png' }} style={{ borderRadius: '8px' }} />
+      <Button properties={{ title: 'Learn More' }} style={{ position: 'absolute', bottom: 10, right: 10 }} />
     </Stack>
   </Column>
 )
