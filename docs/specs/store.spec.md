@@ -124,6 +124,46 @@ public protocol Store: AnyObject {
 
 ---
 
+## 4.1 Store Factory
+
+A `StoreFactory` is responsible for creating `Store` instances bound to a specific **scope** and **storage**.
+This ensures consistent lifecycle management (e.g., session clearing, versioning rules, shared caches).
+
+```swift
+public protocol StoreFactory: AnyObject {
+    /// Returns a Store bound to given scope and storage.
+    /// If a Store already exists for the combination, the same instance may be reused.
+    func makeStore(scope: Scope, storage: Storage) -> Store
+
+    /// Optionally drop and recreate all stores for a given scope (e.g., on major version bump).
+    func resetStores(for scope: Scope)
+}
+```
+
+### Responsibilities
+
+- Manage the **registry of Store instances**.
+- Enforce **singleton-like reuse** when multiple components request the same `(scope, storage)`.
+- Apply **lifecycle rules**:
+
+  - Drop scenario stores when scenario ends.
+  - Drop/reset all stores when major version changes.
+
+- Provide central place to inject cross-cutting behavior (e.g., logging, analytics, persistence adapters).
+
+### Example
+
+```swift
+let factory = DefaultStoreFactory()
+
+let appStore = factory.makeStore(scope: .app, storage: .userPrefs())
+let checkoutStore = factory.makeStore(scope: .scenario(id: "checkout"), storage: .memory)
+
+// Reuse same instance for identical scope+storage
+let again = factory.makeStore(scope: .scenario(id: "checkout"), storage: .memory)
+assert(checkoutStore === again)
+```
+
 ## 5. Validation
 
 Validation enforces that data in the store conforms to expected **types, ranges, and constraints**.
