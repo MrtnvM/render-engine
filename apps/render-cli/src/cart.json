@@ -154,5 +154,6 @@
         "type": "bottombar"
       }
     ]
-  }
+  },
+  "components": {}
 }

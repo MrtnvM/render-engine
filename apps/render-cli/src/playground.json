@@ -4,21 +4,23 @@
   "main": {
     "type": "column",
     "style": {
-      "direction": "column",
       "padding": 16,
-      "bgColor": "#F5F5F5"
+      "backgroundColor": "#F5F5F5"
     },
     "children": [
       {
         "type": "row",
         "style": {
-          "direction": "row",
-          "contentAlignment": "space-between",
+          "justifyContent": "space-between",
           "alignItems": "center"
         },
         "children": [
           {
             "type": "text",
+            "style": {
+              "fontSize": 16,
+              "fontWeight": "bold"
+            },
             "properties": {
               "text": "Welcome"
             }
@@ -28,7 +30,7 @@
             "style": {
               "width": 40,
               "height": 40,
-              "cornerRadius": 20
+              "borderRadius": "20px"
             },
             "properties": {
               "source": "avatar.png"
@@ -39,14 +41,14 @@
       {
         "type": "stack",
         "style": {
-          "position": "relative",
-          "marginVertical": 20
+          "marginVertical": 20,
+          "position": "relative"
         },
         "children": [
           {
             "type": "image",
             "style": {
-              "cornerRadius": 8
+              "borderRadius": "8px"
             },
             "properties": {
               "source": "background.png"
@@ -58,10 +60,83 @@
               "position": "absolute",
               "bottom": 10,
               "right": 10
+            },
+            "properties": {
+              "title": "Learn More"
             }
           }
         ]
       }
     ]
+  },
+  "components": {
+    "MyScreen": {
+      "type": "column",
+      "style": {
+        "padding": 16,
+        "backgroundColor": "#F5F5F5"
+      },
+      "children": [
+        {
+          "type": "row",
+          "style": {
+            "justifyContent": "space-between",
+            "alignItems": "center"
+          },
+          "children": [
+            {
+              "type": "text",
+              "style": {
+                "fontSize": 16,
+                "fontWeight": "bold"
+              },
+              "properties": {
+                "text": "Welcome"
+              }
+            },
+            {
+              "type": "image",
+              "style": {
+                "width": 40,
+                "height": 40,
+                "borderRadius": "20px"
+              },
+              "properties": {
+                "source": "avatar.png"
+              }
+            }
+          ]
+        },
+        {
+          "type": "stack",
+          "style": {
+            "marginVertical": 20,
+            "position": "relative"
+          },
+          "children": [
+            {
+              "type": "image",
+              "style": {
+                "borderRadius": "8px"
+              },
+              "properties": {
+                "source": "background.png"
+              }
+            },
+            {
+              "type": "button",
+              "style": {
+                "position": "absolute",
+                "bottom": 10,
+                "right": 10
+              },
+              "properties": {
+                "title": "Learn More"
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 }

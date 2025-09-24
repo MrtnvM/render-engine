@@ -14,6 +14,7 @@ interface TranspiledScenario {
   id: string
   version: string
   main: JsonNode
+  components: Record<string, JsonNode>
 }
 
 /**
@@ -31,39 +32,54 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
   })
 
   let rootJson: JsonNode | null = null
+  const components: Record<string, JsonNode> = {}
+
+  // Use the updated plugin structure
+  const pluginResult = jsxToJsonPlugin()
+  const visitor = pluginResult.plugin.visitor
+  const collectedComponents = pluginResult.components
 
   traverse(ast, {
     Program: {
       exit(path: any) {
-        // Look for JSX elements in the program body
-        for (const node of path.node.body) {
-          if (node.type === 'ExportNamedDeclaration' && node.declaration?.type === 'VariableDeclaration') {
-            // Handle export const MyScreen = () => (<JSX>)
-            const declaration = node.declaration
-            if (declaration.declarations.length > 0) {
-              const variableDeclarator = declaration.declarations[0]
-              if (
-                variableDeclarator.init?.type === 'ArrowFunctionExpression' &&
-                variableDeclarator.init.body?.type === 'JSXElement' &&
-                (variableDeclarator.init.body as any).json
-              ) {
-                rootJson = (variableDeclarator.init.body as any).json as JsonNode
-                break
+        // Process collected components after traversal
+        for (const component of collectedComponents) {
+          if (component.exportType === 'default') {
+            rootJson = component.jsonNode
+          } else if (component.exportType === 'named') {
+            components[component.name] = component.jsonNode
+          }
+        }
+
+        // Fallback: Look for JSX elements in the program body (for backward compatibility)
+        if (!rootJson) {
+          for (const node of path.node.body) {
+            if (node.type === 'ExportNamedDeclaration' && node.declaration?.type === 'VariableDeclaration') {
+              const declaration = node.declaration
+              if (declaration.declarations.length > 0) {
+                const variableDeclarator = declaration.declarations[0]
+                if (
+                  variableDeclarator.init?.type === 'ArrowFunctionExpression' &&
+                  variableDeclarator.init.body?.type === 'JSXElement' &&
+                  (variableDeclarator.init.body as any).json
+                ) {
+                  rootJson = (variableDeclarator.init.body as any).json as JsonNode
+                  break
+                }
               }
+            } else if (
+              node.type === 'ExpressionStatement' &&
+              node.expression.type === 'JSXElement' &&
+              (node.expression as any).json
+            ) {
+              rootJson = (node.expression as any).json as JsonNode
+              break
             }
-          } else if (
-            node.type === 'ExpressionStatement' &&
-            node.expression.type === 'JSXElement' &&
-            (node.expression as any).json
-          ) {
-            // Handle direct JSX elements
-            rootJson = (node.expression as any).json as JsonNode
-            break
           }
         }
       },
     },
-    ...jsxToJsonPlugin().visitor, // Spread our plugin's visitor here
+    ...visitor, // Use the updated plugin's visitor
   } as any)
 
   if (!rootJson) {
@@ -75,6 +91,7 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
     id: 'generated-scenario-1',
     version: '1.0.0',
     main: rootJson,
+    components,
   }
   console.log(JSON.stringify(scenario, null, 2))
   return scenario

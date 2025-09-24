@@ -33,6 +33,12 @@ interface JsonNode {
   children?: JsonNode[]
 }
 
+interface ComponentMetadata {
+  name: string
+  exportType: 'default' | 'named'
+  jsonNode: JsonNode
+}
+
 interface ASTNode {
   type: string
   value?: any
@@ -75,12 +81,21 @@ function astNodeToValue(node?: ASTNode | null): any {
 }
 
 export default function jsxToJsonPlugin() {
-  return {
+  const components: ComponentMetadata[] = []
+
+  const plugin = {
     visitor: {
       JSXElement: {
         exit(path: NodePath<JSXElement>) {
           const node = path.node
           const componentName = node.openingElement.name.name
+
+          // Store component metadata if this is a component (not a built-in like div, span, etc.)
+          const componentTypes = ['Column', 'Row', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Stepper', 'Rating']
+          if (componentTypes.includes(componentName)) {
+            // We'll collect this information later when we encounter the export declaration
+            ;(path.node as any).componentName = componentName
+          }
 
           // 1. Determine Component Type
           const componentType = componentName.toLowerCase()
@@ -134,6 +149,61 @@ export default function jsxToJsonPlugin() {
           ;(path.node as any).json = jsonNode
         },
       },
+      ExportDefaultDeclaration: {
+        exit(path: any) {
+          const declaration = path.node.declaration
+          if (declaration?.type === 'FunctionDeclaration') {
+            // Handle export default function MyComponent() { return <JSX>...</JSX> }
+            // Check if the function body contains a JSX element
+            let jsxElement = null
+            if (declaration.body?.type === 'BlockStatement' && declaration.body.body.length > 0) {
+              const returnStatement = declaration.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
+              if (returnStatement?.argument?.type === 'JSXElement' && (returnStatement.argument as any).json) {
+                jsxElement = returnStatement.argument
+              }
+            }
+            if (jsxElement) {
+              components.push({
+                name: declaration.id?.name || 'default',
+                exportType: 'default',
+                jsonNode: (jsxElement as any).json,
+              })
+            }
+          } else if (declaration?.type === 'ArrowFunctionExpression' && declaration.body?.type === 'JSXElement') {
+            // Handle export default () => <JSX>...</JSX>
+            if ((declaration.body as any).json) {
+              components.push({
+                name: 'default',
+                exportType: 'default',
+                jsonNode: (declaration.body as any).json,
+              })
+            }
+          }
+        },
+      },
+      ExportNamedDeclaration: {
+        exit(path: any) {
+          const declaration = path.node.declaration
+          if (declaration?.type === 'VariableDeclaration') {
+            declaration.declarations.forEach((declarator: any) => {
+              if (
+                declarator.id?.name &&
+                declarator.init?.body?.type === 'JSXElement' &&
+                (declarator.init.body as any).json
+              ) {
+                // Handle export const MyComponent = () => <JSX>...</JSX>
+                components.push({
+                  name: declarator.id.name,
+                  exportType: 'named',
+                  jsonNode: (declarator.init.body as any).json,
+                })
+              }
+            })
+          }
+        },
+      },
     },
   }
+
+  return { plugin, components }
 }
