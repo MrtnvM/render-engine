@@ -108,6 +108,9 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     }
 
     private func buildViewHierarchy(from component: Component) {
+        if let scenario = scenario {
+            DIContainer.shared.ensureScenarioVersionDropIfNeeded(id: scenario.id, version: scenario.version)
+        }
         rootFlexContainer.subviews.forEach { $0.removeFromSuperview() }
         
         rootFlexContainer.flex.define { flex in
