@@ -1,0 +1,388 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/bdui.schema.json",
+  "title": "Backend-Driven UI Configuration",
+  "description": "Master schema for UI configurations and scenario data.",
+  "type": "object",
+  "required": ["version", "components"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of the schema"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the configuration"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "User who created the configuration"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "User who last updated the configuration"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the configuration"
+        }
+      },
+      "additionalProperties": false
+    },
+    "components": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/component" },
+      "minItems": 1,
+      "description": "Array of UI components"
+    },
+    "scenarioData": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/storeValue" },
+      "description": "Key-value store of dynamic scenario data"
+    },
+    "styles": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Global styles and themes"
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Global data bindings"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "component": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the component"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["Button", "Label", "List", "Banner", "Text", "Image", "Container", "Row", "Column", "Card", "Form", "Input", "Select", "Checkbox", "Radio", "Modal", "Alert", "Progress", "Icon"],
+          "description": "Component type"
+        },
+        "props": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Component properties"
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/component" },
+          "description": "Child components"
+        },
+        "bindings": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Component-specific data bindings"
+        },
+        "styles": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Component-specific styles"
+        },
+        "validation": {
+          "$ref": "#/definitions/validationRules",
+          "description": "Validation rules for this component"
+        }
+      },
+      "allOf": [{ "$ref": "#/definitions/componentRules" }],
+      "additionalProperties": false
+    },
+    "componentRules": {
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "const": "Button" },
+            "props": {
+              "type": "object",
+              "required": ["text"],
+              "properties": {
+                "text": { "type": "string", "minLength": 1 },
+                "onClick": { "type": "string", "pattern": "^action:.+" },
+                "disabled": { "type": "boolean" },
+                "variant": { "type": "string", "enum": ["primary", "secondary", "outline", "ghost"] },
+                "size": { "type": "string", "enum": ["sm", "md", "lg"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Label" },
+            "props": {
+              "type": "object",
+              "required": ["text"],
+              "properties": {
+                "text": { "type": "string" },
+                "size": { "type": "string", "enum": ["sm", "md", "lg"] },
+                "color": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$" },
+                "weight": { "type": "string", "enum": ["normal", "medium", "semibold", "bold"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Text" },
+            "props": {
+              "type": "object",
+              "required": ["content"],
+              "properties": {
+                "content": { "type": "string" },
+                "size": { "type": "string", "enum": ["xs", "sm", "md", "lg", "xl"] },
+                "color": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$" },
+                "align": { "type": "string", "enum": ["left", "center", "right", "justify"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Image" },
+            "props": {
+              "type": "object",
+              "required": ["src"],
+              "properties": {
+                "src": { "type": "string", "format": "uri", "pattern": "^https://" },
+                "alt": { "type": "string" },
+                "width": { "type": ["string", "number"] },
+                "height": { "type": ["string", "number"] },
+                "fit": { "type": "string", "enum": ["cover", "contain", "fill", "none", "scale-down"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "List" },
+            "props": {
+              "type": "object",
+              "required": ["items"],
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/component" }
+                },
+                "direction": { "type": "string", "enum": ["vertical", "horizontal"] },
+                "spacing": { "type": ["string", "number"] },
+                "divider": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Banner" },
+            "props": {
+              "type": "object",
+              "required": ["imageUrl"],
+              "properties": {
+                "imageUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+                "action": { "type": "string", "pattern": "^action:.+" },
+                "title": { "type": "string" },
+                "subtitle": { "type": "string" },
+                "variant": { "type": "string", "enum": ["default", "success", "warning", "error", "info"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Container" },
+            "props": {
+              "type": "object",
+              "properties": {
+                "padding": { "type": ["string", "number"] },
+                "margin": { "type": ["string", "number"] },
+                "backgroundColor": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$" },
+                "borderRadius": { "type": ["string", "number"] },
+                "maxWidth": { "type": ["string", "number"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Card" },
+            "props": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "subtitle": { "type": "string" },
+                "elevation": { "type": "number", "minimum": 0, "maximum": 24 },
+                "padding": { "type": ["string", "number"] },
+                "borderRadius": { "type": ["string", "number"] }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Input" },
+            "props": {
+              "type": "object",
+              "properties": {
+                "placeholder": { "type": "string" },
+                "type": { "type": "string", "enum": ["text", "email", "password", "number", "tel", "url"] },
+                "required": { "type": "boolean" },
+                "disabled": { "type": "boolean" },
+                "maxLength": { "type": "number", "minimum": 1 },
+                "pattern": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Select" },
+            "props": {
+              "type": "object",
+              "required": ["options"],
+              "properties": {
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": { "type": "string" },
+                      "value": { "type": ["string", "number", "boolean"] }
+                    },
+                    "required": ["label", "value"]
+                  }
+                },
+                "placeholder": { "type": "string" },
+                "multiple": { "type": "boolean" },
+                "disabled": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Modal" },
+            "props": {
+              "type": "object",
+              "required": ["content"],
+              "properties": {
+                "content": { "$ref": "#/definitions/component" },
+                "title": { "type": "string" },
+                "size": { "type": "string", "enum": ["sm", "md", "lg", "xl", "full"] },
+                "closable": { "type": "boolean" },
+                "maskClosable": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Alert" },
+            "props": {
+              "type": "object",
+              "required": ["message"],
+              "properties": {
+                "message": { "type": "string" },
+                "type": { "type": "string", "enum": ["info", "success", "warning", "error"] },
+                "closable": { "type": "boolean" },
+                "showIcon": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": { "const": "Progress" },
+            "props": {
+              "type": "object",
+              "required": ["percent"],
+              "properties": {
+                "percent": { "type": "number", "minimum": 0, "maximum": 100 },
+                "status": { "type": "string", "enum": ["normal", "success", "exception", "active"] },
+                "strokeColor": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$" },
+                "showInfo": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "validationRules": {
+      "type": "object",
+      "properties": {
+        "required": { "type": "boolean" },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "value": { },
+              "message": { "type": "string" }
+            },
+            "required": ["type"]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "storeValue": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "integer" },
+        { "type": "boolean" },
+        {
+          "type": "string",
+          "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+        },
+        {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/storeValue" }
+        },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/storeValue" }
+        },
+        { "type": "null" }
+      ]
+    }
+  }
+}
