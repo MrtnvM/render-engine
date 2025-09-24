@@ -9,12 +9,17 @@ public protocol RenderViewControllerDelegate: AnyObject {
 
 public class RenderViewController: UIViewController, ScenarioObserver {
     weak public var delegate: RenderViewControllerDelegate?
-    
+
     let scenarioID: String
     private var scenario: Scenario?
     private let repository = DIContainer.shared.scenarioRepository
     private let service = DIContainer.shared.scenarioService
     private let registry = DIContainer.shared.componentRegistry
+    private let storeManager = DIContainer.shared.storeManager
+
+    // Store instances for this scenario
+    private var appStore: Store?
+    private var scenarioStore: Store?
     
     // Root flex container
     private let rootFlexContainer = UIView()
@@ -38,7 +43,8 @@ public class RenderViewController: UIViewController, ScenarioObserver {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupFlexContainer()
-        
+        setupStores()
+
         if let scenario = scenario {
             buildViewHierarchy(from: scenario.mainComponent)
         } else {
@@ -56,10 +62,18 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
+
         Task {
             await repository.unsubscribeFromScenario(self)
         }
+
+        // Clean up stores when view disappears
+        cleanupStores()
+    }
+
+    deinit {
+        // Final cleanup
+        cleanupStores()
     }
 
     override public func viewDidLayoutSubviews() {
@@ -143,5 +157,36 @@ public class RenderViewController: UIViewController, ScenarioObserver {
         }
 
         return view
+    }
+
+    // MARK: - Store Management
+
+    private func setupStores() {
+        // Initialize app store (shared across all scenarios)
+        appStore = storeManager.getStore(scope: .app, storage: .userPrefs())
+
+        // Initialize scenario store (scoped to this scenario)
+        scenarioStore = storeManager.getStore(scope: .scenario(id: scenarioID), storage: .memory)
+
+        // Configure scenario stores
+        storeManager.configureScenarioStores(scenarioID: scenarioID)
+    }
+
+    private func cleanupStores() {
+        // Clean up scenario-specific stores
+        storeManager.cleanupScenarioStores(scenarioID: scenarioID)
+
+        // Clear references
+        scenarioStore = nil
+    }
+
+    /// Get the app-scoped store for global data
+    public func getAppStore() -> Store? {
+        appStore
+    }
+
+    /// Get the scenario-scoped store for scenario-specific data
+    public func getScenarioStore() -> Store? {
+        scenarioStore
     }
 }

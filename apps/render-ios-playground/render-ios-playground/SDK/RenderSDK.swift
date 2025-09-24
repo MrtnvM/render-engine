@@ -5,10 +5,11 @@ import Supabase
 // Public interface for the SDK
 class RenderSDK {
     static let shared = RenderSDK()
-    
+
     private let client = DIContainer.shared.supabaseClient
     private let componentRegistry = DIContainer.shared.componentRegistry
     private let scenarioFetcher = DIContainer.shared.scenarioService
+    private let storeManager = DIContainer.shared.storeManager
 
     private init() {}
 
@@ -68,5 +69,42 @@ class RenderSDK {
             scenarioID: id
         )
         return vc
+    }
+
+    // MARK: - Store API
+
+    /// Get a store for app-scoped data
+    public func getAppStore(storage: Storage = .userPrefs()) -> Store {
+        storeManager.getStore(scope: .app, storage: storage)
+    }
+
+    /// Get a store for scenario-scoped data
+    public func getScenarioStore(scenarioID: String, storage: Storage = .memory) -> Store {
+        storeManager.getStore(scope: .scenario(id: scenarioID), storage: storage)
+    }
+
+    /// Configure stores for a scenario session
+    public func configureScenarioStores(scenarioID: String) {
+        storeManager.configureScenarioStores(scenarioID: scenarioID)
+    }
+
+    /// Clean up scenario stores when scenario ends
+    public func cleanupScenarioStores(scenarioID: String) {
+        storeManager.cleanupScenarioStores(scenarioID: scenarioID)
+    }
+
+    /// Reset all stores for a specific scope
+    public func resetStores(for scope: Scope) {
+        storeManager.resetStores(for: scope)
+    }
+
+    /// Reset all stores
+    public func resetAllStores() {
+        storeManager.resetAllStores()
+    }
+
+    /// Handle version changes
+    public func handleVersionChange(from oldVersion: SemanticVersion, to newVersion: SemanticVersion) {
+        storeManager.handleVersionChange(from: oldVersion, to: newVersion)
     }
 }
