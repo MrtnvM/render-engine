@@ -1,4 +1,3 @@
-import { componentTypeMapping, propMapping } from './mappings.js'
 import type { NodePath } from '@babel/traverse'
 
 // Define types for Babel AST nodes
@@ -25,13 +24,7 @@ interface JSXText {
 }
 
 // Type definitions
-type ComponentType = 'row' | 'column' | 'stack' | 'text' | 'image' | 'button'
-type PropDestination = 'style' | 'properties'
-
-interface PropMapping {
-  key: string
-  destination: PropDestination
-}
+type ComponentType = string
 
 interface JsonNode {
   type: ComponentType
@@ -90,14 +83,12 @@ export default function jsxToJsonPlugin() {
           const componentName = node.openingElement.name.name
 
           // 1. Determine Component Type
-          const componentType = componentTypeMapping[
-            componentName as keyof typeof componentTypeMapping
-          ] as ComponentType
+          const componentType = componentName.toLowerCase()
           if (!componentType) {
             throw new Error(`Unsupported component type: <${componentName}>`)
           }
 
-          const jsonNode: JsonNode = {
+          const jsonNode: any = {
             type: componentType,
             style: {},
             properties: {}, // For non-style attributes
@@ -113,19 +104,9 @@ export default function jsxToJsonPlugin() {
           node.openingElement.attributes.forEach((attribute: any) => {
             if (attribute.type === 'JSXAttribute') {
               const propName = attribute.name.name
-              const mapping = propMapping[propName as keyof typeof propMapping] as PropMapping
-
-              if (!mapping) {
-                throw new Error(`Unsupported prop: '${propName}' on <${componentName}>`)
-              }
 
               const value = astNodeToValue(attribute.value as ASTNode)
-
-              if (mapping.destination === 'style') {
-                jsonNode.style![mapping.key] = value
-              } else {
-                jsonNode.properties![mapping.key] = value
-              }
+              jsonNode[propName] = value
             }
           })
 

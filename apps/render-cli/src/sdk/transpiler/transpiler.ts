@@ -4,7 +4,7 @@ import jsxToJsonPlugin from './babel-plugin-jsx-to-json.js'
 
 // Type definitions
 interface JsonNode {
-  type: 'row' | 'column' | 'stack' | 'text' | 'image' | 'button'
+  type: string
   style?: Record<string, any>
   properties?: Record<string, any>
   children?: JsonNode[]

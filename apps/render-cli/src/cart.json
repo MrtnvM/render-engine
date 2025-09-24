@@ -1,0 +1,158 @@
+{
+  "id": "generated-scenario-1",
+  "version": "1.0.0",
+  "main": {
+    "type": "column",
+    "style": {
+      "width": "100%",
+      "height": "100%",
+      "backgroundColor": "#FFFFFF"
+    },
+    "children": [
+      {
+        "type": "row",
+        "style": {
+          "justifyContent": "space-between",
+          "alignItems": "center",
+          "padding": 16,
+          "height": 48,
+          "backgroundColor": "#FFFFFF"
+        },
+        "children": [
+          {
+            "type": "button",
+            "properties": {
+              "title": "←"
+            }
+          },
+          {
+            "type": "text",
+            "style": {
+              "fontSize": 18,
+              "fontWeight": "800"
+            },
+            "properties": {
+              "text": "Корзина"
+            }
+          },
+          {
+            "type": "column",
+            "style": {
+              "width": 24
+            }
+          }
+        ]
+      },
+      {
+        "type": "row",
+        "style": {
+          "justifyContent": "space-between",
+          "alignItems": "center",
+          "paddingHorizontal": 16,
+          "paddingVertical": 12
+        },
+        "children": [
+          {
+            "type": "row",
+            "style": {
+              "alignItems": "center",
+              "gap": 11
+            },
+            "children": [
+              {
+                "type": "checkbox",
+                "properties": {
+                  "checked": true,
+                  "disabled": false
+                }
+              },
+              {
+                "type": "text",
+                "style": {
+                  "fontSize": 15,
+                  "fontWeight": "500"
+                },
+                "properties": {
+                  "text": "Выбрать всё"
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "style": {
+              "fontSize": 15,
+              "fontWeight": "500",
+              "color": "#0099F7"
+            },
+            "properties": {
+              "text": "Удалить (3)"
+            }
+          }
+        ]
+      },
+      {
+        "type": "column",
+        "style": {
+          "flex": 1,
+          "paddingHorizontal": 0
+        },
+        "children": [
+          {
+            "type": "sellersection",
+            "storeName": "Pear Store",
+            "rating": 4.8,
+            "reviewCount": 643,
+            "checked": true
+          },
+          {
+            "type": "column",
+            "style": {
+              "backgroundColor": "#F5F5F5",
+              "paddingVertical": 24
+            },
+            "children": [
+              {
+                "type": "cartitem",
+                "image": "charger.png",
+                "price": "4 990 ₽",
+                "title": "Зарядка MagSafe Charger 15W 1 метр",
+                "quantity": 1,
+                "checked": true
+              },
+              {
+                "type": "cartitem",
+                "image": "airpods.png",
+                "price": "15 990 ₽",
+                "title": "AirPods Pro 2",
+                "quantity": 1,
+                "checked": true
+              }
+            ]
+          },
+          {
+            "type": "bundlesection"
+          },
+          {
+            "type": "sellersection",
+            "storeName": "TECHNO ZONE",
+            "rating": 5,
+            "reviewCount": 916,
+            "checked": true
+          },
+          {
+            "type": "cartitem",
+            "image": "iphone.png",
+            "price": "99 990 ₽",
+            "title": "iPhone 16 Pro, 256 ГБ",
+            "quantity": 1,
+            "checked": true
+          }
+        ]
+      },
+      {
+        "type": "bottombar"
+      }
+    ]
+  }
+}

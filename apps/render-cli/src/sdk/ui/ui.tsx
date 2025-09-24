@@ -87,3 +87,5 @@ export interface RatingProps extends ViewStyle {
     interactive: boolean
   }
 }
+
+export const Rating = (props: RatingProps): null => null
