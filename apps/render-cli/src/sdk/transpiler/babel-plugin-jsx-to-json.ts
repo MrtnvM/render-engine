@@ -72,6 +72,7 @@ interface JsonNode {
   type: ComponentType
   style?: Record<string, any>
   properties?: Record<string, any>
+  data?: Record<string, any>
   children?: JsonNode[]
 }
 
@@ -149,21 +150,26 @@ export default function jsxToJsonPlugin() {
             type: componentType,
             style: {},
             properties: {}, // For non-style attributes
+            data: {}, // For component props
             children: [],
           }
-
-          // Add implicit styles for layout components
-          if (componentName === 'Row') jsonNode.style!.direction = 'row'
-          if (componentName === 'Column') jsonNode.style!.direction = 'column'
-          if (componentName === 'Stack') jsonNode.style!.position = 'relative'
 
           // 2. Process Props (Attributes)
           node.openingElement.attributes.forEach((attribute: any) => {
             if (attribute.type === 'JSXAttribute') {
               const propName = attribute.name.name
-
               const value = astNodeToValue(attribute.value as ASTNode)
-              jsonNode[propName] = value
+
+              // Handle special props that should remain at root level
+              if (propName === 'style') {
+                // Style attributes and properties are handled separately in the opening element
+                // For now, we'll keep this as-is since the style and properties handling might be complex
+              } else if (propName === 'properties') {
+                jsonNode[propName] = value
+              } else {
+                // All other props go into the data object
+                jsonNode.data[propName] = value
+              }
             }
           })
 
@@ -184,6 +190,7 @@ export default function jsxToJsonPlugin() {
           // Clean up empty objects
           if (jsonNode.style && Object.keys(jsonNode.style).length === 0) delete jsonNode.style
           if (jsonNode.properties && Object.keys(jsonNode.properties).length === 0) delete jsonNode.properties
+          if (jsonNode.data && Object.keys(jsonNode.data).length === 0) delete jsonNode.data
           if (jsonNode.children && jsonNode.children.length === 0)
             delete jsonNode.children
 

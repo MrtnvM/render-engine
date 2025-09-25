@@ -7,6 +7,7 @@ interface JsonNode {
   type: string
   style?: Record<string, any>
   properties?: Record<string, any>
+  data?: Record<string, any>
   children?: JsonNode[]
 }
 

@@ -3,21 +3,9 @@
   "version": "1.0.0",
   "main": {
     "type": "Column",
-    "style": {
-      "width": "100%",
-      "height": "100%",
-      "backgroundColor": "#FFFFFF"
-    },
     "children": [
       {
         "type": "Row",
-        "style": {
-          "justifyContent": "space-between",
-          "alignItems": "center",
-          "padding": 16,
-          "height": 48,
-          "backgroundColor": "#FFFFFF"
-        },
         "children": [
           {
             "type": "Button",
@@ -27,37 +15,20 @@
           },
           {
             "type": "Text",
-            "style": {
-              "fontSize": 18,
-              "fontWeight": "800"
-            },
             "properties": {
               "text": "Корзина"
             }
           },
           {
-            "type": "Column",
-            "style": {
-              "width": 24
-            }
+            "type": "Column"
           }
         ]
       },
       {
         "type": "Row",
-        "style": {
-          "justifyContent": "space-between",
-          "alignItems": "center",
-          "paddingHorizontal": 16,
-          "paddingVertical": 12
-        },
         "children": [
           {
             "type": "Row",
-            "style": {
-              "alignItems": "center",
-              "gap": 11
-            },
             "children": [
               {
                 "type": "Checkbox",
@@ -68,10 +39,6 @@
               },
               {
                 "type": "Text",
-                "style": {
-                  "fontSize": 15,
-                  "fontWeight": "500"
-                },
                 "properties": {
                   "text": "Выбрать всё"
                 }
@@ -80,11 +47,6 @@
           },
           {
             "type": "Text",
-            "style": {
-              "fontSize": 15,
-              "fontWeight": "500",
-              "color": "#0099F7"
-            },
             "properties": {
               "text": "Удалить (3)"
             }
@@ -93,40 +55,38 @@
       },
       {
         "type": "Column",
-        "style": {
-          "flex": 1,
-          "paddingHorizontal": 0
-        },
         "children": [
           {
             "type": "SellerSection",
-            "storeName": "Pear Store",
-            "rating": 4.8,
-            "reviewCount": 643,
-            "checked": true
+            "data": {
+              "storeName": "Pear Store",
+              "rating": 4.8,
+              "reviewCount": 643,
+              "checked": true
+            }
           },
           {
             "type": "Column",
-            "style": {
-              "backgroundColor": "#F5F5F5",
-              "paddingVertical": 24
-            },
             "children": [
               {
                 "type": "CartItem",
-                "image": "charger.png",
-                "price": "4 990 ₽",
-                "title": "Зарядка MagSafe Charger 15W 1 метр",
-                "quantity": 1,
-                "checked": true
+                "data": {
+                  "image": "charger.png",
+                  "price": "4 990 ₽",
+                  "title": "Зарядка MagSafe Charger 15W 1 метр",
+                  "quantity": 1,
+                  "checked": true
+                }
               },
               {
                 "type": "CartItem",
-                "image": "airpods.png",
-                "price": "15 990 ₽",
-                "title": "AirPods Pro 2",
-                "quantity": 1,
-                "checked": true
+                "data": {
+                  "image": "airpods.png",
+                  "price": "15 990 ₽",
+                  "title": "AirPods Pro 2",
+                  "quantity": 1,
+                  "checked": true
+                }
               }
             ]
           },
@@ -135,18 +95,22 @@
           },
           {
             "type": "SellerSection",
-            "storeName": "TECHNO ZONE",
-            "rating": 5,
-            "reviewCount": 916,
-            "checked": true
+            "data": {
+              "storeName": "TECHNO ZONE",
+              "rating": 5,
+              "reviewCount": 916,
+              "checked": true
+            }
           },
           {
             "type": "CartItem",
-            "image": "iphone.png",
-            "price": "99 990 ₽",
-            "title": "iPhone 16 Pro, 256 ГБ",
-            "quantity": 1,
-            "checked": true
+            "data": {
+              "image": "iphone.png",
+              "price": "99 990 ₽",
+              "title": "iPhone 16 Pro, 256 ГБ",
+              "quantity": 1,
+              "checked": true
+            }
           }
         ]
       },
@@ -158,21 +122,9 @@
   "components": {
     "CartScreen": {
       "type": "Column",
-      "style": {
-        "width": "100%",
-        "height": "100%",
-        "backgroundColor": "#FFFFFF"
-      },
       "children": [
         {
           "type": "Row",
-          "style": {
-            "justifyContent": "space-between",
-            "alignItems": "center",
-            "padding": 16,
-            "height": 48,
-            "backgroundColor": "#FFFFFF"
-          },
           "children": [
             {
               "type": "Button",
@@ -182,37 +134,20 @@
             },
             {
               "type": "Text",
-              "style": {
-                "fontSize": 18,
-                "fontWeight": "800"
-              },
               "properties": {
                 "text": "Корзина"
               }
             },
             {
-              "type": "Column",
-              "style": {
-                "width": 24
-              }
+              "type": "Column"
             }
           ]
         },
         {
           "type": "Row",
-          "style": {
-            "justifyContent": "space-between",
-            "alignItems": "center",
-            "paddingHorizontal": 16,
-            "paddingVertical": 12
-          },
           "children": [
             {
               "type": "Row",
-              "style": {
-                "alignItems": "center",
-                "gap": 11
-              },
               "children": [
                 {
                   "type": "Checkbox",
@@ -223,10 +158,6 @@
                 },
                 {
                   "type": "Text",
-                  "style": {
-                    "fontSize": 15,
-                    "fontWeight": "500"
-                  },
                   "properties": {
                     "text": "Выбрать всё"
                   }
@@ -235,11 +166,6 @@
             },
             {
               "type": "Text",
-              "style": {
-                "fontSize": 15,
-                "fontWeight": "500",
-                "color": "#0099F7"
-              },
               "properties": {
                 "text": "Удалить (3)"
               }
@@ -248,40 +174,38 @@
         },
         {
           "type": "Column",
-          "style": {
-            "flex": 1,
-            "paddingHorizontal": 0
-          },
           "children": [
             {
               "type": "SellerSection",
-              "storeName": "Pear Store",
-              "rating": 4.8,
-              "reviewCount": 643,
-              "checked": true
+              "data": {
+                "storeName": "Pear Store",
+                "rating": 4.8,
+                "reviewCount": 643,
+                "checked": true
+              }
             },
             {
               "type": "Column",
-              "style": {
-                "backgroundColor": "#F5F5F5",
-                "paddingVertical": 24
-              },
               "children": [
                 {
                   "type": "CartItem",
-                  "image": "charger.png",
-                  "price": "4 990 ₽",
-                  "title": "Зарядка MagSafe Charger 15W 1 метр",
-                  "quantity": 1,
-                  "checked": true
+                  "data": {
+                    "image": "charger.png",
+                    "price": "4 990 ₽",
+                    "title": "Зарядка MagSafe Charger 15W 1 метр",
+                    "quantity": 1,
+                    "checked": true
+                  }
                 },
                 {
                   "type": "CartItem",
-                  "image": "airpods.png",
-                  "price": "15 990 ₽",
-                  "title": "AirPods Pro 2",
-                  "quantity": 1,
-                  "checked": true
+                  "data": {
+                    "image": "airpods.png",
+                    "price": "15 990 ₽",
+                    "title": "AirPods Pro 2",
+                    "quantity": 1,
+                    "checked": true
+                  }
                 }
               ]
             },
@@ -290,18 +214,22 @@
             },
             {
               "type": "SellerSection",
-              "storeName": "TECHNO ZONE",
-              "rating": 5,
-              "reviewCount": 916,
-              "checked": true
+              "data": {
+                "storeName": "TECHNO ZONE",
+                "rating": 5,
+                "reviewCount": 916,
+                "checked": true
+              }
             },
             {
               "type": "CartItem",
-              "image": "iphone.png",
-              "price": "99 990 ₽",
-              "title": "iPhone 16 Pro, 256 ГБ",
-              "quantity": 1,
-              "checked": true
+              "data": {
+                "image": "iphone.png",
+                "price": "99 990 ₽",
+                "title": "iPhone 16 Pro, 256 ГБ",
+                "quantity": 1,
+                "checked": true
+              }
             }
           ]
         },
@@ -312,12 +240,6 @@
     },
     "SellerSection": {
       "type": "Row",
-      "style": {
-        "alignItems": "center",
-        "gap": 11,
-        "paddingHorizontal": 16,
-        "paddingVertical": 16
-      },
       "children": [
         {
           "type": "Checkbox",
@@ -328,17 +250,9 @@
         },
         {
           "type": "Row",
-          "style": {
-            "alignItems": "center",
-            "gap": 5
-          },
           "children": [
             {
               "type": "Text",
-              "style": {
-                "fontSize": 21,
-                "fontWeight": "800"
-              },
               "properties": {
                 "text": null
               }
@@ -353,21 +267,12 @@
             },
             {
               "type": "Text",
-              "style": {
-                "fontSize": 15,
-                "fontWeight": "500"
-              },
               "properties": {
                 "text": null
               }
             },
             {
               "type": "Text",
-              "style": {
-                "fontSize": 15,
-                "fontWeight": "500",
-                "color": "#A3A3A3"
-              },
               "properties": {
                 "text": null
               }
@@ -378,12 +283,6 @@
     },
     "CartItem": {
       "type": "Row",
-      "style": {
-        "alignItems": "flex-start",
-        "gap": 12,
-        "paddingHorizontal": 16,
-        "paddingVertical": 16
-      },
       "children": [
         {
           "type": "Checkbox",
@@ -394,52 +293,27 @@
         },
         {
           "type": "Image",
-          "style": {
-            "width": 96,
-            "height": 96,
-            "borderRadius": "12px"
-          },
           "properties": {
             "source": null
           }
         },
         {
           "type": "Column",
-          "style": {
-            "flex": 1,
-            "gap": 12
-          },
           "children": [
             {
               "type": "Row",
-              "style": {
-                "justifyContent": "space-between",
-                "alignItems": "flex-start"
-              },
               "children": [
                 {
                   "type": "Column",
-                  "style": {
-                    "flex": 1,
-                    "gap": 2
-                  },
                   "children": [
                     {
                       "type": "Text",
-                      "style": {
-                        "fontSize": 18,
-                        "fontWeight": "800"
-                      },
                       "properties": {
                         "text": null
                       }
                     },
                     {
                       "type": "Text",
-                      "style": {
-                        "fontSize": 13,
-                        "fontWeight": "500"
-                      },
                       "properties": {
                         "text": null
                       }
@@ -448,24 +322,15 @@
                 },
                 {
                   "type": "Row",
-                  "style": {
-                    "gap": 4
-                  },
                   "children": [
                     {
                       "type": "Button",
-                      "style": {
-                        "padding": 4
-                      },
                       "properties": {
                         "title": "♡"
                       }
                     },
                     {
                       "type": "Button",
-                      "style": {
-                        "padding": 4
-                      },
                       "properties": {
                         "title": "🗑️"
                       }
@@ -476,10 +341,6 @@
             },
             {
               "type": "Row",
-              "style": {
-                "justifyContent": "space-between",
-                "alignItems": "center"
-              },
               "children": [
                 {
                   "type": "Stepper",
@@ -492,11 +353,6 @@
                 },
                 {
                   "type": "Text",
-                  "style": {
-                    "fontSize": 13,
-                    "fontWeight": "500",
-                    "color": "#A168F7"
-                  },
                   "properties": {
                     "text": "Купить с доставкой"
                   }
@@ -509,47 +365,24 @@
     },
     "BundleSection": {
       "type": "Column",
-      "style": {
-        "paddingHorizontal": 16,
-        "paddingVertical": 20,
-        "gap": 16
-      },
       "children": [
         {
           "type": "Row",
-          "style": {
-            "alignItems": "center",
-            "gap": 6
-          },
           "children": [
             {
               "type": "Text",
-              "style": {
-                "fontSize": 24
-              },
               "properties": {
                 "text": "🎁"
               }
             },
             {
               "type": "Column",
-              "style": {
-                "flex": 1
-              },
               "children": [
                 {
                   "type": "Row",
-                  "style": {
-                    "justifyContent": "space-between",
-                    "alignItems": "center"
-                  },
                   "children": [
                     {
                       "type": "Text",
-                      "style": {
-                        "fontSize": 14,
-                        "fontWeight": "800"
-                      },
                       "properties": {
                         "text": "Добавьте ещё 1 товар до скидки 5%"
                       }
@@ -568,48 +401,33 @@
         },
         {
           "type": "Row",
-          "style": {
-            "gap": 16
-          },
           "children": [
             {
               "type": "BundleItem",
-              "image": "watch.png",
-              "currentPrice": "26 591 ₽",
-              "originalPrice": "27 990 ₽",
-              "title": "Apple Watch 10 42mm Blue"
+              "data": {
+                "image": "watch.png",
+                "currentPrice": "26 591 ₽",
+                "originalPrice": "27 990 ₽",
+                "title": "Apple Watch 10 42mm Blue"
+              }
             },
             {
               "type": "BundleItem",
-              "image": "shorts.png",
-              "currentPrice": "13 314 ₽",
-              "originalPrice": "13 320 ₽",
-              "title": "Шорты мужские новые 44 размер черные"
+              "data": {
+                "image": "shorts.png",
+                "currentPrice": "13 314 ₽",
+                "originalPrice": "13 320 ₽",
+                "title": "Шорты мужские новые 44 размер черные"
+              }
             },
             {
               "type": "Column",
-              "style": {
-                "width": 94,
-                "height": 94,
-                "backgroundColor": "#F5F5F5",
-                "borderRadius": "12px",
-                "justifyContent": "center",
-                "alignItems": "center"
-              },
               "children": [
                 {
                   "type": "Column",
-                  "style": {
-                    "alignItems": "center",
-                    "gap": 4
-                  },
                   "children": [
                     {
                       "type": "Text",
-                      "style": {
-                        "fontSize": 15,
-                        "fontWeight": "500"
-                      },
                       "properties": {
                         "text": "Ещё"
                       }
@@ -630,80 +448,42 @@
     },
     "BundleItem": {
       "type": "Column",
-      "style": {
-        "width": 236,
-        "gap": 12
-      },
       "children": [
         {
           "type": "Row",
-          "style": {
-            "alignItems": "center",
-            "gap": 12
-          },
           "children": [
             {
               "type": "Image",
-              "style": {
-                "width": 94,
-                "height": 94,
-                "borderRadius": "12px"
-              },
               "properties": {
                 "source": null
               }
             },
             {
               "type": "Column",
-              "style": {
-                "gap": 12,
-                "width": 130
-              },
               "children": [
                 {
                   "type": "Column",
-                  "style": {
-                    "gap": 4
-                  },
                   "children": [
                     {
                       "type": "Row",
-                      "style": {
-                        "gap": 6
-                      },
                       "children": [
                         {
                           "type": "Text",
-                          "style": {
-                            "fontSize": 16,
-                            "fontWeight": "800"
-                          },
                           "properties": {
                             "text": null
                           }
                         },
                         {
                           "type": "Row",
-                          "style": {
-                            "alignItems": "center"
-                          },
                           "children": [
                             {
                               "type": "Text",
-                              "style": {
-                                "fontSize": 15,
-                                "fontWeight": "500",
-                                "color": "#757575"
-                              },
                               "properties": {
                                 "text": null
                               }
                             },
                             {
                               "type": "Text",
-                              "style": {
-                                "color": "#757575"
-                              },
                               "properties": {
                                 "text": "─"
                               }
@@ -714,10 +494,6 @@
                     },
                     {
                       "type": "Text",
-                      "style": {
-                        "fontSize": 11,
-                        "fontWeight": "500"
-                      },
                       "properties": {
                         "text": null
                       }
@@ -726,14 +502,6 @@
                 },
                 {
                   "type": "Button",
-                  "style": {
-                    "backgroundColor": "#FFFFFF",
-                    "borderRadius": "10px",
-                    "paddingHorizontal": 12,
-                    "paddingVertical": 8,
-                    "borderWidth": 1,
-                    "borderColor": "#E0E0E0"
-                  },
                   "properties": {
                     "title": "В корзину"
                   }
@@ -746,44 +514,21 @@
     },
     "BottomBar": {
       "type": "Column",
-      "style": {
-        "backgroundColor": "#FFFFFF",
-        "paddingHorizontal": 16,
-        "paddingVertical": 16,
-        "borderRadius": "28px"
-      },
       "children": [
         {
           "type": "Row",
-          "style": {
-            "justifyContent": "space-between",
-            "alignItems": "center",
-            "marginBottom": 16
-          },
           "children": [
             {
               "type": "Column",
-              "style": {
-                "direction": "column"
-              },
               "children": [
                 {
                   "type": "Text",
-                  "style": {
-                    "fontSize": 11,
-                    "fontWeight": "500",
-                    "color": "#000000"
-                  },
                   "properties": {
                     "text": "3 товара"
                   }
                 },
                 {
                   "type": "Text",
-                  "style": {
-                    "fontSize": 21,
-                    "fontWeight": "800"
-                  },
                   "properties": {
                     "text": "120 979 ₽"
                   }
@@ -792,12 +537,6 @@
             },
             {
               "type": "Button",
-              "style": {
-                "backgroundColor": "#965EEB",
-                "borderRadius": "16px",
-                "paddingHorizontal": 18,
-                "paddingVertical": 17
-              },
               "properties": {
                 "title": "Оформить доставку"
               }
@@ -806,18 +545,9 @@
         },
         {
           "type": "Row",
-          "style": {
-            "justifyContent": "center"
-          },
           "children": [
             {
-              "type": "Column",
-              "style": {
-                "width": 134,
-                "height": 5,
-                "backgroundColor": "#000000",
-                "borderRadius": "3px"
-              }
+              "type": "Column"
             }
           ]
         }
