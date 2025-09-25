@@ -1,7 +1,7 @@
 import UIKit
 
 class ViewRenderer: Renderer {
-    let type = "view"
+    let type = "View"
 
     func render(component: Component) -> UIView? {
         let view = RenderableView(component: component)

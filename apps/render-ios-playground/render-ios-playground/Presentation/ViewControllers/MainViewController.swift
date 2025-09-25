@@ -33,7 +33,7 @@ class MainViewController: UIViewController {
 //            let scenario = try await schemaService.fetchScenario(from: url)
             
             try await RenderSDK.shared.render(
-                scenarioID: "generated-scenario-1",
+                scenarioID: "avito-cart",
                 vc: self,
                 containerView: mainView
             )

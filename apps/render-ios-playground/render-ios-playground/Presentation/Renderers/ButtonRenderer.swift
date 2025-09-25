@@ -1,7 +1,7 @@
 import UIKit
 
 class ButtonRenderer: Renderer {
-    let type = "button"
+    let type = "Button"
     
     func render(component: Component) -> UIView? {
         return RenderableButton(component: component)

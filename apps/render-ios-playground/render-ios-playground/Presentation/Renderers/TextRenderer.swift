@@ -1,7 +1,7 @@
 import UIKit
 
 class TextRenderer: Renderer {
-    let type = "text"
+    let type = "Text"
     
     func render(component: Component) -> UIView? {
         return RenderableText(component: component)

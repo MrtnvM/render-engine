@@ -7,7 +7,7 @@ import UIKit
 /// relative to the Stack container. The Stack itself is a simple container view
 /// that establishes the positioning context for its children.
 class StackRenderer: Renderer {
-    let type = "stack"
+    let type = "Stack"
 
     func render(component: Component) -> UIView? {
         // The Stack component is a standard RenderableView that acts as a
