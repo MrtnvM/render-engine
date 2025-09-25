@@ -3,13 +3,12 @@ import Foundation
 /// Domain entity representing a complete UI schema
 public class Scenario {
     let id: String
-    
+
     let mainComponent: Component
     let components: [String: Component]
-    
+
     let version: String
-    let buildNumber: Int
-    
+
     let metadata: [String: Any]
 
     private init(
@@ -17,7 +16,6 @@ public class Scenario {
         mainComponent: Component,
         components: [String: Component],
         version: String,
-        buildNumber: Int,
         metadata: [String: Any]
     ) {
         self.id = id
@@ -25,7 +23,6 @@ public class Scenario {
         self.mainComponent = mainComponent
         self.metadata = metadata
         self.components = components
-        self.buildNumber = buildNumber
     }
     
     static func create(from json: [String: Any?]) -> Scenario? {
@@ -35,7 +32,6 @@ public class Scenario {
         let version = config.getString(forKey: "version") ?? "1.0.0"
         let metadata = config.getDictionary(forKey: "metadata") ?? [:]
         let mainComponentConfig = config.getConfig(forKey: "main")
-        let buildNumber = config.getInt(forKey: "buildNumber") ?? 1
 
         guard
             !mainComponentConfig.isEmpty,
@@ -58,7 +54,6 @@ public class Scenario {
             mainComponent: mainComponent,
             components: components,
             version: version,
-            buildNumber: buildNumber,
             metadata: metadata
         )
     }

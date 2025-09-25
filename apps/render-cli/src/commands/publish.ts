@@ -4,14 +4,19 @@ import path from 'path'
 import chalk from 'chalk'
 import { createClient } from '@supabase/supabase-js'
 
+function incrementSemanticVersion(version: string): string {
+  const [major, minor, patch] = version.split('.').map(Number)
+  return `${major}.${minor}.${patch + 1}`
+}
+
 export const publishCommand = program
   .command('publish')
-  .description('Publish a new version of a JSON schema to Supabase.')
-  .argument('<inputFile>', 'Path to the input JSON schema file.')
+  .description('Publish a new version of a JSON scenario to Supabase.')
+  .argument('<inputFile>', 'Path to the input JSON scenario file.')
   .option('--supabase-url <url>', 'Supabase project URL. Overrides SUPABASE_URL env var.')
   .option('--supabase-key <key>', 'Supabase service role key. Overrides SUPABASE_SERVICE_KEY env var.')
   .action(async (inputFile, options) => {
-    console.log(chalk.cyan.bold('🚀 Starting schema publication...'))
+    console.log(chalk.cyan.bold('🚀 Starting scenario publication...'))
 
     const supabaseUrl = options.supabaseUrl || process.env.SUPABASE_URL
     const supabaseKey = options.supabaseKey || process.env.SUPABASE_SERVICE_KEY
@@ -36,10 +41,10 @@ export const publishCommand = program
       console.log(chalk.yellow('   Checking for the latest version...'))
 
       const { data: latestVersionData, error: fetchError } = await supabase
-        .from('schema_table')
+        .from('scenario_table')
         .select('version')
         .eq('id', schema.id)
-        .order('version', { ascending: false }) // Important: get the highest version first
+        .order('version', { ascending: false }) // Get the highest version first
         .limit(1)
         .single()
 
@@ -49,8 +54,8 @@ export const publishCommand = program
       }
 
       // --- 2. Determine the next version number ---
-      const latestVersion = latestVersionData ? latestVersionData.version : 0
-      const nextVersion = latestVersion + 1
+      const latestVersion = latestVersionData ? latestVersionData.version : '1.0.0'
+      const nextVersion = incrementSemanticVersion(latestVersion)
 
       console.log(
         chalk.blue(
@@ -59,20 +64,17 @@ export const publishCommand = program
       )
 
       // --- 3. Prepare and Insert the new version ---
-      // Ensure the content we store has the correct, database-assigned version.
-      const contentToStore = {
-        ...schema,
-        buildNumber: nextVersion,
-      }
-
+      // Map the input schema to the scenario table structure
       const rowToInsert = {
         id: schema.id,
+        mainComponent: schema.mainComponent || schema.main || {},
+        components: schema.components || {},
         version: nextVersion,
-        schema: contentToStore,
+        metadata: schema.metadata || {},
       }
 
       const { data: insertedData, error: insertError } = await supabase
-        .from('schema_table')
+        .from('scenario_table')
         .insert(rowToInsert)
         .select()
         .single()
@@ -82,11 +84,11 @@ export const publishCommand = program
       }
 
       // --- 4. Show Success Message ---
-      console.log(chalk.green.bold('\n✅ Schema published successfully!'))
+      console.log(chalk.green.bold('\n✅ Scenario published successfully!'))
       console.log(chalk.gray(`   Record created for ID: ${insertedData.id}, Version: ${insertedData.version}`))
       console.log(chalk.gray(`   Published at: ${new Date(insertedData.created_at || new Date()).toLocaleString()}`))
     } catch (error: any) {
-      console.error(chalk.red.bold('\n❌ Publication failed.'))
+      console.error(chalk.red.bold('\n❌ Scenario publication failed.'))
       console.error(chalk.red(`   Error: ${error.message}`))
       process.exit(1)
     }
