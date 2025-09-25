@@ -1,4 +1,46 @@
 import type { NodePath } from '@babel/traverse'
+import fs from 'fs'
+import path from 'path'
+
+// Function to get predefined component names directly from ui.tsx
+function getPredefinedComponents(): string[] {
+  try {
+    // Try different path strategies to find ui.tsx
+    const possiblePaths = [
+      path.resolve(process.cwd(), 'apps/render-cli/src/sdk/ui/ui.tsx'), // From workspace root
+      path.resolve(process.cwd(), 'src/sdk/ui/ui.tsx'), // From project root
+    ]
+
+    let uiContent = ''
+    for (const uiPath of possiblePaths) {
+      try {
+        uiContent = fs.readFileSync(uiPath, 'utf8')
+        break
+      } catch (e) {
+        continue
+      }
+    }
+
+    if (!uiContent) {
+      console.warn('Could not read ui.tsx file, using fallback component list')
+      return ['Column', 'Row', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Stepper', 'Rating']
+    }
+
+    // Extract component names from export const statements
+    const componentNames: string[] = []
+    const exportRegex = /export const (\w+)/g
+    let match
+
+    while ((match = exportRegex.exec(uiContent)) !== null) {
+      componentNames.push(match[1])
+    }
+
+    return componentNames
+  } catch (error) {
+    console.warn('Error reading ui.tsx file, using fallback component list')
+    return ['Column', 'Row', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Stepper', 'Rating']
+  }
+}
 
 // Define types for Babel AST nodes
 interface JSXElement {
@@ -35,7 +77,7 @@ interface JsonNode {
 
 interface ComponentMetadata {
   name: string
-  exportType: 'default' | 'named'
+  exportType: 'default' | 'named' | 'helper'
   jsonNode: JsonNode
 }
 
@@ -90,15 +132,15 @@ export default function jsxToJsonPlugin() {
           const node = path.node
           const componentName = node.openingElement.name.name
 
-          // Store component metadata if this is a component (not a built-in like div, span, etc.)
-          const componentTypes = ['Column', 'Row', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Stepper', 'Rating']
+          // Get predefined components dynamically from ui.tsx
+          const componentTypes = getPredefinedComponents()
           if (componentTypes.includes(componentName)) {
             // We'll collect this information later when we encounter the export declaration
             ;(path.node as any).componentName = componentName
           }
 
           // 1. Determine Component Type
-          const componentType = componentName.toLowerCase()
+          const componentType = componentName
           if (!componentType) {
             throw new Error(`Unsupported component type: <${componentName}>`)
           }
@@ -199,6 +241,29 @@ export default function jsxToJsonPlugin() {
                 })
               }
             })
+          }
+        },
+      },
+      FunctionDeclaration: {
+        exit(path: any) {
+          // Capture all function declarations that return JSX, not just exported ones
+          const functionName = path.node.id?.name
+          if (functionName) {
+            // Check if the function body contains a JSX element
+            let jsxElement = null
+            if (path.node.body?.type === 'BlockStatement' && path.node.body.body.length > 0) {
+              const returnStatement = path.node.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
+              if (returnStatement?.argument?.type === 'JSXElement' && (returnStatement.argument as any).json) {
+                jsxElement = returnStatement.argument
+              }
+            }
+            if (jsxElement) {
+              components.push({
+                name: functionName,
+                exportType: 'helper',
+                jsonNode: (jsxElement as any).json,
+              })
+            }
           }
         },
       },

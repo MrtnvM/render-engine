@@ -2,21 +2,21 @@
   "id": "generated-scenario-1",
   "version": "1.0.0",
   "main": {
-    "type": "column",
+    "type": "Column",
     "style": {
       "padding": 16,
       "backgroundColor": "#F5F5F5"
     },
     "children": [
       {
-        "type": "row",
+        "type": "Row",
         "style": {
           "justifyContent": "space-between",
           "alignItems": "center"
         },
         "children": [
           {
-            "type": "text",
+            "type": "Text",
             "style": {
               "fontSize": 16,
               "fontWeight": "bold"
@@ -26,7 +26,7 @@
             }
           },
           {
-            "type": "image",
+            "type": "Image",
             "style": {
               "width": 40,
               "height": 40,
@@ -39,14 +39,14 @@
         ]
       },
       {
-        "type": "stack",
+        "type": "Stack",
         "style": {
           "marginVertical": 20,
           "position": "relative"
         },
         "children": [
           {
-            "type": "image",
+            "type": "Image",
             "style": {
               "borderRadius": "8px"
             },
@@ -55,7 +55,7 @@
             }
           },
           {
-            "type": "button",
+            "type": "Button",
             "style": {
               "position": "absolute",
               "bottom": 10,
@@ -71,21 +71,21 @@
   },
   "components": {
     "MyScreen": {
-      "type": "column",
+      "type": "Column",
       "style": {
         "padding": 16,
         "backgroundColor": "#F5F5F5"
       },
       "children": [
         {
-          "type": "row",
+          "type": "Row",
           "style": {
             "justifyContent": "space-between",
             "alignItems": "center"
           },
           "children": [
             {
-              "type": "text",
+              "type": "Text",
               "style": {
                 "fontSize": 16,
                 "fontWeight": "bold"
@@ -95,7 +95,7 @@
               }
             },
             {
-              "type": "image",
+              "type": "Image",
               "style": {
                 "width": 40,
                 "height": 40,
@@ -108,14 +108,14 @@
           ]
         },
         {
-          "type": "stack",
+          "type": "Stack",
           "style": {
             "marginVertical": 20,
             "position": "relative"
           },
           "children": [
             {
-              "type": "image",
+              "type": "Image",
               "style": {
                 "borderRadius": "8px"
               },
@@ -124,7 +124,7 @@
               }
             },
             {
-              "type": "button",
+              "type": "Button",
               "style": {
                 "position": "absolute",
                 "bottom": 10,

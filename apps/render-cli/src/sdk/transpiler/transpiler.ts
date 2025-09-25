@@ -46,7 +46,7 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
         for (const component of collectedComponents) {
           if (component.exportType === 'default') {
             rootJson = component.jsonNode
-          } else if (component.exportType === 'named') {
+          } else if (component.exportType === 'named' || component.exportType === 'helper') {
             components[component.name] = component.jsonNode
           }
         }
