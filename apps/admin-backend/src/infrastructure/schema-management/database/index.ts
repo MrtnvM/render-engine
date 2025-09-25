@@ -1,1 +1,1 @@
-export * from './schema.table.js'
+export * from './scenario.table.js'

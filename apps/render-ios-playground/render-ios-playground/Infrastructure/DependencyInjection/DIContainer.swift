@@ -54,7 +54,10 @@ class DIContainer {
             StackRenderer(),
             TextRenderer(),
             ButtonRenderer(),
-            ImageRenderer()
+            ImageRenderer(),
+            CheckboxRenderer(),
+            StepperRenderer(),
+            RatingRenderer()
         ]
         renderers.forEach { registry.register(renderer: $0) }
         return registry

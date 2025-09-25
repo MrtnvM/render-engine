@@ -80,7 +80,7 @@ enum AlignItems: ViewStyleEnum {
     }
 }
 
-class ViewStyle {
+public class ViewStyle {
     private let config: Config
     private var cache: [String: Any]
 

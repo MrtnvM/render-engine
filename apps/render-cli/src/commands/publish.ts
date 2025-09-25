@@ -62,7 +62,7 @@ export const publishCommand = program
       // Ensure the content we store has the correct, database-assigned version.
       const contentToStore = {
         ...schema,
-        version: nextVersion,
+        buildNumber: nextVersion,
       }
 
       const rowToInsert = {

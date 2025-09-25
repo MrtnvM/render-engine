@@ -1,18 +1,20 @@
 import UIKit
 
 /// Domain entity representing a UI component
-class Component: Equatable {
+public class Component: Equatable {
     let id: String
     let type: String
     let style: ViewStyle
     let properties: Config
+    let data: Config
     private var children: [Component] = []
     
-    private init(id: String, type: String, style: ViewStyle, properties: Config) {
+    public init(id: String, type: String, style: ViewStyle, properties: Config, data: Config) {
         self.id = id
         self.type = type
         self.style = style
         self.properties = properties
+        self.data = data
     }
     
     static func create(from config: Config) throws -> Component {
@@ -21,24 +23,26 @@ class Component: Equatable {
                 "Missing 'type' field in component config"
             )
         }
-        
+
         let id = config.getString(forKey: "id") ?? UUID().uuidString
         let style = ViewStyle(config.getConfig(forKey: "style"))
         let properties = config.getConfig(forKey: "properties")
+        let data = config.getConfig(forKey: "data")
 
         let component = Component(
             id: id,
             type: typeString,
             style: style,
-            properties: properties
+            properties: properties,
+            data: data
         )
-        
+
         let childrenData = config.getConfigArray(forKey: "children")
         for childConfig in childrenData {
             let childComponent = try Component.create(from: childConfig)
             try component.addChild(childComponent)
         }
-        
+
         return component
     }
     
@@ -65,7 +69,7 @@ class Component: Equatable {
         }
     }
     
-    static func == (lhs: Component, rhs: Component) -> Bool {
+    public static func == (lhs: Component, rhs: Component) -> Bool {
         return lhs.id == rhs.id
     }
 }

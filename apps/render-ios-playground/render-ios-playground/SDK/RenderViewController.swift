@@ -127,7 +127,13 @@ public class RenderViewController: UIViewController, ScenarioObserver {
 
     private func buildView(from component: Component) -> UIView? {
         guard let renderer = registry.renderer(for: component.type) else {
-            print("Warning: No renderer found for type '\(component.type)'")
+            // Check if this component type is defined in the components section
+            if let scenario = scenario,
+               let componentDefinition = scenario.components[component.type] {
+                return buildView(from: expandComponentDefinition(componentDefinition, withData: component.data))
+            }
+
+            print("Warning: No renderer found for type '\(component.type)' and no component definition found")
             return nil
         }
 
@@ -143,5 +149,41 @@ public class RenderViewController: UIViewController, ScenarioObserver {
         }
 
         return view
+    }
+
+    private func expandComponentDefinition(_ componentDefinition: Component, withData data: Config) -> Component {
+        // Create a new component with merged properties and data
+        let mergedProperties = mergeDataIntoProperties(componentDefinition.properties, data: data)
+
+        let expandedComponent = Component(
+            id: componentDefinition.id,
+            type: componentDefinition.type,
+            style: componentDefinition.style,
+            properties: mergedProperties,
+            data: Config()
+        )
+
+        // Recursively expand children with data substitution
+        for child in componentDefinition.getChildren() {
+            let expandedChild = expandComponentDefinition(child, withData: data)
+            try? expandedComponent.addChild(expandedChild)
+        }
+
+        return expandedComponent
+    }
+
+    private func mergeDataIntoProperties(_ originalProperties: Config, data: Config) -> Config {
+        var mergedDict = originalProperties.getRawDictionary()
+
+        // Merge data values into properties where properties have null values
+        let dataDict = data.getRawDictionary()
+        for (key, dataValue) in dataDict {
+            if let currentValue = mergedDict[key],
+               currentValue == nil || (currentValue as? String == "" || currentValue as? String == "null") {
+                mergedDict[key] = dataValue
+            }
+        }
+
+        return Config(mergedDict)
     }
 }

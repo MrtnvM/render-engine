@@ -1,6 +1,6 @@
 import Foundation
 
-class Config {
+public class Config {
     private let config: [String: Any?]
 
     init(_ config: Any? = nil) {
@@ -96,11 +96,15 @@ class Config {
         guard let value = config[key] else {
             return Config()
         }
-        
+
         guard let dict = value as? [String: Any?] else {
             return Config()
         }
-        
+
         return Config(dict)
+    }
+
+    func getRawDictionary() -> [String: Any?] {
+        return config
     }
 }
