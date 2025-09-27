@@ -31,7 +31,7 @@ public class Scenario {
         let id = config.getString(forKey: "id") ?? UUID().uuidString
         let version = config.getString(forKey: "version") ?? "1.0.0"
         let metadata = config.getDictionary(forKey: "metadata") ?? [:]
-        let mainComponentConfig = config.getConfig(forKey: "main")
+        let mainComponentConfig = config.getConfig(forKey: "mainComponent")
 
         guard
             !mainComponentConfig.isEmpty,

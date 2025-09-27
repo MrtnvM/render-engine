@@ -1,20 +1,43 @@
-struct JsonSchema: Decodable {
+struct ScenarioJSON: Decodable {
     let id: String
-    let schema: [String: JSONValue]
-    let version: Int
+    let mainComponent: [String: JSONValue]
+    let components: [String: JSONValue]
+    let version: String
+    let metadata: [String: JSONValue]
     
     func toMap() -> [String: Any?] {
-        var schemaMap = [String: Any?]()
-        
-        for (key, value) in schema {
-            schemaMap[key] = value.value
-        }
-        
         return [
             "id": id,
-            "schema": schemaMap,
-            "version": version
+            "mainComponent": convertJSONValueToAny(mainComponent),
+            "components": convertJSONValueToAny(components),
+            "version": version,
+            "metadata": convertJSONValueToAny(metadata)
         ]
+    }
+    
+    private func convertJSONValueToAny(_ jsonValue: [String: JSONValue]) -> [String: Any?] {
+        var result = [String: Any?]()
+        for (key, value) in jsonValue {
+            result[key] = convertJSONValueToAny(value)
+        }
+        return result
+    }
+    
+    private func convertJSONValueToAny(_ jsonValue: JSONValue) -> Any? {
+        switch jsonValue {
+        case .string(let string):
+            return string
+        case .number(let number):
+            return number
+        case .boolean(let boolean):
+            return boolean
+        case .array(let array):
+            return array.map { convertJSONValueToAny($0) }
+        case .object(let object):
+            return convertJSONValueToAny(object)
+        case .null:
+            return nil
+        }
     }
 }
 

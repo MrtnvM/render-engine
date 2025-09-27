@@ -42,7 +42,7 @@ public class RenderViewController: UIViewController, ScenarioObserver {
         if let scenario = scenario {
             buildViewHierarchy(from: scenario.mainComponent)
         } else {
-            loadScenario()
+            print("ERROR: Scenario not found!!!")
         }
     }
     
@@ -91,20 +91,6 @@ public class RenderViewController: UIViewController, ScenarioObserver {
             .direction(.column)
             .justifyContent(.start)
             .alignItems(.start)
-    }
-
-    private func loadScenario() {
-        let url = URL(string: "https://localhost:3035/json-schema")!
-        Task {
-            guard let scenario = try? await service.fetchScenario(from: url) else {
-                print("FAILED TO LOAD SCENARIO")
-                return
-            }
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.buildViewHierarchy(from: scenario.mainComponent)
-            }
-        }
     }
 
     private func buildViewHierarchy(from component: Component) {

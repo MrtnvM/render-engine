@@ -8,6 +8,7 @@ class RenderSDK {
     
     private let client = DIContainer.shared.supabaseClient
     private let componentRegistry = DIContainer.shared.componentRegistry
+    private let scenarioRepository = DIContainer.shared.scenarioRepository
     private let scenarioFetcher = DIContainer.shared.scenarioService
 
     private init() {}
@@ -19,26 +20,8 @@ class RenderSDK {
         containerView view: UIView? = nil
     ) async throws {
         do {
-            let scenarios: [JsonSchema] = try await client
-                .from("schema_table")
-                .select()
-                .eq("id", value: scenarioID)
-                .order("version", ascending: false)
-                .execute()
-                .value
-            
-            if scenarios.isEmpty {
-                throw ApplicationError.scenarioFetchFailed(
-                    "No scenario with ID: \(scenarioID)"
-                )
-            }
-            
-            let scenarioData = scenarios[0].toMap()
-            guard let scenario = Scenario.create(from: scenarioData) else {
-                throw ApplicationError.scenarioFetchFailed(
-                    "Can not parse scenario"
-                )
-            }
+            let scenario = try await scenarioRepository
+                .fetchScenario(id: scenarioID)
             
             let renderVC = await RenderViewController(
                 scenario: scenario

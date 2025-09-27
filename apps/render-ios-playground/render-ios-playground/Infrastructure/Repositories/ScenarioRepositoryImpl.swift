@@ -23,8 +23,8 @@ class ScenarioRepositoryImpl: ScenarioRepository {
     }
     
     func fetchScenario(id: String) async throws -> Scenario {
-        let scenarios: [JsonSchema] = try await supabaseClient
-            .from("schema_table")
+        let scenarios: [ScenarioJSON] = try await supabaseClient
+            .from("scenario_table")
             .select()
             .eq("id", value: id)
             .order("version", ascending: false)
@@ -65,7 +65,7 @@ class ScenarioRepositoryImpl: ScenarioRepository {
                 print(change.oldRecord, change.record)
                 
                 // Decode the record to JsonSchema
-                let jsonSchema = try change.decodeRecord(as: JsonSchema.self, decoder: JSONDecoder())
+                let jsonSchema = try change.decodeRecord(as: ScenarioJSON.self, decoder: JSONDecoder())
                 let scenarioData = jsonSchema.toMap()
                 
                 guard let scenario = Scenario.create(from: scenarioData) else {

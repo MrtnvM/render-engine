@@ -29,9 +29,6 @@ class MainViewController: UIViewController {
         }
         
         do {
-//            let url = URL(string: "http://localhost:3050/json-schema")!
-//            let scenario = try await schemaService.fetchScenario(from: url)
-            
             try await RenderSDK.shared.render(
                 scenarioID: "avito-cart",
                 vc: self,
