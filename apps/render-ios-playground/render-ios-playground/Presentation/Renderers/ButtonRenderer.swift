@@ -3,7 +3,7 @@ import UIKit
 class ButtonRenderer: Renderer {
     let type = "Button"
     
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         return RenderableButton(component: component)
     }
 }

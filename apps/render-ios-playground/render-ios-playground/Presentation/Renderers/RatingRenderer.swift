@@ -3,7 +3,7 @@ import UIKit
 class RatingRenderer: Renderer {
     let type = "Rating"
 
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         return RenderableRating(component: component)
     }
 }

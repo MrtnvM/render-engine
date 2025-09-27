@@ -123,7 +123,14 @@ public class RenderViewController: UIViewController, ScenarioObserver {
             return nil
         }
 
-        guard let view = renderer.render(component: component) else {
+        let context = RendererContext(
+            viewController: self,
+            navigationController: navigationController,
+            window: view.window,
+            scenario: scenario
+        )
+        
+        guard let view = renderer.render(component: component, context: context) else {
             return nil
         }
 

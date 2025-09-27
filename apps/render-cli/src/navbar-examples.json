@@ -1,0 +1,136 @@
+{
+  "id": "navbar-examples",
+  "version": "1.0.0",
+  "mainComponent": {
+    "type": "Column",
+    "children": [
+      {
+        "type": "Navbar",
+        "properties": {
+          "title": "Navigation Examples",
+          "leftButtonTitle": "← Menu",
+          "rightButtonTitle": "⚙️",
+          "prefersLargeTitles": true
+        },
+        "style": {
+          "backgroundColor": "#F8F9FA",
+          "titleColor": "#1A1A1A",
+          "largeTitleColor": "#1A1A1A"
+        }
+      },
+      {
+        "type": "Column",
+        "children": [
+          {
+            "type": "Text",
+            "properties": {
+              "text": "Navbar Component Features:"
+            },
+            "style": {
+              "fontSize": 20,
+              "fontWeight": "bold",
+              "margin": {
+                "top": 20,
+                "left": 16,
+                "right": 16,
+                "bottom": 8
+              }
+            }
+          },
+          {
+            "type": "Column",
+            "children": [
+              {
+                "type": "Text",
+                "properties": {
+                  "text": "✓ Automatic Navigation Controller Setup"
+                },
+                "style": {
+                  "fontSize": 16,
+                  "margin": {
+                    "left": 16,
+                    "right": 16,
+                    "bottom": 4
+                  }
+                }
+              },
+              {
+                "type": "Text",
+                "properties": {
+                  "text": "✓ Customizable Title and Buttons"
+                },
+                "style": {
+                  "fontSize": 16,
+                  "margin": {
+                    "left": 16,
+                    "right": 16,
+                    "bottom": 4
+                  }
+                }
+              },
+              {
+                "type": "Text",
+                "properties": {
+                  "text": "✓ Large Title Support"
+                },
+                "style": {
+                  "fontSize": 16,
+                  "margin": {
+                    "left": 16,
+                    "right": 16,
+                    "bottom": 4
+                  }
+                }
+              },
+              {
+                "type": "Text",
+                "properties": {
+                  "text": "✓ Programmatic Navigation Access"
+                },
+                "style": {
+                  "fontSize": 16,
+                  "margin": {
+                    "left": 16,
+                    "right": 16,
+                    "bottom": 4
+                  }
+                }
+              },
+              {
+                "type": "Text",
+                "properties": {
+                  "text": "✓ Action Handling (back, dismiss, push, present)"
+                },
+                "style": {
+                  "fontSize": 16,
+                  "margin": {
+                    "left": 16,
+                    "right": 16,
+                    "bottom": 4
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "Button",
+            "properties": {
+              "title": "Test Navigation Actions"
+            },
+            "style": {
+              "backgroundColor": "#007AFF",
+              "titleColor": "#FFFFFF",
+              "cornerRadius": 8,
+              "margin": {
+                "top": 30,
+                "left": 16,
+                "right": 16,
+                "bottom": 16
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

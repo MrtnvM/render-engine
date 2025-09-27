@@ -3,7 +3,7 @@ import UIKit
 class CheckboxRenderer: Renderer {
     let type = "Checkbox"
 
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         return RenderableCheckbox(component: component)
     }
 }

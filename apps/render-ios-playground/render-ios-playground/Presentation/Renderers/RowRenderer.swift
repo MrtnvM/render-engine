@@ -6,7 +6,7 @@ import FlexLayout
 class RowRenderer: Renderer {
     let type = "Row"
 
-    @MainActor func render(component: Component) -> UIView? {
+    @MainActor func render(component: Component, context: RendererContext) -> UIView? {
         // A Row is a specialized RenderableView.
         let view = RenderableView(component: component)
         

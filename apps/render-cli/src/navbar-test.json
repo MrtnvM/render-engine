@@ -1,0 +1,65 @@
+{
+  "id": "navbar-test",
+  "version": "1.0.0",
+  "mainComponent": {
+    "type": "Column",
+    "children": [
+      {
+        "type": "Navbar",
+        "properties": {
+          "title": "Test Navigation",
+          "leftButtonTitle": "← Back",
+          "rightButtonTitle": "Settings",
+          "leftButtonAction": "back",
+          "rightButtonAction": "present",
+          "prefersLargeTitles": true,
+          "isHidden": false
+        },
+        "style": {
+          "backgroundColor": "#FFFFFF",
+          "titleColor": "#000000",
+          "largeTitleColor": "#000000",
+          "hideShadow": false
+        }
+      },
+      {
+        "type": "Column",
+        "children": [
+          {
+            "type": "Text",
+            "properties": {
+              "text": "This is a test page with navigation bar"
+            },
+            "style": {
+              "fontSize": 18,
+              "textAlignment": "center",
+              "margin": {
+                "top": 20,
+                "left": 16,
+                "right": 16,
+                "bottom": 16
+              }
+            }
+          },
+          {
+            "type": "Button",
+            "properties": {
+              "title": "Push New Screen"
+            },
+            "style": {
+              "backgroundColor": "#007AFF",
+              "titleColor": "#FFFFFF",
+              "cornerRadius": 8,
+              "margin": {
+                "top": 20,
+                "left": 16,
+                "right": 16,
+                "bottom": 16
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

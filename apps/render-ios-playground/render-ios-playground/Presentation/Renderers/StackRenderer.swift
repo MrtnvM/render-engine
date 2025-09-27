@@ -9,7 +9,7 @@ import UIKit
 class StackRenderer: Renderer {
     let type = "Stack"
 
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         // The Stack component is a standard RenderableView that acts as a
         // containing block for its children.
         let view = RenderableView(component: component)

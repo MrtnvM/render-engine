@@ -6,7 +6,7 @@ import FlexLayout
 class ColumnRenderer: Renderer {
     let type = "Column"
 
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         // A Column is a specialized RenderableView.
         let view = RenderableView(component: component)
         

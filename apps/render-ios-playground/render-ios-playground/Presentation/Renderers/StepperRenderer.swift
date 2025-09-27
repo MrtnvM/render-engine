@@ -3,7 +3,7 @@ import UIKit
 class StepperRenderer: Renderer {
     let type = "Stepper"
 
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         return RenderableStepper(component: component)
     }
 }

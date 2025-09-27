@@ -30,7 +30,7 @@ class MainViewController: UIViewController {
         
         do {
             try await RenderSDK.shared.render(
-                scenarioID: "avito-cart",
+                scenarioID: "navbar-test",
                 vc: self,
                 containerView: mainView
             )

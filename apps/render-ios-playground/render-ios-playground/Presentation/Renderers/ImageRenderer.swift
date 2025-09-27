@@ -3,7 +3,7 @@ import UIKit
 class ImageRenderer: Renderer {
     let type = "Image"
     
-    func render(component: Component) -> UIView? {
+    func render(component: Component, context: RendererContext) -> UIView? {
         return RenderableImage(component: component)
     }
 }
