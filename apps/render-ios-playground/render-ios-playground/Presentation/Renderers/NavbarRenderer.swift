@@ -4,17 +4,17 @@ class NavbarRenderer: Renderer {
     let type = "Navbar"
     
     func render(component: Component, context: RendererContext) -> UIView? {
-        return RenderableNavbar(component: component)
+        return RenderableNavbar(component: component, context: context)
     }
 }
 
 class RenderableNavbar: UIView, Renderable {
     let component: Component
-    private var navigationController: UINavigationController?
-    private weak var currentViewController: UIViewController?
+    let context: RendererContext
     
-    init(component: Component) {
+    init(component: Component, context: RendererContext) {
         self.component = component
+        self.context = context
         super.init(frame: .zero)
         setupNavbar()
         applyFlexStyles()
@@ -25,9 +25,6 @@ class RenderableNavbar: UIView, Renderable {
     }
     
     private func setupNavbar() {
-        // Create navigation controller if not exists
-        setupNavigationController()
-        
         // Setup navbar appearance
         setupNavbarAppearance()
         
@@ -35,31 +32,7 @@ class RenderableNavbar: UIView, Renderable {
         setupNavbarContent()
     }
     
-    private func setupNavigationController() {
-        // Find the current view controller in the view hierarchy
-        if let currentVC = findViewController() {
-            self.currentViewController = currentVC
-            
-            // If no navigation controller exists, create one
-            if currentVC.navigationController == nil {
-                let navController = UINavigationController(
-                    rootViewController: currentVC
-                )
-                self.navigationController = navController
-                
-                // Present the navigation controller modally if needed
-                if let presentingVC = currentVC.presentingViewController {
-                    presentingVC.present(navController, animated: true)
-                }
-            } else {
-                self.navigationController = currentVC.navigationController
-            }
-        }
-    }
-    
     private func setupNavbarAppearance() {
-        guard let navController = navigationController else { return }
-        
         // Configure navigation bar appearance
         let appearance = UINavigationBarAppearance()
         
@@ -81,9 +54,9 @@ class RenderableNavbar: UIView, Renderable {
         }
         
         // Configure appearance
-        navController.navigationBar.standardAppearance = appearance
-        navController.navigationBar.scrollEdgeAppearance = appearance
-        navController.navigationBar.compactAppearance = appearance
+        context.navigationController?.navigationBar.standardAppearance = appearance
+        context.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        context.navigationController?.navigationBar.compactAppearance = appearance
         
         // Hide shadow if specified
         if let hideShadow = component.style.get(forKey: "hideShadow", ofType: Bool.self), hideShadow {
@@ -94,7 +67,7 @@ class RenderableNavbar: UIView, Renderable {
     private func setupNavbarContent() {
         // Title
         if let title = component.properties.getString(forKey: "title") {
-            currentViewController?.title = title
+            context.viewController?.title = title
         }
         
         // Left button (back button)
@@ -105,7 +78,7 @@ class RenderableNavbar: UIView, Renderable {
                 target: self,
                 action: #selector(leftButtonTapped)
             )
-            currentViewController?.navigationItem.leftBarButtonItem = leftButton
+            context.viewController?.navigationItem.leftBarButtonItem = leftButton
         }
         
         // Right button
@@ -116,39 +89,61 @@ class RenderableNavbar: UIView, Renderable {
                 target: self,
                 action: #selector(rightButtonTapped)
             )
-            currentViewController?.navigationItem.rightBarButtonItem = rightButton
+            context.viewController?.navigationItem.rightBarButtonItem = rightButton
         }
         
         // Large title preference
         if let prefersLargeTitles = component.properties.getBool(forKey: "prefersLargeTitles") {
-            navigationController?.navigationBar.prefersLargeTitles = prefersLargeTitles
+            context.navigationController?.navigationBar.prefersLargeTitles = prefersLargeTitles
         }
         
         // Hide navigation bar
         if let isHidden = component.properties.getBool(forKey: "isHidden") {
-            navigationController?.setNavigationBarHidden(isHidden, animated: true)
+            context.navigationController?.setNavigationBarHidden(isHidden, animated: true)
         }
     }
     
-    private func findViewController() -> UIViewController? {
-        var responder: UIResponder? = self
-        while let nextResponder = responder?.next {
-            if let viewController = nextResponder as? UIViewController {
-                return viewController
-            }
-            responder = nextResponder
-        }
-        return nil
-    }
     
     @objc private func leftButtonTapped() {
         // Handle left button action
         if let action = component.properties.getString(forKey: "leftButtonAction") {
+            if action == "back" {
+                // Check if view controller was presented modally or pushed
+                if isModalPresentation() {
+                    context.viewController?.dismiss(animated: true)
+                } else {
+                    context.navigationController?.popViewController(animated: true)
+                }
+                return
+            }
             handleNavbarAction(action)
         } else {
-            // Default back action
-            currentViewController?.navigationController?.popViewController(animated: true)
+            // Default back action - check if modal or pushed
+            if isModalPresentation() {
+                context.viewController?.dismiss(animated: true)
+            } else {
+                context.navigationController?.popViewController(animated: true)
+            }
         }
+    }
+    
+    private func isModalPresentation() -> Bool {
+        // Check if the current view controller was presented modally
+        // by checking if it has a presenting view controller
+        guard let viewController = context.viewController else { return false }
+        
+        // If there's a presenting view controller, it was presented modally
+        if viewController.presentingViewController != nil {
+            return true
+        }
+        
+        // Also check if the navigation controller itself was presented modally
+        if let navController = context.navigationController,
+           navController.presentingViewController != nil {
+            return true
+        }
+        
+        return false
     }
     
     @objc private func rightButtonTapped() {
@@ -161,9 +156,9 @@ class RenderableNavbar: UIView, Renderable {
     private func handleNavbarAction(_ action: String) {
         switch action.lowercased() {
         case "back", "pop":
-            currentViewController?.navigationController?.popViewController(animated: true)
+            context.navigationController?.popViewController(animated: true)
         case "dismiss":
-            currentViewController?.dismiss(animated: true)
+            context.viewController?.dismiss(animated: true)
         case "push":
             // Could be extended to push specific view controllers
             break
