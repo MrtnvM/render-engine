@@ -1,5 +1,5 @@
 {
-  "id": "navbar-test",
+  "key": "navbar-test",
   "version": "1.0.0",
   "mainComponent": {
     "type": "Column",

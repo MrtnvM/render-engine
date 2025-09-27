@@ -31,9 +31,10 @@ export const publishCommand = program
       if (!fs.existsSync(inputPath)) throw new Error(`Input file not found: ${inputPath}`)
 
       const schema = JSON.parse(fs.readFileSync(inputPath, 'utf8'))
-      if (!schema.id) throw new Error('The input JSON must have a top-level "id" field.')
+      if (!schema.key) throw new Error('The input JSON must have a top-level "key" field.')
 
-      console.log(chalk.blue(`   Schema Key: ${chalk.bold(schema.id)}`))
+      const scenarioKey = schema.key
+      console.log(chalk.blue(`   Schema Key: ${chalk.bold(scenarioKey)}`))
 
       const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -43,7 +44,7 @@ export const publishCommand = program
       const { data: latestBuildData, error: fetchError } = await supabase
         .from('scenario_table')
         .select('build_number, version')
-        .eq('key', schema.id)
+        .eq('key', scenarioKey)
         .order('build_number', { ascending: false }) // Get the highest build number first
         .limit(1)
         .single()
@@ -68,7 +69,7 @@ export const publishCommand = program
       // --- 3. Prepare and Insert the new version ---
       // Map the input schema to the scenario table structure
       const rowToInsert = {
-        key: schema.id,
+        key: scenarioKey,
         mainComponent: schema.mainComponent || schema.main || {},
         components: schema.components || {},
         version: nextVersion,

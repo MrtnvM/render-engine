@@ -1,5 +1,7 @@
 import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating } from './sdk/ui/index.js'
 
+export const SCENARIO_KEY = 'avito-cart'
+
 export default function CartScreen() {
   return (
     <Column style={{ width: '100%', height: '100%', backgroundColor: '#F0F8FF' }}>

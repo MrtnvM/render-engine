@@ -12,7 +12,7 @@ interface JsonNode {
 }
 
 interface TranspiledScenario {
-  id: string
+  key: string
   version: string
   main: JsonNode
   components: Record<string, JsonNode>
@@ -34,6 +34,23 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
 
   let rootJson: JsonNode | null = null
   const components: Record<string, JsonNode> = {}
+  let scenarioKey: string | null = null
+
+  // First, extract SCENARIO_KEY from the AST
+  traverse(ast, {
+    ExportNamedDeclaration: {
+      exit(path: any) {
+        const declaration = path.node.declaration
+        if (declaration?.type === 'VariableDeclaration') {
+          declaration.declarations.forEach((declarator: any) => {
+            if (declarator.id?.name === 'SCENARIO_KEY' && declarator.init?.type === 'StringLiteral') {
+              scenarioKey = declarator.init.value
+            }
+          })
+        }
+      },
+    },
+  } as any)
 
   // Use the updated plugin structure
   const pluginResult = jsxToJsonPlugin()
@@ -87,9 +104,12 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
     throw new Error('Transpilation failed: Could not find a root JSX element.')
   }
 
+  // Use extracted SCENARIO_KEY or fallback to generated key
+  const finalScenarioKey = scenarioKey || 'generated-scenario-1'
+
   // Wrap the root component in the final scenario structure
   const scenario: TranspiledScenario = {
-    id: 'generated-scenario-1',
+    key: finalScenarioKey,
     version: '1.0.0',
     main: rootJson,
     components,

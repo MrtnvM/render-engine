@@ -1,5 +1,7 @@
 import { Column, Row, Stack, Text, Image, Button } from './sdk/ui/index.js'
 
+export const SCENARIO_KEY = 'playground-example'
+
 export const MyScreen = () => (
   <Column style={{ padding: 16, backgroundColor: '#F5F5F5' }}>
     <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>

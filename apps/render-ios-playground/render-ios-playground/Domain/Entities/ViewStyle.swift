@@ -102,7 +102,7 @@ public class ViewStyle {
     }
 
     var backgroundColor: UIColor {
-        return get(forKey: "bgColor", ofType: UIColor.self) ?? UIColor.clear
+        return get(forKey: "backgroundColor", ofType: UIColor.self) ?? UIColor.clear
     }
 
     var cornerRadius: CGFloat {

@@ -1,5 +1,5 @@
 {
-  "id": "avito-cart",
+  "key": "avito-cart",
   "version": "1.0.0",
   "main": {
     "type": "Column",
@@ -64,8 +64,8 @@
               {
                 "type": "Checkbox",
                 "style": {
-                  "backgroundColor": "#0099F7",
-                  "borderColor": "#0099F7",
+                  "backgroundColor": "#141414",
+                  "borderColor": "#141414",
                   "borderRadius": "4px"
                 },
                 "properties": {
@@ -78,7 +78,8 @@
                 "style": {
                   "fontSize": 15,
                   "fontWeight": "500",
-                  "color": "#000000"
+                  "color": "#000000",
+                  "backgroundColor": "#E6F3FF"
                 },
                 "properties": {
                   "text": "Выбрать всё"

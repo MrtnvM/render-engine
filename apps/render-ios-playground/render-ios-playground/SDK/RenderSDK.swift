@@ -24,7 +24,7 @@ class RenderSDK {
                 .fetchScenario(key: scenarioKey)
             
             print("RENDERING SCENARIO WITH ID: \(scenario.id)")
-        print("SCENARIO VERSION: \(scenario.version) (\(scenario.build_number))")
+            print("SCENARIO VERSION: \(scenario.version) (\(scenario.build_number))")
             
             let renderVC = await RenderViewController(
                 scenario: scenario

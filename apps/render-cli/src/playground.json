@@ -1,5 +1,5 @@
 {
-  "id": "generated-scenario-1",
+  "key": "playground-example",
   "version": "1.0.0",
   "main": {
     "type": "Column",
