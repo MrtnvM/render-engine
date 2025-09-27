@@ -32,6 +32,8 @@ class RenderableText: UILabel, Renderable {
     private func applyStyle() {
         let style = component.style
         
+        applyVisualStyles()
+        
         // Text color
         if let textColor = style.get(forKey: "textColor", ofType: UIColor.self) {
             self.textColor = textColor
