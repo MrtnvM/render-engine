@@ -71,6 +71,17 @@ public class Config {
         return defaultValue
     }
     
+    func getDate(forKey key: String, defaultValue: Date? = nil) -> Date? {
+        if let value = config[key] as? String {
+            let formatter = ISO8601DateFormatter()
+            return formatter.date(from: value)
+        }
+        if let value = config[key] as? Date {
+            return value
+        }
+        return defaultValue
+    }
+    
     func getArray(forKey key: String, defaultValue: [Any] = []) -> [Any] {
         if let value = config[key], let array = value as? [Any] {
             return array

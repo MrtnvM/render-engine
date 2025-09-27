@@ -47,7 +47,8 @@ class RenderableCheckbox: UIButton, Renderable {
         if isChecked {
             // Show checked state
             checkboxImageView.image = createCheckedImage()
-            self.backgroundColor = UIColor.systemBlue
+            // Use custom background color from component style, fallback to system blue
+            self.backgroundColor = component.style.backgroundColor != UIColor.clear ? component.style.backgroundColor : UIColor.systemBlue
         } else {
             // Show unchecked state
             checkboxImageView.image = createUncheckedImage()
@@ -56,8 +57,11 @@ class RenderableCheckbox: UIButton, Renderable {
 
         // Add border
         self.layer.borderWidth = 2
-        self.layer.borderColor = isChecked ? UIColor.systemBlue.cgColor : UIColor.gray.cgColor
-        self.layer.cornerRadius = 4
+        // Use custom border color from component style, fallback to system blue
+        let borderColor = component.style.borderColor != UIColor.clear ? component.style.borderColor : UIColor.systemBlue
+        self.layer.borderColor = isChecked ? borderColor.cgColor : UIColor.gray.cgColor
+        // Use custom corner radius from component style, fallback to 4
+        self.layer.cornerRadius = component.style.cornerRadius > 0 ? component.style.cornerRadius : 4
 
         // Add the image view
         if checkboxImageView.superview == nil {

@@ -132,6 +132,10 @@ public class ViewStyle {
     var height: CGFloat? {
         return get(forKey: "height", ofType: CGFloat.self)
     }
+    
+    var flex: CGFloat? {
+        return get(forKey: "flex", ofType: CGFloat.self)
+    }
 
     var padding: UIEdgeInsets {
         // Priority 1: Specific properties (highest priority)

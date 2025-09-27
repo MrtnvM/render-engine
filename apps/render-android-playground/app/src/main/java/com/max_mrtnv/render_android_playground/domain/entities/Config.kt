@@ -29,6 +29,9 @@ class Config(private val data: Map<String, Any?>) {
     fun getDouble(key: String, defaultValue: Double? = null): Double? =
         data[key] as? Double ?: defaultValue
     
+    fun getLong(key: String, defaultValue: Long? = null): Long? =
+        data[key] as? Long ?: (data[key] as? Int)?.toLong() ?: defaultValue
+    
     fun getBoolean(key: String, defaultValue: Boolean? = null): Boolean? =
         data[key] as? Boolean ?: defaultValue
     

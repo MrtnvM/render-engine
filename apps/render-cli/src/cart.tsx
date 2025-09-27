@@ -2,7 +2,7 @@ import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating } from './s
 
 export default function CartScreen() {
   return (
-    <Column style={{ width: '100%', height: '100%', backgroundColor: '#FFFFFF' }}>
+    <Column style={{ width: '100%', height: '100%', backgroundColor: '#F0F8FF' }}>
       {/* Navigation Bar */}
       <Row
         style={{
@@ -10,7 +10,7 @@ export default function CartScreen() {
           alignItems: 'center',
           padding: 16,
           height: 48,
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#E6F3FF',
         }}
       >
         <Button properties={{ title: '←' }} />
@@ -20,13 +20,40 @@ export default function CartScreen() {
 
       {/* Select All Section */}
       <Row
-        style={{ justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12 }}
+        style={{ 
+          alignItems: 'center', 
+          paddingHorizontal: 16, 
+          paddingVertical: 12,
+          backgroundColor: '#FFF2E6',
+          width: '100%'
+        }}
       >
-        <Row style={{ alignItems: 'center', gap: 11 }}>
-          <Checkbox properties={{ checked: true, disabled: false }} />
-          <Text style={{ fontSize: 15, fontWeight: '500' }} properties={{ text: 'Выбрать всё' }} />
+        <Row style={{ alignItems: 'center', gap: 11, flex: 1 }}>
+          <Checkbox 
+            style={{ 
+              backgroundColor: '#0099F7',
+              borderColor: '#0099F7',
+              borderRadius: '4px'
+            }}
+            properties={{ checked: true, disabled: false }} 
+          />
+          <Text 
+            style={{ 
+              fontSize: 15, 
+              fontWeight: '500',
+              color: '#000000'
+            }} 
+            properties={{ text: 'Выбрать всё' }} 
+          />
         </Row>
-        <Text style={{ fontSize: 15, fontWeight: '500', color: '#0099F7' }} properties={{ text: 'Удалить (3)' }} />
+        <Text 
+          style={{ 
+            fontSize: 15, 
+            fontWeight: '500', 
+            color: '#000000'
+          }} 
+          properties={{ text: 'Удалить (3)' }} 
+        />
       </Row>
 
       {/* Content */}
@@ -35,7 +62,7 @@ export default function CartScreen() {
         <SellerSection storeName="Pear Store" rating={4.8} reviewCount={643} checked={true} />
 
         {/* Cart Items for Pear Store */}
-        <Column style={{ backgroundColor: '#F5F5F5', paddingVertical: 24 }}>
+        <Column style={{ backgroundColor: '#E8F5E8', paddingVertical: 24 }}>
           <CartItem
             image="charger.png"
             price="4 990 ₽"
@@ -65,7 +92,7 @@ export default function CartScreen() {
 
 function SellerSection({ storeName, rating, reviewCount, checked }: any) {
   return (
-    <Row style={{ alignItems: 'center', gap: 11, paddingHorizontal: 16, paddingVertical: 16 }}>
+    <Row style={{ alignItems: 'center', gap: 11, paddingHorizontal: 16, paddingVertical: 16, backgroundColor: '#F0E6FF' }}>
       <Checkbox properties={{ checked: checked, disabled: false }} />
       <Row style={{ alignItems: 'center', gap: 5 }}>
         <Text style={{ fontSize: 21, fontWeight: '800' }} properties={{ text: storeName }} />
@@ -79,7 +106,7 @@ function SellerSection({ storeName, rating, reviewCount, checked }: any) {
 
 function CartItem({ image, price, title, quantity, checked }: any) {
   return (
-    <Row style={{ alignItems: 'flex-start', gap: 12, paddingHorizontal: 16, paddingVertical: 16 }}>
+    <Row style={{ alignItems: 'flex-start', gap: 12, paddingHorizontal: 16, paddingVertical: 16, backgroundColor: '#FFF8E1' }}>
       <Checkbox properties={{ checked: checked, disabled: false }} />
 
       <Image style={{ width: 96, height: 96, borderRadius: '12px' }} properties={{ source: image }} />
@@ -111,7 +138,7 @@ function CartItem({ image, price, title, quantity, checked }: any) {
 
 function BundleSection() {
   return (
-    <Column style={{ paddingHorizontal: 16, paddingVertical: 20, gap: 16 }}>
+    <Column style={{ paddingHorizontal: 16, paddingVertical: 20, gap: 16, backgroundColor: '#E3F2FD' }}>
       <Row style={{ alignItems: 'center', gap: 6 }}>
         <Text style={{ fontSize: 24 }} properties={{ text: '🎁' }} />
         <Column style={{ flex: 1 }}>
@@ -165,7 +192,7 @@ function BundleSection() {
 
 function BundleItem({ image, currentPrice, originalPrice, title }: any) {
   return (
-    <Column style={{ width: 236, gap: 12 }}>
+    <Column style={{ width: 236, gap: 12, backgroundColor: '#F3E5F5' }}>
       <Row style={{ alignItems: 'center', gap: 12 }}>
         <Image style={{ width: 94, height: 94, borderRadius: '12px' }} properties={{ source: image }} />
 
@@ -203,7 +230,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
 
 function BottomBar() {
   return (
-    <Column style={{ backgroundColor: '#FFFFFF', paddingHorizontal: 16, paddingVertical: 16, borderRadius: '28px' }}>
+    <Column style={{ backgroundColor: '#E8F5E8', paddingHorizontal: 16, paddingVertical: 16, borderRadius: '28px' }}>
       <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <Column>
           <Text style={{ fontSize: 11, fontWeight: '500', color: '#000000' }} properties={{ text: '3 товара' }} />

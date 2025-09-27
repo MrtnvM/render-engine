@@ -59,6 +59,11 @@ extension Renderable where Self: UIView {
         if let height = style.height {
             flex.height(height)
         }
+        
+        // Flex grow
+        if let flexValue = style.flex {
+            flex.grow(flexValue)
+        }
     }
 
     func applyVisualStyles() {

@@ -1,0 +1,1 @@
+ALTER TABLE "scenario_table" ADD COLUMN "build_number" integer DEFAULT 1 NOT NULL;--> statement-breakpoint

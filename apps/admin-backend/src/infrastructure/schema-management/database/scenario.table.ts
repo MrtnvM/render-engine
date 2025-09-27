@@ -1,11 +1,15 @@
-import { jsonb, pgTable, text } from 'drizzle-orm/pg-core'
+import { jsonb, pgTable, text, uuid, integer, timestamp } from 'drizzle-orm/pg-core'
 
 export const scenarioTable = pgTable('scenario_table', {
-  id: text('id').primaryKey().notNull(),
+  id: uuid('id').primaryKey().defaultRandom().notNull(),
+  key: text('key').notNull(),
   mainComponent: jsonb('mainComponent').notNull().$type<Record<string, any>>(),
   components: jsonb('components').notNull().$type<Record<string, any>>(),
   version: text('version').notNull().default('1.0.0'),
+  buildNumber: integer('build_number').notNull().default(1),
   metadata: jsonb('metadata').notNull().$type<Record<string, any>>(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
 export type Scenario = typeof scenarioTable.$inferSelect

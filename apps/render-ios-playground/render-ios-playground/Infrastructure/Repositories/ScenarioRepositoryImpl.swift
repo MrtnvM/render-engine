@@ -47,16 +47,41 @@ class ScenarioRepositoryImpl: ScenarioRepository {
         return scenario
     }
     
+    func fetchScenario(key: String) async throws -> Scenario {
+        let scenarios: [ScenarioJSON] = try await supabaseClient
+            .from("scenario_table")
+            .select()
+            .eq("key", value: key)
+            .order("build_number", ascending: false)
+            .execute()
+            .value
+        
+        if scenarios.isEmpty {
+            throw ApplicationError.scenarioFetchFailed(
+                "No scenario with key: \(key)"
+            )
+        }
+        
+        let scenarioData = scenarios[0].toMap()
+        guard let scenario = Scenario.create(from: scenarioData) else {
+            throw ApplicationError.scenarioFetchFailed(
+                "Can not parse scenario"
+            )
+        }
+        
+        return scenario
+    }
+    
     func subscribeToScenario(_ observer: ScenarioObserver) async throws {
-        let scenarioID = observer.scenarioID
-        guard observers[scenarioID] == nil else {
-            print("Already subscribed to scenario \(scenarioID): \(observer)")
+        let scenarioKey = observer.scenarioKey
+        guard observers[scenarioKey] == nil else {
+            print("Already subscribed to scenario \(scenarioKey): \(observer)")
             return
         }
         
-        observers[scenarioID] = observer
+        observers[scenarioKey] = observer
         
-        let channel = supabaseClient.channel("scenario-\(scenarioID)")
+        let channel = supabaseClient.channel("scenario-\(scenarioKey)")
         let changes = channel.postgresChange(UpdateAction.self, schema: "public")
         
         do {
@@ -76,22 +101,22 @@ class ScenarioRepositoryImpl: ScenarioRepository {
                 observer.onScenarioUpdate(scenario: scenario)
             }
         } catch {
-            print("FAILED TO SUBSCRIBE TO CHANNEL FOR SCENARIO ID = \(scenarioID)")
+            print("FAILED TO SUBSCRIBE TO CHANNEL FOR SCENARIO KEY = \(scenarioKey)")
         }
     }
     
     func unsubscribeFromScenario(_ observer: ScenarioObserver) async {
-        let scenarioID = observer.scenarioID
-        let exisingObserver = observers[scenarioID]
+        let scenarioKey = observer.scenarioKey
+        let exisingObserver = observers[scenarioKey]
         
         if exisingObserver == nil {
-            print("Observer was not subscribed to scenario \(scenarioID): \(observer)")
+            print("Observer was not subscribed to scenario \(scenarioKey): \(observer)")
             return
         }
         
-        let channel = supabaseClient.channel("scenario-\(scenarioID)")
+        let channel = supabaseClient.channel("scenario-\(scenarioKey)")
         await channel.unsubscribe()
         
-        observers.removeValue(forKey: scenarioID)
+        observers.removeValue(forKey: scenarioKey)
     }
 }

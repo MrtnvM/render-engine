@@ -3,33 +3,44 @@ import Foundation
 /// Domain entity representing a complete UI schema
 public class Scenario {
     let id: String
-
+    let key: String
     let mainComponent: Component
     let components: [String: Component]
-
     let version: String
-
+    let build_number: Int
     let metadata: [String: Any]
+    let createdAt: Date
+    let updatedAt: Date
 
     private init(
         id: String,
+        key: String,
         mainComponent: Component,
         components: [String: Component],
         version: String,
-        metadata: [String: Any]
+        build_number: Int,
+        metadata: [String: Any],
+        createdAt: Date,
+        updatedAt: Date
     ) {
         self.id = id
+        self.key = key
         self.version = version
+        self.build_number = build_number
         self.mainComponent = mainComponent
         self.metadata = metadata
         self.components = components
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
     
     static func create(from json: [String: Any?]) -> Scenario? {
         let config = Config(json)
 
         let id = config.getString(forKey: "id") ?? UUID().uuidString
+        let key = config.getString(forKey: "key") ?? config.getString(forKey: "id") ?? UUID().uuidString
         let version = config.getString(forKey: "version") ?? "1.0.0"
+        let build_number = config.getInt(forKey: "build_number") ?? 1
         let metadata = config.getDictionary(forKey: "metadata") ?? [:]
         let mainComponentConfig = config.getConfig(forKey: "mainComponent")
 
@@ -49,12 +60,20 @@ public class Scenario {
             }
         }
 
+        // Parse timestamps
+        let createdAt = config.getDate(forKey: "createdAt") ?? Date()
+        let updatedAt = config.getDate(forKey: "updatedAt") ?? Date()
+
         return Scenario(
             id: id,
+            key: key,
             mainComponent: mainComponent,
             components: components,
             version: version,
-            metadata: metadata
+            build_number: build_number,
+            metadata: metadata,
+            createdAt: createdAt,
+            updatedAt: updatedAt
         )
     }
 }

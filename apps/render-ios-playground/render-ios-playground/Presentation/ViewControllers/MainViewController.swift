@@ -8,6 +8,8 @@ class MainViewController: UIViewController {
     
     // MARK: - UI Components
     private var mainView: MainView!
+
+    private let scenarioKey = "avito-cart"
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -30,7 +32,7 @@ class MainViewController: UIViewController {
         
         do {
             try await RenderSDK.shared.render(
-                scenarioID: "navbar-test",
+                scenarioKey: scenarioKey,
                 vc: self,
                 containerView: mainView
             )

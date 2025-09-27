@@ -88,7 +88,11 @@ interface ASTNode {
   name?: string
   expression?: ASTNode
   properties?: Array<{
-    key: { name: string }
+    key: { 
+      type: string
+      name?: string
+      value?: any
+    }
     value: ASTNode
   }>
 }
@@ -109,7 +113,15 @@ function astNodeToValue(node?: ASTNode | null): any {
     case 'ObjectExpression':
       return (
         node.properties?.reduce((obj: Record<string, any>, prop) => {
-          const key = prop.key.name
+          // Handle different key types (Identifier, StringLiteral, etc.)
+          let key: string
+          if (prop.key.type === 'Identifier') {
+            key = prop.key.name || 'unknown'
+          } else if (prop.key.type === 'StringLiteral') {
+            key = prop.key.value || 'unknown'
+          } else {
+            key = String(prop.key)
+          }
           obj[key] = astNodeToValue(prop.value)
           return obj
         }, {}) || {}
@@ -162,8 +174,10 @@ export default function jsxToJsonPlugin() {
 
               // Handle special props that should remain at root level
               if (propName === 'style') {
-                // Style attributes and properties are handled separately in the opening element
-                // For now, we'll keep this as-is since the style and properties handling might be complex
+                // Process style object and merge into jsonNode.style
+                if (value && typeof value === 'object') {
+                  jsonNode.style = { ...jsonNode.style, ...value }
+                }
               } else if (propName === 'properties') {
                 jsonNode[propName] = value
               } else {

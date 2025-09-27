@@ -33,18 +33,18 @@ export const publishCommand = program
       const schema = JSON.parse(fs.readFileSync(inputPath, 'utf8'))
       if (!schema.id) throw new Error('The input JSON must have a top-level "id" field.')
 
-      console.log(chalk.blue(`   Schema ID: ${chalk.bold(schema.id)}`))
+      console.log(chalk.blue(`   Schema Key: ${chalk.bold(schema.id)}`))
 
       const supabase = createClient(supabaseUrl, supabaseKey)
 
-      // --- 1. Fetch the latest version for this ID ---
-      console.log(chalk.yellow('   Checking for the latest version...'))
+      // --- 1. Fetch the latest build version for this key ---
+      console.log(chalk.yellow('   Checking for the latest build version...'))
 
-      const { data: latestVersionData, error: fetchError } = await supabase
+      const { data: latestBuildData, error: fetchError } = await supabase
         .from('scenario_table')
-        .select('version')
-        .eq('id', schema.id)
-        .order('version', { ascending: false }) // Get the highest version first
+        .select('build_number, version')
+        .eq('key', schema.id)
+        .order('build_number', { ascending: false }) // Get the highest build number first
         .limit(1)
         .single()
 
@@ -53,23 +53,26 @@ export const publishCommand = program
         throw fetchError
       }
 
-      // --- 2. Determine the next version number ---
-      const latestVersion = latestVersionData ? latestVersionData.version : '1.0.0'
+      // --- 2. Determine the next build number and version ---
+      const latestBuildNumber = latestBuildData ? latestBuildData.build_number : 0
+      const latestVersion = latestBuildData ? latestBuildData.version : '1.0.0'
+      const nextBuildNumber = latestBuildNumber + 1
       const nextVersion = incrementSemanticVersion(latestVersion)
 
       console.log(
         chalk.blue(
-          `   Latest version is ${chalk.bold(latestVersion)}. Publishing new version ${chalk.bold(nextVersion)}.`,
+          `   Latest build number is ${chalk.bold(latestBuildNumber)}. Publishing build number ${chalk.bold(nextBuildNumber)} with version ${chalk.bold(nextVersion)}.`,
         ),
       )
 
       // --- 3. Prepare and Insert the new version ---
       // Map the input schema to the scenario table structure
       const rowToInsert = {
-        id: schema.id,
+        key: schema.id,
         mainComponent: schema.mainComponent || schema.main || {},
         components: schema.components || {},
         version: nextVersion,
+        build_number: nextBuildNumber,
         metadata: schema.metadata || {},
       }
 
@@ -85,7 +88,7 @@ export const publishCommand = program
 
       // --- 4. Show Success Message ---
       console.log(chalk.green.bold('\n✅ Scenario published successfully!'))
-      console.log(chalk.gray(`   Record created for ID: ${insertedData.id}, Version: ${insertedData.version}`))
+      console.log(chalk.gray(`   Record created for Key: ${insertedData.key}, Version: ${insertedData.version}, Build: ${insertedData.build_number}`))
       console.log(chalk.gray(`   Published at: ${new Date(insertedData.created_at || new Date()).toLocaleString()}`))
     } catch (error: any) {
       console.error(chalk.red.bold('\n❌ Scenario publication failed.'))

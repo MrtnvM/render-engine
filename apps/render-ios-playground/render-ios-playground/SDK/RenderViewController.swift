@@ -10,7 +10,7 @@ public protocol RenderViewControllerDelegate: AnyObject {
 public class RenderViewController: UIViewController, ScenarioObserver {
     weak public var delegate: RenderViewControllerDelegate?
     
-    let scenarioID: String
+    let scenarioKey: String
     private var scenario: Scenario?
     private let repository = DIContainer.shared.scenarioRepository
     private let service = DIContainer.shared.scenarioService
@@ -19,14 +19,14 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     // Root flex container
     private let rootFlexContainer = UIView()
 
-    init(scenarioID: String) {
-        self.scenarioID = scenarioID
+    init(scenarioKey: String) {
+        self.scenarioKey = scenarioKey
         super.init(nibName: nil, bundle: nil)
     }
     
     init(scenario: Scenario) {
         self.scenario = scenario
-        scenarioID = scenario.id
+        scenarioKey = scenario.key
         super.init(nibName: nil, bundle: nil)
     }
 

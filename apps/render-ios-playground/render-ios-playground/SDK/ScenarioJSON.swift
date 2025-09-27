@@ -1,16 +1,20 @@
 struct ScenarioJSON: Decodable {
     let id: String
+    let key: String
     let mainComponent: [String: JSONValue]
     let components: [String: JSONValue]
     let version: String
+    let build_number: Int
     let metadata: [String: JSONValue]
     
     func toMap() -> [String: Any?] {
         return [
             "id": id,
+            "key": key,
             "mainComponent": convertJSONValueToAny(mainComponent),
             "components": convertJSONValueToAny(components),
             "version": version,
+            "build_number": build_number,
             "metadata": convertJSONValueToAny(metadata)
         ]
     }

@@ -15,13 +15,16 @@ class RenderSDK {
 
     // Option 1: Render into an existing view
     func render(
-        scenarioID: String,
+        scenarioKey: String,
         vc: UIViewController,
         containerView view: UIView? = nil
     ) async throws {
         do {
             let scenario = try await scenarioRepository
-                .fetchScenario(id: scenarioID)
+                .fetchScenario(key: scenarioKey)
+            
+            print("RENDERING SCENARIO WITH ID: \(scenario.id)")
+        print("SCENARIO VERSION: \(scenario.version) (\(scenario.build_number))")
             
             let renderVC = await RenderViewController(
                 scenario: scenario
@@ -46,9 +49,9 @@ class RenderSDK {
     }
 
     // Option 2: Create and return a new view controller
-    func getViewController(scenarioID id: String) -> RenderViewController {
+    func getViewController(scenarioKey key: String) -> RenderViewController {
         let vc = RenderViewController(
-            scenarioID: id
+            scenarioKey: key
         )
         return vc
     }
