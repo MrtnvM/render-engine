@@ -72,4 +72,43 @@ public class Component: Equatable {
     public static func == (lhs: Component, rhs: Component) -> Bool {
         return lhs.id == rhs.id
     }
+    
+    /// Checks if two components have the same structure and properties
+    func isStructurallyEqual(to other: Component) -> Bool {
+        return self.type == other.type &&
+               self.style == other.style &&
+               self.properties == other.properties &&
+               self.data == other.data &&
+               self.getChildren().count == other.getChildren().count
+    }
+    
+    /// Gets a hash value for structural comparison
+    func structuralHash() -> Int {
+        var hasher = Hasher()
+        hasher.combine(type)
+        hasher.combine(style)
+        hasher.combine(properties)
+        hasher.combine(data)
+        hasher.combine(getChildren().count)
+        return hasher.finalize()
+    }
+    
+    /// Creates a copy of the component with a new ID
+    func copy(withNewId id: String? = nil) -> Component {
+        let newId = id ?? self.id
+        let newComponent = Component(
+            id: newId,
+            type: self.type,
+            style: self.style,
+            properties: self.properties,
+            data: self.data
+        )
+        
+        // Copy children
+        for child in self.getChildren() {
+            try? newComponent.addChild(child.copy())
+        }
+        
+        return newComponent
+    }
 }
