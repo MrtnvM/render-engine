@@ -1,4 +1,5 @@
 import UIKit
+import FlexLayout
 
 class StepperRenderer: Renderer {
     let type = "Stepper"
@@ -52,30 +53,34 @@ class RenderableStepper: UIView, Renderable {
         addSubview(valueLabel)
         addSubview(plusButton)
 
-        // Layout
-        minusButton.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.translatesAutoresizingMaskIntoConstraints = false
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            minusButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-            minusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            minusButton.widthAnchor.constraint(equalToConstant: 44),
-            minusButton.heightAnchor.constraint(equalToConstant: 44),
-
-            valueLabel.leadingAnchor.constraint(equalTo: minusButton.trailingAnchor),
-            valueLabel.topAnchor.constraint(equalTo: topAnchor),
-            valueLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            valueLabel.widthAnchor.constraint(equalToConstant: 44),
-
-            plusButton.leadingAnchor.constraint(equalTo: valueLabel.trailingAnchor),
-            plusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            plusButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            plusButton.widthAnchor.constraint(equalToConstant: 44),
-            plusButton.heightAnchor.constraint(equalToConstant: 44)
-        ])
+        // Setup FlexLayout
+        setupFlexLayout()
 
         updateButtonStates()
+    }
+
+    private func setupFlexLayout() {
+        // Configure the main container as a horizontal row
+        flex.direction(.row)
+            .justifyContent(.spaceBetween)
+            .alignItems(.center)
+            .define { flex in
+                // Minus button
+                flex.addItem(minusButton)
+                    .width(44)
+                    .height(44)
+                
+                // Value label (grows to fill available space)
+                flex.addItem(valueLabel)
+                    .width(44)
+                    .grow(1)
+                    .shrink(1)
+                
+                // Plus button
+                flex.addItem(plusButton)
+                    .width(44)
+                    .height(44)
+            }
     }
 
     private func updateButtonStates() {
@@ -113,5 +118,66 @@ class RenderableStepper: UIView, Renderable {
         valueLabel.backgroundColor = UIColor.systemGray6
         valueLabel.layer.cornerRadius = 4
         valueLabel.layer.masksToBounds = true
+    }
+
+    @MainActor
+    func applyFlexStyles() {
+        // Apply flex styles from component.style
+        let style = component.style
+        
+        // Flex direction
+        flex.direction(style.direction == .row ? .row : .column)
+        
+        // Justify content
+        switch style.contentAlignment {
+        case .center:
+            flex.justifyContent(.center)
+        case .flexEnd:
+            flex.justifyContent(.end)
+        case .flexStart:
+            flex.justifyContent(.start)
+        case .spaceAround:
+            flex.justifyContent(.spaceAround)
+        case .spaceBetween:
+            flex.justifyContent(.spaceBetween)
+        case .spaceEvenly:
+            flex.justifyContent(.spaceEvenly)
+        }
+        
+        // Align items
+        switch style.alignItems {
+        case .center:
+            flex.alignItems(.center)
+        case .flexStart:
+            flex.alignItems(.start)
+        case .flexEnd:
+            flex.alignItems(.end)
+        case .stretch:
+            flex.alignItems(.stretch)
+        case .baseline:
+            flex.alignItems(.baseline)
+        }
+        
+        // Padding & Margin
+        flex.padding(style.padding)
+        flex.margin(style.margin)
+        
+        // Width & Height
+        if let width = style.width {
+            flex.width(width)
+        }
+        if let height = style.height {
+            flex.height(height)
+        }
+    }
+
+    func applyVisualStyles() {
+        let style = component.style
+        
+        backgroundColor = style.backgroundColor
+        layer.cornerRadius = style.cornerRadius
+        layer.masksToBounds = style.cornerRadius > 0
+        layer.borderWidth = style.borderWidth
+        layer.borderColor = style.borderColor.cgColor
     }
 }

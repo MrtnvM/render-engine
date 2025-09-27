@@ -14,7 +14,8 @@ class RenderableText: UILabel, Renderable {
     init(component: Component) {
         self.component = component
         super.init(frame: .zero)
-        applyStyle()
+        applyVisualStyles()
+        applyLabelStyle()
         applyFlexStyles()
         setupLabel()
     }
@@ -29,10 +30,8 @@ class RenderableText: UILabel, Renderable {
     }
     
     
-    private func applyStyle() {
+    private func applyLabelStyle() {
         let style = component.style
-        
-        applyVisualStyles()
         
         // Text color
         if let textColor = style.get(forKey: "textColor", ofType: UIColor.self) {
