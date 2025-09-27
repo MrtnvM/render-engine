@@ -71,24 +71,16 @@
             },
             "children": [
               {
-                "type": "View",
+                "type": "Checkbox",
                 "style": {
-                  "backgroundColor": "#333333"
+                  "backgroundColor": "#0099F7",
+                  "borderColor": "#0099F7",
+                  "borderRadius": "4px"
                 },
-                "children": [
-                  {
-                    "type": "Checkbox",
-                    "style": {
-                      "backgroundColor": "#0099F7",
-                      "borderColor": "#0099F7",
-                      "borderRadius": "4px"
-                    },
-                    "properties": {
-                      "checked": true,
-                      "disabled": false
-                    }
-                  }
-                ]
+                "properties": {
+                  "checked": true,
+                  "disabled": false
+                }
               },
               {
                 "type": "Text",
@@ -270,24 +262,16 @@
               },
               "children": [
                 {
-                  "type": "View",
+                  "type": "Checkbox",
                   "style": {
-                    "backgroundColor": "#333333"
+                    "backgroundColor": "#0099F7",
+                    "borderColor": "#0099F7",
+                    "borderRadius": "4px"
                   },
-                  "children": [
-                    {
-                      "type": "Checkbox",
-                      "style": {
-                        "backgroundColor": "#0099F7",
-                        "borderColor": "#0099F7",
-                        "borderRadius": "4px"
-                      },
-                      "properties": {
-                        "checked": true,
-                        "disabled": false
-                      }
-                    }
-                  ]
+                  "properties": {
+                    "checked": true,
+                    "disabled": false
+                  }
                 },
                 {
                   "type": "Text",

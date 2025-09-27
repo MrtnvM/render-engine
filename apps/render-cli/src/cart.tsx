@@ -1,4 +1,4 @@
-import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating, View } from './sdk/ui/index.js'
+import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating } from './sdk/ui/index.js'
 
 export const SCENARIO_KEY = 'avito-cart'
 
@@ -31,16 +31,14 @@ export default function CartScreen() {
         }}
       >
         <Row style={{ alignItems: 'center', gap: 11, flex: 1 }}>
-          <View style={{backgroundColor: '#333333'}}>
-            <Checkbox 
-              style={{ 
-                backgroundColor: '#0099F7',
-                borderColor: '#0099F7',
-                borderRadius: '4px'
-              }}
-              properties={{ checked: true, disabled: false }} 
-            />
-          </View>
+          <Checkbox 
+            style={{ 
+              backgroundColor: '#0099F7',
+              borderColor: '#0099F7',
+              borderRadius: '4px'
+            }}
+            properties={{ checked: true, disabled: false }} 
+          />
           <Text 
             style={{ 
               fontSize: 15, 
