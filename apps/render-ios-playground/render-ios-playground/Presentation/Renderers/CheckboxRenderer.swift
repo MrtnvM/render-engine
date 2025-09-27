@@ -37,10 +37,16 @@ class RenderableCheckbox: UIButton, Renderable {
         // Create checkbox appearance
         updateCheckboxAppearance()
 
-        // Add constraints to make it a proper size
+        // Use flex layout instead of fixed constraints
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.widthAnchor.constraint(equalToConstant: 24).isActive = true
-        self.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        
+        // Set default size using flex if not specified in style
+        if component.style.width == nil {
+            flex.width(24)
+        }
+        if component.style.height == nil {
+            flex.height(24)
+        }
     }
 
     private func updateCheckboxAppearance() {
