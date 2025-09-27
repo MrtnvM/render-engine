@@ -16,7 +16,13 @@ extension Renderable where Self: UIView {
         let style = component.style
         
         // Flex direction
-        flex.direction(style.direction == .row ? .row : .column)
+        var direction = style.direction
+        if component.type == "Row" {
+            direction = .row
+        } else if component.type == "Column" {
+            direction = .column
+        }
+        flex.direction(direction == .row ? .row : .column)
         
         // Justify content
         switch style.contentAlignment {
