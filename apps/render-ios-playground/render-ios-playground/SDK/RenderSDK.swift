@@ -10,6 +10,7 @@ class RenderSDK {
     private let componentRegistry = DIContainer.shared.componentRegistry
     private let scenarioRepository = DIContainer.shared.scenarioRepository
     private let scenarioFetcher = DIContainer.shared.scenarioService
+    private var logger: Logger { DIContainer.shared.currentLogger }
 
     private init() {}
 
@@ -23,8 +24,8 @@ class RenderSDK {
             let scenario = try await scenarioRepository
                 .fetchScenario(key: scenarioKey)
             
-            print("RENDERING SCENARIO WITH ID: \(scenario.id)")
-            print("SCENARIO VERSION: \(scenario.version) (\(scenario.build_number))")
+            logger.sdk("Rendering scenario with ID: \(scenario.id)")
+            logger.sdk("Scenario version: \(scenario.version) (\(scenario.build_number))")
             
             let renderVC = await RenderViewController(
                 scenario: scenario
@@ -43,7 +44,7 @@ class RenderSDK {
                 }
             }
         } catch {
-            print("RENDER SDK ERROR:", error)
+            logger.error("Render SDK error: \(error.localizedDescription)", category: "SDK")
             throw error
         }
     }
@@ -54,5 +55,58 @@ class RenderSDK {
             scenarioKey: key
         )
         return vc
+    }
+    
+    // MARK: - Logger Configuration
+    
+    /// Configure the SDK logger with custom settings
+    func configureLogger(
+        consoleEnabled: Bool = true,
+        fileEnabled: Bool = true,
+        consoleLogLevel: LogLevel = .info,
+        fileLogLevel: LogLevel = .debug,
+        customLogFileURL: URL? = nil
+    ) {
+        var loggers: [Logger] = []
+        
+        if consoleEnabled {
+            let consoleLogger = ConsoleLogger(
+                minimumLogLevel: consoleLogLevel,
+                isEnabled: true,
+                includeTimestamp: true
+            )
+            loggers.append(consoleLogger)
+        }
+        
+        if fileEnabled {
+            let fileLogger = FileLogger(
+                minimumLogLevel: fileLogLevel,
+                isEnabled: true,
+                includeTimestamp: true,
+                logFileURL: customLogFileURL
+            )
+            loggers.append(fileLogger)
+        }
+        
+        // Update the DIContainer with the new logger configuration
+        DIContainer.shared.updateLogger(ComposableLogger(loggers: loggers))
+        
+        logger.sdk("Logger configuration updated - Console: \(consoleEnabled), File: \(fileEnabled)")
+    }
+    
+    /// Get the current log file URL (if file logging is enabled)
+    func getLogFileURL() -> URL? {
+        if let composableLogger = logger as? ComposableLogger {
+            // Find the file logger and return its URL
+            for case let fileLogger as FileLogger in composableLogger.loggers {
+                return fileLogger.currentLogFileURL
+            }
+        }
+        
+        if let fileLogger = logger as? FileLogger {
+            return fileLogger.currentLogFileURL
+        }
+        
+        return nil
     }
 }

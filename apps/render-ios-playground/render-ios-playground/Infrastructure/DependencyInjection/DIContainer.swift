@@ -45,6 +45,22 @@ class DIContainer {
     
     // MARK: SDK
     
+    lazy var logger: Logger = {
+        let consoleLogger = ConsoleLogger(
+            minimumLogLevel: .info,
+            isEnabled: true,
+            includeTimestamp: true
+        )
+        
+        let fileLogger = FileLogger(
+            minimumLogLevel: .debug,
+            isEnabled: true,
+            includeTimestamp: true
+        )
+        
+        return ComposableLogger(loggers: [consoleLogger, fileLogger])
+    }()
+    
     lazy var componentRegistry: ComponentRegistry = {
         let registry = ComponentRegistry()
         let renderers: [Renderer] = [
@@ -62,5 +78,19 @@ class DIContainer {
         ]
         renderers.forEach { registry.register(renderer: $0) }
         return registry
-}()
+    }()
+    
+    // MARK: - Logger Management
+    
+    private var _logger: Logger?
+    
+    /// Get the current logger instance
+    var currentLogger: Logger {
+        return _logger ?? logger
+    }
+    
+    /// Update the logger configuration
+    func updateLogger(_ newLogger: Logger) {
+        _logger = newLogger
+    }
 }

@@ -15,6 +15,7 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     private let repository = DIContainer.shared.scenarioRepository
     private let service = DIContainer.shared.scenarioService
     private let registry = DIContainer.shared.componentRegistry
+    private var logger: Logger { DIContainer.shared.currentLogger }
     
     // Root flex container
     private let rootFlexContainer = UIView()
@@ -42,7 +43,7 @@ public class RenderViewController: UIViewController, ScenarioObserver {
         if let scenario = scenario {
             buildViewHierarchy(from: scenario.mainComponent)
         } else {
-            print("ERROR: Scenario not found!!!")
+            logger.error("Scenario not found for key: \(scenarioKey)", category: "RenderViewController")
         }
     }
     
@@ -119,7 +120,7 @@ public class RenderViewController: UIViewController, ScenarioObserver {
                 return buildView(from: expandComponentDefinition(componentDefinition, withData: component.data))
             }
 
-            print("Warning: No renderer found for type '\(component.type)' and no component definition found")
+            logger.warning("No renderer found for type '\(component.type)' and no component definition found", category: "RenderViewController")
             return nil
         }
 

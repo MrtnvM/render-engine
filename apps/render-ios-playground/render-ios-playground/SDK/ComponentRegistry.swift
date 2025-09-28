@@ -1,9 +1,8 @@
 class ComponentRegistry {
     // A private dictionary to store renderers, mapping type names to renderer instances.
     private var renderers: [String: Renderer] = [:]
+    private var logger: Logger { return DIContainer.shared.currentLogger }
 
-    // Prevent direct instantiation; encourage using a singleton or injected instance.
-    // If Render.shared is managing it, it would be an internal class.
     init() {}
 
     /**
@@ -13,7 +12,7 @@ class ComponentRegistry {
      */
     func register(renderer: Renderer) {
         renderers[renderer.type] = renderer
-        print("ComponentRegistry: Registered renderer for type '\(renderer.type)'")
+        logger.registry("Registered renderer for type '\(renderer.type)'")
     }
 
     /**
@@ -31,7 +30,7 @@ class ComponentRegistry {
      */
     func unregister(type: String) {
         renderers.removeValue(forKey: type)
-        print("ComponentRegistry: Unregistered renderer for type '\(type)'")
+        logger.registry("Unregistered renderer for type '\(type)'")
     }
     
     /**
@@ -39,6 +38,6 @@ class ComponentRegistry {
      */
     func reset() {
         renderers.removeAll()
-        print("ComponentRegistry: All renderers unregistered.")
+        logger.registry("All renderers unregistered")
     }
 }
