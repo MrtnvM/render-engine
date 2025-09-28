@@ -47,7 +47,7 @@ class DIContainer {
     
     lazy var logger: Logger = {
         let consoleLogger = ConsoleLogger(
-            minimumLogLevel: .info,
+            minimumLogLevel: .debug,
             isEnabled: true,
             includeTimestamp: true
         )
