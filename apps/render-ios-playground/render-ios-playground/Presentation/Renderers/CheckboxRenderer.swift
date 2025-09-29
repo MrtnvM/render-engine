@@ -10,12 +10,18 @@ class CheckboxRenderer: Renderer {
 
 class RenderableCheckbox: UIButton, Renderable {
     let component: Component
+    
     private let checkboxImageView = UIImageView()
     private var isChecked = false
+    
+    private var width: CGFloat { component.style.width ?? 24 }
+    private var height: CGFloat { component.style.height ?? 24 }
+    private var borderWidth: CGFloat { component.style.get(forKey: "borderWidth", ofType: CGFloat.self) ?? 2 }
 
     init(component: Component) {
         self.component = component
         super.init(frame: .zero)
+        
         applyStyle()
         applyFlexStyles()
         setupCheckbox()
@@ -40,66 +46,45 @@ class RenderableCheckbox: UIButton, Renderable {
         // Use flex layout instead of fixed constraints
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        // Set default size using flex if not specified in style
-        if component.style.width == nil {
-            flex.width(24)
-        }
-        if component.style.height == nil {
-            flex.height(24)
-        }
+        yoga.isEnabled = true
+        flex
+            .width(width)
+            .height(height)
+        
+        checkboxImageView.yoga.isEnabled = true
+        checkboxImageView.flex
+            .width(width)
+            .height(height)
+        
+        flex.addItem(checkboxImageView)
     }
 
     private func updateCheckboxAppearance() {
         if isChecked {
             // Show checked state
-            checkboxImageView.image = createCheckedImage()
+            checkboxImageView.image = UIImage.checkbox
             // Use custom background color from component style, fallback to system blue
-            self.backgroundColor = component.style.backgroundColor != UIColor.clear ? component.style.backgroundColor : UIColor.systemBlue
+            self.backgroundColor = component.style.backgroundColor
+            self.layer.borderColor = UIColor.clear.cgColor
         } else {
             // Show unchecked state
-            checkboxImageView.image = createUncheckedImage()
+            checkboxImageView.image = nil
+            self.layer.borderColor = UIColor.gray.cgColor
             self.backgroundColor = UIColor.clear
         }
 
         // Add border
-        self.layer.borderWidth = 2
+        self.layer.borderWidth = component.style.get(forKey: "borderWidth", ofType: CGFloat.self) ?? 2
         // Use custom border color from component style, fallback to system blue
-        let borderColor = component.style.borderColor != UIColor.clear ? component.style.borderColor : UIColor.systemBlue
-        self.layer.borderColor = isChecked ? borderColor.cgColor : UIColor.gray.cgColor
+        
         // Use custom corner radius from component style, fallback to 4
-        self.layer.cornerRadius = component.style.cornerRadius > 0 ? component.style.cornerRadius : 4
+        let conrnerRadius = component.style.get(forKey: "cornerRadius", ofType: CGFloat.self)
+        self.layer.cornerRadius = conrnerRadius ?? 4
 
         // Add the image view
         if checkboxImageView.superview == nil {
             self.addSubview(checkboxImageView)
-            checkboxImageView.translatesAutoresizingMaskIntoConstraints = false
-            checkboxImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-            checkboxImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-            checkboxImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-            checkboxImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         }
-    }
-
-    private func createCheckedImage() -> UIImage? {
-        let size = CGSize(width: 16, height: 16)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        defer { UIGraphicsEndImageContext() }
-
-        let context = UIGraphicsGetCurrentContext()!
-        context.setStrokeColor(UIColor.white.cgColor)
-        context.setLineWidth(2)
-
-        // Draw checkmark
-        context.move(to: CGPoint(x: 3, y: 8))
-        context.addLine(to: CGPoint(x: 7, y: 12))
-        context.addLine(to: CGPoint(x: 13, y: 4))
-        context.strokePath()
-
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-
-    private func createUncheckedImage() -> UIImage? {
-        return nil // No image for unchecked state
     }
 
     @objc private func checkboxTapped() {
@@ -111,10 +96,32 @@ class RenderableCheckbox: UIButton, Renderable {
         // You could add callback here if needed
         // component.onStateChange?(.checked(isChecked))
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        frame.size = CGSize(width: width, height: height)
+        
+        flex.layout(mode: .adjustHeight)
+    }
 
     private func applyStyle() {
         applyVisualStyles()
+        
+        if #available(iOS 15.0, *) {
+            if var config = self.configuration {
+                config.contentInsets = .zero
+                config.titlePadding = .zero
+                config.imagePadding = .zero
+                self.configuration = config
+            }
+        } else {
+            contentEdgeInsets = .zero
+            titleEdgeInsets = .zero
+            imageEdgeInsets = .zero
+        }
         // Apply any custom styling if needed
         // This could be extended to support custom colors, sizes, etc.
     }
 }
+

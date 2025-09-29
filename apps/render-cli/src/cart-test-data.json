@@ -1,0 +1,21 @@
+{
+  "SellerSection": {
+    "storeName": "Pear Store",
+    "rating": 4.8,
+    "reviewCount": 643,
+    "checked": true
+  },
+  "CartItem": {
+    "image": "https://example.com/product.jpg",
+    "price": "26 591 ₽",
+    "title": "Apple Watch 10 42mm Blue",
+    "quantity": 2,
+    "checked": false
+  },
+  "BundleItem": {
+    "image": "watch.png",
+    "currentPrice": "26 591 ₽",
+    "originalPrice": "27 990 ₽",
+    "title": "Apple Watch 10 42mm Blue"
+  }
+}

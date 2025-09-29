@@ -39,6 +39,12 @@
         ]
       },
       {
+        "type": "Spacer",
+        "properties": {
+          "size": 20
+        }
+      },
+      {
         "type": "Stack",
         "style": {
           "marginVertical": 20,
@@ -63,6 +69,30 @@
             },
             "properties": {
               "title": "Learn More"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Spacer",
+        "style": {
+          "flex": 1
+        }
+      },
+      {
+        "type": "Row",
+        "style": {
+          "justifyContent": "center"
+        },
+        "children": [
+          {
+            "type": "Text",
+            "style": {
+              "fontSize": 12,
+              "color": "#666"
+            },
+            "properties": {
+              "text": "Footer Content"
             }
           }
         ]
@@ -108,6 +138,12 @@
           ]
         },
         {
+          "type": "Spacer",
+          "properties": {
+            "size": 20
+          }
+        },
+        {
           "type": "Stack",
           "style": {
             "marginVertical": 20,
@@ -132,6 +168,30 @@
               },
               "properties": {
                 "title": "Learn More"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Spacer",
+          "style": {
+            "flex": 1
+          }
+        },
+        {
+          "type": "Row",
+          "style": {
+            "justifyContent": "center"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "style": {
+                "fontSize": 12,
+                "color": "#666"
+              },
+              "properties": {
+                "text": "Footer Content"
               }
             }
           ]

@@ -90,6 +90,7 @@ public class RenderViewController: UIViewController, ScenarioObserver {
         view.addSubview(rootFlexContainer)
         rootFlexContainer.flex
             .direction(.column)
+            .width(100%)
             .justifyContent(.start)
             .alignItems(.start)
     }
@@ -97,19 +98,32 @@ public class RenderViewController: UIViewController, ScenarioObserver {
     private func buildViewHierarchy(from component: Component) {
         rootFlexContainer.subviews.forEach { $0.removeFromSuperview() }
         
-        rootFlexContainer.flex.define { flex in
-            if let view = buildView(from: component) {
-                flex.addItem(view)
-            }
+        guard let scenario = scenario else {
+            return
         }
         
-        // Force layout update after rebuilding the hierarchy
-        rootFlexContainer.setNeedsLayout()
-        rootFlexContainer.layoutIfNeeded()
+        let builder = ViewTreeBuilder(scenario: scenario)
         
-        // Ensure the parent view also updates its layout
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
+        guard let view = builder.buildViewTree(from: component) else {
+            fatalError("View not built")
+        }
+        
+        rootFlexContainer.flex.addItem(view)
+        return
+        
+//        rootFlexContainer.flex.define { flex in
+//            if let view = buildView(from: component) {
+//                flex.addItem(view)
+//            }
+//        }
+//        
+//        // Force layout update after rebuilding the hierarchy
+//        rootFlexContainer.setNeedsLayout()
+//        rootFlexContainer.layoutIfNeeded()
+//        
+//        // Ensure the parent view also updates its layout
+//        view.setNeedsLayout()
+//        view.layoutIfNeeded()
     }
 
     private func buildView(from component: Component) -> UIView? {

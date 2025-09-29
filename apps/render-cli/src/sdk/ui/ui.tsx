@@ -89,3 +89,15 @@ export interface RatingProps extends ViewStyle {
 }
 
 export const Rating = (props: RatingProps): null => null
+
+// ---------------- SPACER ----------------
+
+export interface SpacerProps extends ViewStyle {
+  style?: ViewStyle
+  properties?: {
+    size?: number
+    minSize?: number
+  }
+}
+
+export const Spacer = (props: SpacerProps): null => null

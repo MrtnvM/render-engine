@@ -74,7 +74,8 @@ class DIContainer {
             CheckboxRenderer(),
             StepperRenderer(),
             RatingRenderer(),
-            NavbarRenderer()
+            NavbarRenderer(),
+            SpacerRenderer()
         ]
         renderers.forEach { registry.register(renderer: $0) }
         return registry

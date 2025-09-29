@@ -4,109 +4,68 @@ export const SCENARIO_KEY = 'avito-cart'
 
 export default function CartScreen() {
   return (
-    <Column style={{ width: '100%', height: '100%', backgroundColor: '#F0F8FF' }}>
-      {/* Navigation Bar */}
-      <Row
-        style={{
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 16,
-          height: 48,
-          backgroundColor: '#E6F3FF',
-        }}
-      >
-        <Button style={{ backgroundColor: '#E0E0E0', borderRadius: '8px', padding: 8 }} properties={{ title: '←' }} />
-        <Text style={{ fontSize: 18, fontWeight: '800', backgroundColor: '#DDDDDD', paddingHorizontal: 8, paddingVertical: 4, borderRadius: '6px' }} properties={{ text: 'Корзина' }} />
-        <Column style={{ width: 24 }} />
-      </Row>
-
+    <Column style={{ backgroundColor: '#F0F8FF' }}>
       {/* Select All Section */}
-      <Row
+      <Row 
         style={{ 
-          alignItems: 'center', 
+          alignItems: 'center',
           paddingHorizontal: 16, 
           paddingVertical: 12,
           backgroundColor: '#FFF2E6',
-          width: '100%'
         }}
       >
-        <Row style={{ alignItems: 'center', gap: 11, flex: 1 }}>
-          <Checkbox 
-            style={{ 
-              backgroundColor: '#0099F7',
-              borderColor: '#0099F7',
-              borderRadius: '4px'
-            }}
-            properties={{ checked: true, disabled: false }} 
-          />
-          <Text 
-            style={{ 
-              fontSize: 15, 
-              fontWeight: '500',
-              color: '#000000',
-              backgroundColor: '#CCCCCC',
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              borderRadius: '6px'
-            }} 
-            properties={{ text: 'Выбрать всё' }} 
-          />
-        </Row>
+        <Checkbox 
+          style={{ 
+            borderColor: '#0099F7',
+            borderRadius: '4px',
+            marginRight: 16,
+          }}
+          properties={{ checked: true, disabled: false }} 
+        />
         <Text 
           style={{ 
             fontSize: 15, 
-            fontWeight: '500', 
+            fontWeight: '500',
             color: '#000000',
-            backgroundColor: '#FFE4E1',
+            backgroundColor: '#CCCCCC',
             paddingHorizontal: 8,
             paddingVertical: 4,
-            borderRadius: '6px'
+            borderRadius: '6px',
+            marginRight: 16,
+            flexGrow: 1,
+          }} 
+          properties={{ text: 'Выбрать всё' }} 
+        />
+        <Text
+          style={{ 
+            fontSize: 15, 
+            fontWeight: '500', 
+            color: '#0099F7',
+            backgroundColor: '#FFE4E1',
+            paddingVertical: 4,
+            borderRadius: '6px',
           }} 
           properties={{ text: 'Удалить (3)' }} 
         />
       </Row>
 
-      {/* Content */}
       <Column style={{ flex: 1, paddingHorizontal: 0, backgroundColor: '#FAFAFA' }}>
         {/* Seller Section 1: Pear Store */}
         <SellerSection storeName="Pear Store" rating={4.8} reviewCount={643} checked={true} />
-
-        {/* Cart Items for Pear Store */}
-        <Column style={{ backgroundColor: '#E8F5E8', paddingVertical: 24 }}>
-          <CartItem
-            image="charger.png"
-            price="4 990 ₽"
-            title="Зарядка MagSafe Charger 15W 1 метр"
-            quantity={1}
-            checked={true}
-          />
-
-          <CartItem image="airpods.png" price="15 990 ₽" title="AirPods Pro 2" quantity={1} checked={true} />
-        </Column>
-
-        {/* Bundle/Discount Section */}
-        <BundleSection />
-
-        {/* Seller Section 2: TECHNO ZONE */}
-        <SellerSection storeName="TECHNO ZONE" rating={5.0} reviewCount={916} checked={true} />
-
-        {/* Cart Item for TECHNO ZONE */}
-        <CartItem image="iphone.png" price="99 990 ₽" title="iPhone 16 Pro, 256 ГБ" quantity={1} checked={true} />
       </Column>
 
-      {/* Bottom Bar */}
-      <BottomBar />
+
     </Column>
   )
 }
 
 function SellerSection({ storeName, rating, reviewCount, checked }: any) {
   return (
-    <Row style={{ alignItems: 'center', gap: 11, paddingHorizontal: 16, paddingVertical: 16, backgroundColor: '#F0E6FF' }}>
-      <Checkbox style={{ backgroundColor: '#F0F8FF', borderRadius: '4px', padding: 4 }} properties={{ checked: checked, disabled: false }} />
-      <Row style={{ alignItems: 'center', gap: 5 }}>
+    <Row style={{ alignItems: 'center', paddingHorizontal: 16, paddingVertical: 16, backgroundColor: '#F0E6FF' }}>
+      {/* <Checkbox style={{ backgroundColor: '#F0F8FF', borderRadius: '4px', padding: 4 }} properties={{ checked: checked, disabled: false }} /> */}
+      <Row style={{ alignItems: 'center' }}>
         <Text style={{ fontSize: 21, fontWeight: '800', backgroundColor: '#F0F8FF', paddingHorizontal: 8, paddingVertical: 4, borderRadius: '6px' }} properties={{ text: storeName }} />
-        <Rating style={{ backgroundColor: '#FFF8DC', borderRadius: '6px', padding: 4 }} properties={{ rating: rating, maxRating: 5, interactive: false }} />
+        {/* <Rating style={{ backgroundColor: '#FFF8DC', borderRadius: '6px', padding: 4 }} properties={{ rating: rating, maxRating: 5, interactive: false }} /> */}
         <Text style={{ fontSize: 15, fontWeight: '500', backgroundColor: '#E6F3FF', paddingHorizontal: 6, paddingVertical: 2, borderRadius: '4px' }} properties={{ text: rating.toString() }} />
         <Text style={{ fontSize: 15, fontWeight: '500', color: '#A3A3A3', backgroundColor: '#F5F5F5', paddingHorizontal: 6, paddingVertical: 2, borderRadius: '4px' }} properties={{ text: `(${reviewCount})` }} />
       </Row>

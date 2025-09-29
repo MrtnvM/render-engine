@@ -62,6 +62,12 @@ extension MainViewController: MainViewDelegate {
         let navController = UINavigationController(rootViewController: showcaseVC)
         present(navController, animated: true)
     }
+
+    func mainViewDidTapUIKitButton(_ mainView: MainView) {
+        let uiKitVC = UIKitViewController()
+        let navController = UINavigationController(rootViewController: uiKitVC)
+        present(navController, animated: true)
+    }
     
     func mainView(_ mainView: MainView, shouldPresentAlert alert: UIAlertController) {
         present(alert, animated: true)

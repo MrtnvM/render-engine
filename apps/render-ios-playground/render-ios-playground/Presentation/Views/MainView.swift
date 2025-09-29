@@ -4,6 +4,7 @@ import UIKit
 protocol MainViewDelegate: AnyObject {
     func mainViewDidTapFetchButton(_ mainView: MainView)
     func mainViewDidTapDesignSystemButton(_ mainView: MainView)
+    func mainViewDidTapUIKitButton(_ mainView: MainView)
     func mainView(_ mainView: MainView, shouldPresentAlert alert: UIAlertController)
 }
 
@@ -32,6 +33,16 @@ class MainView: UIView {
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(designSystemButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var uiKitButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("🎨 UI Kit", for: .normal)
+        button.backgroundColor = UIColor(red: 0.98, green: 0.58, blue: 0.27, alpha: 1.0) // Orange color
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(uiKitButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -63,18 +74,19 @@ class MainView: UIView {
     }
     
     private func setupButtons() {
-        let buttonStack = UIStackView(arrangedSubviews: [designSystemButton, fetchButton])
-        buttonStack.axis = .horizontal
-        buttonStack.spacing = 16
+        let views = [designSystemButton, uiKitButton, fetchButton]
+        let buttonStack = UIStackView(arrangedSubviews: views)
+        buttonStack.axis = .vertical
+        buttonStack.spacing = 12
         buttonStack.distribution = .fillEqually
-        
+
         addSubview(buttonStack)
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             buttonStack.centerXAnchor.constraint(equalTo: centerXAnchor),
             buttonStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            buttonStack.widthAnchor.constraint(equalToConstant: 320),
-            buttonStack.heightAnchor.constraint(equalToConstant: 50)
+            buttonStack.widthAnchor.constraint(equalToConstant: 360),
+            buttonStack.heightAnchor.constraint(equalToConstant: CGFloat(150.0) + CGFloat(12.0) * CGFloat(views.count))
         ])
     }
     
@@ -94,6 +106,10 @@ class MainView: UIView {
     
     @objc private func designSystemButtonTapped() {
         delegate?.mainViewDidTapDesignSystemButton(self)
+    }
+
+    @objc private func uiKitButtonTapped() {
+        delegate?.mainViewDidTapUIKitButton(self)
     }
     
     // MARK: - Public Methods

@@ -35,15 +35,15 @@ enum ContentAlignment: ViewStyleEnum {
 
     static func from(string: String) -> ContentAlignment {
         switch string {
-        case "flexStart":
+        case "flex-start":
             return .flexStart
-        case "flexEnd":
+        case "flex-end":
             return .flexEnd
-        case "spaceBetween":
+        case "space-between":
             return .spaceBetween
-        case "spaceAround":
+        case "space-around":
             return .spaceAround
-        case "spaceEvenly":
+        case "space-evenly":
             return .spaceEvenly
         case "center":
             return .center
@@ -64,9 +64,9 @@ enum AlignItems: ViewStyleEnum {
 
     static func from(string: String) -> AlignItems {
         switch string {
-        case "flexStart":
+        case "flex-start":
             return .flexStart
-        case "flexEnd":
+        case "flex-end":
             return .flexEnd
         case "center":
             return .center
@@ -99,6 +99,18 @@ public class ViewStyle {
 
     var alignItems: AlignItems {
         return get(forKey: "alignItems", ofType: AlignItems.self) ?? AlignItems.defaultValue
+    }
+    
+    var gap: CGFloat? {
+        return get(forKey: "gap", ofType: CGFloat.self)
+    }
+    
+    var rowGap: CGFloat? {
+        return get(forKey: "rowGap", ofType: CGFloat.self)
+    }
+    
+    var columnGap: CGFloat? {
+        return get(forKey: "columnGap", ofType: CGFloat.self)
     }
 
     var backgroundColor: UIColor {
@@ -135,6 +147,14 @@ public class ViewStyle {
     
     var flex: CGFloat? {
         return get(forKey: "flex", ofType: CGFloat.self)
+    }
+    
+    var flexGrow: CGFloat? {
+        return get(forKey: "flexGrow", ofType: CGFloat.self)
+    }
+    
+    var flexShrink: CGFloat? {
+        return get(forKey: "flexShrink", ofType: CGFloat.self)
     }
 
     var padding: UIEdgeInsets {
