@@ -8,7 +8,7 @@ class ColumnRenderer: Renderer {
 
     func render(component: Component, context: RendererContext) -> UIView? {
         // A Column is a specialized RenderableView.
-        let view = RenderableView(component: component)
+        let view = RenderableView(component: component, context: context)
         return view
     }
 }

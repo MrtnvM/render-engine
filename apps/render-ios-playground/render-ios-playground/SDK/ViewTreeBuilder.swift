@@ -89,6 +89,8 @@ class ViewTreeBuilder {
             }
         }
         
+        view.flex.layout()
+        
         // 5. Return the fully constructed view with its children attached.
         return view
     }
@@ -163,5 +165,7 @@ class ViewTreeBuilder {
         if let flexShrink = style.flexShrink {
             flex.shrink(flexShrink)
         }
+        
+        flex.layout()
     }
 }

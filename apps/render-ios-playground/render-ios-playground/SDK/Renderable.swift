@@ -3,12 +3,28 @@ import FlexLayout
 
 protocol Renderable {
     var component: Component { get }
+    var context: RendererContext { get }
     
     @MainActor func applyFlexStyles()
     func applyVisualStyles()
 }
 
 extension Renderable where Self: UIView {
+    var valueProvider: ValueProvider {
+        DIContainer.shared.valueProvider
+    }
+    
+    func get<T>(key: String, type: T.Type) -> T? {
+        return valueProvider.resolve(
+            ValueContext(
+                key: key,
+                type: type,
+                component: component,
+                props: context.props
+            )
+        )
+    }
+    
     @MainActor
     func applyFlexStyles() {
         yoga.isEnabled = true

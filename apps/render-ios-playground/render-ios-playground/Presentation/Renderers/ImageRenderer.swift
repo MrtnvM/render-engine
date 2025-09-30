@@ -4,15 +4,17 @@ class ImageRenderer: Renderer {
     let type = "Image"
     
     func render(component: Component, context: RendererContext) -> UIView? {
-        return RenderableImage(component: component)
+        return RenderableImage(component: component, context: context)
     }
 }
 
 class RenderableImage: UIImageView, Renderable {
     let component: Component
-    
-    init(component: Component) {
+    let context: RendererContext
+
+    init(component: Component, context: RendererContext) {
         self.component = component
+        self.context = context
         super.init(frame: .zero)
         setupImageContent()
         applyStyle()
@@ -27,19 +29,18 @@ class RenderableImage: UIImageView, Renderable {
         let style = component.style
         
         // Content mode
-        if let contentModeString = style.get(forKey: "contentMode", ofType: String.self) {
-            self.contentMode = parseContentMode(from: contentModeString)
+        if let contentModeString = get(key: "contentMode", type: String.self) {
+            contentMode = parseContentMode(from: contentModeString)
         } else {
-            self.contentMode = .scaleAspectFit
+            contentMode = .scaleAspectFit
         }
         
-        // Tint color
-        if let tintColor = style.get(forKey: "tintColor", ofType: UIColor.self) {
+        if let tintColor = get(key: "tintColor", type: UIColor.self) {
             self.tintColor = tintColor
         }
         
         // Clips to bounds
-        if let clipsToBounds = style.get(forKey: "clipsToBounds", ofType: Bool.self) {
+        if let clipsToBounds = get(key: "clipsToBounds", type: Bool.self) {
             self.clipsToBounds = clipsToBounds
         }
         
@@ -48,7 +49,8 @@ class RenderableImage: UIImageView, Renderable {
     }
     
     private func setupImageContent() {
-        guard let imageSource = component.properties.getString(forKey: "src") else {
+        let imageSource = get(key: "source", type: String.self)
+        guard let imageSource = imageSource else {
             return
         }
 

@@ -5,99 +5,121 @@ export const SCENARIO_KEY = 'avito-cart'
 export default function CartScreen() {
   return (
     <Column style={{ backgroundColor: '#F0F8FF' }}>
-      {/* Select All Section */}
-      <Row
-        style={{
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          paddingVertical: 12,
-          backgroundColor: '#FFF2E6',
-        }}
-      >
-        <Checkbox
-          style={{
-            borderColor: '#0099F7',
-            borderRadius: '4px',
-            marginRight: 16,
-          }}
-          properties={{ checked: true, disabled: false }}
-        />
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: '500',
-            color: '#000000',
-            backgroundColor: '#CCCCCC',
-            paddingHorizontal: 8,
-            paddingVertical: 4,
-            borderRadius: '6px',
-            marginRight: 16,
-            flexGrow: 1,
-          }}
-          properties={{ text: 'Выбрать всё' }}
-        />
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: '500',
-            color: '#0099F7',
-            backgroundColor: '#FFE4E1',
-            paddingVertical: 4,
-            borderRadius: '6px',
-          }}
-          properties={{ text: 'Удалить (3)' }}
-        />
-      </Row>
-
-      <Column style={{ flex: 1, paddingHorizontal: 0, backgroundColor: '#FAFAFA' }}>
-        {/* Seller Section 1: Pear Store */}
-        <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" />
-      </Column>
+      {/* <TopRow /> */}
+      <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={true} />
     </Column>
   )
 }
 
-function SellerSection({ storeName, rating, reviewCount }: { storeName: string; rating: string; reviewCount: string }) {
+function TopRow() {
   return (
-    <Row style={{ alignItems: 'center', paddingHorizontal: 16, paddingVertical: 16, backgroundColor: '#F0E6FF' }}>
-      {/* <Checkbox style={{ backgroundColor: '#F0F8FF', borderRadius: '4px', padding: 4 }} properties={{ checked: checked, disabled: false }} /> */}
-      <Row style={{ alignItems: 'center' }}>
-        <Text
-          style={{
-            fontSize: 21,
-            fontWeight: '800',
-            backgroundColor: '#F0F8FF',
-            paddingHorizontal: 8,
-            paddingVertical: 4,
-            borderRadius: '6px',
-          }}
-          properties={{ text: storeName }}
-        />
-        {/* <Rating style={{ backgroundColor: '#FFF8DC', borderRadius: '6px', padding: 4 }} properties={{ rating: rating, maxRating: 5, interactive: false }} /> */}
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: '500',
-            backgroundColor: '#E6F3FF',
-            paddingHorizontal: 6,
-            paddingVertical: 2,
-            borderRadius: '4px',
-          }}
-          properties={{ text: rating }}
-        />
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: '500',
-            color: '#A3A3A3',
-            backgroundColor: '#F5F5F5',
-            paddingHorizontal: 6,
-            paddingVertical: 2,
-            borderRadius: '4px',
-          }}
-          properties={{ text: reviewCount }}
-        />
-      </Row>
+    <Row
+      style={{
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: '#333333',
+      }}
+    >
+      <Checkbox
+        style={{
+          borderColor: '#0099F7',
+          borderRadius: 4,
+          marginRight: 16,
+        }}
+        properties={{ checked: true, disabled: false }}
+      />
+      <Text
+        style={{
+          fontSize: 15,
+          fontWeight: 500,
+          color: '#000000',
+          backgroundColor: '#CCCCCC',
+          paddingHorizontal: 8,
+          paddingVertical: 4,
+          borderRadius: 6,
+          marginRight: 16,
+          flexGrow: 1,
+        }}
+        properties={{ text: 'Выбрать всё' }}
+      />
+      <Text
+        style={{
+          fontSize: 15,
+          fontWeight: '500',
+          color: '#0099F7',
+          backgroundColor: '#FFE4E1',
+          paddingVertical: 4,
+          borderRadius: 6,
+        }}
+        properties={{ text: 'Удалить (3)' }}
+      />
+    </Row>
+  )
+}
+
+function SellerSection({
+  storeName,
+  rating,
+  reviewCount,
+  checked,
+}: {
+  storeName: string
+  rating: string
+  reviewCount: string
+  checked: boolean
+}) {
+  return (
+    <Row
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 4,
+        backgroundColor: '#333333',
+      }}
+    >
+      <Checkbox
+        style={{ backgroundColor: '#F0F8FF', borderRadius: 4, padding: 4, marginRight: 12 }}
+        properties={{ checked: checked, disabled: false }}
+      />
+      <Text
+        style={{
+          fontSize: 21,
+          fontWeight: 800,
+          backgroundColor: '#F0F8FF',
+          marginRight: 6,
+        }}
+        properties={{ text: storeName }}
+      />
+      <Image
+        properties={{
+          source: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/star.png',
+        }}
+        style={{
+          width: 16,
+          height: 16,
+          marginRight: 2,
+        }}
+      />
+      <Text
+        style={{
+          fontSize: 15,
+          fontWeight: 500,
+          backgroundColor: '#E6F3FF',
+          marginRight: 2,
+        }}
+        properties={{ text: rating }}
+      />
+      <Text
+        style={{
+          fontSize: 15,
+          fontWeight: 500,
+          color: '#A3A3A3',
+          backgroundColor: '#F5F5F5',
+        }}
+        properties={{ text: reviewCount }}
+      />
     </Row>
   )
 }
@@ -114,12 +136,12 @@ function CartItem({ image, price, title, quantity, checked }: any) {
       }}
     >
       <Checkbox
-        style={{ backgroundColor: '#F0F8FF', borderRadius: '4px', padding: 4 }}
+        style={{ backgroundColor: '#F0F8FF', borderRadius: 4, padding: 4 }}
         properties={{ checked: checked, disabled: false }}
       />
 
       <Image
-        style={{ width: 96, height: 96, borderRadius: '12px', backgroundColor: '#F5F5F5' }}
+        style={{ width: 96, height: 96, borderRadius: 12, backgroundColor: '#F5F5F5' }}
         properties={{ source: image }}
       />
 
@@ -133,7 +155,7 @@ function CartItem({ image, price, title, quantity, checked }: any) {
                 backgroundColor: '#E8F5E8',
                 paddingHorizontal: 8,
                 paddingVertical: 4,
-                borderRadius: '6px',
+                borderRadius: 6,
               }}
               properties={{ text: price }}
             />
@@ -144,27 +166,21 @@ function CartItem({ image, price, title, quantity, checked }: any) {
                 backgroundColor: '#FFF8DC',
                 paddingHorizontal: 6,
                 paddingVertical: 2,
-                borderRadius: '4px',
+                borderRadius: 4,
               }}
               properties={{ text: title }}
             />
           </Column>
 
           <Row style={{ gap: 4 }}>
-            <Button
-              style={{ backgroundColor: '#FFE0E0', borderRadius: '6px', padding: 4 }}
-              properties={{ title: '♡' }}
-            />
-            <Button
-              style={{ backgroundColor: '#FFE0E0', borderRadius: '6px', padding: 4 }}
-              properties={{ title: '🗑️' }}
-            />
+            <Button style={{ backgroundColor: '#FFE0E0', borderRadius: 6, padding: 4 }} properties={{ title: '♡' }} />
+            <Button style={{ backgroundColor: '#FFE0E0', borderRadius: 6, padding: 4 }} properties={{ title: '🗑️' }} />
           </Row>
         </Row>
 
         <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <Stepper
-            style={{ backgroundColor: '#E6F3FF', borderRadius: '8px', padding: 8 }}
+            style={{ backgroundColor: '#E6F3FF', borderRadius: 8, padding: 8 }}
             properties={{ value: quantity, minimumValue: 1, maximumValue: 10, disabled: false }}
           />
           <Text
@@ -175,7 +191,7 @@ function CartItem({ image, price, title, quantity, checked }: any) {
               backgroundColor: '#F3E5F5',
               paddingHorizontal: 8,
               paddingVertical: 4,
-              borderRadius: '6px',
+              borderRadius: 6,
             }}
             properties={{ text: 'Купить с доставкой' }}
           />
@@ -195,7 +211,7 @@ function BundleSection() {
             backgroundColor: '#FFF8DC',
             paddingHorizontal: 8,
             paddingVertical: 4,
-            borderRadius: '8px',
+            borderRadius: 8,
           }}
           properties={{ text: '🎁' }}
         />
@@ -208,14 +224,11 @@ function BundleSection() {
                 backgroundColor: '#E3F2FD',
                 paddingHorizontal: 8,
                 paddingVertical: 4,
-                borderRadius: '6px',
+                borderRadius: 6,
               }}
               properties={{ text: 'Добавьте ещё 1 товар до скидки 5%' }}
             />
-            <Button
-              style={{ backgroundColor: '#E0E0E0', borderRadius: '8px', padding: 8 }}
-              properties={{ title: '→' }}
-            />
+            <Button style={{ backgroundColor: '#E0E0E0', borderRadius: 8, padding: 8 }} properties={{ title: '→' }} />
           </Row>
         </Column>
       </Row>
@@ -243,7 +256,7 @@ function BundleSection() {
             width: 94,
             height: 94,
             backgroundColor: '#F5F5F5',
-            borderRadius: '12px',
+            borderRadius: 12,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -256,14 +269,11 @@ function BundleSection() {
                 backgroundColor: '#F5F5F5',
                 paddingHorizontal: 8,
                 paddingVertical: 4,
-                borderRadius: '6px',
+                borderRadius: 6,
               }}
               properties={{ text: 'Ещё' }}
             />
-            <Button
-              style={{ backgroundColor: '#E0E0E0', borderRadius: '8px', padding: 8 }}
-              properties={{ title: '→' }}
-            />
+            <Button style={{ backgroundColor: '#E0E0E0', borderRadius: 8, padding: 8 }} properties={{ title: '→' }} />
           </Column>
         </Column>
       </Row>
@@ -276,7 +286,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
     <Column style={{ width: 236, gap: 12, backgroundColor: '#F3E5F5' }}>
       <Row style={{ alignItems: 'center', gap: 12 }}>
         <Image
-          style={{ width: 94, height: 94, borderRadius: '12px', backgroundColor: '#F5F5F5' }}
+          style={{ width: 94, height: 94, borderRadius: 12, backgroundColor: '#F5F5F5' }}
           properties={{ source: image }}
         />
 
@@ -290,7 +300,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
                   backgroundColor: '#E8F5E8',
                   paddingHorizontal: 6,
                   paddingVertical: 2,
-                  borderRadius: '4px',
+                  borderRadius: 4,
                 }}
                 properties={{ text: currentPrice }}
               />
@@ -303,7 +313,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
                     backgroundColor: '#F5F5F5',
                     paddingHorizontal: 4,
                     paddingVertical: 2,
-                    borderRadius: '4px',
+                    borderRadius: 4,
                   }}
                   properties={{ text: originalPrice }}
                 />
@@ -313,7 +323,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
                     backgroundColor: '#F5F5F5',
                     paddingHorizontal: 4,
                     paddingVertical: 2,
-                    borderRadius: '4px',
+                    borderRadius: 4,
                   }}
                   properties={{ text: '─' }}
                 />
@@ -326,7 +336,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
                 backgroundColor: '#FFF8DC',
                 paddingHorizontal: 6,
                 paddingVertical: 2,
-                borderRadius: '4px',
+                borderRadius: 4,
               }}
               properties={{ text: title }}
             />
@@ -335,7 +345,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
           <Button
             style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: '10px',
+              borderRadius: 10,
               paddingHorizontal: 12,
               paddingVertical: 8,
               borderWidth: 1,
@@ -351,7 +361,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
 
 function BottomBar() {
   return (
-    <Column style={{ backgroundColor: '#E8F5E8', paddingHorizontal: 16, paddingVertical: 16, borderRadius: '28px' }}>
+    <Column style={{ backgroundColor: '#E8F5E8', paddingHorizontal: 16, paddingVertical: 16, borderRadius: 28 }}>
       <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <Column>
           <Text
@@ -362,7 +372,7 @@ function BottomBar() {
               backgroundColor: '#E6F3FF',
               paddingHorizontal: 8,
               paddingVertical: 4,
-              borderRadius: '6px',
+              borderRadius: 6,
             }}
             properties={{ text: '3 товара' }}
           />
@@ -373,21 +383,21 @@ function BottomBar() {
               backgroundColor: '#E8F5E8',
               paddingHorizontal: 12,
               paddingVertical: 6,
-              borderRadius: '8px',
+              borderRadius: 8,
             }}
             properties={{ text: '120 979 ₽' }}
           />
         </Column>
 
         <Button
-          style={{ backgroundColor: '#965EEB', borderRadius: '16px', paddingHorizontal: 18, paddingVertical: 17 }}
+          style={{ backgroundColor: '#965EEB', borderRadius: 16, paddingHorizontal: 18, paddingVertical: 17 }}
           properties={{ title: 'Оформить доставку' }}
         />
       </Row>
 
       {/* Home Indicator */}
       <Row style={{ justifyContent: 'center' }}>
-        <Column style={{ width: 134, height: 5, backgroundColor: '#000000', borderRadius: '3px' }} />
+        <Column style={{ width: 134, height: 5, backgroundColor: '#000000', borderRadius: 3 }} />
       </Row>
     </Column>
   )

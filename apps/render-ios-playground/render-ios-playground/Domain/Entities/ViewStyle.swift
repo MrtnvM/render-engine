@@ -233,6 +233,8 @@ public class ViewStyle {
         case is AlignItems.Type:
             let configValue = config.getString(forKey: key) ?? ""
             value = AlignItems.from(string: configValue) as? T
+        case is [String: Any].Type:
+            value = config.getDictionary(forKey: key) as? T
         case is [String: Any?].Type:
             value = config.getDictionary(forKey: key) as? T
         default:

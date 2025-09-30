@@ -4,12 +4,13 @@ class CheckboxRenderer: Renderer {
     let type = "Checkbox"
 
     func render(component: Component, context: RendererContext) -> UIView? {
-        return RenderableCheckbox(component: component)
+        return RenderableCheckbox(component: component, context: context)
     }
 }
 
 class RenderableCheckbox: UIButton, Renderable {
     let component: Component
+    let context: RendererContext
     
     private let checkboxImageView = UIImageView()
     private var isChecked = false
@@ -17,9 +18,12 @@ class RenderableCheckbox: UIButton, Renderable {
     private var width: CGFloat { component.style.width ?? 24 }
     private var height: CGFloat { component.style.height ?? 24 }
     private var borderWidth: CGFloat { component.style.get(forKey: "borderWidth", ofType: CGFloat.self) ?? 2 }
+    
+    private let valueProvider = DIContainer.shared.valueProvider
 
-    init(component: Component) {
+    init(component: Component, context: RendererContext) {
         self.component = component
+        self.context = context
         super.init(frame: .zero)
         
         applyStyle()
@@ -33,8 +37,22 @@ class RenderableCheckbox: UIButton, Renderable {
 
     private func setupCheckbox() {
         // Set initial state
-        isChecked = component.properties.getBool(forKey: "checked") ?? false
-        let disabled = component.properties.getBool(forKey: "disabled") ?? false
+        isChecked = valueProvider.resolve(
+            ValueContext(
+                key: "checked",
+                type: Bool.self,
+                component: component,
+                props: context.props
+            )
+        ) ?? false
+        let disabled = valueProvider.resolve(
+            ValueContext(
+                key: "disabled",
+                type: Bool.self,
+                component: component,
+                props: context.props
+            )
+        ) ?? false
 
         // Configure button
         self.isEnabled = !disabled
@@ -53,22 +71,24 @@ class RenderableCheckbox: UIButton, Renderable {
         
         checkboxImageView.yoga.isEnabled = true
         checkboxImageView.flex
+            .position(.absolute)
             .width(width)
             .height(height)
+            .top(0)
+            .left(0)
+        
         
         flex.addItem(checkboxImageView)
     }
 
     private func updateCheckboxAppearance() {
+        checkboxImageView.image = UIImage.checkbox
         if isChecked {
-            // Show checked state
-            checkboxImageView.image = UIImage.checkbox
-            // Use custom background color from component style, fallback to system blue
+            checkboxImageView.isHidden = false
             self.backgroundColor = component.style.backgroundColor
             self.layer.borderColor = UIColor.clear.cgColor
         } else {
-            // Show unchecked state
-            checkboxImageView.image = nil
+            checkboxImageView.isHidden = true
             self.layer.borderColor = UIColor.gray.cgColor
             self.backgroundColor = UIColor.clear
         }
@@ -95,14 +115,6 @@ class RenderableCheckbox: UIButton, Renderable {
 
         // You could add callback here if needed
         // component.onStateChange?(.checked(isChecked))
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        frame.size = CGSize(width: width, height: height)
-        
-        flex.layout(mode: .adjustHeight)
     }
 
     private func applyStyle() {

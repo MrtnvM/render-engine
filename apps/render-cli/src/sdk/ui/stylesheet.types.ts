@@ -239,27 +239,27 @@ export interface ViewStyle extends FlexStyle, ShadowStyleIOS {
   borderBlockEndColor?: ColorValue | undefined
   borderBlockStartColor?: ColorValue | undefined
   borderBottomColor?: ColorValue | undefined
-  borderBottomEndRadius?: string | undefined
-  borderBottomLeftRadius?: string | undefined
-  borderBottomRightRadius?: string | undefined
-  borderBottomStartRadius?: string | undefined
+  borderBottomEndRadius?: number | undefined
+  borderBottomLeftRadius?: number | undefined
+  borderBottomRightRadius?: number | undefined
+  borderBottomStartRadius?: number | undefined
   borderColor?: ColorValue | undefined
   borderCurve?: 'circular' | 'continuous' | undefined
   borderEndColor?: ColorValue | undefined
-  borderEndEndRadius?: string | undefined
-  borderEndStartRadius?: string | undefined
+  borderEndEndRadius?: number | undefined
+  borderEndStartRadius?: number | undefined
   borderLeftColor?: ColorValue | undefined
-  borderRadius?: string | undefined
+  borderRadius?: number | undefined
   borderRightColor?: ColorValue | undefined
   borderStartColor?: ColorValue | undefined
-  borderStartEndRadius?: string | undefined
-  borderStartStartRadius?: string | undefined
+  borderStartEndRadius?: number | undefined
+  borderStartStartRadius?: number | undefined
   borderStyle?: 'solid' | 'dotted' | 'dashed' | undefined
   borderTopColor?: ColorValue | undefined
-  borderTopEndRadius?: string | undefined
-  borderTopLeftRadius?: string | undefined
-  borderTopRightRadius?: string | undefined
-  borderTopStartRadius?: string | undefined
+  borderTopEndRadius?: number | undefined
+  borderTopLeftRadius?: number | undefined
+  borderTopRightRadius?: number | undefined
+  borderTopStartRadius?: number | undefined
   outlineColor?: ColorValue | undefined
   outlineOffset?: number | undefined
   outlineStyle?: 'solid' | 'dotted' | 'dashed' | undefined
@@ -390,13 +390,13 @@ export interface TextStyle extends TextStyleIOS, TextStyleAndroid, ViewStyle {
 export interface ImageStyle extends FlexStyle, ShadowStyleIOS {
   resizeMode?: ImageResizeMode | undefined
   backfaceVisibility?: 'visible' | 'hidden' | undefined
-  borderBottomLeftRadius?: string | undefined
-  borderBottomRightRadius?: string | undefined
+  borderBottomLeftRadius?: number | undefined
+  borderBottomRightRadius?: number | undefined
   backgroundColor?: ColorValue | undefined
   borderColor?: ColorValue | undefined
-  borderRadius?: string | undefined
-  borderTopLeftRadius?: string | undefined
-  borderTopRightRadius?: string | undefined
+  borderRadius?: number | undefined
+  borderTopLeftRadius?: number | undefined
+  borderTopRightRadius?: number | undefined
   overflow?: 'visible' | 'hidden' | undefined
   overlayColor?: ColorValue | undefined
   tintColor?: ColorValue | undefined

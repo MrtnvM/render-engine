@@ -348,7 +348,10 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Checkbox", style: style, properties: properties, data: data)
-        return RenderableCheckbox(component: component)
+        return RenderableCheckbox(
+            component: component,
+            context: RendererContext()
+        )
     }
 
     private func createImageVariations() -> [UIView] {
@@ -376,7 +379,7 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Image", style: style, properties: properties, data: data)
-        return RenderableImage(component: component)
+        return RenderableImage(component: component, context: RendererContext())
     }
 
     private func createRatingVariations() -> [UIView] {
@@ -409,7 +412,7 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Rating", style: style, properties: properties, data: data)
-        return RenderableRating(component: component)
+        return RenderableRating(component: component, context: RendererContext(viewController: nil, navigationController: nil, window: nil, scenario: nil, props: Config()))
     }
 
     private func createStepperVariations() -> [UIView] {
@@ -442,7 +445,7 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Stepper", style: style, properties: properties, data: data)
-        return RenderableStepper(component: component)
+        return RenderableStepper(component: component, context: RendererContext())
     }
 
     private func createNavbarVariations() -> [UIView] {
@@ -510,7 +513,7 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "View", style: style, properties: properties, data: data)
-        return RenderableView(component: component)
+        return RenderableView(component: component, context: RendererContext())
     }
 
     private func createRowVariations() -> [UIView] {

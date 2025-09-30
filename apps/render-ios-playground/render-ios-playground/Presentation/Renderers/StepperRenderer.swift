@@ -5,12 +5,14 @@ class StepperRenderer: Renderer {
     let type = "Stepper"
 
     func render(component: Component, context: RendererContext) -> UIView? {
-        return RenderableStepper(component: component)
+        return RenderableStepper(component: component, context: context)
     }
 }
 
 class RenderableStepper: UIView, Renderable {
     let component: Component
+    let context: RendererContext
+    
     private let minusButton = UIButton(type: .system)
     private let plusButton = UIButton(type: .system)
     private let valueLabel = UILabel()
@@ -19,8 +21,9 @@ class RenderableStepper: UIView, Renderable {
     private var maximumValue = 10
     private var isDisabled = false
 
-    init(component: Component) {
+    init(component: Component, context: RendererContext) {
         self.component = component
+        self.context = context
         super.init(frame: .zero)
         applyStyle()
         applyFlexStyles()

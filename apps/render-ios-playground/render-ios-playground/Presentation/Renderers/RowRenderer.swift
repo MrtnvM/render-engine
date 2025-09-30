@@ -8,7 +8,7 @@ class RowRenderer: Renderer {
 
     @MainActor func render(component: Component, context: RendererContext) -> UIView? {
         // A Row is a specialized RenderableView.
-        let view = RenderableView(component: component)
+        let view = RenderableView(component: component, context: context)
         return view
     }
 }

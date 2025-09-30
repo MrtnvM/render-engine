@@ -9,7 +9,7 @@ class SpacerRenderer: Renderer {
     let type = "Spacer"
 
     func render(component: Component, context: RendererContext) -> UIView? {
-        let spacerView = RenderableView(component: component)
+        let spacerView = RenderableView(component: component, context: context)
 
         // Configure flex properties for flexible space
         spacerView.flex.grow(1)  // Allow the spacer to grow and fill available space

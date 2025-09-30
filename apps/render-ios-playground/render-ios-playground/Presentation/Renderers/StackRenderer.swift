@@ -12,7 +12,7 @@ class StackRenderer: Renderer {
     func render(component: Component, context: RendererContext) -> UIView? {
         // The Stack component is a standard RenderableView that acts as a
         // containing block for its children.
-        let view = RenderableView(component: component)
+        let view = RenderableView(component: component, context: context)
         return view
     }
 }

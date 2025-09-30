@@ -75,10 +75,15 @@ public class TestViewController: UIViewController {
 //        self.renderScenario(scenario: self.scenario)
         
         Task {
-            let scenario = try! await self.repo.fetchScenario(key: "avito-cart")
-            
-            await MainActor.run {
-                self.renderScenario(scenario: scenario)
+            do {
+                let scenario = try await self.repo.fetchScenario(key: "avito-cart")
+                
+                await MainActor.run {
+                    self.renderScenario(scenario: scenario)
+                }
+            }
+            catch {
+                print(error)
             }
         }
     }
@@ -114,9 +119,11 @@ public class TestViewController: UIViewController {
         )
         rootFlexContainer.flex.addItem(subview!)
         rootFlexContainer.flex.layout(mode: .fitContainer)
+        rootFlexContainer.setNeedsLayout()
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        rootFlexContainer.logFlexTree()
         return
-        
-        let row = rootFlexContainer.flex.addItem()
         
 //        let checkboxComponent = try! Component.create(from: Config([
 //            "type": "Checkbox",
