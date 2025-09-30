@@ -81,6 +81,14 @@ class DIContainer {
         return registry
     }()
     
+    lazy var valueProvider: ValueProvider = {
+        let resolvers: [ValueResolver] = [
+            ScalarResolver(),
+            PropsResolver(),
+        ]
+        return ValueProvider(resolvers: resolvers)
+    }()
+    
     // MARK: - Logger Management
     
     private var _logger: Logger?

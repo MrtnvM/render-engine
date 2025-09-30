@@ -118,51 +118,51 @@ public class TestViewController: UIViewController {
         
         let row = rootFlexContainer.flex.addItem()
         
-        let checkboxComponent = try! Component.create(from: Config([
-            "type": "Checkbox",
-            "style": [
-                "marginRight": 16,
-            ],
-            "properties": [],
-            "data": []
-        ]))
-        
-        let selectAllText = try! Component.create(from: Config([
-            "type": "Text",
-            "style": [],
-            "properties": [
-                "text": "Выбрать все"
-            ],
-            "data": []
-        ]))
-        
-        let deleteText = try! Component.create(from: Config([
-            "type": "Text",
-            "style": [],
-            "properties": [
-                "text": "Удалить (3)"
-            ],
-            "data": []
-        ]))
-        
-        
-        row
-            .direction(.row)
-            .justifyContent(.start)
-            .alignItems(.center)
-            .padding(UIEdgeInsets(
-                top: 16,
-                left: 16,
-                bottom: 16,
-                right: 16
-            ))
-            .backgroundColor(.red)
-        
-        row.define { flex in
-            flex.addItem(RenderableCheckbox(component: checkboxComponent))
-            flex.addItem(RenderableText(component: selectAllText)).grow(1)
-            flex.addItem(RenderableText(component: deleteText))
-        }
+//        let checkboxComponent = try! Component.create(from: Config([
+//            "type": "Checkbox",
+//            "style": [
+//                "marginRight": 16,
+//            ],
+//            "properties": [],
+//            "data": []
+//        ]))
+//        
+//        let selectAllText = try! Component.create(from: Config([
+//            "type": "Text",
+//            "style": [],
+//            "properties": [
+//                "text": "Выбрать все"
+//            ],
+//            "data": []
+//        ]))
+//        
+//        let deleteText = try! Component.create(from: Config([
+//            "type": "Text",
+//            "style": [],
+//            "properties": [
+//                "text": "Удалить (3)"
+//            ],
+//            "data": []
+//        ]))
+//        
+//        
+//        row
+//            .direction(.row)
+//            .justifyContent(.start)
+//            .alignItems(.center)
+//            .padding(UIEdgeInsets(
+//                top: 16,
+//                left: 16,
+//                bottom: 16,
+//                right: 16
+//            ))
+//            .backgroundColor(.red)
+//        
+//        row.define { flex in
+//            flex.addItem(RenderableCheckbox(component: checkboxComponent))
+//            flex.addItem(RenderableText(component: selectAllText)).grow(1)
+//            flex.addItem(RenderableText(component: deleteText))
+//        }
     }
     
     func buildViewTree(flex: FlexLayout.Flex, component: Component, scenario: Scenario) -> UIView? {

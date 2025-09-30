@@ -2,7 +2,6 @@ import UIKit
 import FlexLayout
 
 class ViewTreeBuilder {
-    
     private let scenario: Scenario
     private let viewController: UIViewController?
     private let navigationController: UINavigationController?
@@ -29,22 +28,22 @@ class ViewTreeBuilder {
      * This function looks up the appropriate renderer for the given component's type,
      * creates the view, and then recursively calls itself to build views for all
      * child components, adding them to the newly created view's flex container.
+     * 
+     * Enhanced to handle component props by expanding custom components with their data.
      *
      * - Parameter component: The `Component` object to be rendered.
      * - Returns: A `UIView` instance representing the component and its entire
      *   child hierarchy, or `nil` if rendering fails (e.g., no renderer found).
      */
     @MainActor
-    func buildViewTree(from component: Component) -> UIView? {
-        // 1. Find the renderer for the component's type from the registry.
+    func buildViewTree(from component: Component, props: Config? = nil) -> UIView? {
+        // 1. Check if this is a custom component defined in the scenario
+        if let subcomponent = scenario.components[component.type] {
+            return buildViewTree(from: subcomponent, props: component.data)
+        }
+        
+        // 2. Find the renderer for the component's type from the registry.
         guard let renderer = registry.renderer(for: component.type) else {
-            let subcomponent = scenario.components[component.type]
-            
-            if let subcomponent = subcomponent {
-                // TODO: Add data to this component or create template type
-                return buildViewTree(from: subcomponent)
-            }
-            
             logger.warning(
                 "Warning: No renderer found for type '\(component.type)'. Skipping.",
                 category: "ViewTreeBuilder"
@@ -52,14 +51,16 @@ class ViewTreeBuilder {
             return nil
         }
         
+        let props = props ?? Config()
         let context = RendererContext(
             viewController: viewController,
             navigationController: navigationController,
             window: window,
-            scenario: scenario
+            scenario: scenario,
+            props: props,
         )
         
-        // 2. Use the renderer to create the UIView. The renderer is responsible
+        // 3. Use the renderer to create the UIView. The renderer is responsible
         // for creating a view (e.g., RenderableView) that applies the component's styles.
         guard let view = renderer.render(component: component, context: context) else {
             logger.warning(
@@ -72,14 +73,14 @@ class ViewTreeBuilder {
         view.yoga.isEnabled = true
         applyFlexboxLayout(to: view.flex, with: component)
         
-        // 3. Recursively build the view tree for all children.
+        // 4. Recursively build the view tree for all children.
         // The `define` block provides a clean, declarative structure for adding child items.
         let children = component.getChildren()
         if !children.isEmpty {
             view.flex.define { (flex) in // `flex` is the FlexLayout interface for the `view` we just created.
                 for childComponent in children {
                     // Recursively call the function to build the child's view.
-                    if let childView = buildViewTree(from: childComponent) {
+                    if let childView = buildViewTree(from: childComponent, props: props) {
                         // Add the created child view to the current view's flex container.
                         let childFlex = flex.addItem(childView)
                         applyFlexboxLayout(to: childFlex, with: childComponent)
@@ -88,7 +89,7 @@ class ViewTreeBuilder {
             }
         }
         
-        // 4. Return the fully constructed view with its children attached.
+        // 5. Return the fully constructed view with its children attached.
         return view
     }
     

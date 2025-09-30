@@ -126,23 +126,25 @@ public class RenderViewController: UIViewController, ScenarioObserver {
 //        view.layoutIfNeeded()
     }
 
-    private func buildView(from component: Component) -> UIView? {
+    private func buildView(from component: Component, props: Config? = nil) -> UIView? {
         guard let renderer = registry.renderer(for: component.type) else {
             // Check if this component type is defined in the components section
             if let scenario = scenario,
-               let componentDefinition = scenario.components[component.type] {
-                return buildView(from: expandComponentDefinition(componentDefinition, withData: component.data))
+               let subcomponent = scenario.components[component.type] {
+                return buildView(from: subcomponent, props: component.data)
             }
 
             logger.warning("No renderer found for type '\(component.type)' and no component definition found", category: "RenderViewController")
             return nil
         }
 
+        let props = props ?? Config()
         let context = RendererContext(
             viewController: self,
             navigationController: navigationController,
             window: view.window,
-            scenario: scenario
+            scenario: scenario,
+            props: props
         )
         
         guard let view = renderer.render(component: component, context: context) else {
@@ -151,7 +153,7 @@ public class RenderViewController: UIViewController, ScenarioObserver {
 
         // Recursively add children
         component.getChildren().forEach { childNode in
-            if let childView = buildView(from: childNode) {
+            if let childView = buildView(from: childNode, props: props) {
                 view.flex.addItem(childView)
             }
         }

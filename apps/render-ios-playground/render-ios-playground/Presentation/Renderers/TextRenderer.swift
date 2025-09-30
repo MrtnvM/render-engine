@@ -4,16 +4,20 @@ class TextRenderer: Renderer {
     let type = "Text"
     
     func render(component: Component, context: RendererContext) -> UIView? {
-        return RenderableText(component: component)
+        return RenderableText(component: component, context: context)
     }
 }
 
 class RenderableText: UILabel, Renderable {
     let component: Component
+    let context: RendererContext
+    let valueProvider = DIContainer.shared.valueProvider
     
-    init(component: Component) {
+    init(component: Component, context: RendererContext) {
         self.component = component
+        self.context = context
         super.init(frame: .zero)
+        
         applyVisualStyles()
         applyLabelStyle()
         applyFlexStyles()
@@ -25,7 +29,15 @@ class RenderableText: UILabel, Renderable {
     }
     
     private func setupLabel() {
-        let text = component.properties.getString(forKey: "text") ?? ""
+        let text = valueProvider.resolve(
+            ValueContext(
+                key: "text",
+                type: String.self,
+                component: component,
+                props: context.props
+            )
+        )
+        
         self.text = text
     }
     
@@ -46,11 +58,6 @@ class RenderableText: UILabel, Renderable {
         // Text alignment
         if let textAlignmentString = style.get(forKey: "textAlignment", ofType: String.self) {
             self.textAlignment = parseTextAlignment(from: textAlignmentString)
-        }
-        
-        // Text content
-        if let text = style.get(forKey: "text", ofType: String.self) {
-            self.text = text
         }
         
         // Number of lines

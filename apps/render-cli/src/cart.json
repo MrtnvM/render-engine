@@ -73,9 +73,8 @@
             "type": "SellerSection",
             "data": {
               "storeName": "Pear Store",
-              "rating": 4.8,
-              "reviewCount": 643,
-              "checked": true
+              "rating": "4.8",
+              "reviewCount": "643"
             }
           }
         ]
@@ -155,9 +154,8 @@
               "type": "SellerSection",
               "data": {
                 "storeName": "Pear Store",
-                "rating": 4.8,
-                "reviewCount": 643,
-                "checked": true
+                "rating": "4.8",
+                "reviewCount": "643"
               }
             }
           ]
@@ -190,7 +188,10 @@
                 "borderRadius": "6px"
               },
               "properties": {
-                "text": null
+                "text": {
+                  "type": "prop",
+                  "key": "storeName"
+                }
               }
             },
             {
@@ -204,7 +205,10 @@
                 "borderRadius": "4px"
               },
               "properties": {
-                "text": null
+                "text": {
+                  "type": "prop",
+                  "key": "rating"
+                }
               }
             },
             {
@@ -219,7 +223,10 @@
                 "borderRadius": "4px"
               },
               "properties": {
-                "text": null
+                "text": {
+                  "type": "prop",
+                  "key": "reviewCount"
+                }
               }
             }
           ]
@@ -244,7 +251,10 @@
             "padding": 4
           },
           "properties": {
-            "checked": null,
+            "checked": {
+              "type": "prop",
+              "key": "checked"
+            },
             "disabled": false
           }
         },
@@ -257,7 +267,10 @@
             "backgroundColor": "#F5F5F5"
           },
           "properties": {
-            "source": null
+            "source": {
+              "type": "prop",
+              "key": "image"
+            }
           }
         },
         {
@@ -292,7 +305,10 @@
                         "borderRadius": "6px"
                       },
                       "properties": {
-                        "text": null
+                        "text": {
+                          "type": "prop",
+                          "key": "price"
+                        }
                       }
                     },
                     {
@@ -306,7 +322,10 @@
                         "borderRadius": "4px"
                       },
                       "properties": {
-                        "text": null
+                        "text": {
+                          "type": "prop",
+                          "key": "title"
+                        }
                       }
                     }
                   ]
@@ -358,7 +377,10 @@
                     "padding": 8
                   },
                   "properties": {
-                    "value": null,
+                    "value": {
+                      "type": "prop",
+                      "key": "quantity"
+                    },
                     "minimumValue": 1,
                     "maximumValue": 10,
                     "disabled": false
@@ -557,7 +579,10 @@
                 "backgroundColor": "#F5F5F5"
               },
               "properties": {
-                "source": null
+                "source": {
+                  "type": "prop",
+                  "key": "image"
+                }
               }
             },
             {
@@ -590,7 +615,10 @@
                             "borderRadius": "4px"
                           },
                           "properties": {
-                            "text": null
+                            "text": {
+                              "type": "prop",
+                              "key": "currentPrice"
+                            }
                           }
                         },
                         {
@@ -611,7 +639,10 @@
                                 "borderRadius": "4px"
                               },
                               "properties": {
-                                "text": null
+                                "text": {
+                                  "type": "prop",
+                                  "key": "originalPrice"
+                                }
                               }
                             },
                             {
@@ -642,7 +673,10 @@
                         "borderRadius": "4px"
                       },
                       "properties": {
-                        "text": null
+                        "text": {
+                          "type": "prop",
+                          "key": "title"
+                        }
                       }
                     }
                   ]

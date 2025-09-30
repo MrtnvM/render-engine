@@ -302,7 +302,7 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Text", style: style, properties: properties, data: data)
-        return RenderableText(component: component)
+        return RenderableText(component: component, context: RendererContext(viewController: nil, navigationController: nil, window: nil, scenario: nil, props: Config()))
     }
 
     private func alignmentToString(_ alignment: NSTextAlignment) -> String {
@@ -473,7 +473,16 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Navbar", style: style, properties: properties, data: data)
-        return RenderableNavbar(component: component, context: RendererContext(viewController: nil, navigationController: nil, window: nil, scenario: nil))
+        return RenderableNavbar(
+            component: component,
+            context: RendererContext(
+                viewController: nil,
+                navigationController: nil,
+                window: nil,
+                scenario: nil,
+                props: Config()
+            )
+        )
     }
 
     private func createViewVariations() -> [UIView] {

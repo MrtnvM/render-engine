@@ -1,104 +1,9 @@
 import type { NodePath } from '@babel/traverse'
-import fs from 'fs'
-import path from 'path'
-
-// Function to get predefined component names directly from ui.tsx
-function getPredefinedComponents(): string[] {
-  try {
-    // Try different path strategies to find ui.tsx
-    const possiblePaths = [
-      path.resolve(process.cwd(), 'apps/render-cli/src/sdk/ui/ui.tsx'), // From workspace root
-      path.resolve(process.cwd(), 'src/sdk/ui/ui.tsx'), // From project root
-    ]
-
-    let uiContent = ''
-    for (const uiPath of possiblePaths) {
-      try {
-        uiContent = fs.readFileSync(uiPath, 'utf8')
-        break
-      } catch (e) {
-        continue
-      }
-    }
-
-    if (!uiContent) {
-      console.warn('Could not read ui.tsx file, using fallback component list')
-      return ['Column', 'Row', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Stepper', 'Rating']
-    }
-
-    // Extract component names from export const statements
-    const componentNames: string[] = []
-    const exportRegex = /export const (\w+)/g
-    let match
-
-    while ((match = exportRegex.exec(uiContent)) !== null) {
-      componentNames.push(match[1])
-    }
-
-    return componentNames
-  } catch (error) {
-    console.warn('Error reading ui.tsx file, using fallback component list')
-    return ['Column', 'Row', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Stepper', 'Rating']
-  }
-}
-
-// Define types for Babel AST nodes
-interface JSXElement {
-  type: 'JSXElement'
-  openingElement: {
-    name: { name: string }
-    attributes: Array<{
-      type: string
-      name: { name: string }
-      value?: any
-    }>
-  }
-  children: Array<{
-    type: string
-    value?: string
-    json?: JsonNode
-  }>
-}
-
-interface JSXText {
-  type: 'JSXText'
-  value: string
-}
-
-// Type definitions
-type ComponentType = string
-
-interface JsonNode {
-  type: ComponentType
-  style?: Record<string, any>
-  properties?: Record<string, any>
-  data?: Record<string, any>
-  children?: JsonNode[]
-}
-
-interface ComponentMetadata {
-  name: string
-  exportType: 'default' | 'named' | 'helper'
-  jsonNode: JsonNode
-}
-
-interface ASTNode {
-  type: string
-  value?: any
-  name?: string
-  expression?: ASTNode
-  properties?: Array<{
-    key: { 
-      type: string
-      name?: string
-      value?: any
-    }
-    value: ASTNode
-  }>
-}
+import type { ASTNode, ComponentMetadata, JSXElement, JSXText } from './types.js'
+import { getPredefinedComponents } from './ui.js'
 
 // Helper to convert an AST node to a JavaScript value
-function astNodeToValue(node?: ASTNode | null): any {
+export function astNodeToValue(node?: ASTNode | null, componentProps?: Set<string>): any {
   if (!node) return null
 
   switch (node.type) {
@@ -108,8 +13,18 @@ function astNodeToValue(node?: ASTNode | null): any {
       return node.value
     case 'BooleanLiteral':
       return node.value
+    case 'Identifier':
+      // Check if this identifier is a component prop
+      if (componentProps && componentProps.has(node.name || '')) {
+        return {
+          type: 'prop',
+          key: node.name,
+        }
+      }
+      // For non-component props, return null (or could throw an error)
+      return null
     case 'JSXExpressionContainer':
-      return astNodeToValue(node.expression)
+      return astNodeToValue(node.expression, componentProps)
     case 'ObjectExpression':
       return (
         node.properties?.reduce((obj: Record<string, any>, prop) => {
@@ -122,7 +37,7 @@ function astNodeToValue(node?: ASTNode | null): any {
           } else {
             key = String(prop.key)
           }
-          obj[key] = astNodeToValue(prop.value)
+          obj[key] = astNodeToValue(prop.value, componentProps)
           return obj
         }, {}) || {}
       )
@@ -138,8 +53,90 @@ function astNodeToValue(node?: ASTNode | null): any {
 export default function jsxToJsonPlugin() {
   const components: ComponentMetadata[] = []
 
+  // Track component props for each function scope
+  const componentPropsStack: Set<string>[] = []
+
+  // Helper to get current component props
+  function getCurrentComponentProps(): Set<string> {
+    return componentPropsStack[componentPropsStack.length - 1] || new Set()
+  }
+
   const plugin = {
     visitor: {
+      // Track function parameters for arrow functions and function declarations
+      ArrowFunctionExpression: {
+        enter(path: any) {
+          const props = new Set<string>()
+
+          // Extract parameter names from arrow function
+          if (path.node.params) {
+            path.node.params.forEach((param: any) => {
+              if (param.type === 'Identifier') {
+                props.add(param.name)
+              } else if (param.type === 'ObjectPattern') {
+                // Handle destructured parameters like { storeName, rating }
+                param.properties.forEach((prop: any) => {
+                  if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
+                    props.add(prop.key.name)
+                  }
+                })
+              }
+            })
+          }
+
+          componentPropsStack.push(props)
+        },
+        exit(path: any) {
+          componentPropsStack.pop()
+        },
+      },
+      FunctionDeclaration: {
+        enter(path: any) {
+          const props = new Set<string>()
+
+          // Extract parameter names from function declaration
+          if (path.node.params) {
+            path.node.params.forEach((param: any) => {
+              if (param.type === 'Identifier') {
+                props.add(param.name)
+              } else if (param.type === 'ObjectPattern') {
+                // Handle destructured parameters like { storeName, rating }
+                param.properties.forEach((prop: any) => {
+                  if (prop.type === 'ObjectProperty' && prop.key.type === 'Identifier') {
+                    props.add(prop.key.name)
+                  }
+                })
+              }
+            })
+          }
+
+          componentPropsStack.push(props)
+        },
+        exit(path: any) {
+          // Pop the props stack when exiting function
+          componentPropsStack.pop()
+
+          // Original function declaration logic for collecting components
+          const functionName = path.node.id?.name
+          if (functionName) {
+            // Check if the function body contains a JSX element
+            let jsxElement = null
+            if (path.node.body?.type === 'BlockStatement' && path.node.body.body.length > 0) {
+              const returnStatement = path.node.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
+              if (returnStatement?.argument?.type === 'JSXElement' && (returnStatement.argument as any).json) {
+                jsxElement = returnStatement.argument
+              }
+            }
+            if (jsxElement) {
+              components.push({
+                name: functionName,
+                exportType: 'helper',
+                jsonNode: (jsxElement as any).json,
+              })
+            }
+          }
+        },
+      },
       JSXElement: {
         exit(path: NodePath<JSXElement>) {
           const node = path.node
@@ -167,10 +164,11 @@ export default function jsxToJsonPlugin() {
           }
 
           // 2. Process Props (Attributes)
+          const currentComponentProps = getCurrentComponentProps()
           node.openingElement.attributes.forEach((attribute: any) => {
             if (attribute.type === 'JSXAttribute') {
               const propName = attribute.name.name
-              const value = astNodeToValue(attribute.value as ASTNode)
+              const value = astNodeToValue(attribute.value as ASTNode, currentComponentProps)
 
               // Handle special props that should remain at root level
               if (propName === 'style') {
@@ -262,29 +260,6 @@ export default function jsxToJsonPlugin() {
                 })
               }
             })
-          }
-        },
-      },
-      FunctionDeclaration: {
-        exit(path: any) {
-          // Capture all function declarations that return JSX, not just exported ones
-          const functionName = path.node.id?.name
-          if (functionName) {
-            // Check if the function body contains a JSX element
-            let jsxElement = null
-            if (path.node.body?.type === 'BlockStatement' && path.node.body.body.length > 0) {
-              const returnStatement = path.node.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
-              if (returnStatement?.argument?.type === 'JSXElement' && (returnStatement.argument as any).json) {
-                jsxElement = returnStatement.argument
-              }
-            }
-            if (jsxElement) {
-              components.push({
-                name: functionName,
-                exportType: 'helper',
-                jsonNode: (jsxElement as any).json,
-              })
-            }
           }
         },
       },

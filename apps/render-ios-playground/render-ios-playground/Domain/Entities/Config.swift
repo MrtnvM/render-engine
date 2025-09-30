@@ -20,6 +20,35 @@ public class Config {
         return config[key] ?? nil
     }
     
+    func get<T>(forKey key: String, type: T.Type) -> T? {
+        switch type {
+        case is String.Type:
+            return getString(forKey: key) as? T
+        case is Int.Type:
+            return getInt(forKey: key) as? T
+        case is Float.Type:
+            return getFloat(forKey: key) as? T
+        case is Double.Type:
+            return getDouble(forKey: key) as? T
+        case is CGFloat.Type:
+            return getCGFloat(forKey: key) as? T
+        case is Bool.Type:
+            return getBool(forKey: key) as? T
+        case is Date.Type:
+            return getDate(forKey: key) as? T
+        case is [Any].Type:
+            return getArray(forKey: key) as? T
+        case is [Config].Type:
+            return getConfigArray(forKey: key) as? T
+        case is [String: Any].Type:
+            return getDictionary(forKey: key) as? T
+        case is Config.Type:
+            return getConfig(forKey: key) as? T
+        default:
+            return config[key] as? T
+        }
+    }
+    
     func getString(forKey key: String, defaultValue: String? = nil) -> String? {
         if let value = config[key] as? String {
             return value
