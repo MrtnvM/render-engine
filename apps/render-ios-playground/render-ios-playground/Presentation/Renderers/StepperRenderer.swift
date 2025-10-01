@@ -126,53 +126,7 @@ class RenderableStepper: UIView, Renderable {
 
     @MainActor
     func applyFlexStyles() {
-        // Apply flex styles from component.style
-        let style = component.style
-        
-        // Flex direction
-        flex.direction(style.direction == .row ? .row : .column)
-        
-        // Justify content
-        switch style.contentAlignment {
-        case .center:
-            flex.justifyContent(.center)
-        case .flexEnd:
-            flex.justifyContent(.end)
-        case .flexStart:
-            flex.justifyContent(.start)
-        case .spaceAround:
-            flex.justifyContent(.spaceAround)
-        case .spaceBetween:
-            flex.justifyContent(.spaceBetween)
-        case .spaceEvenly:
-            flex.justifyContent(.spaceEvenly)
-        }
-        
-        // Align items
-        switch style.alignItems {
-        case .center:
-            flex.alignItems(.center)
-        case .flexStart:
-            flex.alignItems(.start)
-        case .flexEnd:
-            flex.alignItems(.end)
-        case .stretch:
-            flex.alignItems(.stretch)
-        case .baseline:
-            flex.alignItems(.baseline)
-        }
-        
-        // Padding & Margin
-        flex.padding(style.padding)
-        flex.margin(style.margin)
-        
-        // Width & Height
-        if let width = style.width {
-            flex.width(width)
-        }
-        if let height = style.height {
-            flex.height(height)
-        }
+    
     }
 
     func applyVisualStyles() {

@@ -41,6 +41,7 @@ class ViewTreeBuilder {
         if let subcomponent = scenario.components[component.type] {
             let parentProps = props ?? Config()
             let combinedProps = component.data.merge(parentProps)
+            subcomponent.metadata["componentName"] = component.type
             return buildViewTree(from: subcomponent, props: combinedProps)
         }
         
@@ -112,7 +113,7 @@ class ViewTreeBuilder {
             flex.direction(.column)
         }
         
-        switch style.contentAlignment {
+        switch style.justifyContent {
         case .center:
             flex.justifyContent(.center)
         case .flexEnd:
@@ -125,6 +126,8 @@ class ViewTreeBuilder {
             flex.justifyContent(.spaceBetween)
         case .spaceEvenly:
             flex.justifyContent(.spaceEvenly)
+        default:
+            break
         }
         
         switch style.alignItems {
@@ -138,6 +141,25 @@ class ViewTreeBuilder {
             flex.alignItems(.stretch)
         case .baseline:
             flex.alignItems(.baseline)
+        default:
+            break
+        }
+        
+        switch style.alignSelf {
+        case .auto:
+            flex.alignSelf(.auto)
+        case .center:
+            flex.alignSelf(.center)
+        case .flexStart:
+            flex.alignSelf(.start)
+        case .flexEnd:
+            flex.alignSelf(.end)
+        case .stretch:
+            flex.alignSelf(.stretch)
+        case .baseline:
+            flex.alignSelf(.baseline)
+        default:
+            break
         }
         
         let padding = style.padding

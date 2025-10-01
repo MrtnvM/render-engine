@@ -94,6 +94,7 @@ function SellerSection({
       style={{
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'flexStart',
         paddingHorizontal: 16,
         paddingVertical: 4,
         backgroundColor: '#333333',
@@ -236,7 +237,7 @@ function BundleSection() {
           properties={{ text: '🎁' }}
         />
         <Column style={{ flexGrow: 1 }}>
-          <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <Row style={{ justifyContent: 'spaceBetween', alignItems: 'center' }}>
             <Text
               style={{
                 fontSize: 14,
@@ -382,7 +383,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
 function BottomBar() {
   return (
     <Column style={{ backgroundColor: '#E8F5E8', paddingHorizontal: 16, paddingVertical: 16, borderRadius: 28 }}>
-      <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <Row style={{ justifyContent: 'spaceBetween', alignItems: 'center', marginBottom: 16 }}>
         <Column>
           <Text
             style={{

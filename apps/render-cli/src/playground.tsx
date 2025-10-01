@@ -4,7 +4,7 @@ export const SCENARIO_KEY = 'playground-example'
 
 export const MyScreen = () => (
   <Column style={{ padding: 16, backgroundColor: '#F5F5F5' }}>
-    <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+    <Row style={{ justifyContent: 'spaceBetween', alignItems: 'center' }}>
       <Text properties={{ text: 'Welcome' }} style={{ fontSize: 16, fontWeight: 'bold' }} />
       <Image properties={{ source: 'avatar.png' }} style={{ width: 40, height: 40, borderRadius: 20 }} />
     </Row>

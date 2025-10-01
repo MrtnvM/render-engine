@@ -3,6 +3,10 @@ import yoga
 import FlexLayout
 
 extension UIView {
+    fileprivate var logger: Logger {
+        return DIContainer.shared.logger
+    }
+    
     /**
      * Recursively logs the Flexbox properties of this view and all its subviews.
      *
@@ -15,12 +19,16 @@ extension UIView {
         guard self.yoga.isEnabled else { return }
 
         // 1. Basic View Information
-        let viewDisplayName: String
+        var viewDisplayName: String
         if let renderable = self as? Renderable {
-            viewDisplayName = renderable.component.type
+            let componentName = renderable.component.metadata["componentName"] != nil 
+                ? " (\(renderable.component.metadata["componentName"]!))"
+                : ""
+            viewDisplayName = renderable.component.type + componentName
         } else {
             viewDisplayName = String(describing: type(of: self))
         }
+        
         let frameDescription = String(format: "frame: (%.1f, %.1f, %.1f, %.1f)", self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height)
         
         print("\(indent)- \(viewDisplayName) - \(frameDescription)")
@@ -45,6 +53,10 @@ extension UIView {
         properties.append("width: \(widthString())")
         properties.append("height: \(heightString())")
         properties.append("aspectRatio: \(aspectRatioString())")
+        properties.append("alignSelf: \(alignSelfString())")
+        properties.append("alignItems: \(alignItemsString())")
+        properties.append("alignContent: \(alignContentString())")
+        properties.append("justifyContent: \(justifyContentString())")
         
         // Spacing Properties (only print if not zero and not all undefined)
         if !isPaddingZero() && !isPaddingUndefined() { properties.append("padding: \(paddingString())") }
@@ -57,6 +69,84 @@ extension UIView {
         // 3. Recurse into Subviews
         for subview in self.subviews {
             subview.logFlexTree(indent: indent + "  ")
+        }
+    }
+    
+    private func alignSelfString() -> String {
+        switch yoga.alignSelf {
+        case .auto:
+            return "auto"
+        case .baseline:
+            return "baseline"
+        case .center:
+            return "center"
+        case .flexEnd:
+            return "flexEnd"
+        case .flexStart:
+            return "flexStart"
+        case .spaceAround:
+            return "spaceAround"
+        case .spaceBetween:
+            return "spaceBetween"
+        case .spaceEvenly:
+            return "spaceEvenly"
+        case .stretch:
+            return "stretch"
+        @unknown default:
+            logger.warning("Unknown alignSelf value: \(yoga.alignSelf)", category: "Tree Logger")
+            return "unknown"
+        }
+    }
+    
+    private func alignItemsString() -> String {
+        switch yoga.alignItems {
+        case .auto:
+            return "auto"
+        case .baseline:
+            return "baseline"
+        case .center:
+            return "center"
+        case .flexEnd:
+            return "flexEnd"
+        case .flexStart:
+            return "flexStart"
+        case .spaceAround:
+            return "spaceAround"
+        case .spaceBetween:
+            return "spaceBetween"
+        case .spaceEvenly:
+            return "spaceEvenly"
+        case .stretch:
+            return "stretch"
+        @unknown default:
+            logger.warning("Unknown alignItems value: \(yoga.alignItems)", category: "Tree Logger")
+            return "unknown"
+        }
+    }
+    
+    private func alignContentString() -> String {
+        switch yoga.alignContent {
+        case .auto:
+            return "auto"
+        case .baseline:
+            return "baseline"
+        case .center:
+            return "center"
+        case .flexEnd:
+            return "flexEnd"
+        case .flexStart:
+            return "flexStart"
+        case .spaceAround:
+            return "spaceAround"
+        case .spaceBetween:
+            return "spaceBetween"
+        case .spaceEvenly:
+            return "spaceEvenly"
+        case .stretch:
+            return "stretch"
+        @unknown default:
+            logger.warning("Unknown alignContent value: \(yoga.alignContent)", category: "Tree Logger")
+            return "unknown"
         }
     }
     
@@ -75,31 +165,7 @@ extension UIView {
         case .spaceEvenly:
             return "spaceEvenly"
         @unknown default:
-            return "unknown"
-        }
-    }
-    
-    private func alignItemsString() -> String {
-        switch yoga.alignItems {
-        case .auto:
-            return "auto"
-        case .flexStart:
-            return "flexStart"
-        case .center:
-            return "center"
-        case .flexEnd:
-            return "flexEnd"
-        case .stretch:
-            return "stretch"
-        case .baseline:
-            return "baseline"
-        case .spaceBetween:
-            return "spaceBetween"
-        case .spaceAround:
-            return "spaceAround"
-        case .spaceEvenly:
-            return "spaceEvenly"
-        @unknown default:
+            logger.warning("Unknown justifyContent value: \(yoga.justifyContent)", category: "Tree Logger")
             return "unknown"
         }
     }

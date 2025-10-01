@@ -1,7 +1,7 @@
 import UIKit
 
 protocol ViewStyleEnum {
-    static func from(string: String) -> Self
+    static func from(string: String) -> Self?
     static var defaultValue: Self { get }
 }
 
@@ -11,19 +11,19 @@ enum FlexDirection: ViewStyleEnum {
 
     static let defaultValue: FlexDirection = .column
 
-    static func from(string: String) -> FlexDirection {
+    static func from(string: String) -> FlexDirection? {
         switch string {
         case "row":
             return .row
         case "column":
             return .column
         default:
-            return .column
+            return nil
         }
     }
 }
 
-enum ContentAlignment: ViewStyleEnum {
+enum JustifyContent: ViewStyleEnum {
     case flexStart
     case flexEnd
     case spaceBetween
@@ -31,24 +31,24 @@ enum ContentAlignment: ViewStyleEnum {
     case spaceEvenly
     case center
 
-    static let defaultValue: ContentAlignment = .flexStart
+    static let defaultValue: JustifyContent = .flexStart
 
-    static func from(string: String) -> ContentAlignment {
+    static func from(string: String) -> JustifyContent? {
         switch string {
-        case "flex-start":
+        case "flexStart":
             return .flexStart
-        case "flex-end":
+        case "flexEnd":
             return .flexEnd
-        case "space-between":
+        case "spaceBetween":
             return .spaceBetween
-        case "space-around":
+        case "spaceAround":
             return .spaceAround
-        case "space-evenly":
+        case "spaceEvenly":
             return .spaceEvenly
         case "center":
             return .center
         default:
-            return .flexStart
+            return nil
         }
     }
 }
@@ -62,11 +62,11 @@ enum AlignItems: ViewStyleEnum {
 
     static let defaultValue: AlignItems = .stretch
 
-    static func from(string: String) -> AlignItems {
+    static func from(string: String) -> AlignItems? {
         switch string {
-        case "flex-start":
+        case "flexStart":
             return .flexStart
-        case "flex-end":
+        case "flexEnd":
             return .flexEnd
         case "center":
             return .center
@@ -75,7 +75,37 @@ enum AlignItems: ViewStyleEnum {
         case "baseline":
             return .baseline
         default:
+            return nil
+        }
+    }
+}
+
+enum AlignSelf: ViewStyleEnum {
+    case auto
+    case flexStart
+    case flexEnd
+    case center
+    case stretch
+    case baseline
+
+    static let defaultValue: AlignSelf = .stretch
+
+    static func from(string: String) -> AlignSelf? {
+        switch string {
+        case "auto":
+            return .auto
+        case "flexStart":
+            return .flexStart
+        case "flexEnd":
+            return .flexEnd
+        case "center":
+            return .center
+        case "stretch":
             return .stretch
+        case "baseline":
+            return .baseline
+        default:
+            return nil
         }
     }
 }
@@ -93,7 +123,7 @@ enum TextAlignment: ViewStyleEnum {
 
     static let defaultValue: TextAlignment = .left
 
-    static func from(string: String) -> TextAlignment {
+    static func from(string: String) -> TextAlignment? {
         switch string.lowercased() {
         case "left":
             return .left
@@ -106,7 +136,7 @@ enum TextAlignment: ViewStyleEnum {
         case "natural":
             return .natural
         default:
-            return .left
+            return nil
         }
     }
     
@@ -137,16 +167,20 @@ public class ViewStyle {
         self.cache = [:]
     }
 
-    var direction: FlexDirection {
-        return get(forKey: "flexDirection", ofType: FlexDirection.self) ?? FlexDirection.defaultValue
+    var direction: FlexDirection? {
+        return get(forKey: "flexDirection", ofType: FlexDirection.self)
     }
 
-    var contentAlignment: ContentAlignment {
-        return get(forKey: "contentAlignment", ofType: ContentAlignment.self) ?? ContentAlignment.defaultValue
+    var justifyContent: JustifyContent? {
+        return get(forKey: "justifyContent", ofType: JustifyContent.self)
     }
 
-    var alignItems: AlignItems {
-        return get(forKey: "alignItems", ofType: AlignItems.self) ?? AlignItems.defaultValue
+    var alignItems: AlignItems? {
+        return get(forKey: "alignItems", ofType: AlignItems.self)
+    }
+    
+    var alignSelf: AlignSelf? {
+        return get(forKey: "alignSelf", ofType: AlignSelf.self)
     }
     
     var gap: CGFloat? {
@@ -299,15 +333,18 @@ public class ViewStyle {
         case is FlexDirection.Type:
             let configValue = config.getString(forKey: key) ?? ""
             value = FlexDirection.from(string: configValue) as? T
-        case is ContentAlignment.Type:
+        case is JustifyContent.Type:
             let configValue = config.getString(forKey: key) ?? ""
-            value = ContentAlignment.from(string: configValue) as? T
+            value = JustifyContent.from(string: configValue) as? T
         case is AlignItems.Type:
             let configValue = config.getString(forKey: key) ?? ""
             value = AlignItems.from(string: configValue) as? T
+        case is AlignSelf.Type:
+            let configValue = config.getString(forKey: key) ?? ""
+            value = AlignSelf.from(string: configValue) as? T
         case is NSTextAlignment.Type:
             let configValue = config.getString(forKey: key) ?? ""
-            value = TextAlignment.from(string: configValue).nsTextAlignment as? T
+            value = TextAlignment.from(string: configValue)?.nsTextAlignment as? T
         case is [String: Any].Type:
             value = config.getDictionary(forKey: key) as? T
         case is [String: Any?].Type:
@@ -382,6 +419,8 @@ public class ViewStyle {
             case "adjustHeight":
                 value = FlexMode.adjustHeight as? T
             case "fitContainer":
+                value = FlexMode.fitContainer as? T
+            case nil:
                 value = FlexMode.fitContainer as? T
             default:
                 ViewStyle.logger.warning("Unknown FlexMode value: \(rawValue ?? "nil")", category: "ViewStyle")

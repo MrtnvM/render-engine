@@ -7,7 +7,9 @@ public class Component: Equatable {
     let style: ViewStyle
     let properties: Config
     let data: Config
+    var metadata: [String: Any] = [:]
     private var children: [Component] = []
+    
     
     public init(id: String, type: String, style: ViewStyle, properties: Config, data: Config) {
         self.id = id

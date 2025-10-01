@@ -43,7 +43,7 @@ extension Renderable where Self: UIView {
         }
         
         // Justify content
-        switch style.contentAlignment {
+        switch style.justifyContent {
         case .center:
             flex.justifyContent(.center)
         case .flexEnd:
@@ -56,6 +56,8 @@ extension Renderable where Self: UIView {
             flex.justifyContent(.spaceBetween)
         case .spaceEvenly:
             flex.justifyContent(.spaceEvenly)
+        default:
+            break
         }
         
         // Align items
@@ -70,6 +72,25 @@ extension Renderable where Self: UIView {
             flex.alignItems(.stretch)
         case .baseline:
             flex.alignItems(.baseline)
+        default:
+            break
+        }
+        
+        switch style.alignSelf {
+        case .auto:
+            flex.alignSelf(.auto)
+        case .center:
+            flex.alignItems(.center)
+        case .flexStart:
+            flex.alignItems(.start)
+        case .flexEnd:
+            flex.alignItems(.end)
+        case .stretch:
+            flex.alignItems(.stretch)
+        case .baseline:
+            flex.alignItems(.baseline)
+        default:
+            break
         }
         
         // Padding & Margin

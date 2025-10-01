@@ -1,15 +1,15 @@
 import { ImageResizeMode } from './image-resize-mode.types'
 
 export type ColorValue = string
-export type FlexAlignType = 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline'
+export type FlexAlignType = 'flexStart' | 'flexEnd' | 'center' | 'stretch' | 'baseline'
 export type AlignContent =
-  | 'flex-start'
-  | 'flex-end'
+  | 'flexStart'
+  | 'flexEnd'
   | 'center'
   | 'stretch'
-  | 'space-between'
-  | 'space-around'
-  | 'space-evenly'
+  | 'spaceBetween'
+  | 'spaceAround'
+  | 'spaceEvenly'
 export type DimensionValue = number | 'auto' | `${number}%` | null
 
 export type CursorValue = 'auto' | 'pointer'
@@ -27,20 +27,20 @@ export interface FlexStyle {
   borderTopWidth?: number | undefined
   borderWidth?: number | undefined
   bottom?: DimensionValue | undefined
-  boxSizing?: 'border-box' | 'content-box' | undefined
+  boxSizing?: 'borderBox' | 'contentBox' | undefined
   display?: 'none' | 'flex' | 'contents' | undefined
   end?: DimensionValue | undefined
   flexBasis?: DimensionValue | undefined
-  flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse' | undefined
+  flexDirection?: 'row' | 'column' | 'rowReverse' | 'columnReverse' | undefined
   rowGap?: number | string | undefined
   gap?: number | string | undefined
   columnGap?: number | string | undefined
   flexGrow?: number | undefined
   flexShrink?: number | undefined
   flexMode?: 'adjustWidth' | 'adjustHeight' | 'fitContainer' | undefined
-  flexWrap?: 'wrap' | 'nowrap' | 'wrap-reverse' | undefined
+  flexWrap?: 'wrap' | 'nowrap' | 'wrapReverse' | undefined
   height?: DimensionValue | undefined
-  justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly' | undefined
+  justifyContent?: 'flexStart' | 'flexEnd' | 'center' | 'spaceBetween' | 'spaceAround' | 'spaceEvenly' | undefined
   left?: DimensionValue | undefined
   margin?: DimensionValue | undefined
   marginBottom?: DimensionValue | undefined
@@ -368,7 +368,7 @@ export interface TextStyle extends TextStyleIOS, TextStyleAndroid, ViewStyle {
   letterSpacing?: number | undefined
   lineHeight?: number | undefined
   textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify' | undefined
-  textDecorationLine?: 'none' | 'underline' | 'line-through' | 'underline line-through' | undefined
+  textDecorationLine?: 'none' | 'underline' | 'lineThrough' | 'underline lineThrough' | undefined
   iosTextDecorationStyle?: 'solid' | 'double' | 'dotted' | 'dashed' | undefined
   iosTextDecorationColor?: ColorValue | undefined
   textShadowColor?: ColorValue | undefined
@@ -392,6 +392,6 @@ export interface ImageStyle extends FlexStyle, ShadowStyleIOS {
   overlayColor?: ColorValue | undefined
   tintColor?: ColorValue | undefined
   opacity?: number | undefined
-  objectFit?: 'cover' | 'contain' | 'fill' | 'scale-down' | 'none' | undefined
+  objectFit?: 'cover' | 'contain' | 'fill' | 'scaleDown' | 'none' | undefined
   cursor?: CursorValue | undefined
 }
