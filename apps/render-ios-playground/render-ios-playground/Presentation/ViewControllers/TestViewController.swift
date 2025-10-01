@@ -69,13 +69,11 @@ public class TestViewController: UIViewController {
    
     override public func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .white
         view.addSubview(rootFlexContainer)
-        rootFlexContainer.backgroundColor = .gray
         rootFlexContainer.flex
             .paddingTop(56)
             .paddingBottom(24)
-//        self.renderScenario(scenario: self.scenario)
         
         Task {
             do {
