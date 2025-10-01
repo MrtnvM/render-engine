@@ -66,6 +66,8 @@ class RenderableStepper: UIView, Renderable {
     private func setupFlexLayout() {
         // Configure the main container as a horizontal row
         flex.direction(.row)
+            .width(44 * 3)
+            .height(44)
             .justifyContent(.spaceBetween)
             .alignItems(.center)
             .define { flex in
@@ -112,21 +114,14 @@ class RenderableStepper: UIView, Renderable {
     private func applyStyle() {
         applyVisualStyles()
 
+        let cornerRadius: CGFloat = get(key: "borderRadius", type: CGFloat.self) ?? 12
+        backgroundColor = parseColor(from: "#F2F1F0")
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = true
+        
         // Style buttons
-        minusButton.backgroundColor = UIColor.systemGray5
-        minusButton.layer.cornerRadius = 4
-        plusButton.backgroundColor = UIColor.systemGray5
-        plusButton.layer.cornerRadius = 4
-
-        // Style label
-        valueLabel.backgroundColor = UIColor.systemGray6
-        valueLabel.layer.cornerRadius = 4
-        valueLabel.layer.masksToBounds = true
-    }
-
-    @MainActor
-    func applyFlexStyles() {
-    
+        minusButton.layer.cornerRadius = cornerRadius
+        plusButton.layer.cornerRadius = cornerRadius
     }
 
     func applyVisualStyles() {

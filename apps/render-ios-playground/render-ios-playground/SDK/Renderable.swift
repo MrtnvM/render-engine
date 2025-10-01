@@ -124,8 +124,31 @@ extension Renderable where Self: UIView {
         
         backgroundColor = style.backgroundColor
         layer.cornerRadius = style.cornerRadius
-        layer.masksToBounds = style.cornerRadius > 0
         layer.borderWidth = style.borderWidth
         layer.borderColor = style.borderColor.cgColor
+        
+        // Apply shadow properties
+        if let shadowColor = style.shadowColor {
+            layer.shadowColor = shadowColor.cgColor
+        }
+        
+        if let shadowOffset = style.shadowOffset {
+            layer.shadowOffset = shadowOffset
+        }
+        
+        if let shadowOpacity = style.shadowOpacity {
+            layer.shadowOpacity = Float(shadowOpacity)
+        }
+        
+        if let shadowRadius = style.shadowRadius {
+            layer.shadowRadius = shadowRadius
+        }
+        
+        // Only clip to bounds if there's no shadow, otherwise shadow won't be visible
+        if style.shadowColor != nil || style.shadowOpacity != nil {
+            layer.masksToBounds = false
+        } else {
+            layer.masksToBounds = style.cornerRadius > 0
+        }
     }
 }

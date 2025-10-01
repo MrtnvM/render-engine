@@ -169,11 +169,11 @@ export interface FlexStyle {
   paddingInlineStart?: DimensionValue | undefined
 }
 
-export interface ShadowStyleIOS {
-  iosShadowColor?: ColorValue | undefined
-  iosShadowOffset?: Readonly<{ width: number; height: number }> | undefined
-  iosShadowOpacity?: number | undefined
-  iosShadowRadius?: number | undefined
+export interface ShadowStyle {
+  shadowColor?: ColorValue | undefined
+  shadowOffset?: Readonly<{ width: number; height: number }> | undefined
+  shadowOpacity?: number | undefined
+  shadowRadius?: number | undefined
 }
 
 export type FilterFunction =
@@ -232,7 +232,7 @@ export type GradientValue = {
   }>
 }
 
-export interface ViewStyle extends FlexStyle, ShadowStyleIOS {
+export interface ViewStyle extends FlexStyle, ShadowStyle {
   backfaceVisibility?: 'visible' | 'hidden' | undefined
   backgroundColor?: ColorValue | undefined
   borderBlockColor?: ColorValue | undefined
@@ -378,7 +378,7 @@ export interface TextStyle extends TextStyleIOS, TextStyleAndroid, ViewStyle {
   userSelect?: 'auto' | 'none' | 'text' | 'contain' | 'all' | undefined
 }
 
-export interface ImageStyle extends FlexStyle, ShadowStyleIOS {
+export interface ImageStyle extends FlexStyle, ShadowStyle {
   resizeMode?: ImageResizeMode | undefined
   backfaceVisibility?: 'visible' | 'hidden' | undefined
   borderBottomLeftRadius?: number | undefined

@@ -186,12 +186,9 @@ class ViewTreeBuilder {
         if margin.right > 0 {
             flex.marginRight(margin.right)
         }
-        if padding.bottom > 0 {
+        if margin.bottom > 0 {
             flex.marginBottom(margin.bottom)
         }
-        
-//        flex.padding(style.padding)
-//        flex.margin(style.margin)
         
         print("\(component.type): ")
         print("PADDING: \(style.padding)")

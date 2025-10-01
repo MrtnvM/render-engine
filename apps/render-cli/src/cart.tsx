@@ -75,7 +75,9 @@ function TopRow() {
 }
 
 function Price({ price }: { price: string }) {
-  return <Text style={{ fontSize: 18, fontWeight: '600', flexShrink: 0 }} properties={{ text: price }} />
+  return (
+    <Text style={{ fontSize: 18, fontWeight: '600', flexShrink: 0, marginBottom: 2 }} properties={{ text: price }} />
+  )
 }
 
 function ProductTitle({ title }: { title: string }) {
@@ -103,12 +105,12 @@ function SellerSection({
         paddingVertical: 4,
       }}
     >
-      <Checkbox style={{ borderRadius: 4, marginRight: 12 }} properties={{ checked: checked, disabled: false }} />
+      <Checkbox style={{ borderRadius: 4, marginRight: 16 }} properties={{ checked: checked, disabled: false }} />
       <Text
         style={{
           fontSize: 21,
           fontWeight: '800',
-          marginRight: 6,
+          marginRight: 8,
         }}
         properties={{ text: storeName }}
       />
@@ -127,7 +129,7 @@ function SellerSection({
         style={{
           fontSize: 15,
           fontWeight: '500',
-          marginRight: 2,
+          marginRight: 4,
         }}
         properties={{ text: rating }}
       />
@@ -152,7 +154,7 @@ function BuyWithDelivery() {
 function CountStepper({ quantity }: { quantity: number }) {
   return (
     <Stepper
-      style={{ borderRadius: 8, padding: 8 }}
+      style={{ borderRadius: 12, marginVertical: 10 }}
       properties={{ value: quantity, minimumValue: 1, maximumValue: 10, disabled: false }}
     />
   )
@@ -352,7 +354,17 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
 
 function BottomBar() {
   return (
-    <Column style={{ paddingHorizontal: 16, paddingVertical: 16, borderRadius: 28 }}>
+    <Column
+      style={{
+        paddingHorizontal: 16,
+        paddingVertical: 16,
+        borderRadius: 28,
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 24,
+      }}
+    >
       <Row style={{ justifyContent: 'spaceBetween', alignItems: 'center', marginBottom: 16 }}>
         <Column>
           <Text

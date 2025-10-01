@@ -4,12 +4,13 @@ public class Config {
     private let config: [String: Any?]
 
     init(_ config: Any? = nil) {
-        guard let config = config as? [String: Any?] else {
+        if let config = config as? [String: Any] {
+            self.config = config
+        } else if let config = config as? [String: Any?] {
+            self.config = config
+        } else {
             self.config = [:]
-            return
         }
-
-        self.config = config
     }
 
     var isEmpty: Bool {
@@ -60,17 +61,35 @@ public class Config {
         if let value = config[key] as? Int {
             return value
         }
+        if let value = config[key] as? Float {
+            return Int(value.rounded())
+        }
+        if let value = config[key] as? Double {
+            return Int(value.rounded())
+        }
         return defaultValue
     }
     
     func getFloat(forKey key: String, defaultValue: Float? = nil) -> Float? {
+        if let value = config[key] as? Int {
+            return Float(value)
+        }
         if let value = config[key] as? Float {
             return value
+        }
+        if let value = config[key] as? Double {
+            return Float(value)
         }
         return defaultValue
     }
     
     func getDouble(forKey key: String, defaultValue: Double? = nil) -> Double? {
+        if let value = config[key] as? Int {
+            return Double(value)
+        }
+        if let value = config[key] as? Float {
+            return Double(value)
+        }
         if let value = config[key] as? Double {
             return value
         }
@@ -81,15 +100,12 @@ public class Config {
         if let value = config[key] as? Int {
             return CGFloat(value)
         }
-        
         if let value = config[key] as? Float {
             return CGFloat(value)
         }
-        
         if let value = config[key] as? Double {
             return CGFloat(value)
         }
-        
         return defaultValue
     }
     
