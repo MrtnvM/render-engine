@@ -184,7 +184,13 @@ export default function jsxToJsonPlugin() {
                   jsonNode.style = { ...jsonNode.style, ...value }
                 }
               } else if (propName === 'properties') {
-                jsonNode[propName] = value
+                // Merge properties instead of replacing
+                if (value && typeof value === 'object') {
+                  jsonNode.properties = { ...jsonNode.properties, ...value }
+                }
+              } else if (propName === 'titleStyle') {
+                // titleStyle should go into properties for Button components
+                jsonNode.properties.titleStyle = value
               } else {
                 // All other props go into the data object
                 jsonNode.data[propName] = value

@@ -5,30 +5,62 @@
     "type": "Column",
     "style": {
       "flexDirection": "column",
-      "backgroundColor": "#F0F8FF"
+      "flexGrow": 1
     },
     "children": [
       {
-        "type": "TopRow"
+        "type": "Column",
+        "style": {
+          "flexDirection": "column",
+          "flexGrow": 1
+        },
+        "children": [
+          {
+            "type": "TopRow"
+          },
+          {
+            "type": "SellerSection",
+            "data": {
+              "storeName": "Pear Store",
+              "rating": "4.8",
+              "reviewCount": "643",
+              "checked": false
+            }
+          },
+          {
+            "type": "CartItem",
+            "data": {
+              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
+              "price": "4 990 ₽",
+              "title": "ЗарядкаMagSafe Charger 15W 1 метр",
+              "quantity": 1,
+              "checked": true
+            }
+          },
+          {
+            "type": "CartItem",
+            "data": {
+              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png",
+              "price": "15 990 ₽",
+              "title": "AirPods Pro 2",
+              "quantity": 1,
+              "checked": true
+            }
+          },
+          {
+            "type": "CartItem",
+            "data": {
+              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png",
+              "price": "26 591 ₽",
+              "title": "Apple Watch 10 42mm Blue",
+              "quantity": 1,
+              "checked": true
+            }
+          }
+        ]
       },
       {
-        "type": "SellerSection",
-        "data": {
-          "storeName": "Pear Store",
-          "rating": "4.8",
-          "reviewCount": "643",
-          "checked": false
-        }
-      },
-      {
-        "type": "CartItem",
-        "data": {
-          "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
-          "price": "4 990 ₽",
-          "title": "ЗарядкаMagSafe Charger 15W 1 метр",
-          "quantity": 1,
-          "checked": true
-        }
+        "type": "BottomBar"
       }
     ]
   },
@@ -37,30 +69,62 @@
       "type": "Column",
       "style": {
         "flexDirection": "column",
-        "backgroundColor": "#F0F8FF"
+        "flexGrow": 1
       },
       "children": [
         {
-          "type": "TopRow"
+          "type": "Column",
+          "style": {
+            "flexDirection": "column",
+            "flexGrow": 1
+          },
+          "children": [
+            {
+              "type": "TopRow"
+            },
+            {
+              "type": "SellerSection",
+              "data": {
+                "storeName": "Pear Store",
+                "rating": "4.8",
+                "reviewCount": "643",
+                "checked": false
+              }
+            },
+            {
+              "type": "CartItem",
+              "data": {
+                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
+                "price": "4 990 ₽",
+                "title": "ЗарядкаMagSafe Charger 15W 1 метр",
+                "quantity": 1,
+                "checked": true
+              }
+            },
+            {
+              "type": "CartItem",
+              "data": {
+                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png",
+                "price": "15 990 ₽",
+                "title": "AirPods Pro 2",
+                "quantity": 1,
+                "checked": true
+              }
+            },
+            {
+              "type": "CartItem",
+              "data": {
+                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png",
+                "price": "26 591 ₽",
+                "title": "Apple Watch 10 42mm Blue",
+                "quantity": 1,
+                "checked": true
+              }
+            }
+          ]
         },
         {
-          "type": "SellerSection",
-          "data": {
-            "storeName": "Pear Store",
-            "rating": "4.8",
-            "reviewCount": "643",
-            "checked": false
-          }
-        },
-        {
-          "type": "CartItem",
-          "data": {
-            "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
-            "price": "4 990 ₽",
-            "title": "ЗарядкаMagSafe Charger 15W 1 метр",
-            "quantity": 1,
-            "checked": true
-          }
+          "type": "BottomBar"
         }
       ]
     },
@@ -70,8 +134,7 @@
         "flexDirection": "row",
         "alignItems": "center",
         "paddingHorizontal": 16,
-        "paddingVertical": 12,
-        "backgroundColor": "#555555"
+        "paddingVertical": 12
       },
       "children": [
         {
@@ -89,10 +152,10 @@
         {
           "type": "Text",
           "style": {
+            "fontFamily": "Manrope",
             "fontSize": 15,
             "fontWeight": "500",
             "color": "#000000",
-            "backgroundColor": "#CCCCCC",
             "marginRight": 16,
             "flexGrow": 1
           },
@@ -103,10 +166,10 @@
         {
           "type": "Text",
           "style": {
+            "fontFamily": "Manrope",
             "fontSize": 15,
             "fontWeight": "500",
-            "color": "#0099F7",
-            "backgroundColor": "#FFE4E1"
+            "color": "#0099F7"
           },
           "properties": {
             "text": "Удалить (3)"
@@ -117,10 +180,11 @@
     "Price": {
       "type": "Text",
       "style": {
+        "fontFamily": "Manrope",
         "fontSize": 18,
-        "fontWeight": "600",
-        "backgroundColor": "#E8F5E8",
-        "flexShrink": 1
+        "fontWeight": "800",
+        "flexShrink": 0,
+        "marginBottom": 2
       },
       "properties": {
         "text": {
@@ -132,10 +196,10 @@
     "ProductTitle": {
       "type": "Text",
       "style": {
+        "fontFamily": "Manrope",
         "fontSize": 13,
         "fontWeight": "500",
-        "backgroundColor": "#FFF8DC",
-        "flexShrink": 1
+        "flexMode": "adjustWidth"
       },
       "properties": {
         "text": {
@@ -149,17 +213,16 @@
       "style": {
         "flexDirection": "row",
         "alignItems": "center",
+        "justifyContent": "flexStart",
         "paddingHorizontal": 16,
-        "paddingVertical": 4,
-        "backgroundColor": "#333333"
+        "paddingVertical": 4
       },
       "children": [
         {
           "type": "Checkbox",
           "style": {
-            "backgroundColor": "#F0F8FF",
             "borderRadius": 4,
-            "marginRight": 12
+            "marginRight": 16
           },
           "properties": {
             "checked": {
@@ -172,10 +235,10 @@
         {
           "type": "Text",
           "style": {
+            "fontFamily": "Manrope",
             "fontSize": 21,
             "fontWeight": "800",
-            "backgroundColor": "#F0F8FF",
-            "marginRight": 6
+            "marginRight": 8
           },
           "properties": {
             "text": {
@@ -190,7 +253,6 @@
             "width": 16,
             "height": 16,
             "marginRight": 2,
-            "backgroundColor": "#E22F3FF",
             "alignSelf": "center"
           },
           "properties": {
@@ -200,10 +262,10 @@
         {
           "type": "Text",
           "style": {
+            "fontFamily": "Manrope",
             "fontSize": 15,
             "fontWeight": "500",
-            "backgroundColor": "#E6F3FF",
-            "marginRight": 2
+            "marginRight": 4
           },
           "properties": {
             "text": {
@@ -215,10 +277,10 @@
         {
           "type": "Text",
           "style": {
+            "fontFamily": "Manrope",
             "fontSize": 15,
             "fontWeight": "500",
-            "color": "#A3A3A3",
-            "backgroundColor": "#F5F5F5"
+            "color": "#A3A3A3"
           },
           "properties": {
             "text": {
@@ -232,10 +294,10 @@
     "BuyWithDelivery": {
       "type": "Text",
       "style": {
+        "fontFamily": "Manrope",
         "fontSize": 13,
         "fontWeight": "500",
-        "color": "#A168F7",
-        "backgroundColor": "#F3E5F5"
+        "color": "#A168F7"
       },
       "properties": {
         "text": "Купить с доставкой"
@@ -244,9 +306,8 @@
     "CountStepper": {
       "type": "Stepper",
       "style": {
-        "backgroundColor": "#E6F3FF",
-        "borderRadius": 8,
-        "padding": 8
+        "borderRadius": 12,
+        "marginVertical": 10
       },
       "properties": {
         "value": {
@@ -259,25 +320,25 @@
       }
     },
     "LikeButton": {
-      "type": "Button",
+      "type": "Image",
       "style": {
-        "backgroundColor": "#FFE0E0",
         "borderRadius": 6,
-        "padding": 4
+        "width": 28,
+        "height": 28
       },
       "properties": {
-        "title": "♡"
+        "source": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/favorites.png"
       }
     },
     "DeleteButton": {
-      "type": "Button",
+      "type": "Image",
       "style": {
-        "backgroundColor": "#FFE0E0",
         "borderRadius": 6,
-        "padding": 4
+        "width": 28,
+        "height": 28
       },
       "properties": {
-        "title": "🗑️"
+        "source": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/delete.png"
       }
     },
     "ProductImage": {
@@ -285,8 +346,7 @@
       "style": {
         "width": 96,
         "height": 96,
-        "borderRadius": 12,
-        "backgroundColor": "#F5F5F5"
+        "borderRadius": 12
       },
       "properties": {
         "source": {
@@ -298,7 +358,6 @@
     "ProductCheckbox": {
       "type": "Checkbox",
       "style": {
-        "backgroundColor": "#F0F8FF",
         "borderRadius": 4,
         "padding": 4
       },
@@ -317,8 +376,7 @@
         "alignItems": "stretch",
         "gap": 12,
         "paddingHorizontal": 16,
-        "paddingVertical": 16,
-        "backgroundColor": "#FFF8E1"
+        "paddingVertical": 16
       },
       "children": [
         {
@@ -343,14 +401,18 @@
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "flexGrow": 1
+            "flexGrow": 1,
+            "flexMode": "adjustWidth",
+            "flexShrink": 1
           },
           "children": [
             {
               "type": "Column",
               "style": {
                 "flexDirection": "column",
-                "gap": 2
+                "gap": 2,
+                "flexShrink": 1,
+                "flexMode": "adjustWidth"
               },
               "children": [
                 {
@@ -370,24 +432,36 @@
                       "key": "title"
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "Column",
-              "style": {
-                "flexDirection": "column",
-                "gap": 4,
-                "flexShrink": 0
-              },
-              "children": [
-                {
-                  "type": "LikeButton"
                 },
                 {
-                  "type": "DeleteButton"
+                  "type": "CountStepper",
+                  "data": {
+                    "quantity": {
+                      "type": "prop",
+                      "key": "quantity"
+                    }
+                  }
+                },
+                {
+                  "type": "BuyWithDelivery"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "style": {
+            "flexDirection": "column",
+            "gap": 4,
+            "flexShrink": 0
+          },
+          "children": [
+            {
+              "type": "LikeButton"
+            },
+            {
+              "type": "DeleteButton"
             }
           ]
         }
@@ -399,8 +473,7 @@
         "flexDirection": "column",
         "paddingHorizontal": 16,
         "paddingVertical": 20,
-        "gap": 16,
-        "backgroundColor": "#E3F2FD"
+        "gap": 16
       },
       "children": [
         {
@@ -414,8 +487,8 @@
             {
               "type": "Text",
               "style": {
+                "fontFamily": "Manrope",
                 "fontSize": 24,
-                "backgroundColor": "#FFF8DC",
                 "paddingHorizontal": 8,
                 "paddingVertical": 4,
                 "borderRadius": 8
@@ -428,23 +501,23 @@
               "type": "Column",
               "style": {
                 "flexDirection": "column",
-                "flex": 1
+                "flexGrow": 1
               },
               "children": [
                 {
                   "type": "Row",
                   "style": {
                     "flexDirection": "row",
-                    "justifyContent": "space-between",
+                    "justifyContent": "spaceBetween",
                     "alignItems": "center"
                   },
                   "children": [
                     {
                       "type": "Text",
                       "style": {
+                        "fontFamily": "Manrope",
                         "fontSize": 14,
                         "fontWeight": "800",
-                        "backgroundColor": "#E3F2FD",
                         "paddingHorizontal": 8,
                         "paddingVertical": 4,
                         "borderRadius": 6
@@ -456,7 +529,6 @@
                     {
                       "type": "Button",
                       "style": {
-                        "backgroundColor": "#E0E0E0",
                         "borderRadius": 8,
                         "padding": 8
                       },
@@ -501,7 +573,6 @@
                 "flexDirection": "column",
                 "width": 94,
                 "height": 94,
-                "backgroundColor": "#F5F5F5",
                 "borderRadius": 12,
                 "justifyContent": "center",
                 "alignItems": "center"
@@ -518,9 +589,9 @@
                     {
                       "type": "Text",
                       "style": {
+                        "fontFamily": "Manrope",
                         "fontSize": 15,
                         "fontWeight": "500",
-                        "backgroundColor": "#F5F5F5",
                         "paddingHorizontal": 8,
                         "paddingVertical": 4,
                         "borderRadius": 6
@@ -532,7 +603,6 @@
                     {
                       "type": "Button",
                       "style": {
-                        "backgroundColor": "#E0E0E0",
                         "borderRadius": 8,
                         "padding": 8
                       },
@@ -553,8 +623,7 @@
       "style": {
         "flexDirection": "column",
         "width": 236,
-        "gap": 12,
-        "backgroundColor": "#F3E5F5"
+        "gap": 12
       },
       "children": [
         {
@@ -570,8 +639,7 @@
               "style": {
                 "width": 94,
                 "height": 94,
-                "borderRadius": 12,
-                "backgroundColor": "#F5F5F5"
+                "borderRadius": 12
               },
               "properties": {
                 "source": {
@@ -605,9 +673,9 @@
                         {
                           "type": "Text",
                           "style": {
+                            "fontFamily": "Manrope",
                             "fontSize": 16,
                             "fontWeight": "800",
-                            "backgroundColor": "#E8F5E8",
                             "paddingHorizontal": 6,
                             "paddingVertical": 2,
                             "borderRadius": 4
@@ -629,10 +697,10 @@
                             {
                               "type": "Text",
                               "style": {
+                                "fontFamily": "Manrope",
                                 "fontSize": 15,
                                 "fontWeight": "500",
                                 "color": "#757575",
-                                "backgroundColor": "#F5F5F5",
                                 "paddingHorizontal": 4,
                                 "paddingVertical": 2,
                                 "borderRadius": 4
@@ -647,8 +715,8 @@
                             {
                               "type": "Text",
                               "style": {
+                                "fontFamily": "Manrope",
                                 "color": "#757575",
-                                "backgroundColor": "#F5F5F5",
                                 "paddingHorizontal": 4,
                                 "paddingVertical": 2,
                                 "borderRadius": 4
@@ -664,9 +732,9 @@
                     {
                       "type": "Text",
                       "style": {
+                        "fontFamily": "Manrope",
                         "fontSize": 11,
                         "fontWeight": "500",
-                        "backgroundColor": "#FFF8DC",
                         "paddingHorizontal": 6,
                         "paddingVertical": 2,
                         "borderRadius": 4
@@ -683,7 +751,6 @@
                 {
                   "type": "Button",
                   "style": {
-                    "backgroundColor": "#FFFFFF",
                     "borderRadius": 10,
                     "paddingHorizontal": 12,
                     "paddingVertical": 8,
@@ -704,17 +771,23 @@
       "type": "Column",
       "style": {
         "flexDirection": "column",
-        "backgroundColor": "#E8F5E8",
         "paddingHorizontal": 16,
         "paddingVertical": 16,
-        "borderRadius": 28
+        "borderRadius": 28,
+        "shadowColor": "#000000",
+        "shadowOffset": {
+          "width": 0,
+          "height": 4
+        },
+        "shadowOpacity": 0.8,
+        "shadowRadius": 24
       },
       "children": [
         {
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "justifyContent": "space-between",
+            "justifyContent": "spaceBetween",
             "alignItems": "center",
             "marginBottom": 16
           },
@@ -728,10 +801,10 @@
                 {
                   "type": "Text",
                   "style": {
+                    "fontFamily": "Manrope",
                     "fontSize": 11,
                     "fontWeight": "500",
                     "color": "#000000",
-                    "backgroundColor": "#E6F3FF",
                     "paddingHorizontal": 8,
                     "paddingVertical": 4,
                     "borderRadius": 6
@@ -743,9 +816,9 @@
                 {
                   "type": "Text",
                   "style": {
+                    "fontFamily": "Manrope",
                     "fontSize": 21,
                     "fontWeight": "800",
-                    "backgroundColor": "#E8F5E8",
                     "paddingHorizontal": 12,
                     "paddingVertical": 6,
                     "borderRadius": 8
@@ -759,32 +832,18 @@
             {
               "type": "Button",
               "style": {
-                "backgroundColor": "#965EEB",
                 "borderRadius": 16,
                 "paddingHorizontal": 18,
-                "paddingVertical": 17
+                "paddingVertical": 17,
+                "backgroundColor": "#965EEB"
               },
               "properties": {
+                "titleStyle": {
+                  "color": "#FFFFFF",
+                  "fontWeight": "500",
+                  "fontSize": 15
+                },
                 "title": "Оформить доставку"
-              }
-            }
-          ]
-        },
-        {
-          "type": "Row",
-          "style": {
-            "flexDirection": "row",
-            "justifyContent": "center"
-          },
-          "children": [
-            {
-              "type": "Column",
-              "style": {
-                "flexDirection": "column",
-                "width": 134,
-                "height": 5,
-                "backgroundColor": "#000000",
-                "borderRadius": 3
               }
             }
           ]

@@ -17,7 +17,38 @@ public class Config {
         return config.isEmpty
     }
     
+    /// Resolves nested keys using dot notation (e.g., "titleStyle.color")
+    /// - Parameter key: The key path to resolve, supporting dot notation
+    /// - Returns: The value at the key path, or nil if not found
+    private func resolveNestedKey(_ key: String) -> Any? {
+        // Check if key contains dot notation
+        guard key.contains(".") else {
+            return config[key]
+        }
+        
+        let components = key.split(separator: ".").map(String.init)
+        guard !components.isEmpty else { return nil }
+        
+        var current: Any? = config
+        
+        for component in components {
+            if let dict = current as? [String: Any] {
+                current = dict[component]
+            } else if let dict = current as? [String: Any?] {
+                current = dict[component] ?? nil
+            } else {
+                return nil
+            }
+        }
+        
+        return current
+    }
+    
     func get(forKey key: String) -> Any? {
+        // Support dot notation
+        if key.contains(".") {
+            return resolveNestedKey(key)
+        }
         return config[key] ?? nil
     }
     
@@ -51,21 +82,23 @@ public class Config {
     }
     
     func getString(forKey key: String, defaultValue: String? = nil) -> String? {
-        if let value = config[key] as? String {
-            return value
+        let value = key.contains(".") ? resolveNestedKey(key) : config[key]
+        if let stringValue = value as? String {
+            return stringValue
         }
         return defaultValue
     }
     
     func getInt(forKey key: String, defaultValue: Int? = nil) -> Int? {
-        if let value = config[key] as? Int {
-            return value
+        let value = key.contains(".") ? resolveNestedKey(key) : config[key]
+        if let intValue = value as? Int {
+            return intValue
         }
-        if let value = config[key] as? Float {
-            return Int(value.rounded())
+        if let floatValue = value as? Float {
+            return Int(floatValue.rounded())
         }
-        if let value = config[key] as? Double {
-            return Int(value.rounded())
+        if let doubleValue = value as? Double {
+            return Int(doubleValue.rounded())
         }
         return defaultValue
     }
@@ -97,14 +130,15 @@ public class Config {
     }
     
     func getCGFloat(forKey key: String, defaultValue: CGFloat? = nil) -> CGFloat? {
-        if let value = config[key] as? Int {
-            return CGFloat(value)
+        let value = key.contains(".") ? resolveNestedKey(key) : config[key]
+        if let intValue = value as? Int {
+            return CGFloat(intValue)
         }
-        if let value = config[key] as? Float {
-            return CGFloat(value)
+        if let floatValue = value as? Float {
+            return CGFloat(floatValue)
         }
-        if let value = config[key] as? Double {
-            return CGFloat(value)
+        if let doubleValue = value as? Double {
+            return CGFloat(doubleValue)
         }
         return defaultValue
     }
@@ -142,7 +176,8 @@ public class Config {
     }
     
     func getDictionary(forKey key: String, defaultValue: [String: Any]? = nil) -> [String: Any]? {
-        if let value = config[key], let dict = value as? [String: Any] {
+        let value = key.contains(".") ? resolveNestedKey(key) : config[key]
+        if let dict = value as? [String: Any] {
             return dict
         }
         return defaultValue

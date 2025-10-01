@@ -44,6 +44,7 @@ export const Image = (props: ImageProps): null => null
 
 export interface ButtonProps extends ViewStyle {
   style?: ViewStyle
+  titleStyle?: TextStyle
   properties?: {
     title?: string
     image?: string

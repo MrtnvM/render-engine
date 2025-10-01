@@ -397,9 +397,10 @@ function BottomBar() {
         paddingVertical: 16,
         borderRadius: 28,
         shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
+        shadowOffset: { width: 2, height: -4 },
+        shadowOpacity: 0.8,
         shadowRadius: 24,
+        backgroundColor: '#DCDCDC',
       }}
     >
       <Row style={{ justifyContent: 'spaceBetween', alignItems: 'center', marginBottom: 16 }}>
@@ -430,7 +431,8 @@ function BottomBar() {
         </Column>
 
         <Button
-          style={{ borderRadius: 16, paddingHorizontal: 18, paddingVertical: 17 }}
+          style={{ borderRadius: 16, paddingHorizontal: 18, paddingVertical: 17, backgroundColor: '#965EEB' }}
+          titleStyle={{ color: '#FFFFFF', fontWeight: '500', fontSize: 15 }}
           properties={{ title: 'Оформить доставку' }}
         />
       </Row>
