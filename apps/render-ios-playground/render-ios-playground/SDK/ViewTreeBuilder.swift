@@ -82,6 +82,7 @@ class ViewTreeBuilder {
                     // Recursively call the function to build the child's view.
                     if let childView = buildViewTree(from: childComponent, props: props) {
                         // Add the created child view to the current view's flex container.
+                        childView.yoga.isEnabled = true
                         let childFlex = flex.addItem(childView)
                         applyFlexboxLayout(to: childFlex, with: childComponent)
                     }
@@ -89,7 +90,10 @@ class ViewTreeBuilder {
             }
         }
         
+        // Apply the flex layout after setting all properties
         view.flex.layout()
+        
+        // Layout setup completed
         
         // 5. Return the fully constructed view with its children attached.
         return view
@@ -104,8 +108,6 @@ class ViewTreeBuilder {
             flex.direction(.row)
         } else if component.type == "Column" {
             flex.direction(.column)
-        } else {
-            flex.direction(style.direction == .row ? .row : .column)
         }
         
         switch style.contentAlignment {
@@ -120,7 +122,7 @@ class ViewTreeBuilder {
         case .spaceBetween:
             flex.justifyContent(.spaceBetween)
         case .spaceEvenly:
-            flex.justifyContent(.spaceBetween)
+            flex.justifyContent(.spaceEvenly)
         }
         
         switch style.alignItems {
@@ -136,8 +138,41 @@ class ViewTreeBuilder {
             flex.alignItems(.baseline)
         }
         
-        flex.padding(style.padding)
-        flex.margin(style.margin)
+        let padding = style.padding
+        if padding.left > 0 {
+            flex.paddingLeft(padding.left)
+        }
+        if padding.top > 0 {
+            flex.paddingTop(padding.top)
+        }
+        if padding.right > 0 {
+            flex.paddingRight(padding.right)
+        }
+        if padding.bottom > 0 {
+            flex.paddingBottom(padding.bottom)
+        }
+        
+        let margin = style.margin
+        if margin.left > 0 {
+            flex.marginLeft(margin.left)
+        }
+        if margin.top > 0 {
+            flex.marginTop(margin.top)
+        }
+        if margin.right > 0 {
+            flex.marginRight(margin.right)
+        }
+        if padding.bottom > 0 {
+            flex.marginBottom(margin.bottom)
+        }
+        
+//        flex.padding(style.padding)
+//        flex.margin(style.margin)
+        
+        print("\(component.type): ")
+        print("PADDING: \(style.padding)")
+        print("MARGIN: \(style.margin)")
+        print("")
         
         if let width = style.width {
             flex.width(width)

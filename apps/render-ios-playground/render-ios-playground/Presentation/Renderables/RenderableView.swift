@@ -8,8 +8,9 @@ class RenderableView: UIView, Renderable {
         self.component = component
         self.context = context
         super.init(frame: .zero)
+        yoga.isEnabled = true
         
-        applyFlexStyles()
+        // Note: Flex styles are applied by ViewTreeBuilder, not here
         applyVisualStyles()
     }
 
@@ -20,6 +21,7 @@ class RenderableView: UIView, Renderable {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        // Apply flex layout when the view's bounds change
         flex.layout()
     }
 }

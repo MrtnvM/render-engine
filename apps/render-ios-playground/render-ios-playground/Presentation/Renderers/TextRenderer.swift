@@ -11,15 +11,14 @@ class TextRenderer: Renderer {
 class RenderableText: UILabel, Renderable {
     let component: Component
     let context: RendererContext
-    let valueProvider = DIContainer.shared.valueProvider
     
     init(component: Component, context: RendererContext) {
         self.component = component
         self.context = context
         super.init(frame: .zero)
+        yoga.isEnabled = true
         
         applyVisualStyles()
-        applyLabelStyle()
         applyFlexStyles()
         setupLabel()
     }
@@ -29,57 +28,10 @@ class RenderableText: UILabel, Renderable {
     }
     
     private func setupLabel() {
-        let text = valueProvider.resolve(
-            ValueContext(
-                key: "text",
-                type: String.self,
-                component: component,
-                props: context.props
-            )
-        )
-        
-        self.text = text
-    }
-    
-    
-    private func applyLabelStyle() {
-        let style = component.style
-        
-        // Text color
-        if let textColor = style.get(forKey: "textColor", ofType: UIColor.self) {
-            self.textColor = textColor
-        }
-        
-        // Font size
-        if let fontSize = style.get(forKey: "fontSize", ofType: CGFloat.self) {
-            self.font = UIFont.systemFont(ofSize: fontSize)
-        }
-        
-        // Text alignment
-        if let textAlignmentString = style.get(forKey: "textAlignment", ofType: String.self) {
-            self.textAlignment = parseTextAlignment(from: textAlignmentString)
-        }
-        
-        // Number of lines
-        if let numberOfLines = style.get(forKey: "numberOfLines", ofType: Int.self) {
-            self.numberOfLines = numberOfLines
-        }
-    }
-    
-    private func parseTextAlignment(from string: String) -> NSTextAlignment {
-        switch string.lowercased() {
-        case "left":
-            return .left
-        case "center":
-            return .center
-        case "right":
-            return .right
-        case "justified":
-            return .justified
-        case "natural":
-            return .natural
-        default:
-            return .left
-        }
+        self.text = get(key: "text", type: String.self)
+        self.font = get(key: "font", type: UIFont.self)
+        self.textColor = get(key: "color", type: UIColor.self)
+        self.textAlignment = get(key: "textAlignment", type: NSTextAlignment.self) ?? .natural
+        self.numberOfLines = get(key: "numberOfLines", type: Int.self) ?? 0
     }
 }

@@ -25,6 +25,7 @@ class RenderableCheckbox: UIButton, Renderable {
         self.component = component
         self.context = context
         super.init(frame: .zero)
+        yoga.isEnabled = true
         
         applyStyle()
         applyFlexStyles()

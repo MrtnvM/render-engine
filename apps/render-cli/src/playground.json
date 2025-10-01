@@ -4,6 +4,7 @@
   "main": {
     "type": "Column",
     "style": {
+      "flexDirection": "column",
       "padding": 16,
       "backgroundColor": "#F5F5F5"
     },
@@ -11,88 +12,31 @@
       {
         "type": "Row",
         "style": {
-          "justifyContent": "space-between",
-          "alignItems": "center"
+          "flexDirection": "row",
+          "backgroundColor": "red",
+          "height": 100
         },
         "children": [
           {
             "type": "Text",
             "style": {
-              "fontSize": 16,
-              "fontWeight": "bold"
+              "backgroundColor": "blue",
+              "color": "white",
+              "padding": 10
             },
             "properties": {
-              "text": "Welcome"
+              "text": "Left"
             }
           },
-          {
-            "type": "Image",
-            "style": {
-              "width": 40,
-              "height": 40,
-              "borderRadius": "20px"
-            },
-            "properties": {
-              "source": "avatar.png"
-            }
-          }
-        ]
-      },
-      {
-        "type": "Spacer",
-        "properties": {
-          "size": 20
-        }
-      },
-      {
-        "type": "Stack",
-        "style": {
-          "marginVertical": 20,
-          "position": "relative"
-        },
-        "children": [
-          {
-            "type": "Image",
-            "style": {
-              "borderRadius": "8px"
-            },
-            "properties": {
-              "source": "background.png"
-            }
-          },
-          {
-            "type": "Button",
-            "style": {
-              "position": "absolute",
-              "bottom": 10,
-              "right": 10
-            },
-            "properties": {
-              "title": "Learn More"
-            }
-          }
-        ]
-      },
-      {
-        "type": "Spacer",
-        "style": {
-          "flex": 1
-        }
-      },
-      {
-        "type": "Row",
-        "style": {
-          "justifyContent": "center"
-        },
-        "children": [
           {
             "type": "Text",
             "style": {
-              "fontSize": 12,
-              "color": "#666"
+              "backgroundColor": "green",
+              "color": "white",
+              "padding": 10
             },
             "properties": {
-              "text": "Footer Content"
+              "text": "Right"
             }
           }
         ]
@@ -103,6 +47,7 @@
     "MyScreen": {
       "type": "Column",
       "style": {
+        "flexDirection": "column",
         "padding": 16,
         "backgroundColor": "#F5F5F5"
       },
@@ -110,88 +55,31 @@
         {
           "type": "Row",
           "style": {
-            "justifyContent": "space-between",
-            "alignItems": "center"
+            "flexDirection": "row",
+            "backgroundColor": "red",
+            "height": 100
           },
           "children": [
             {
               "type": "Text",
               "style": {
-                "fontSize": 16,
-                "fontWeight": "bold"
+                "backgroundColor": "blue",
+                "color": "white",
+                "padding": 10
               },
               "properties": {
-                "text": "Welcome"
+                "text": "Left"
               }
             },
-            {
-              "type": "Image",
-              "style": {
-                "width": 40,
-                "height": 40,
-                "borderRadius": "20px"
-              },
-              "properties": {
-                "source": "avatar.png"
-              }
-            }
-          ]
-        },
-        {
-          "type": "Spacer",
-          "properties": {
-            "size": 20
-          }
-        },
-        {
-          "type": "Stack",
-          "style": {
-            "marginVertical": 20,
-            "position": "relative"
-          },
-          "children": [
-            {
-              "type": "Image",
-              "style": {
-                "borderRadius": "8px"
-              },
-              "properties": {
-                "source": "background.png"
-              }
-            },
-            {
-              "type": "Button",
-              "style": {
-                "position": "absolute",
-                "bottom": 10,
-                "right": 10
-              },
-              "properties": {
-                "title": "Learn More"
-              }
-            }
-          ]
-        },
-        {
-          "type": "Spacer",
-          "style": {
-            "flex": 1
-          }
-        },
-        {
-          "type": "Row",
-          "style": {
-            "justifyContent": "center"
-          },
-          "children": [
             {
               "type": "Text",
               "style": {
-                "fontSize": 12,
-                "color": "#666"
+                "backgroundColor": "green",
+                "color": "white",
+                "padding": 10
               },
               "properties": {
-                "text": "Footer Content"
+                "text": "Right"
               }
             }
           ]

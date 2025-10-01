@@ -14,6 +14,7 @@ class RenderableButton: UIButton {
     init(component: Component) {
         self.component = component
         super.init(frame: .zero)
+        yoga.isEnabled = true
         setupButton()
     }
     

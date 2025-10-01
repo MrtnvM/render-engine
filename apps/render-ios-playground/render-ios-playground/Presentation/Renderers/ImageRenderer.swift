@@ -16,6 +16,7 @@ class RenderableImage: UIImageView, Renderable {
         self.component = component
         self.context = context
         super.init(frame: .zero)
+        yoga.isEnabled = true
         setupImageContent()
         applyStyle()
         applyFlexStyles()

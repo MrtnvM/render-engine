@@ -163,6 +163,13 @@ export default function jsxToJsonPlugin() {
             children: [],
           }
 
+          // Add default flexDirection for Row and Column components
+          if (componentType === 'Row') {
+            jsonNode.style.flexDirection = 'row'
+          } else if (componentType === 'Column') {
+            jsonNode.style.flexDirection = 'column'
+          }
+
           // 2. Process Props (Attributes)
           const currentComponentProps = getCurrentComponentProps()
           node.openingElement.attributes.forEach((attribute: any) => {

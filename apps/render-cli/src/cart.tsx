@@ -5,8 +5,15 @@ export const SCENARIO_KEY = 'avito-cart'
 export default function CartScreen() {
   return (
     <Column style={{ backgroundColor: '#F0F8FF' }}>
-      {/* <TopRow /> */}
-      <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={true} />
+      <TopRow />
+      <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
+      <CartItem
+        image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
+        price="4 990 ₽"
+        title="ЗарядкаMagSafe Charger 15W 1 метр"
+        quantity={1}
+        checked={true}
+      />
     </Column>
   )
 }
@@ -18,7 +25,7 @@ function TopRow() {
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingVertical: 12,
-        backgroundColor: '#333333',
+        backgroundColor: '#555555',
       }}
     >
       <Checkbox
@@ -32,12 +39,9 @@ function TopRow() {
       <Text
         style={{
           fontSize: 15,
-          fontWeight: 500,
+          fontWeight: '500',
           color: '#000000',
           backgroundColor: '#CCCCCC',
-          paddingHorizontal: 8,
-          paddingVertical: 4,
-          borderRadius: 6,
           marginRight: 16,
           flexGrow: 1,
         }}
@@ -49,13 +53,19 @@ function TopRow() {
           fontWeight: '500',
           color: '#0099F7',
           backgroundColor: '#FFE4E1',
-          paddingVertical: 4,
-          borderRadius: 6,
         }}
         properties={{ text: 'Удалить (3)' }}
       />
     </Row>
   )
+}
+
+function Price({ price }: { price: string }) {
+  return <Text style={{ fontSize: 18, fontWeight: '600', backgroundColor: '#E8F5E8' }} properties={{ text: price }} />
+}
+
+function ProductTitle({ title }: { title: string }) {
+  return <Text style={{ fontSize: 13, fontWeight: '500', backgroundColor: '#FFF8DC' }} properties={{ text: title }} />
 }
 
 function SellerSection({
@@ -80,13 +90,13 @@ function SellerSection({
       }}
     >
       <Checkbox
-        style={{ backgroundColor: '#F0F8FF', borderRadius: 4, padding: 4, marginRight: 12 }}
+        style={{ backgroundColor: '#F0F8FF', borderRadius: 4, marginRight: 12 }}
         properties={{ checked: checked, disabled: false }}
       />
       <Text
         style={{
           fontSize: 21,
-          fontWeight: 800,
+          fontWeight: '800',
           backgroundColor: '#F0F8FF',
           marginRight: 6,
         }}
@@ -105,7 +115,7 @@ function SellerSection({
       <Text
         style={{
           fontSize: 15,
-          fontWeight: 500,
+          fontWeight: '500',
           backgroundColor: '#E6F3FF',
           marginRight: 2,
         }}
@@ -114,13 +124,57 @@ function SellerSection({
       <Text
         style={{
           fontSize: 15,
-          fontWeight: 500,
+          fontWeight: '500',
           color: '#A3A3A3',
           backgroundColor: '#F5F5F5',
         }}
         properties={{ text: reviewCount }}
       />
     </Row>
+  )
+}
+
+function BuyWithDelivery() {
+  return (
+    <Text
+      style={{ fontSize: 13, fontWeight: '500', color: '#A168F7', backgroundColor: '#F3E5F5' }}
+      properties={{ text: 'Купить с доставкой' }}
+    />
+  )
+}
+
+function CountStepper({ quantity }: { quantity: number }) {
+  return (
+    <Stepper
+      style={{ backgroundColor: '#E6F3FF', borderRadius: 8, padding: 8 }}
+      properties={{ value: quantity, minimumValue: 1, maximumValue: 10, disabled: false }}
+    />
+  )
+}
+
+function LikeButton() {
+  return <Button style={{ backgroundColor: '#FFE0E0', borderRadius: 6, padding: 4 }} properties={{ title: '♡' }} />
+}
+
+function DeleteButton() {
+  return <Button style={{ backgroundColor: '#FFE0E0', borderRadius: 6, padding: 4 }} properties={{ title: '🗑️' }} />
+}
+
+function ProductImage({ image }: { image: string }) {
+  return (
+    <Image
+      style={{ width: 96, height: 96, borderRadius: 12, backgroundColor: '#F5F5F5' }}
+      properties={{ source: image }}
+    />
+  )
+}
+
+function ProductCheckbox({ checked }: { checked: boolean }) {
+  return (
+    <Checkbox
+      style={{ backgroundColor: '#F0F8FF', borderRadius: 4, padding: 4 }}
+      properties={{ checked: checked, disabled: false }}
+    />
   )
 }
 
@@ -135,67 +189,19 @@ function CartItem({ image, price, title, quantity, checked }: any) {
         backgroundColor: '#FFF8E1',
       }}
     >
-      <Checkbox
-        style={{ backgroundColor: '#F0F8FF', borderRadius: 4, padding: 4 }}
-        properties={{ checked: checked, disabled: false }}
-      />
+      <ProductCheckbox checked={checked} />
+      <ProductImage image={image} />
 
-      <Image
-        style={{ width: 96, height: 96, borderRadius: 12, backgroundColor: '#F5F5F5' }}
-        properties={{ source: image }}
-      />
+      <Column style={{ flex: 1, gap: 2 }}>
+        <Price price={price} />
+        <ProductTitle title={title} />
+        <CountStepper quantity={quantity} />
+        <BuyWithDelivery />
+      </Column>
 
-      <Column style={{ flex: 1, gap: 12 }}>
-        <Row style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Column style={{ flex: 1, gap: 2 }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '800',
-                backgroundColor: '#E8F5E8',
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                borderRadius: 6,
-              }}
-              properties={{ text: price }}
-            />
-            <Text
-              style={{
-                fontSize: 13,
-                fontWeight: '500',
-                backgroundColor: '#FFF8DC',
-                paddingHorizontal: 6,
-                paddingVertical: 2,
-                borderRadius: 4,
-              }}
-              properties={{ text: title }}
-            />
-          </Column>
-
-          <Row style={{ gap: 4 }}>
-            <Button style={{ backgroundColor: '#FFE0E0', borderRadius: 6, padding: 4 }} properties={{ title: '♡' }} />
-            <Button style={{ backgroundColor: '#FFE0E0', borderRadius: 6, padding: 4 }} properties={{ title: '🗑️' }} />
-          </Row>
-        </Row>
-
-        <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <Stepper
-            style={{ backgroundColor: '#E6F3FF', borderRadius: 8, padding: 8 }}
-            properties={{ value: quantity, minimumValue: 1, maximumValue: 10, disabled: false }}
-          />
-          <Text
-            style={{
-              fontSize: 13,
-              fontWeight: '500',
-              color: '#A168F7',
-              backgroundColor: '#F3E5F5',
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              borderRadius: 6,
-            }}
-            properties={{ text: 'Купить с доставкой' }}
-          />
-        </Row>
+      <Column style={{ gap: 4 }}>
+        <LikeButton />
+        <DeleteButton />
       </Column>
     </Row>
   )

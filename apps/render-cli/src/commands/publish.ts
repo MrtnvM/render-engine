@@ -58,11 +58,10 @@ export const publishCommand = program
       const latestBuildNumber = latestBuildData ? latestBuildData.build_number : 0
       const latestVersion = latestBuildData ? latestBuildData.version : '1.0.0'
       const nextBuildNumber = latestBuildNumber + 1
-      const nextVersion = incrementSemanticVersion(latestVersion)
 
       console.log(
         chalk.blue(
-          `   Latest build number is ${chalk.bold(latestBuildNumber)}. Publishing build number ${chalk.bold(nextBuildNumber)} with version ${chalk.bold(nextVersion)}.`,
+          `   Publishing build number ${chalk.bold(nextBuildNumber)} with version ${chalk.bold(latestVersion)}.`,
         ),
       )
 
@@ -72,7 +71,7 @@ export const publishCommand = program
         key: scenarioKey,
         mainComponent: schema.mainComponent || schema.main || {},
         components: schema.components || {},
-        version: nextVersion,
+        version: latestVersion,
         build_number: nextBuildNumber,
         metadata: schema.metadata || {},
       }
@@ -89,7 +88,11 @@ export const publishCommand = program
 
       // --- 4. Show Success Message ---
       console.log(chalk.green.bold('\n✅ Scenario published successfully!'))
-      console.log(chalk.gray(`   Record created for Key: ${insertedData.key}, Version: ${insertedData.version}, Build: ${insertedData.build_number}`))
+      console.log(
+        chalk.gray(
+          `   Record created for Key: ${insertedData.key}, Version: ${insertedData.version}, Build: ${insertedData.build_number}`,
+        ),
+      )
       console.log(chalk.gray(`   Published at: ${new Date(insertedData.created_at || new Date()).toLocaleString()}`))
     } catch (error: any) {
       console.error(chalk.red.bold('\n❌ Scenario publication failed.'))

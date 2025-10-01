@@ -106,7 +106,7 @@ class CheckBox: UIView {
         super.layoutSubviews()
 
         // Apply flex layout
-        flex.layout(mode: .fitContainer)
+        flex.layout()
     }
 
     // MARK: - Appearance Updates
