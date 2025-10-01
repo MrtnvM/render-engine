@@ -80,7 +80,7 @@ class ViewTreeBuilder {
         // The `define` block provides a clean, declarative structure for adding child items.
         let children = component.getChildren()
         if !children.isEmpty {
-            view.flex.define { (flex) in // `flex` is the FlexLayout interface for the `view` we just created.
+            view.flex.define { (flex) in
                 for childComponent in children {
                     // Recursively call the function to build the child's view.
                     if let childView = buildViewTree(from: childComponent, props: props) {
@@ -94,10 +94,9 @@ class ViewTreeBuilder {
         }
         
         // Apply the flex layout after setting all properties
-        view.flex.layout()
+        layout(flex: view.flex, component: component)
         
         // Layout setup completed
-        
         // 5. Return the fully constructed view with its children attached.
         return view
     }
@@ -190,11 +189,6 @@ class ViewTreeBuilder {
             flex.marginBottom(margin.bottom)
         }
         
-        print("\(component.type): ")
-        print("PADDING: \(style.padding)")
-        print("MARGIN: \(style.margin)")
-        print("")
-        
         if let width = style.width {
             flex.width(width)
         }
@@ -223,6 +217,20 @@ class ViewTreeBuilder {
         }
         
         switch style.flexMode {
+        case .adjustWidth:
+            flex.layout(mode: .adjustWidth)
+        case .adjustHeight:
+            flex.layout(mode: .adjustHeight)
+        case .fitContainer:
+            flex.layout(mode: .fitContainer)
+        }
+        
+        layout(flex: flex, component: component)
+    }
+    
+    @MainActor
+    private func layout(flex: Flex, component: Component) {
+        switch component.style.flexMode {
         case .adjustWidth:
             flex.layout(mode: .adjustWidth)
         case .adjustHeight:
