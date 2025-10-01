@@ -6,6 +6,7 @@ import chalk from 'chalk'
 import { renderCommand } from './commands/render.js'
 import { compileCommand } from './commands/compile.js'
 import { publishCommand } from './commands/publish.js'
+import { pushCommand } from './commands/push.js'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
@@ -23,6 +24,7 @@ program.name('render').description('CLI tool for Render Engine').version(version
 program.addCommand(renderCommand)
 program.addCommand(compileCommand)
 program.addCommand(publishCommand)
+program.addCommand(pushCommand)
 
 // Global error handling
 program.configureHelp({

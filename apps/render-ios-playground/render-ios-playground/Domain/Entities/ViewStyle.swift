@@ -80,6 +80,10 @@ enum AlignItems: ViewStyleEnum {
     }
 }
 
+enum FlexMode {
+    case adjustWidth, adjustHeight, fitContainer
+}
+
 enum TextAlignment: ViewStyleEnum {
     case left
     case center
@@ -125,6 +129,8 @@ enum TextAlignment: ViewStyleEnum {
 public class ViewStyle {
     private let config: Config
     private var cache: [String: Any]
+    
+    private static let logger = DIContainer.shared.logger
 
     init(_ config: Config?) {
         self.config = config ?? Config([:])
@@ -197,6 +203,10 @@ public class ViewStyle {
     
     var flexShrink: CGFloat? {
         return get(forKey: "flexShrink", ofType: CGFloat.self)
+    }
+    
+    var flexMode: FlexMode {
+        return get(forKey: "flexMode", ofType: FlexMode.self) ?? FlexMode.fitContainer
     }
 
     var padding: UIEdgeInsets {
@@ -363,6 +373,19 @@ public class ViewStyle {
             } else {
                 // Use system font with weight
                 value = UIFont.systemFont(ofSize: size, weight: weight) as? T
+            }
+        case is FlexMode.Type:
+            let rawValue = config.getString(forKey: key)
+            switch rawValue {
+            case "adjustWidth":
+                value = FlexMode.adjustWidth as? T
+            case "adjustHeight":
+                value = FlexMode.adjustHeight as? T
+            case "fitContainer":
+                value = FlexMode.fitContainer as? T
+            default:
+                ViewStyle.logger.warning("Unknown FlexMode value: \(rawValue ?? "nil")", category: "ViewStyle")
+                value = FlexMode.fitContainer as? T
             }
         default:
             print("Unsupported type: \(type)")

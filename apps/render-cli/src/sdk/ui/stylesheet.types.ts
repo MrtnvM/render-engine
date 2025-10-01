@@ -30,7 +30,6 @@ export interface FlexStyle {
   boxSizing?: 'border-box' | 'content-box' | undefined
   display?: 'none' | 'flex' | 'contents' | undefined
   end?: DimensionValue | undefined
-  flex?: number | undefined
   flexBasis?: DimensionValue | undefined
   flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse' | undefined
   rowGap?: number | string | undefined
@@ -38,6 +37,7 @@ export interface FlexStyle {
   columnGap?: number | string | undefined
   flexGrow?: number | undefined
   flexShrink?: number | undefined
+  flexMode?: 'adjustWidth' | 'adjustHeight' | 'fitContainer' | undefined
   flexWrap?: 'wrap' | 'nowrap' | 'wrap-reverse' | undefined
   height?: DimensionValue | undefined
   justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly' | undefined

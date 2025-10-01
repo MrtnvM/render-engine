@@ -147,4 +147,46 @@ public class Config {
     func getRawDictionary() -> [String: Any?] {
         return config
     }
+    
+    /// Merges another Config into the current one, returning a new Config instance.
+    /// Values from the other Config will override values in the current Config for matching keys.
+    /// - Parameter other: The Config to merge into this one
+    /// - Parameter deep: If true, performs deep merge for nested dictionaries and Config objects. Defaults to false.
+    /// - Returns: A new Config instance with merged values
+    func merge(_ other: Config, deep: Bool = false) -> Config {
+        guard !other.isEmpty else {
+            return Config(self.config)
+        }
+        
+        if !deep {
+            // Shallow merge: other's values simply override current values
+            var mergedConfig = self.config
+            let otherConfig = other.getRawDictionary()
+            
+            for (key, value) in otherConfig {
+                mergedConfig[key] = value
+            }
+            
+            return Config(mergedConfig)
+        } else {
+            // Deep merge: recursively merge nested dictionaries and Config objects
+            var mergedConfig = self.config
+            let otherConfig = other.getRawDictionary()
+            
+            for (key, value) in otherConfig {
+                if let existingDict = mergedConfig[key] as? [String: Any?],
+                   let newDict = value as? [String: Any?] {
+                    // Recursively merge nested dictionaries
+                    let existingConfig = Config(existingDict)
+                    let newConfig = Config(newDict)
+                    mergedConfig[key] = existingConfig.merge(newConfig, deep: true).getRawDictionary()
+                } else {
+                    // For non-dictionary values, override with new value
+                    mergedConfig[key] = value
+                }
+            }
+            
+            return Config(mergedConfig)
+        }
+    }
 }

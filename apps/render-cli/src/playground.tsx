@@ -16,7 +16,7 @@ export const MyScreen = () => (
       <Button properties={{ title: 'Learn More' }} style={{ position: 'absolute', bottom: 10, right: 10 }} />
     </Stack>
 
-    <Spacer style={{ flex: 1 }} />
+    <Spacer style={{ flexGrow: 1 }} />
 
     <Row style={{ justifyContent: 'center' }}>
       <Text properties={{ text: 'Footer Content' }} style={{ fontSize: 12, color: '#666' }} />

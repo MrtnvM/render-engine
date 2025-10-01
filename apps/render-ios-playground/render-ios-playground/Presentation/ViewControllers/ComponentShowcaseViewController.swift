@@ -269,7 +269,7 @@ class ComponentShowcaseViewController: UIViewController {
         let data = Config([:])
 
         let component = Component(id: componentId, type: "Button", style: style, properties: properties, data: data)
-        return RenderableButton(component: component)
+        return RenderableButton(component: component, context: RendererContext())
     }
 
     private func createTextVariations() -> [UIView] {

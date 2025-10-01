@@ -39,7 +39,9 @@ class ViewTreeBuilder {
     func buildViewTree(from component: Component, props: Config? = nil) -> UIView? {
         // 1. Check if this is a custom component defined in the scenario
         if let subcomponent = scenario.components[component.type] {
-            return buildViewTree(from: subcomponent, props: component.data)
+            let parentProps = props ?? Config()
+            let combinedProps = component.data.merge(parentProps)
+            return buildViewTree(from: subcomponent, props: combinedProps)
         }
         
         // 2. Find the renderer for the component's type from the registry.
@@ -201,6 +203,13 @@ class ViewTreeBuilder {
             flex.shrink(flexShrink)
         }
         
-        flex.layout()
+        switch style.flexMode {
+        case .adjustWidth:
+            flex.layout(mode: .adjustWidth)
+        case .adjustHeight:
+            flex.layout(mode: .adjustHeight)
+        case .fitContainer:
+            flex.layout(mode: .fitContainer)
+        }
     }
 }

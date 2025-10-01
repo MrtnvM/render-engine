@@ -61,11 +61,21 @@ function TopRow() {
 }
 
 function Price({ price }: { price: string }) {
-  return <Text style={{ fontSize: 18, fontWeight: '600', backgroundColor: '#E8F5E8' }} properties={{ text: price }} />
+  return (
+    <Text
+      style={{ fontSize: 18, fontWeight: '600', backgroundColor: '#E8F5E8', flexShrink: 0 }}
+      properties={{ text: price }}
+    />
+  )
 }
 
 function ProductTitle({ title }: { title: string }) {
-  return <Text style={{ fontSize: 13, fontWeight: '500', backgroundColor: '#FFF8DC' }} properties={{ text: title }} />
+  return (
+    <Text
+      style={{ fontSize: 13, fontWeight: '500', backgroundColor: '#FFF8DC', flexMode: 'adjustWidth' }}
+      properties={{ text: title }}
+    />
+  )
 }
 
 function SellerSection({
@@ -110,6 +120,8 @@ function SellerSection({
           width: 16,
           height: 16,
           marginRight: 2,
+          backgroundColor: '#E22F3FF',
+          alignSelf: 'center',
         }}
       />
       <Text
@@ -182,7 +194,7 @@ function CartItem({ image, price, title, quantity, checked }: any) {
   return (
     <Row
       style={{
-        alignItems: 'flex-start',
+        alignItems: 'stretch',
         gap: 12,
         paddingHorizontal: 16,
         paddingVertical: 16,
@@ -192,14 +204,16 @@ function CartItem({ image, price, title, quantity, checked }: any) {
       <ProductCheckbox checked={checked} />
       <ProductImage image={image} />
 
-      <Column style={{ flex: 1, gap: 2 }}>
-        <Price price={price} />
-        <ProductTitle title={title} />
-        <CountStepper quantity={quantity} />
-        <BuyWithDelivery />
-      </Column>
+      <Row style={{ flexGrow: 1, backgroundColor: '#DCDCDC', flexMode: 'adjustWidth', flexShrink: 1 }}>
+        <Column style={{ gap: 2, flexShrink: 1, flexMode: 'adjustWidth' }}>
+          <Price price={price} />
+          <ProductTitle title={title} />
+          <CountStepper quantity={quantity} />
+          <BuyWithDelivery />
+        </Column>
+      </Row>
 
-      <Column style={{ gap: 4 }}>
+      <Column style={{ gap: 4, flexShrink: 0 }}>
         <LikeButton />
         <DeleteButton />
       </Column>
@@ -221,7 +235,7 @@ function BundleSection() {
           }}
           properties={{ text: '🎁' }}
         />
-        <Column style={{ flex: 1 }}>
+        <Column style={{ flexGrow: 1 }}>
           <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <Text
               style={{
