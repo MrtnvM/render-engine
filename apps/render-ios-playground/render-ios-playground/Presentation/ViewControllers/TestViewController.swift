@@ -72,6 +72,9 @@ public class TestViewController: UIViewController {
         view.backgroundColor = .lightGray
         view.addSubview(rootFlexContainer)
         rootFlexContainer.backgroundColor = .gray
+        rootFlexContainer.flex
+            .paddingTop(56)
+            .paddingBottom(24)
 //        self.renderScenario(scenario: self.scenario)
         
         Task {
@@ -102,7 +105,7 @@ public class TestViewController: UIViewController {
         // Position the container to fill safe area
         rootFlexContainer.frame = CGRect(
             x: 0,
-            y: 56,
+            y: 0,
             width: view.frame.width,
             height: view.frame.height
         )

@@ -4,16 +4,33 @@ export const SCENARIO_KEY = 'avito-cart'
 
 export default function CartScreen() {
   return (
-    <Column style={{ backgroundColor: '#F0F8FF' }}>
-      <TopRow />
-      <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
-      <CartItem
-        image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
-        price="4 990 ₽"
-        title="ЗарядкаMagSafe Charger 15W 1 метр"
-        quantity={1}
-        checked={true}
-      />
+    <Column style={{ backgroundColor: '#F0F8FF', flexGrow: 1 }}>
+      <Column style={{ flexGrow: 1 }}>
+        <TopRow />
+        <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
+        <CartItem
+          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
+          price="4 990 ₽"
+          title="ЗарядкаMagSafe Charger 15W 1 метр"
+          quantity={1}
+          checked={true}
+        />
+        <CartItem
+          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png"
+          price="15 990 ₽"
+          title="AirPods Pro 2"
+          quantity={1}
+          checked={true}
+        />
+        <CartItem
+          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png"
+          price="26 591 ₽"
+          title="Apple Watch 10 42mm Blue"
+          quantity={1}
+          checked={true}
+        />
+      </Column>
+      <BottomBar />
     </Column>
   )
 }
@@ -414,11 +431,6 @@ function BottomBar() {
           style={{ backgroundColor: '#965EEB', borderRadius: 16, paddingHorizontal: 18, paddingVertical: 17 }}
           properties={{ title: 'Оформить доставку' }}
         />
-      </Row>
-
-      {/* Home Indicator */}
-      <Row style={{ justifyContent: 'center' }}>
-        <Column style={{ width: 134, height: 5, backgroundColor: '#000000', borderRadius: 3 }} />
       </Row>
     </Column>
   )
