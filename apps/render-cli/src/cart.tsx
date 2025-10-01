@@ -54,6 +54,7 @@ function TopRow() {
       />
       <Text
         style={{
+          fontFamily: 'Manrope',
           fontSize: 15,
           fontWeight: '500',
           color: '#000000',
@@ -64,6 +65,7 @@ function TopRow() {
       />
       <Text
         style={{
+          fontFamily: 'Manrope',
           fontSize: 15,
           fontWeight: '500',
           color: '#0099F7',
@@ -76,12 +78,20 @@ function TopRow() {
 
 function Price({ price }: { price: string }) {
   return (
-    <Text style={{ fontSize: 18, fontWeight: '600', flexShrink: 0, marginBottom: 2 }} properties={{ text: price }} />
+    <Text
+      style={{ fontFamily: 'Manrope', fontSize: 18, fontWeight: '800', flexShrink: 0, marginBottom: 2 }}
+      properties={{ text: price }}
+    />
   )
 }
 
 function ProductTitle({ title }: { title: string }) {
-  return <Text style={{ fontSize: 13, fontWeight: '500', flexMode: 'adjustWidth' }} properties={{ text: title }} />
+  return (
+    <Text
+      style={{ fontFamily: 'Manrope', fontSize: 13, fontWeight: '500', flexMode: 'adjustWidth' }}
+      properties={{ text: title }}
+    />
+  )
 }
 
 function SellerSection({
@@ -108,6 +118,7 @@ function SellerSection({
       <Checkbox style={{ borderRadius: 4, marginRight: 16 }} properties={{ checked: checked, disabled: false }} />
       <Text
         style={{
+          fontFamily: 'Manrope',
           fontSize: 21,
           fontWeight: '800',
           marginRight: 8,
@@ -127,6 +138,7 @@ function SellerSection({
       />
       <Text
         style={{
+          fontFamily: 'Manrope',
           fontSize: 15,
           fontWeight: '500',
           marginRight: 4,
@@ -135,6 +147,7 @@ function SellerSection({
       />
       <Text
         style={{
+          fontFamily: 'Manrope',
           fontSize: 15,
           fontWeight: '500',
           color: '#A3A3A3',
@@ -147,7 +160,10 @@ function SellerSection({
 
 function BuyWithDelivery() {
   return (
-    <Text style={{ fontSize: 13, fontWeight: '500', color: '#A168F7' }} properties={{ text: 'Купить с доставкой' }} />
+    <Text
+      style={{ fontFamily: 'Manrope', fontSize: 13, fontWeight: '500', color: '#A168F7' }}
+      properties={{ text: 'Купить с доставкой' }}
+    />
   )
 }
 
@@ -161,11 +177,25 @@ function CountStepper({ quantity }: { quantity: number }) {
 }
 
 function LikeButton() {
-  return <Button style={{ borderRadius: 6, padding: 4 }} properties={{ title: '♡' }} />
+  return (
+    <Image
+      style={{ borderRadius: 6, width: 28, height: 28 }}
+      properties={{
+        source: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/favorites.png',
+      }}
+    />
+  )
 }
 
 function DeleteButton() {
-  return <Button style={{ borderRadius: 6, padding: 4 }} properties={{ title: '🗑️' }} />
+  return (
+    <Image
+      style={{ borderRadius: 6, width: 28, height: 28 }}
+      properties={{
+        source: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/delete.png',
+      }}
+    />
+  )
 }
 
 function ProductImage({ image }: { image: string }) {
@@ -212,6 +242,7 @@ function BundleSection() {
       <Row style={{ alignItems: 'center', gap: 6 }}>
         <Text
           style={{
+            fontFamily: 'Manrope',
             fontSize: 24,
             paddingHorizontal: 8,
             paddingVertical: 4,
@@ -223,6 +254,7 @@ function BundleSection() {
           <Row style={{ justifyContent: 'spaceBetween', alignItems: 'center' }}>
             <Text
               style={{
+                fontFamily: 'Manrope',
                 fontSize: 14,
                 fontWeight: '800',
                 paddingHorizontal: 8,
@@ -266,6 +298,7 @@ function BundleSection() {
           <Column style={{ alignItems: 'center', gap: 4 }}>
             <Text
               style={{
+                fontFamily: 'Manrope',
                 fontSize: 15,
                 fontWeight: '500',
                 paddingHorizontal: 8,
@@ -293,6 +326,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
             <Row style={{ gap: 6 }}>
               <Text
                 style={{
+                  fontFamily: 'Manrope',
                   fontSize: 16,
                   fontWeight: '800',
                   paddingHorizontal: 6,
@@ -304,6 +338,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
               <Row style={{ alignItems: 'center' }}>
                 <Text
                   style={{
+                    fontFamily: 'Manrope',
                     fontSize: 15,
                     fontWeight: '500',
                     color: '#757575',
@@ -315,6 +350,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
                 />
                 <Text
                   style={{
+                    fontFamily: 'Manrope',
                     color: '#757575',
                     paddingHorizontal: 4,
                     paddingVertical: 2,
@@ -326,6 +362,7 @@ function BundleItem({ image, currentPrice, originalPrice, title }: any) {
             </Row>
             <Text
               style={{
+                fontFamily: 'Manrope',
                 fontSize: 11,
                 fontWeight: '500',
                 paddingHorizontal: 6,
@@ -369,6 +406,7 @@ function BottomBar() {
         <Column>
           <Text
             style={{
+              fontFamily: 'Manrope',
               fontSize: 11,
               fontWeight: '500',
               color: '#000000',
@@ -380,6 +418,7 @@ function BottomBar() {
           />
           <Text
             style={{
+              fontFamily: 'Manrope',
               fontSize: 21,
               fontWeight: '800',
               paddingHorizontal: 12,

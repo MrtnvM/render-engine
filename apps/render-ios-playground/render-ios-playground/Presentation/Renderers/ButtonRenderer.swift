@@ -12,6 +12,7 @@ class RenderableButton: UIButton, Renderable {
     let component: Component
     let context: RendererContext
     
+    private let imageLoader = DIContainer.shared.imageLoader
     
     init(component: Component, context: RendererContext) {
         self.component = component
@@ -27,6 +28,7 @@ class RenderableButton: UIButton, Renderable {
     
     private func setupButton() {
         applyVisualStyles()
+        applyFlexStyles()
         
         let titleColor = get(key: "titleColor", type: UIColor.self) ?? .tintColor
         setTitleColor(titleColor, for: .normal)
@@ -36,5 +38,21 @@ class RenderableButton: UIButton, Renderable {
         
         let font = get(key: "font", type: UIFont.self)
         titleLabel?.font = font
+        
+        setupImageContent()
+    }
+    
+    private func setupImageContent() {
+        let imageSource = get(key: "image", type: String.self)
+        guard let imageSource = imageSource else {
+            return
+        }
+
+        // Get optional placeholder
+        let placeholder = component.properties.getString(forKey: "placeholder")
+        
+        imageLoader.loadImage(from: imageSource, placeholder: placeholder) { [weak self] image in
+            self?.setImage(image, for: .normal)
+        }
     }
 }

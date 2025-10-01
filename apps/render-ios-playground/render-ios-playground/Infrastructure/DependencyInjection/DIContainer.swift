@@ -11,6 +11,10 @@ class DIContainer {
         return NetworkClient()
     }()
     
+    lazy var imageLoader: ImageLoader = {
+        return ImageLoader()
+    }()
+    
     lazy var supabaseClient: SupabaseClient = {
         return SupabaseClient(
             supabaseURL: URL(string: "https://yhfeoztyhuiccuyeghiw.supabase.co")!,

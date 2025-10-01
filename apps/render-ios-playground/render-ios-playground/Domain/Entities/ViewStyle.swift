@@ -491,6 +491,9 @@ public class ViewStyle {
             return createFontWithWeight(familyName: "Monaco", size: size, weight: weight)
         case "system", "system-ui":
             return UIFont.systemFont(ofSize: size, weight: weight)
+        case "manrope", "manrope_cut", "manrope cut":
+            // Special handling for Manrope font family
+            return createManropeFont(size: size, weight: weight)
         default:
             // Try to find the font by exact name first with weight
             if let exactFont = createFontWithWeight(familyName: familyName, size: size, weight: weight) {
@@ -514,6 +517,48 @@ public class ViewStyle {
             ])
             return UIFont(descriptor: weightedDescriptor, size: size)
         }
+    }
+    
+    private func createManropeFont(size: CGFloat, weight: UIFont.Weight) -> UIFont? {
+        // Map weights to Manrope font variants
+        var fontName: String
+        
+        switch weight {
+        case .heavy, .black:
+            // Use ExtraBold for heavy and black weights (800, 900)
+            fontName = "Manrope_Cut_008-ExtraBold"
+        default:
+            // Use Medium for all other weights as fallback
+            fontName = "Manrope_Cut_008-Medium"
+        }
+        
+        if let font = UIFont(name: fontName, size: size) {
+            return font
+        }
+        
+        // Fallback: Try with underscores replaced by hyphens or vice versa
+        let alternateName = fontName.replacingOccurrences(of: "_", with: "-")
+        if let font = UIFont(name: alternateName, size: size) {
+            return font
+        }
+        
+        // Final fallback: search for any font containing "Manrope"
+        for fontFamily in UIFont.familyNames {
+            let fontNames = UIFont.fontNames(forFamilyName: fontFamily)
+            for name in fontNames where name.lowercased().contains("manrope") {
+                if weight == .heavy || weight == .black {
+                    if name.lowercased().contains("extrabold") || name.lowercased().contains("extra-bold") {
+                        return UIFont(name: name, size: size)
+                    }
+                } else {
+                    if name.lowercased().contains("medium") {
+                        return UIFont(name: name, size: size)
+                    }
+                }
+            }
+        }
+        
+        return nil
     }
     
     private func createFontWithWeight(familyName: String, size: CGFloat, weight: UIFont.Weight) -> UIFont? {

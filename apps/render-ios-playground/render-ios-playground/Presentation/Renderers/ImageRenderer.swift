@@ -11,6 +11,8 @@ class ImageRenderer: Renderer {
 class RenderableImage: UIImageView, Renderable {
     let component: Component
     let context: RendererContext
+    
+    let imageLoader = DIContainer.shared.imageLoader
 
     init(component: Component, context: RendererContext) {
         self.component = component
@@ -33,7 +35,7 @@ class RenderableImage: UIImageView, Renderable {
         if let contentModeString = get(key: "contentMode", type: String.self) {
             contentMode = parseContentMode(from: contentModeString)
         } else {
-            contentMode = .scaleAspectFit
+            contentMode = .scaleToFill
         }
         
         if let tintColor = get(key: "tintColor", type: UIColor.self) {
@@ -55,65 +57,11 @@ class RenderableImage: UIImageView, Renderable {
             return
         }
 
-        loadImage(from: imageSource)
-
-        // Placeholder image
-        if let placeholder = component.properties.getString(forKey: "placeholder") {
-            if placeholder.hasPrefix("http") {
-                // Load placeholder from URL
-                loadImageFromURL(placeholder) { [weak self] image in
-                    self?.image = image
-                }
-            } else {
-                // Load placeholder from assets
-                self.image = UIImage(named: placeholder)
-            }
-        }
-    }
-    
-    private func loadImage(from source: String) {
-        if source.hasPrefix("http") {
-            // Load from URL
-            loadImageFromURL(source) { [weak self] image in
-                DispatchQueue.main.async {
-                    self?.image = image
-                }
-            }
-        } else if source.hasPrefix("data:") {
-            // Load from base64 data
-            loadImageFromBase64(source)
-        } else {
-            // Load from assets
-            self.image = UIImage(named: source)
-        }
-    }
-    
-    private func loadImageFromURL(_ urlString: String, completion: @escaping (UIImage?) -> Void) {
-        guard let url = URL(string: urlString) else {
-            completion(nil)
-            return
-        }
+        // Get optional placeholder
+        let placeholder = component.properties.getString(forKey: "placeholder")
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data, let image = UIImage(data: data) {
-                completion(image)
-            } else {
-                completion(nil)
-            }
-        }.resume()
-    }
-    
-    private func loadImageFromBase64(_ base64String: String) {
-        // Remove data URL prefix if present
-        let cleanBase64 = base64String.replacingOccurrences(of: "data:image/[^;]+;base64,", with: "", options: .regularExpression)
-        
-        guard let data = Data(base64Encoded: cleanBase64),
-              let image = UIImage(data: data) else {
-            return
-        }
-        
-        DispatchQueue.main.async {
-            self.image = image
+        imageLoader.loadImage(from: imageSource, placeholder: placeholder) { [weak self] image in
+            self?.image = image
         }
     }
     
