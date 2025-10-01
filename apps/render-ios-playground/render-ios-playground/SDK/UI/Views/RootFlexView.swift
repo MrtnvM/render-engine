@@ -80,6 +80,7 @@ class RootFlexView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        frame = superview?.bounds ?? .zero
         flex.layout(mode: .fitContainer)
     }
     
