@@ -14,6 +14,7 @@
 		8AA6782F2E8145F60044B555 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA6782E2E8145F60044B555 /* Storage */; };
 		8AA678332E8195320044B555 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA678322E8195320044B555 /* Supabase */; };
 		8AD2DA242E801FAB001729D2 /* FlexLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 8AD2DA232E801FAB001729D2 /* FlexLayout */; };
+		8AD2DA352E8A45670044B555 /* render-ios-sdk in Frameworks */ = {isa = PBXBuildFile; productRef = 8AD2DA342E8A45670044B555 /* render-ios-sdk */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 				8AA678272E8145F60044B555 /* Auth in Frameworks */,
 				8AA6782D2E8145F60044B555 /* Realtime in Frameworks */,
 				8AD2DA242E801FAB001729D2 /* FlexLayout in Frameworks */,
+				8AD2DA352E8A45670044B555 /* render-ios-sdk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +151,7 @@
 				8AA6782C2E8145F60044B555 /* Realtime */,
 				8AA6782E2E8145F60044B555 /* Storage */,
 				8AA678322E8195320044B555 /* Supabase */,
+				8AD2DA342E8A45670044B555 /* render-ios-sdk */,
 			);
 			productName = "render-ios-playground";
 			productReference = 8AD2D7E92E7C0528001729D2 /* render-ios-playground.app */;
@@ -235,6 +238,7 @@
 			packageReferences = (
 				8AD2DA222E801FAB001729D2 /* XCRemoteSwiftPackageReference "FlexLayout" */,
 				8AA678252E8145F60044B555 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				8AD2DA362E8A45670044B555 /* XCLocalSwiftPackageReference "../../packages/render-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8AD2D7EA2E7C0528001729D2 /* Products */;
@@ -594,6 +598,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		8AD2DA362E8A45670044B555 /* XCLocalSwiftPackageReference "../../packages/render-ios-sdk" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../packages/render-ios-sdk";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		8AA678252E8145F60044B555 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -648,6 +659,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8AD2DA222E801FAB001729D2 /* XCRemoteSwiftPackageReference "FlexLayout" */;
 			productName = FlexLayout;
+		};
+		8AD2DA342E8A45670044B555 /* render-ios-sdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8AD2DA362E8A45670044B555 /* XCLocalSwiftPackageReference "../../packages/render-ios-sdk" */;
+			productName = "render-ios-sdk";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

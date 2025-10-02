@@ -6,6 +6,9 @@
 //
 
 import UIKit
+// MARK: - Package SDK Import Example
+// Uncomment the line below to use the render-ios-sdk package instead of the local SDK
+import render_ios_sdk
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+         print("Package SDK Version: \(render_ios_sdk.RenderSDK.shared.version)")
         
         return true
     }
