@@ -82,6 +82,11 @@ export const sidebarData: SidebarData = {
           icon: IconCode,
         },
         {
+          title: 'Scenarios',
+          url: '/scenarios',
+          icon: IconCode,
+        },
+        {
           title: 'Avito Design System',
           url: '/avito-design-system',
           icon: IconPalette,
