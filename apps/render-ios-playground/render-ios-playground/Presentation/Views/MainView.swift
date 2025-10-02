@@ -4,7 +4,6 @@ import UIKit
 protocol MainViewDelegate: AnyObject {
     func mainViewDidTapFetchButton(_ mainView: MainView)
     func mainViewDidTapDesignSystemButton(_ mainView: MainView)
-    func mainViewDidTapUIKitButton(_ mainView: MainView)
     func mainView(_ mainView: MainView, shouldPresentAlert alert: UIAlertController)
 }
 
@@ -33,16 +32,6 @@ class MainView: UIView {
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(designSystemButtonTapped), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var uiKitButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("🎨 UI Kit", for: .normal)
-        button.backgroundColor = UIColor(red: 0.98, green: 0.58, blue: 0.27, alpha: 1.0) // Orange color
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(uiKitButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -74,7 +63,7 @@ class MainView: UIView {
     }
     
     private func setupButtons() {
-        let views = [designSystemButton, uiKitButton, fetchButton]
+        let views = [designSystemButton, fetchButton]
         let buttonStack = UIStackView(arrangedSubviews: views)
         buttonStack.axis = .vertical
         buttonStack.spacing = 12
@@ -106,10 +95,6 @@ class MainView: UIView {
     
     @objc private func designSystemButtonTapped() {
         delegate?.mainViewDidTapDesignSystemButton(self)
-    }
-
-    @objc private func uiKitButtonTapped() {
-        delegate?.mainViewDidTapUIKitButton(self)
     }
     
     // MARK: - Public Methods

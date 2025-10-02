@@ -1,4 +1,5 @@
 import UIKit
+import RenderEngine
 
 /// Main view controller following clean architecture principles
 class MainViewController: UIViewController {
@@ -28,9 +29,9 @@ class MainViewController: UIViewController {
         }
         
         do {
-            try await RenderSDK.shared.render(
+            try await RenderEngine.shared.render(
                 scenarioKey: scenarioKey,
-                vc: self,
+                in: self,
                 containerView: mainView
             )
             
@@ -57,12 +58,6 @@ extension MainViewController: MainViewDelegate {
     func mainViewDidTapDesignSystemButton(_ mainView: MainView) {
         let showcaseVC = AvitoDesignSystem.showcase()
         let navController = UINavigationController(rootViewController: showcaseVC)
-        present(navController, animated: true)
-    }
-
-    func mainViewDidTapUIKitButton(_ mainView: MainView) {
-        let uiKitVC = UIKitViewController()
-        let navController = UINavigationController(rootViewController: uiKitVC)
         present(navController, animated: true)
     }
     

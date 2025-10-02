@@ -1,72 +1,90 @@
-# render-ios-sdk Package Integration
+# Render Engine Package Integration
 
-This document explains how the `render-ios-sdk` Swift Package is connected to the `render-ios-playground` Xcode project.
+This document explains how the `RenderEngine` Swift Package is integrated into the `render-ios-playground` Xcode project.
 
 ## Overview
 
-The `render-ios-playground` app now has access to the `render-ios-sdk` package, which is located at `../../packages/render-ios-sdk` relative to the project root.
+The `render-ios-playground` app uses the `RenderEngine` package from `../../packages/render-ios-sdk` for all rendering functionality. The local SDK implementation has been completely replaced with the package SDK.
 
 ## Integration Details
 
 ### Xcode Project Configuration
 
-The integration was done by modifying the `project.pbxproj` file with the following additions:
+The integration is configured via the `project.pbxproj` file with:
 
-1. **Local Package Reference**: Added `XCLocalSwiftPackageReference` pointing to the SDK package
-2. **Package Dependency**: Added the package to the `render-ios-playground` target's dependencies
-3. **Framework Linking**: Linked the `render-ios-sdk` library in the Frameworks build phase
+1. **Local Package Reference**: `XCLocalSwiftPackageReference` pointing to `../../packages/render-ios-sdk`
+2. **Package Dependency**: The package is added to the `render-ios-playground` target's dependencies
+3. **Framework Linking**: The `RenderEngine` library is linked in the Frameworks build phase
 
 ### Current Architecture
 
-The playground currently has two SDK implementations:
+The playground now exclusively uses the **Package SDK** (`../../packages/render-ios-sdk`):
 
-1. **Local SDK** (`render-ios-playground/SDK/`): The existing, complete SDK implementation used by the app
-2. **Package SDK** (`../../packages/render-ios-sdk`): The new Swift Package that can be used for distribution
+- ✅ All SDK code is in the package
+- ✅ Playground imports `RenderEngine` module
+- ✅ Single source of truth for SDK implementation
 
 ## Usage
 
-### Importing the Package SDK
+### Import the Package SDK
 
-To use the package SDK in your Swift files:
+```swift
+import RenderEngine
+```
+
+### Configure the SDK
+
+In `SceneDelegate.swift`:
 
 ```swift
 import RenderEngine
 
-// Initialize the SDK
-RenderEngine.shared.initialize(baseURL: "https://your-api-url.com")
+RenderEngine.shared.configure(
+    supabaseURL: URL(string: "https://your-project.supabase.co")!,
+    supabaseKey: "your-anon-key"
+)
 
-// Get SDK version
-print("SDK Version: \(RenderEngine.shared.version)")
+RenderEngine.shared.configureLogger(
+    consoleEnabled: true,
+    fileEnabled: true,
+    consoleLogLevel: .info,
+    fileLogLevel: .debug
+)
+
+let renderViewController = RenderViewController(scenarioKey: "avito-cart")`
 ```
 
-### Current Implementation
+### Render a Scenario
 
-The app currently uses the local SDK implementation:
+In your view controller:
 
 ```swift
-// This uses the local SDK from render-ios-playground/SDK/
-RenderSDK.shared.render(
-    scenarioKey: scenarioKey,
-    vc: self,
-    containerView: mainView
-)
+import UIKit
+import RenderEngine
+
+class MainViewController: UIViewController {
+    private func renderScenario() async {
+        do {
+            try await RenderEngine.shared.render(
+                scenarioKey: "main_screen",
+                in: self,
+                containerView: nil // Optional container view
+            )
+        } catch {
+            print("Failed to render: \(error)")
+        }
+    }
+}
 ```
-
-## Migration Path
-
-To migrate from the local SDK to the package SDK:
-
-1. Move SDK code from `render-ios-playground/SDK/` to `packages/render-ios-sdk/Sources/render-ios-sdk/`
-2. Update imports in the playground app from local to package imports
-3. Remove the local SDK directory once migration is complete
 
 ## Benefits of Package Architecture
 
-- **Reusability**: The SDK can be easily integrated into other iOS projects
+- **Reusability**: The SDK can be easily integrated into any iOS project
 - **Versioning**: Better version control and distribution
-- **Separation of Concerns**: Clear separation between SDK and playground app
+- **Separation of Concerns**: Clear boundary between SDK and app
 - **Testing**: Independent testing of SDK functionality
 - **Distribution**: Can be distributed via Swift Package Manager, CocoaPods, or Carthage
+- **Maintainability**: Single implementation to maintain
 
 ## Building and Testing
 
@@ -94,23 +112,21 @@ Open the Xcode project and build normally. Xcode will automatically resolve and 
 
 ```
 packages/render-ios-sdk/
-├── Package.swift              # Package manifest
-├── README.md                  # Package documentation
+├── Package.swift                      # Package manifest
+├── README.md                          # Package documentation
 ├── Sources/
 │   └── RenderEngine/
-│       └── render_ios_sdk.swift  # Main SDK implementation
+│       ├── RenderEngine.swift         # Main SDK entry point
+│       ├── Core/                      # Core functionality
+│       ├── Debug/                     # Logging and debugging
+│       ├── Models/                    # Data models
+│       ├── Providers/                 # Value providers
+│       ├── Repositories/              # Data repositories
+│       └── UI/                        # UI components and rendering
 └── Tests/
     └── RenderEngineTests/
-        └── render_ios_sdkTests.swift  # Unit tests
+        └── RenderEngineTests.swift    # Unit tests
 ```
-
-## Next Steps
-
-1. **Populate the Package**: Move SDK functionality from local to package
-2. **Add Tests**: Create comprehensive unit tests in the package
-3. **Documentation**: Add detailed API documentation
-4. **CI/CD**: Set up continuous integration for the package
-5. **Versioning**: Implement semantic versioning for releases
 
 ## Troubleshooting
 
@@ -126,20 +142,14 @@ If Xcode can't find the package:
 
 If you encounter build errors:
 
-1. Ensure the package path is correct in the Xcode project
-2. Clean build folder: Product → Clean Build Folder
-3. Resolve package versions: File → Packages → Reset Package Caches
+1. Clean build folder: Product → Clean Build Folder
+2. Resolve package versions: File → Packages → Reset Package Caches
+3. Update packages: File → Packages → Update to Latest Package Versions
 
 ### Import Issues
 
 If imports fail:
 
-- Check that the package product name matches: `RenderEngine`
+- Check that the package product name is `RenderEngine`
 - Verify the package is listed in the target's dependencies
-- Ensure the package builds successfully independently
-
-## Resources
-
-- [Swift Package Manager Documentation](https://swift.org/package-manager/)
-- [Creating a Swift Package](https://developer.apple.com/documentation/xcode/creating-a-standalone-swift-package-with-xcode)
-- [Local Package Development](https://developer.apple.com/documentation/xcode/organizing-your-code-with-local-packages)
+- Ensure you're using `import RenderEngine`
