@@ -30,13 +30,13 @@ The playground currently has two SDK implementations:
 To use the package SDK in your Swift files:
 
 ```swift
-import render_ios_sdk
+import RenderEngine
 
 // Initialize the SDK
-render_ios_sdk.RenderSDK.shared.initialize(baseURL: "https://your-api-url.com")
+RenderEngine.shared.initialize(baseURL: "https://your-api-url.com")
 
 // Get SDK version
-print("SDK Version: \(render_ios_sdk.RenderSDK.shared.version)")
+print("SDK Version: \(RenderEngine.shared.version)")
 ```
 
 ### Current Implementation
@@ -97,10 +97,10 @@ packages/render-ios-sdk/
 ├── Package.swift              # Package manifest
 ├── README.md                  # Package documentation
 ├── Sources/
-│   └── render-ios-sdk/
+│   └── RenderEngine/
 │       └── render_ios_sdk.swift  # Main SDK implementation
 └── Tests/
-    └── render-ios-sdkTests/
+    └── RenderEngineTests/
         └── render_ios_sdkTests.swift  # Unit tests
 ```
 
@@ -134,7 +134,7 @@ If you encounter build errors:
 
 If imports fail:
 
-- Check that the package product name matches: `render-ios-sdk`
+- Check that the package product name matches: `RenderEngine`
 - Verify the package is listed in the target's dependencies
 - Ensure the package builds successfully independently
 

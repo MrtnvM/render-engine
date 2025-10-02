@@ -13,13 +13,13 @@ The SDK is integrated into the `render-ios-playground` project as a local Swift 
 To use the SDK in your iOS playground app, simply import it:
 
 ```swift
-import render_ios_sdk
+import RenderEngine
 
 // Initialize the SDK
-RenderSDK.shared.initialize(baseURL: "https://your-api-url.com")
+RenderEngine.shared.initialize(baseURL: "https://your-api-url.com")
 
 // Access SDK version
-print("SDK Version: \(RenderSDK.shared.version)")
+print("SDK Version: \(RenderEngine.shared.version)")
 ```
 
 ## Development
@@ -30,10 +30,10 @@ print("SDK Version: \(RenderSDK.shared.version)")
 render-ios-sdk/
 ├── Package.swift
 ├── Sources/
-│   └── render-ios-sdk/
+│   └── RenderEngine/
 │       └── render_ios_sdk.swift
 └── Tests/
-    └── render-ios-sdkTests/
+    └── RenderEngineTests/
         └── render_ios_sdkTests.swift
 ```
 

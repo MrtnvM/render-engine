@@ -5,7 +5,7 @@
 ### 1. Xcode Project Configuration
 
 - ✅ Added local Swift Package reference to `../../packages/render-ios-sdk`
-- ✅ Linked `render-ios-sdk` product to the main app target
+- ✅ Linked `RenderEngine` product to the main app target
 - ✅ Added package to Frameworks build phase
 - ✅ Updated package dependencies list
 
@@ -30,10 +30,10 @@ render-engine/
 │       ├── Package.swift
 │       ├── README.md                 # Package documentation
 │       ├── Sources/
-│       │   └── render-ios-sdk/
+│       │   └── RenderEngine/
 │       │       └── render_ios_sdk.swift
 │       └── Tests/
-│           └── render-ios-sdkTests/
+│           └── RenderEngineTests/
 └── apps/
     └── render-ios-playground/        # iOS App
         ├── SDK_INTEGRATION.md        # Integration guide
@@ -50,19 +50,19 @@ render-engine/
 ### Import the Package
 
 ```swift
-import render_ios_sdk
+import RenderEngine
 ```
 
 ### Initialize the SDK
 
 ```swift
-render_ios_sdk.RenderSDK.shared.initialize(baseURL: "https://api.example.com")
+RenderEngine.shared.initialize(baseURL: "https://api.example.com")
 ```
 
 ### Get SDK Version
 
 ```swift
-let version = render_ios_sdk.RenderSDK.shared.version
+let version = RenderEngine.shared.version
 print("SDK Version: \(version)")
 ```
 

@@ -4,15 +4,15 @@
 import Foundation
 
 /// The main entry point for the Render iOS SDK
-public class RenderSDK {
+public class RenderEngine {
     
-    @MainActor public static let shared = RenderSDK()
+    @MainActor public static let shared = RenderEngine()
     
     private init() {}
     
     /// Initialize the SDK with configuration
     public func initialize(baseURL: String) {
-        print("RenderSDK initialized with baseURL: \(baseURL)")
+        print("RenderEngine initialized with baseURL: \(baseURL)")
     }
     
     /// Get the SDK version
