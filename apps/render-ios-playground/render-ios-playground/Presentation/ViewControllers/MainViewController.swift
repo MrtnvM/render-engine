@@ -4,7 +4,7 @@ import UIKit
 class MainViewController: UIViewController {
     
     // MARK: - Dependencies
-    private let schemaService = DIContainer.shared.scenarioService
+    private let scenarioService = DIContainer.shared.scenarioService
     
     // MARK: - UI Components
     private var mainView: MainView!
