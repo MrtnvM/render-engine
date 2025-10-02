@@ -56,13 +56,13 @@ export default function ProfileForm() {
           name='username'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Имя пользователя</FormLabel>
               <FormControl>
-                <Input placeholder='shadcn' {...field} />
+                <Input placeholder='demo_user' {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name. It can be your real name or a pseudonym. You can only change this once
-                every 30 days.
+                Это ваше публичное имя. Это может быть ваше настоящее имя или псевдоним. Вы можете изменить его только
+                раз в 30 дней.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -77,17 +77,17 @@ export default function ProfileForm() {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select a verified email to display' />
+                    <SelectValue placeholder='Выберите подтвержденный email для отображения' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                  <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                  <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                  <SelectItem value='demo@demo.com'>demo@demo.com</SelectItem>
+                  <SelectItem value='demo@avito.ru'>demo@avito.ru</SelectItem>
+                  <SelectItem value='demo@example.com'>demo@example.com</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
-                You can manage verified email addresses in your <Link to='/'>email settings</Link>.
+                Вы можете управлять подтвержденными email адресами в <Link to='/'>настройках email</Link>.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -98,12 +98,12 @@ export default function ProfileForm() {
           name='bio'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bio</FormLabel>
+              <FormLabel>О себе</FormLabel>
               <FormControl>
-                <Textarea placeholder='Tell us a little bit about yourself' className='resize-none' {...field} />
+                <Textarea placeholder='Расскажите немного о себе' className='resize-none' {...field} />
               </FormControl>
               <FormDescription>
-                You can <span>@mention</span> other users and organizations to link to them.
+                Вы можете использовать <span>@упоминания</span> других пользователей и организаций для ссылки на них.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -117,9 +117,9 @@ export default function ProfileForm() {
               name={`urls.${index}.value`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={cn(index !== 0 && 'sr-only')}>URLs</FormLabel>
+                  <FormLabel className={cn(index !== 0 && 'sr-only')}>URL-адреса</FormLabel>
                   <FormDescription className={cn(index !== 0 && 'sr-only')}>
-                    Add links to your website, blog, or social media profiles.
+                    Добавьте ссылки на ваш веб-сайт, блог или профили в социальных сетях.
                   </FormDescription>
                   <FormControl>
                     <Input {...field} />
@@ -130,10 +130,10 @@ export default function ProfileForm() {
             />
           ))}
           <Button type='button' variant='outline' size='sm' className='mt-2' onClick={() => append({ value: '' })}>
-            Add URL
+            Добавить URL
           </Button>
         </div>
-        <Button type='submit'>Update profile</Button>
+        <Button type='submit'>Обновить профиль</Button>
       </form>
     </Form>
   )

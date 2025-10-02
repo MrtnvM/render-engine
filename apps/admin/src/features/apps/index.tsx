@@ -12,9 +12,9 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { apps } from './data/apps'
 
 const appText = new Map<string, string>([
-  ['all', 'All Apps'],
-  ['connected', 'Connected'],
-  ['notConnected', 'Not Connected'],
+  ['all', 'Все приложения'],
+  ['connected', 'Подключено'],
+  ['notConnected', 'Не подключено'],
 ])
 
 export default function Apps() {
@@ -41,13 +41,13 @@ export default function Apps() {
       {/* ===== Content ===== */}
       <Main fixed>
         <div>
-          <h1 className='text-2xl font-bold tracking-tight'>App Integrations</h1>
-          <p className='text-muted-foreground'>Here&apos;s a list of your apps for the integration!</p>
+          <h1 className='text-2xl font-bold tracking-tight'>Render Engine - Интеграции приложений</h1>
+          <p className='text-muted-foreground'>Список ваших приложений для интеграции!</p>
         </div>
         <div className='my-4 flex items-end justify-between sm:my-0 sm:items-center'>
           <div className='flex flex-col gap-4 sm:my-4 sm:flex-row'>
             <Input
-              placeholder='Filter apps...'
+              placeholder='Фильтр приложений...'
               className='h-9 w-40 lg:w-[250px]'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -57,9 +57,9 @@ export default function Apps() {
                 <SelectValue>{appText.get(appType)}</SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Apps</SelectItem>
-                <SelectItem value='connected'>Connected</SelectItem>
-                <SelectItem value='notConnected'>Not Connected</SelectItem>
+                <SelectItem value='all'>Все приложения</SelectItem>
+                <SelectItem value='connected'>Подключено</SelectItem>
+                <SelectItem value='notConnected'>Не подключено</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -74,13 +74,13 @@ export default function Apps() {
               <SelectItem value='ascending'>
                 <div className='flex items-center gap-4'>
                   <IconSortAscendingLetters size={16} />
-                  <span>Ascending</span>
+                  <span>По возрастанию</span>
                 </div>
               </SelectItem>
               <SelectItem value='descending'>
                 <div className='flex items-center gap-4'>
                   <IconSortDescendingLetters size={16} />
-                  <span>Descending</span>
+                  <span>По убыванию</span>
                 </div>
               </SelectItem>
             </SelectContent>
@@ -97,7 +97,7 @@ export default function Apps() {
                   size='sm'
                   className={`${app.connected ? 'border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900' : ''}`}
                 >
-                  {app.connected ? 'Connected' : 'Connect'}
+                  {app.connected ? 'Подключено' : 'Подключить'}
                 </Button>
               </div>
               <div>

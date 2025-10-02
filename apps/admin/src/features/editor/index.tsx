@@ -752,8 +752,10 @@ root.render(React.createElement(App));
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Editor</h2>
-            <p className='text-muted-foreground'>Code editor with live preview for React components</p>
+            <h2 className='text-2xl font-bold tracking-tight'>Render Engine - Редактор</h2>
+            <p className='text-muted-foreground'>
+              Редактор кода с предпросмотром в реальном времени для React компонентов
+            </p>
           </div>
         </div>
         <div className='flex-1 overflow-auto px-4 py-1'>

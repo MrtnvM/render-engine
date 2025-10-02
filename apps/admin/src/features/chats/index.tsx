@@ -74,7 +74,7 @@ export default function Chats() {
             <div className='bg-background sticky top-0 z-10 -mx-4 px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
               <div className='flex items-center justify-between py-2'>
                 <div className='flex gap-2'>
-                  <h1 className='text-2xl font-bold'>Inbox</h1>
+                  <h1 className='text-2xl font-bold'>Render Engine - Входящие</h1>
                   <IconMessages size={20} />
                 </div>
 
@@ -90,11 +90,11 @@ export default function Chats() {
 
               <label className='border-input focus-within:ring-ring flex h-12 w-full items-center space-x-0 rounded-md border pl-2 focus-within:ring-1 focus-within:outline-hidden'>
                 <IconSearch size={15} className='mr-2 stroke-slate-500' />
-                <span className='sr-only'>Search</span>
+                <span className='sr-only'>Поиск</span>
                 <input
                   type='text'
                   className='w-full flex-1 bg-inherit text-sm focus-visible:outline-hidden'
-                  placeholder='Search chat...'
+                  placeholder='Поиск чата...'
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -248,10 +248,10 @@ export default function Chats() {
                       </Button>
                     </div>
                     <label className='flex-1'>
-                      <span className='sr-only'>Chat Text Box</span>
+                      <span className='sr-only'>Текстовое поле чата</span>
                       <input
                         type='text'
-                        placeholder='Type your messages...'
+                        placeholder='Введите ваши сообщения...'
                         className='h-8 w-full bg-inherit focus-visible:outline-hidden'
                       />
                     </label>
@@ -260,7 +260,7 @@ export default function Chats() {
                     </Button>
                   </div>
                   <Button className='h-full sm:hidden'>
-                    <IconSend size={18} /> Send
+                    <IconSend size={18} /> Отправить
                   </Button>
                 </form>
               </div>
@@ -276,14 +276,14 @@ export default function Chats() {
                   <IconMessages className='size-8' />
                 </div>
                 <div className='space-y-2 text-center'>
-                  <h1 className='text-xl font-semibold'>Your messages</h1>
-                  <p className='text-muted-foreground text-sm'>Send a message to start a chat.</p>
+                  <h1 className='text-xl font-semibold'>Ваши сообщения</h1>
+                  <p className='text-muted-foreground text-sm'>Отправьте сообщение, чтобы начать чат.</p>
                 </div>
                 <Button
                   className='bg-blue-500 px-6 text-white hover:bg-blue-600'
                   onClick={() => setCreateConversationDialog(true)}
                 >
-                  Send message
+                  Отправить сообщение
                 </Button>
               </div>
             </div>

@@ -28,8 +28,8 @@ export default function Users() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>User List</h2>
-            <p className='text-muted-foreground'>Manage your users and their roles here.</p>
+            <h2 className='text-2xl font-bold tracking-tight'>Render Engine - Список пользователей</h2>
+            <p className='text-muted-foreground'>Управляйте пользователями и их ролями здесь.</p>
           </div>
           <UsersPrimaryButtons />
         </div>

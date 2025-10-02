@@ -1,3 +1,7 @@
+# Render Engine Admin
+
+Административная панель для управления Backend-Driven UI конфигурациями.
+
 ## Tech Stack
 
 **UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
@@ -12,7 +16,7 @@
 
 **Icons:** [Tabler Icons](https://tabler.io/icons)
 
-**Auth (partial):** [Clerk](https://go.clerk.com/GttUAaK)
+**Auth:** [Supabase Auth](https://supabase.com/auth)
 
 ## Run Locally
 

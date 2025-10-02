@@ -25,64 +25,64 @@ import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
+    name: 'Demo User',
+    email: 'demo@demo.com',
     avatar: '/avatars/shadcn.jpg',
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'Render Engine',
       logo: Command,
-      plan: 'Vite + ShadcnUI',
+      plan: 'Backend-Driven UI',
     },
     {
-      name: 'Acme Inc',
+      name: 'Render Engine Production',
       logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
+      plan: 'Продакшн',
     },
     {
-      name: 'Acme Corp.',
+      name: 'Render Engine Staging',
       logo: AudioWaveform,
-      plan: 'Startup',
+      plan: 'Разработка',
     },
   ],
   navGroups: [
     {
-      title: 'General',
+      title: 'Основное',
       items: [
         {
-          title: 'Dashboard',
+          title: 'Панель управления',
           url: '/',
           icon: IconLayoutDashboard,
         },
         {
-          title: 'Tasks',
+          title: 'Задачи',
           url: '/tasks',
           icon: IconChecklist,
         },
         {
-          title: 'Apps',
+          title: 'Приложения',
           url: '/apps',
           icon: IconPackages,
         },
         {
-          title: 'Chats',
+          title: 'Чаты',
           url: '/chats',
           badge: '3',
           icon: IconMessages,
         },
         {
-          title: 'Users',
+          title: 'Пользователи',
           url: '/users',
           icon: IconUsers,
         },
         {
-          title: 'Editor',
+          title: 'Редактор',
           url: '/editor',
           icon: IconCode,
         },
         {
-          title: 'Avito Design System',
+          title: 'Дизайн-система Avito',
           url: '/avito-design-system',
           icon: IconPalette,
         },
@@ -90,60 +90,60 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: 'Pages',
+      title: 'Страницы',
       items: [
         {
-          title: 'Auth',
+          title: 'Авторизация',
           icon: IconLockAccess,
           items: [
             {
-              title: 'Sign In',
+              title: 'Вход',
               url: '/sign-in',
             },
             {
-              title: 'Sign In (2 Col)',
+              title: 'Вход (2 колонки)',
               url: '/sign-in-2',
             },
             {
-              title: 'Sign Up',
+              title: 'Регистрация',
               url: '/sign-up',
             },
             {
-              title: 'Forgot Password',
+              title: 'Восстановление пароля',
               url: '/forgot-password',
             },
             {
-              title: 'OTP',
+              title: 'Одноразовый пароль',
               url: '/otp',
             },
           ],
         },
         {
-          title: 'Errors',
+          title: 'Ошибки',
           icon: IconBug,
           items: [
             {
-              title: 'Unauthorized',
+              title: 'Неавторизован',
               url: '/401',
               icon: IconLock,
             },
             {
-              title: 'Forbidden',
+              title: 'Доступ запрещён',
               url: '/403',
               icon: IconUserOff,
             },
             {
-              title: 'Not Found',
+              title: 'Не найдено',
               url: '/404',
               icon: IconError404,
             },
             {
-              title: 'Internal Server Error',
+              title: 'Ошибка сервера',
               url: '/500',
               icon: IconServerOff,
             },
             {
-              title: 'Maintenance Error',
+              title: 'Техническое обслуживание',
               url: '/503',
               icon: IconBarrierBlock,
             },
@@ -152,41 +152,41 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: 'Other',
+      title: 'Прочее',
       items: [
         {
-          title: 'Settings',
+          title: 'Настройки',
           icon: IconSettings,
           items: [
             {
-              title: 'Profile',
+              title: 'Профиль',
               url: '/settings',
               icon: IconUserCog,
             },
             {
-              title: 'Account',
+              title: 'Аккаунт',
               url: '/settings/account',
               icon: IconTool,
             },
             {
-              title: 'Appearance',
+              title: 'Внешний вид',
               url: '/settings/appearance',
               icon: IconPalette,
             },
             {
-              title: 'Notifications',
+              title: 'Уведомления',
               url: '/settings/notifications',
               icon: IconNotification,
             },
             {
-              title: 'Display',
+              title: 'Отображение',
               url: '/settings/display',
               icon: IconBrowserCheck,
             },
           ],
         },
         {
-          title: 'Help Center',
+          title: 'Центр помощи',
           url: '/help-center',
           icon: IconHelp,
         },
