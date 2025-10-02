@@ -4,12 +4,7 @@
  */
 
 import type { File } from '@babel/types'
-import type {
-  ASTNode,
-  ComponentInfo,
-  JSXElement,
-  ExportAnalyzer as IExportAnalyzer,
-} from '../types.js'
+import type { ASTNode, ComponentInfo, JSXElement, ExportAnalyzer as IExportAnalyzer } from '../types.js'
 import { extractScenarioKey, extractFunctionParams } from '../ast/ast-utils.js'
 import { isJSXElement, isFunctionLike, isVariableDeclaration } from '../ast/type-guards.js'
 import { InvalidExportError } from '../errors.js'
@@ -64,10 +59,9 @@ export class ExportAnalyzer implements IExportAnalyzer {
     else if (declaration.type === 'Identifier') {
       // This would require looking up the identifier in the scope
       // For now, we'll handle this case in the future if needed
-      throw new InvalidExportError(
-        `Export default with identifier reference not yet supported: ${declaration.name}`,
-        { identifierName: declaration.name }
-      )
+      throw new InvalidExportError(`Export default with identifier reference not yet supported: ${declaration.name}`, {
+        identifierName: declaration.name,
+      })
     }
 
     return null
@@ -87,11 +81,7 @@ export class ExportAnalyzer implements IExportAnalyzer {
     // Handle: export const ComponentName = () => <JSX>...
     if (isVariableDeclaration(declaration)) {
       for (const declarator of declaration.declarations) {
-        if (
-          declarator.type === 'VariableDeclarator' &&
-          declarator.id?.type === 'Identifier' &&
-          declarator.init
-        ) {
+        if (declarator.type === 'VariableDeclarator' && declarator.id?.type === 'Identifier' && declarator.init) {
           const componentName = declarator.id.name!
 
           // Handle arrow function: export const Comp = () => <JSX>...
@@ -237,9 +227,7 @@ export class ExportAnalyzer implements IExportAnalyzer {
 
     // Validate component name format (PascalCase for components)
     if (info.exportType !== 'helper' && !info.name.match(/^[A-Z][a-zA-Z0-9]*$/)) {
-      throw new InvalidExportError(
-        `Component name '${info.name}' should be PascalCase (start with uppercase)`
-      )
+      throw new InvalidExportError(`Component name '${info.name}' should be PascalCase (start with uppercase)`)
     }
   }
 }
@@ -258,8 +246,8 @@ export function analyzeAllExports(ast: File): {
   const scenarioKey = analyzer.extractScenarioKey(ast)
 
   // Analyze all statements in the AST
-  if (ast.body) {
-    for (const statement of ast.body) {
+  if (ast.program?.body) {
+    for (const statement of ast.program.body) {
       // Handle default exports
       if (statement.type === 'ExportDefaultDeclaration') {
         const component = analyzer.analyzeDefaultExport(statement as any)

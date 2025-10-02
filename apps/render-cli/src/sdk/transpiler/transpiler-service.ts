@@ -30,7 +30,7 @@ export class TranspilerService {
     private readonly analyzer: ExportAnalyzer,
     private readonly assembler: ScenarioAssembler,
     private readonly valueConverter: ValueConverter,
-    private readonly jsxProcessor: JSXProcessor
+    private readonly jsxProcessor: JSXProcessor,
   ) {}
 
   /**
@@ -39,14 +39,14 @@ export class TranspilerService {
    */
   async transpile(jsxString: string): Promise<TranspiledScenario> {
     const startTime = Date.now()
-    
+
     try {
       this.config.logger?.info('Starting transpilation process')
 
       // Phase 1: Parse JSX to AST
       this.config.logger?.debug('Phase 1: Parsing JSX to AST')
       const ast = this.parser.parse(jsxString)
-      this.config.logger?.debug(`Parsed AST with ${ast.body?.length || 0} top-level statements`)
+      this.config.logger?.debug(`Parsed AST with ${ast.program?.body?.length || 0} top-level statements`)
 
       // Phase 2: Extract scenario key
       this.config.logger?.debug('Phase 2: Extracting scenario key')
@@ -85,7 +85,7 @@ export class TranspilerService {
       if (error instanceof TranspilerError) {
         throw error
       }
-      
+
       throw wrapError(error, 'Transpilation failed')
     }
   }
@@ -104,23 +104,20 @@ export class TranspilerService {
     try {
       // Try to parse
       const ast = this.parser.parse(jsxString)
-      
+
       // Check for common issues
-      if (!ast.body || ast.body.length === 0) {
+      if (!ast.program?.body || ast.program.body.length === 0) {
         warnings.push('Empty JSX file')
       }
 
       // Check for exports
-      const hasDefaultExport = ast.body?.some(
-        node => node.type === 'ExportDefaultDeclaration'
-      )
-      
+      const hasDefaultExport = ast.program?.body?.some((node: any) => node.type === 'ExportDefaultDeclaration')
+
       if (!hasDefaultExport) {
         warnings.push('No default export found - this may not render properly')
       }
 
       // Could add more validation here
-
     } catch (error) {
       if (error instanceof TranspilerError) {
         errors.push(error.message)
@@ -192,7 +189,7 @@ export class TranspilerService {
     const pluginConfig = createDefaultPluginConfig(
       this.config.componentRegistry,
       this.jsxProcessor,
-      this.valueConverter
+      this.valueConverter,
     )
 
     return createJsxToJsonPlugin(pluginConfig)
@@ -206,15 +203,15 @@ export class TranspilerService {
 
     const stats = {
       total: components.length,
-      default: components.filter(c => c.exportType === 'default').length,
-      named: components.filter(c => c.exportType === 'named').length,
-      helper: components.filter(c => c.exportType === 'helper').length,
+      default: components.filter((c) => c.exportType === 'default').length,
+      named: components.filter((c) => c.exportType === 'named').length,
+      helper: components.filter((c) => c.exportType === 'helper').length,
     }
 
     this.config.logger.debug('Component statistics:', stats)
 
     if (stats.total > 0) {
-      const componentNames = components.map(c => `${c.name} (${c.exportType})`).join(', ')
+      const componentNames = components.map((c) => `${c.name} (${c.exportType})`).join(', ')
       this.config.logger.debug('Components found:', componentNames)
     }
   }
@@ -223,9 +220,7 @@ export class TranspilerService {
 /**
  * Create a transpiler service with default dependencies
  */
-export async function createTranspilerService(
-  config?: Partial<TranspilerConfig>
-): Promise<TranspilerService> {
+export async function createTranspilerService(config?: Partial<TranspilerConfig>): Promise<TranspilerService> {
   // Dynamic imports to handle potential circular dependencies
   const { createParser } = await import('./core/parser.js')
   const { ExportAnalyzer } = await import('./core/export-analyzer.js')
@@ -251,14 +246,7 @@ export async function createTranspilerService(
     ...config,
   }
 
-  return new TranspilerService(
-    fullConfig,
-    parser,
-    analyzer,
-    assembler,
-    valueConverter,
-    jsxProcessor
-  )
+  return new TranspilerService(fullConfig, parser, analyzer, assembler, valueConverter, jsxProcessor)
 }
 
 /**

@@ -2,7 +2,7 @@
  * Comprehensive type definitions for the transpiler system
  */
 
-import type { File, ASTNode as BabelASTNode, JSXElement as BabelJSXElement } from '@babel/types'
+import type { File, JSXElement as BabelJSXElement } from '@babel/types'
 
 // ===== Core Configuration Types =====
 

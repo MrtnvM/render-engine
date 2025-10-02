@@ -31,9 +31,9 @@ export function astNodeToValue(node?: ASTNode | null, componentProps?: Set<strin
           // Handle different key types (Identifier, StringLiteral, etc.)
           let key: string
           if (prop.key.type === 'Identifier') {
-            key = prop.key.name || 'unknown'
+            key = (prop.key as any).name || 'unknown'
           } else if (prop.key.type === 'StringLiteral') {
-            key = prop.key.value || 'unknown'
+            key = String((prop.key as any).value) || 'unknown'
           } else {
             key = String(prop.key)
           }

@@ -16,11 +16,7 @@ import type {
   ConversionContext,
   JSXProcessor as IJSXProcessor,
 } from '../types.js'
-import {
-  isJSXElement,
-  isJSXText,
-  isJSXExpressionContainer,
-} from '../ast/type-guards.js'
+import { isJSXElement, isJSXText, isJSXExpressionContainer } from '../ast/type-guards.js'
 import { ConversionError, ComponentNotFoundError } from '../errors.js'
 import { createConversionContext } from '../ast/value-converter.js'
 
@@ -31,7 +27,7 @@ import { createConversionContext } from '../ast/value-converter.js'
 export class JSXProcessor implements IJSXProcessor {
   constructor(
     private readonly registry: ComponentRegistry,
-    private readonly valueConverter: ValueConverter
+    private readonly valueConverter: ValueConverter,
   ) {}
 
   /**
@@ -40,43 +36,41 @@ export class JSXProcessor implements IJSXProcessor {
   processElement(element: JSXElement, context: ProcessingContext): JsonNode {
     const componentName = element.openingElement.name.name
 
-    // Validate component exists in registry
-    if (!this.registry.isRegistered(componentName)) {
-      throw new ComponentNotFoundError(componentName, {
-        availableComponents: this.registry.getAllComponentNames(),
-      })
-    }
+    // Check if component is registered in the predefined registry
+    const isRegistered = this.registry.isRegistered(componentName)
 
-    const componentDefinition = this.registry.getDefinition(componentName)
-
-    // Create base JSON node
-    const jsonNode: JsonNode = {
-      type: componentName,
-      style: { ...this.registry.getDefaultStyles(componentName) },
-      properties: {},
-      data: {},
-      children: [],
-    }
+    // For registered components, get their definition
+    // For unregistered components (user-defined), use default configuration
+    const componentDefinition = isRegistered
+      ? this.registry.getDefinition(componentName)
+      : {
+          name: componentName,
+          defaultStyles: {},
+          supportedProps: [],
+          childrenAllowed: true,
+          textChildrenAllowed: false,
+        }
 
     // Process attributes
     const attributes = this.processAttributes(element.openingElement.attributes, context)
 
-    // Merge attributes into JSON node
-    jsonNode.style = { ...jsonNode.style, ...attributes.style }
-    jsonNode.properties = { ...jsonNode.properties, ...attributes.properties }
-    jsonNode.data = { ...jsonNode.data, ...attributes.data }
-
     // Process children
+    let processedChildren: JsonNode[] = []
     if (componentDefinition.childrenAllowed && element.children.length > 0) {
-      const processedChildren = this.processChildren(element.children, {
+      processedChildren = this.processChildren(element.children, {
         ...context,
         parentComponent: componentName,
         depth: context.depth + 1,
       })
+    }
 
-      if (processedChildren.length > 0) {
-        jsonNode.children = processedChildren
-      }
+    // Create JSON node with all attributes merged
+    const jsonNode: JsonNode = {
+      type: componentName,
+      style: { ...componentDefinition.defaultStyles, ...attributes.style },
+      properties: { ...attributes.properties },
+      data: { ...attributes.data },
+      children: processedChildren,
     }
 
     // Clean up empty objects
@@ -103,9 +97,7 @@ export class JSXProcessor implements IJSXProcessor {
     for (const attribute of attributes) {
       if (attribute.type === 'JSXAttribute') {
         const propName = attribute.name.name
-        const value = attribute.value
-          ? this.valueConverter.convert(attribute.value as any, conversionContext)
-          : true // JSX boolean shorthand: <Component prop /> means prop={true}
+        const value = attribute.value ? this.valueConverter.convert(attribute.value as any, conversionContext) : true // JSX boolean shorthand: <Component prop /> means prop={true}
 
         // Route attributes to appropriate category
         if (propName === 'style') {
@@ -167,9 +159,9 @@ export class JSXProcessor implements IJSXProcessor {
           componentProps: context.componentProps,
           strictMode: false,
         })
-        
+
         const expressionValue = this.valueConverter.convert(child.expression as any, conversionContext)
-        
+
         // Handle the expression result based on its type
         if (typeof expressionValue === 'string' && context.parentComponent === 'Text') {
           const textNode: JsonNode = {
@@ -211,8 +203,8 @@ export class JSXProcessor implements IJSXProcessor {
     // Properties that should go into the properties object
     const specialProperties = new Set([
       'titleStyle', // Button title style
-      'text',       // Text content
-      'source',     // Image source
+      'text', // Text content
+      'source', // Image source
       'resizeMode', // Image resize mode
     ])
 
@@ -223,29 +215,29 @@ export class JSXProcessor implements IJSXProcessor {
    * Clean up empty properties from JSON node
    */
   private cleanupEmptyProperties(node: JsonNode): JsonNode {
-    const cleaned: JsonNode = { ...node }
+    const cleaned: any = { type: node.type }
 
-    // Remove empty style object
-    if (cleaned.style && Object.keys(cleaned.style).length === 0) {
-      delete cleaned.style
+    // Only include non-empty style object
+    if (node.style && Object.keys(node.style).length > 0) {
+      cleaned.style = node.style
     }
 
-    // Remove empty properties object
-    if (cleaned.properties && Object.keys(cleaned.properties).length === 0) {
-      delete cleaned.properties
+    // Only include non-empty properties object
+    if (node.properties && Object.keys(node.properties).length > 0) {
+      cleaned.properties = node.properties
     }
 
-    // Remove empty data object
-    if (cleaned.data && Object.keys(cleaned.data).length === 0) {
-      delete cleaned.data
+    // Only include non-empty data object
+    if (node.data && Object.keys(node.data).length > 0) {
+      cleaned.data = node.data
     }
 
-    // Remove empty children array
-    if (cleaned.children && cleaned.children.length === 0) {
-      delete cleaned.children
+    // Only include non-empty children array
+    if (node.children && node.children.length > 0) {
+      cleaned.children = node.children
     }
 
-    return cleaned
+    return cleaned as JsonNode
   }
 }
 

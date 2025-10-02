@@ -4,22 +4,16 @@
  */
 
 import type { File } from '@babel/types'
-import type {
-  ASTNode,
-  ComponentMetadata,
-  ComponentInfo,
-  ExportType,
-  JSXElement,
-} from '../types.js'
+import type { ASTNode, ComponentMetadata, ComponentInfo, ExportType, JSXElement } from '../types.js'
 
 /**
  * Extract SCENARIO_KEY from AST
  * Looks for: export const SCENARIO_KEY = 'some-value'
  */
 export function extractScenarioKey(ast: File): string | null {
-  if (!ast.body) return null
+  if (!ast.program?.body) return null
 
-  for (const statement of ast.body) {
+  for (const statement of ast.program.body) {
     if (statement.type === 'ExportNamedDeclaration' && statement.declaration?.type === 'VariableDeclaration') {
       const declarations = statement.declaration.declarations
 
@@ -44,10 +38,10 @@ export function extractScenarioKey(ast: File): string | null {
  */
 export function findExportedComponents(ast: File): ComponentInfo[] {
   const components: ComponentInfo[] = []
-  
-  if (!ast.body) return components
 
-  for (const statement of ast.body) {
+  if (!ast.program?.body) return components
+
+  for (const statement of ast.program.body) {
     // Check default exports
     if (statement.type === 'ExportDefaultDeclaration') {
       const component = extractComponentFromDefaultExport(statement as any)
@@ -113,7 +107,7 @@ export function isComponentFunction(node: ASTNode): boolean {
  * Extract component info from default export
  */
 function extractComponentFromDefaultExport(node: ASTNode): ComponentInfo | null {
-  const declaration = node.declaration
+  const declaration = (node as any).declaration
 
   if (!declaration) return null
 
@@ -150,7 +144,7 @@ function extractComponentFromDefaultExport(node: ASTNode): ComponentInfo | null 
  */
 function extractComponentsFromNamedExport(node: ASTNode): ComponentInfo[] {
   const components: ComponentInfo[] = []
-  const declaration = node.declaration
+  const declaration = (node as any).declaration
 
   if (!declaration) return components
 
@@ -181,12 +175,13 @@ function extractComponentsFromNamedExport(node: ASTNode): ComponentInfo[] {
  * Extract component from function declaration (helper function)
  */
 function extractComponentFromFunctionDeclaration(node: ASTNode): ComponentInfo | null {
-  if (node.type !== 'FunctionDeclaration' || !node.id?.name) return null
+  const nodeAny = node as any
+  if (node.type !== 'FunctionDeclaration' || !nodeAny.id?.name) return null
 
   const jsxElement = findJSXInFunction(node)
   if (jsxElement) {
     return {
-      name: node.id.name,
+      name: nodeAny.id.name,
       exportType: 'helper',
       jsxElement,
       params: extractFunctionParams(node),

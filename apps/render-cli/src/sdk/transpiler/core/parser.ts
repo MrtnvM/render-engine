@@ -37,8 +37,6 @@ export class Parser implements IParser {
         ],
         // Parse in strict mode by default
         strictMode: true,
-        // Allow hash-bang at start of files
-        allowHashBang: true,
         // Allow return outside functions (for module exports)
         allowReturnOutsideFunction: true,
       })
@@ -81,12 +79,7 @@ export class Parser implements IParser {
    * Validate that a file is a valid AST
    */
   isValidAST(ast: unknown): ast is File {
-    return (
-      typeof ast === 'object' &&
-      ast !== null &&
-      (ast as any).type === 'File' &&
-      Array.isArray((ast as any).body)
-    )
+    return typeof ast === 'object' && ast !== null && (ast as any).type === 'File' && Array.isArray((ast as any).body)
   }
 
   /**
@@ -128,15 +121,15 @@ export class Parser implements IParser {
         const isErrorLine = lineNumber === line
         const prefix = isErrorLine ? '>' : ' '
         const formattedLineNumber = lineNumber.toString().padStart(3)
-        
+
         let result = `${prefix} ${formattedLineNumber} | ${sourceLine}`
-        
+
         // Add error pointer for the specific column
         if (isErrorLine && column > 0) {
           const pointer = ' '.repeat(8 + column) + '^'
           result += '\n' + pointer
         }
-        
+
         return result
       })
       .join('\n')
