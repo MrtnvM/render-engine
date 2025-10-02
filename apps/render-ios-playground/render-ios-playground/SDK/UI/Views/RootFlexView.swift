@@ -86,16 +86,19 @@ class RootFlexView: UIView {
     
     // MARK: - Scenario Handling
     private func onScenarioChanged(_ scenario: Scenario?) {
-        subviews.forEach { $0.removeFromSuperview() }
-        
         guard let scenario = scenario else { return }
         
+        subviews.forEach { $0.removeFromSuperview() }
         renderScenario(scenario: scenario)
         subscribe(to: scenario)
     }
     
     private func subscribe(to scenario: Scenario) {
-        unsubscribe()
+        if currentObserver?.scenarioKey == scenario.key {
+            return
+        } else {
+            unsubscribe()
+        }
         
         let observer = ScenarioObserverObject(
             scenarioKey: scenario.key,

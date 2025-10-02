@@ -41,7 +41,12 @@ class ScenarioRepositoryImpl: ScenarioRepository {
         observers[scenarioKey] = observer
         
         let channel = supabaseClient.channel("scenario-\(scenarioKey)")
-        let changes = channel.postgresChange(UpdateAction.self, schema: "public")
+        let changes = channel.postgresChange(
+            InsertAction.self,
+            schema: "public",
+            table: "scenario_table",
+            filter: .eq("key", value: scenarioKey)
+        )
         
         do {
             try await channel.subscribeWithError()
@@ -58,7 +63,9 @@ class ScenarioRepositoryImpl: ScenarioRepository {
                     continue
                 }
                 
-                observer.onScenarioUpdate(scenario: scenario)
+                await MainActor.run { [weak observer] in
+                    observer?.onScenarioUpdate(scenario: scenario)
+                }
             }
         } catch {
             logger.error("FAILED TO SUBSCRIBE TO CHANNEL FOR SCENARIO KEY = \(scenarioKey)")

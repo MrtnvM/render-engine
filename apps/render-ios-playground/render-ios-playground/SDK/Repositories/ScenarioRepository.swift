@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ScenarioObserver {
+protocol ScenarioObserver: AnyObject {
     var scenarioKey: String { get }
     func onScenarioUpdate(scenario: Scenario)
 }

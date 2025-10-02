@@ -1,10 +1,10 @@
-import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating } from '@render-engine/admin-sdk/ui'
+import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating, View } from '@render-engine/admin-sdk/ui'
 
 export const SCENARIO_KEY = 'avito-cart'
 
 export default function CartScreen() {
   return (
-    <Column style={{ flexGrow: 1 }}>
+    <Column style={{ flexGrow: 1, backgroundColor: '#ffffff' }}>
       <Column style={{ flexGrow: 1 }}>
         <TopRow />
         <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
@@ -179,7 +179,7 @@ function CountStepper({ quantity }: { quantity: number }) {
 function LikeButton() {
   return (
     <Image
-      style={{ borderRadius: 6, width: 28, height: 28 }}
+      style={{ borderRadius: 6, width: 24, height: 24 }}
       properties={{
         source: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/favorites.png',
       }}
@@ -190,7 +190,7 @@ function LikeButton() {
 function DeleteButton() {
   return (
     <Image
-      style={{ borderRadius: 6, width: 28, height: 28 }}
+      style={{ borderRadius: 6, width: 24, height: 24 }}
       properties={{
         source: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/delete.png',
       }}
@@ -228,7 +228,7 @@ function CartItem({ image, price, title, quantity, checked }: any) {
         </Column>
       </Row>
 
-      <Column style={{ gap: 4, flexShrink: 0 }}>
+      <Column style={{ gap: 6, flexShrink: 0 }}>
         <LikeButton />
         <DeleteButton />
       </Column>
