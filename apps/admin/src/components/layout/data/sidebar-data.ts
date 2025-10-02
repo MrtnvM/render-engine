@@ -1,21 +1,15 @@
 import {
-  IconBarrierBlock,
   IconBrowserCheck,
-  IconBug,
   IconChecklist,
   IconCode,
-  IconError404,
   IconHelp,
   IconLayoutDashboard,
-  IconLock,
   IconNotification,
   IconPackages,
   IconPalette,
-  IconServerOff,
   IconSettings,
   IconTool,
   IconUserCog,
-  IconUserOff,
   IconUsers,
 } from '@tabler/icons-react'
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
@@ -59,11 +53,6 @@ export const sidebarData: SidebarData = {
           icon: IconChecklist,
         },
         {
-          title: 'Приложения',
-          url: '/apps',
-          icon: IconPackages,
-        },
-        {
           title: 'A/B-тесты',
           url: '/ab-tests',
           icon: IconUsers,
@@ -79,42 +68,6 @@ export const sidebarData: SidebarData = {
           icon: IconPalette,
         },
         // Clerk demo group removed
-      ],
-    },
-    {
-      title: 'Страницы',
-      items: [
-        {
-          title: 'Ошибки',
-          icon: IconBug,
-          items: [
-            {
-              title: 'Неавторизован',
-              url: '/401',
-              icon: IconLock,
-            },
-            {
-              title: 'Доступ запрещён',
-              url: '/403',
-              icon: IconUserOff,
-            },
-            {
-              title: 'Не найдено',
-              url: '/404',
-              icon: IconError404,
-            },
-            {
-              title: 'Ошибка сервера',
-              url: '/500',
-              icon: IconServerOff,
-            },
-            {
-              title: 'Техническое обслуживание',
-              url: '/503',
-              icon: IconBarrierBlock,
-            },
-          ],
-        },
       ],
     },
     {

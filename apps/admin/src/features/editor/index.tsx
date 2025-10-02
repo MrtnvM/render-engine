@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSearch } from '@tanstack/react-router'
 import EditorComponent, { OnMount } from '@monaco-editor/react'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useScenarioRaw } from '@/features/tasks/hooks/use-scenarios'
 
 // --- minimal typings so Monaco knows React + your Render components ---
 const reactShimDts = `
@@ -190,8 +192,33 @@ function App() {
 `.trim()
 
 export default function Editor() {
-  const [code, setCode] = useState(STARTER)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const search = useSearch({ from: '/_authenticated/editor' })
+  const { data: scenarioData, isLoading, isError } = useScenarioRaw(search.scenarioId ?? null)
+
+  // Generate initial code from scenario data or use starter
+  const initialCode = useMemo(() => {
+    if (scenarioData) {
+      // Format scenario data as JSON with proper indentation
+      const scenarioJson = {
+        id: scenarioData.id,
+        key: scenarioData.key,
+        version: scenarioData.version,
+        build_number: scenarioData.build_number,
+        mainComponent: scenarioData.mainComponent,
+        components: scenarioData.components,
+        metadata: scenarioData.metadata,
+      }
+      return JSON.stringify(scenarioJson, null, 2)
+    }
+    return STARTER
+  }, [scenarioData])
+
+  const [code, setCode] = useState(initialCode)
+
+  // Update code when scenario data loads
+  useEffect(() => {
+    setCode(initialCode)
+  }, [initialCode])
 
   const onMount: OnMount = (_editor, monaco) => {
     // TS config for JSX/TS
@@ -550,195 +577,6 @@ export default function Editor() {
     })
   }
 
-  // Build a srcDoc with Babel transform and global Render + React
-  const srcDoc = useMemo(() => {
-    // NOTE: Replace CDN URLs if you self-host
-    const reactCDN = 'https://unpkg.com/react@18/umd/react.development.js'
-    const reactDomCDN = 'https://unpkg.com/react-dom@18/umd/react-dom.development.js'
-    const babelCDN = 'https://unpkg.com/@babel/standalone/babel.min.js'
-
-    // A super-simple runtime shim for your Render lib (replace with your real components)
-    const renderRuntime = `
-      (function(){
-        const e = React.createElement;
-        const Render = {
-          Container: ({children, className = '', style = {}}) =>
-            e('div', {
-              style: {padding:12,border:'1px solid #ddd',borderRadius:8,...style},
-              className: className
-            }, children),
-
-          Label: ({children, className = '', style = {}, htmlFor}) =>
-            e('label', {
-              style: {fontWeight:'600',marginRight:8,display:'block',marginBottom:'4px',...style},
-              className: className,
-              htmlFor: htmlFor
-            }, children),
-
-          Button: ({children, className = '', style = {}, variant = 'primary', size = 'md', disabled = false, onClick, type = 'button'}) => {
-            const baseStyle = {
-              padding: size === 'sm' ? '6px 12px' : size === 'lg' ? '12px 24px' : '8px 16px',
-              borderRadius: '6px',
-              border: 'none',
-              cursor: disabled ? 'not-allowed' : 'pointer',
-              fontWeight: '500',
-              fontSize: '14px',
-              ...style
-            };
-
-            const variantStyles = {
-              primary: { backgroundColor: '#3b82f6', color: 'white' },
-              secondary: { backgroundColor: '#6b7280', color: 'white' },
-              outline: { backgroundColor: 'transparent', border: '1px solid #d1d5db', color: '#374151' },
-              ghost: { backgroundColor: 'transparent', color: '#374151' }
-            };
-
-            return e('button', {
-              style: {...baseStyle, ...variantStyles[variant]},
-              className: className,
-              disabled: disabled,
-              onClick: onClick,
-              type: type
-            }, children);
-          },
-
-          Input: ({className = '', style = {}, type = 'text', placeholder, value, disabled = false, readOnly = false, onChange}) =>
-            e('input', {
-              type: type,
-              placeholder: placeholder,
-              value: value,
-              disabled: disabled,
-              readOnly: readOnly,
-              onChange: onChange,
-              style: {
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
-                fontSize: '14px',
-                ...style
-              },
-              className: className
-            }),
-
-          Textarea: ({className = '', style = {}, placeholder, value, disabled = false, readOnly = false, onChange, rows = 3}) =>
-            e('textarea', {
-              placeholder: placeholder,
-              value: value,
-              disabled: disabled,
-              readOnly: readOnly,
-              onChange: onChange,
-              rows: rows,
-              style: {
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
-                fontSize: '14px',
-                resize: 'vertical',
-                ...style
-              },
-              className: className
-            }),
-
-          Select: ({children, className = '', style = {}, value, disabled = false, onChange}) =>
-            e('select', {
-              value: value,
-              disabled: disabled,
-              onChange: onChange,
-              style: {
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
-                fontSize: '14px',
-                ...style
-              },
-              className: className
-            }, children),
-
-          Option: ({children, value, disabled = false}) =>
-            e('option', {
-              value: value,
-              disabled: disabled
-            }, children),
-
-          Card: ({children, className = '', style = {}}) =>
-            e('div', {
-              style: {
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                backgroundColor: 'white',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                ...style
-              },
-              className: className
-            }, children),
-
-          CardHeader: ({children, className = '', style = {}}) =>
-            e('div', {
-              style: {
-                padding: '16px',
-                borderBottom: '1px solid #e5e7eb',
-                ...style
-              },
-              className: className
-            }, children),
-
-          CardContent: ({children, className = '', style = {}}) =>
-            e('div', {
-              style: {
-                padding: '16px',
-                ...style
-              },
-              className: className
-            }, children),
-
-          CardFooter: ({children, className = '', style = {}}) =>
-            e('div', {
-              style: {
-                padding: '16px',
-                borderTop: '1px solid #e5e7eb',
-                ...style
-              },
-              className: className
-            }, children),
-        };
-        window.Render = Render;
-      })();
-    `
-
-    const html = `
-<!doctype html>
-<html>
-  <head><meta charset="utf-8" /></head>
-  <body>
-    <div id="root"></div>
-    <script src="${reactCDN}"></script>
-    <script src="${reactDomCDN}"></script>
-    <script>${renderRuntime}</script>
-    <script src="${babelCDN}"></script>
-    <script type="text/babel" data-presets="react,typescript">
-      ${code}
-
-// Mount
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
-    </script>
-  </body>
-</html>
-`.trim()
-
-    return html
-  }, [code])
-
-  // Push new srcDoc on change (cheap, sandboxed)
-  useEffect(() => {
-    if (iframeRef.current) {
-      iframeRef.current.srcdoc = srcDoc
-    }
-  }, [srcDoc])
-
   return (
     <>
       <Header fixed>
@@ -754,17 +592,27 @@ root.render(React.createElement(App));
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Render Engine - Редактор</h2>
             <p className='text-muted-foreground'>
-              Редактор кода с предпросмотром в реальном времени для React компонентов
+              {scenarioData
+                ? `Редактирование сценария: ${scenarioData.key} (v${scenarioData.version})`
+                : 'Редактор кода для создания и редактирования сценариев'}
             </p>
           </div>
         </div>
         <div className='flex-1 overflow-auto px-4 py-1'>
-          <div className='flex h-[calc(100vh-12rem)]'>
-            <div className='w-1/2 border-r'>
+          {isLoading ? (
+            <div className='flex h-[calc(100vh-12rem)] items-center justify-center'>
+              <p className='text-muted-foreground'>Загрузка сценария...</p>
+            </div>
+          ) : isError && search.scenarioId ? (
+            <div className='flex h-[calc(100vh-12rem)] items-center justify-center'>
+              <p className='text-red-500'>Ошибка загрузки сценария. Проверьте подключение к базе данных.</p>
+            </div>
+          ) : (
+            <div className='h-[calc(100vh-12rem)]'>
               <EditorComponent
                 height='100%'
-                defaultLanguage='typescript'
-                defaultValue={STARTER}
+                defaultLanguage={scenarioData ? 'json' : 'typescript'}
+                value={code}
                 onChange={(v) => setCode(v ?? '')}
                 onMount={onMount}
                 options={{
@@ -772,13 +620,11 @@ root.render(React.createElement(App));
                   minimap: { enabled: false },
                   automaticLayout: true,
                   tabSize: 2,
+                  readOnly: !!scenarioData, // Make read-only when viewing scenario
                 }}
               />
             </div>
-            <div className='w-1/2'>
-              <iframe ref={iframeRef} title='Preview' sandbox='allow-scripts' className='h-full w-full bg-white' />
-            </div>
-          </div>
+          )}
         </div>
       </Main>
     </>

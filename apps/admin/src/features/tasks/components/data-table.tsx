@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,6 +15,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { taskSchema } from '../data/schema'
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 
@@ -23,6 +25,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const navigate = useNavigate()
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -50,6 +53,21 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+  const handleRowClick = (row: any, event: React.MouseEvent) => {
+    // Don't navigate if clicking on checkbox, button, or interactive elements
+    const target = event.target as HTMLElement
+    if (target.closest('button') || target.closest('[role="checkbox"]') || target.closest('[role="menuitem"]')) {
+      return
+    }
+
+    try {
+      const task = taskSchema.parse(row.original)
+      navigate({ to: '/editor', search: { scenarioId: task.id } })
+    } catch (error) {
+      console.error('Error parsing task:', error)
+    }
+  }
+
   return (
     <div className='space-y-4'>
       <DataTableToolbar table={table} />
@@ -71,7 +89,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  onClick={(e) => handleRowClick(row, e)}
+                  className='cursor-pointer'
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}

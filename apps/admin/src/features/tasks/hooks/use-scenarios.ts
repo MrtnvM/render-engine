@@ -92,6 +92,26 @@ export function useScenario(id: string | null) {
   })
 }
 
+// Fetch single scenario with raw data for editing
+export function useScenarioRaw(id: string | null) {
+  return useQuery({
+    queryKey: ['scenarios', 'raw', id],
+    queryFn: async () => {
+      if (!id) return null
+
+      const { data, error } = await supabase.from('scenario_table').select('*').eq('id', id).single()
+
+      if (error) {
+        console.error('Error fetching scenario:', error)
+        throw new Error(error.message)
+      }
+
+      return data as ScenarioRow
+    },
+    enabled: !!id,
+  })
+}
+
 // Create scenario mutation
 export function useCreateScenario() {
   const queryClient = useQueryClient()

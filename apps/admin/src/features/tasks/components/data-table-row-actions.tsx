@@ -1,6 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useNavigate } from '@tanstack/react-router'
 import { Row } from '@tanstack/react-table'
-import { IconTrash } from '@tabler/icons-react'
+import { IconTrash, IconCode } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -19,8 +20,13 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const task = taskSchema.parse(row.original)
+  const navigate = useNavigate()
 
   const { setOpen, setCurrentRow } = useTasks()
+
+  const handleOpenInEditor = () => {
+    navigate({ to: '/editor', search: { scenarioId: task.id } })
+  }
 
   return (
     <DropdownMenu modal={false}>
@@ -30,7 +36,14 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           <span className='sr-only'>Открыть меню</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
+      <DropdownMenuContent align='end' className='w-[180px]'>
+        <DropdownMenuItem onClick={handleOpenInEditor}>
+          Открыть в редакторе
+          <DropdownMenuShortcut>
+            <IconCode size={16} />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
             setCurrentRow(task)

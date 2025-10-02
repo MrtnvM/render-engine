@@ -1,14 +1,3 @@
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { experimentListSchema } from './data/schema'
-import { experiments } from './data/experiments'
 import {
   IconFlask,
   IconChartBar,
@@ -22,6 +11,17 @@ import {
   IconTarget,
   IconChartPie,
 } from '@tabler/icons-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { experiments } from './data/experiments'
+import { experimentListSchema } from './data/schema'
 
 export default function ABTests() {
   const experimentList = experimentListSchema.parse(experiments)
@@ -77,96 +77,96 @@ export default function ABTests() {
       <Main>
         <div className='mb-6 flex flex-wrap items-start justify-between space-y-2'>
           <div>
-            <h2 className='text-3xl font-bold tracking-tight'>A/B Testing Platform</h2>
+            <h2 className='text-3xl font-bold tracking-tight'>Платформа A/B-тестирования</h2>
             <p className='text-muted-foreground mt-1'>
-              Data-driven experimentation for schema optimization and user experience improvement
+              Экспериментирование на основе данных для оптимизации схем и улучшения пользовательского опыта
             </p>
           </div>
           <Button className='gap-2'>
             <IconFlask className='h-4 w-4' />
-            Create New Experiment
+            Создать новый эксперимент
           </Button>
         </div>
 
         {/* Feature Description */}
-        <Card className='mb-6 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10'>
+        <Card className='border-primary/20 from-primary/5 to-primary/10 mb-6 bg-gradient-to-br'>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <IconFlask className='h-5 w-5 text-primary' />
-              About A/B Testing
+              <IconFlask className='text-primary h-5 w-5' />О A/B-тестировании
             </CardTitle>
             <CardDescription>
-              Enabling data-driven schema optimization through controlled experimentation
+              Оптимизация схем на основе данных с помощью контролируемого экспериментирования
             </CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
             <p className='text-sm leading-relaxed'>
-              A/B testing (also known as split testing) allows you to compare different versions of your UI schemas to
-              determine which performs better with your users. This platform enables you to run controlled experiments,
-              measure key performance metrics, and make informed decisions about your user interface changes.
+              A/B-тестирование (также известное как сплит-тестирование) позволяет сравнивать различные версии ваших
+              UI-схем, чтобы определить, какая из них работает лучше для ваших пользователей. Эта платформа позволяет
+              проводить контролируемые эксперименты, измерять ключевые показатели эффективности и принимать обоснованные
+              решения об изменениях пользовательского интерфейса.
             </p>
 
             <div className='grid gap-4 md:grid-cols-3'>
-              <div className='rounded-lg border bg-background/50 p-4'>
+              <div className='bg-background/50 rounded-lg border p-4'>
                 <div className='mb-2 flex items-center gap-2'>
-                  <IconTarget className='h-5 w-5 text-primary' />
-                  <h4 className='font-semibold'>Targeted Testing</h4>
+                  <IconTarget className='text-primary h-5 w-5' />
+                  <h4 className='font-semibold'>Целевое тестирование</h4>
                 </div>
-                <p className='text-sm text-muted-foreground'>
-                  Define specific user segments and audiences for your experiments. Test new features with power users
-                  or specific geographic regions before wider rollout.
+                <p className='text-muted-foreground text-sm'>
+                  Определяйте конкретные сегменты пользователей и аудитории для ваших экспериментов. Тестируйте новые
+                  функции с активными пользователями или в определенных географических регионах перед широким запуском.
                 </p>
               </div>
 
-              <div className='rounded-lg border bg-background/50 p-4'>
+              <div className='bg-background/50 rounded-lg border p-4'>
                 <div className='mb-2 flex items-center gap-2'>
-                  <IconChartPie className='h-5 w-5 text-primary' />
-                  <h4 className='font-semibold'>Traffic Distribution</h4>
+                  <IconChartPie className='text-primary h-5 w-5' />
+                  <h4 className='font-semibold'>Распределение трафика</h4>
                 </div>
-                <p className='text-sm text-muted-foreground'>
-                  Flexible distribution controls allow you to allocate traffic percentages across multiple variants.
-                  Start small and scale up as confidence grows.
+                <p className='text-muted-foreground text-sm'>
+                  Гибкие настройки распределения позволяют выделять процент трафика между несколькими вариантами.
+                  Начинайте с малого и масштабируйтесь по мере роста уверенности.
                 </p>
               </div>
 
-              <div className='rounded-lg border bg-background/50 p-4'>
+              <div className='bg-background/50 rounded-lg border p-4'>
                 <div className='mb-2 flex items-center gap-2'>
-                  <IconChartBar className='h-5 w-5 text-primary' />
-                  <h4 className='font-semibold'>Statistical Analysis</h4>
+                  <IconChartBar className='text-primary h-5 w-5' />
+                  <h4 className='font-semibold'>Статистический анализ</h4>
                 </div>
-                <p className='text-sm text-muted-foreground'>
-                  Built-in statistical significance testing ensures your results are reliable. Track conversion rates,
-                  click-through rates, and custom metrics.
+                <p className='text-muted-foreground text-sm'>
+                  Встроенное тестирование статистической значимости гарантирует надежность результатов. Отслеживайте
+                  конверсию, CTR и пользовательские метрики.
                 </p>
               </div>
             </div>
 
-            <div className='rounded-lg border-l-4 border-primary bg-background/50 p-4'>
-              <h4 className='mb-2 font-semibold'>Key Capabilities</h4>
+            <div className='border-primary bg-background/50 rounded-lg border-l-4 p-4'>
+              <h4 className='mb-2 font-semibold'>Ключевые возможности</h4>
               <ul className='grid gap-2 text-sm md:grid-cols-2'>
                 <li className='flex items-start gap-2'>
-                  <IconCheck className='mt-0.5 h-4 w-4 text-primary' />
-                  <span>Real-time performance monitoring and metrics tracking</span>
+                  <IconCheck className='text-primary mt-0.5 h-4 w-4' />
+                  <span>Мониторинг производительности и отслеживание метрик в реальном времени</span>
                 </li>
                 <li className='flex items-start gap-2'>
-                  <IconCheck className='mt-0.5 h-4 w-4 text-primary' />
-                  <span>Consistent user assignment across sessions</span>
+                  <IconCheck className='text-primary mt-0.5 h-4 w-4' />
+                  <span>Последовательное назначение пользователей между сеансами</span>
                 </li>
                 <li className='flex items-start gap-2'>
-                  <IconCheck className='mt-0.5 h-4 w-4 text-primary' />
-                  <span>Multi-variant testing (A/B/C/D...)</span>
+                  <IconCheck className='text-primary mt-0.5 h-4 w-4' />
+                  <span>Мультивариантное тестирование (A/B/C/D...)</span>
                 </li>
                 <li className='flex items-start gap-2'>
-                  <IconCheck className='mt-0.5 h-4 w-4 text-primary' />
-                  <span>Experiment isolation to prevent contamination</span>
+                  <IconCheck className='text-primary mt-0.5 h-4 w-4' />
+                  <span>Изоляция экспериментов для предотвращения перекрестного влияния</span>
                 </li>
                 <li className='flex items-start gap-2'>
-                  <IconCheck className='mt-0.5 h-4 w-4 text-primary' />
-                  <span>Success criteria definition and validation</span>
+                  <IconCheck className='text-primary mt-0.5 h-4 w-4' />
+                  <span>Определение и валидация критериев успеха</span>
                 </li>
                 <li className='flex items-start gap-2'>
-                  <IconCheck className='mt-0.5 h-4 w-4 text-primary' />
-                  <span>95% confidence interval statistical testing</span>
+                  <IconCheck className='text-primary mt-0.5 h-4 w-4' />
+                  <span>Статистическое тестирование с 95% доверительным интервалом</span>
                 </li>
               </ul>
             </div>
@@ -177,47 +177,47 @@ export default function ABTests() {
         <div className='mb-6 grid gap-4 md:grid-cols-4'>
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Active Experiments</CardTitle>
-              <IconBrandSpeedtest className='h-4 w-4 text-muted-foreground' />
+              <CardTitle className='text-sm font-medium'>Активные эксперименты</CardTitle>
+              <IconBrandSpeedtest className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{runningExperiments.length}</div>
-              <p className='text-xs text-muted-foreground'>Currently running tests</p>
+              <p className='text-muted-foreground text-xs'>Выполняются в данный момент</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Completed Tests</CardTitle>
-              <IconCheck className='h-4 w-4 text-muted-foreground' />
+              <CardTitle className='text-sm font-medium'>Завершенные тесты</CardTitle>
+              <IconCheck className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>{completedExperiments.length}</div>
-              <p className='text-xs text-muted-foreground'>Successfully finished</p>
+              <p className='text-muted-foreground text-xs'>Успешно завершены</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Total Variants</CardTitle>
-              <IconFlask className='h-4 w-4 text-muted-foreground' />
+              <CardTitle className='text-sm font-medium'>Всего вариантов</CardTitle>
+              <IconFlask className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>
                 {experimentList.reduce((acc, exp) => acc + exp.variants.length, 0)}
               </div>
-              <p className='text-xs text-muted-foreground'>Across all experiments</p>
+              <p className='text-muted-foreground text-xs'>Во всех экспериментах</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Avg Success Rate</CardTitle>
-              <IconTrendingUp className='h-4 w-4 text-muted-foreground' />
+              <CardTitle className='text-sm font-medium'>Средняя успешность</CardTitle>
+              <IconTrendingUp className='text-muted-foreground h-4 w-4' />
             </CardHeader>
             <CardContent>
               <div className='text-2xl font-bold'>68%</div>
-              <p className='text-xs text-muted-foreground'>Experiments reach goals</p>
+              <p className='text-muted-foreground text-xs'>Эксперименты достигают целей</p>
             </CardContent>
           </Card>
         </div>
@@ -225,10 +225,10 @@ export default function ABTests() {
         {/* Experiments List */}
         <Tabs defaultValue='all' className='space-y-4'>
           <TabsList>
-            <TabsTrigger value='all'>All Experiments ({experimentList.length})</TabsTrigger>
-            <TabsTrigger value='running'>Running ({runningExperiments.length})</TabsTrigger>
-            <TabsTrigger value='draft'>Draft ({draftExperiments.length})</TabsTrigger>
-            <TabsTrigger value='completed'>Completed ({completedExperiments.length})</TabsTrigger>
+            <TabsTrigger value='all'>Все эксперименты ({experimentList.length})</TabsTrigger>
+            <TabsTrigger value='running'>Активные ({runningExperiments.length})</TabsTrigger>
+            <TabsTrigger value='draft'>Черновики ({draftExperiments.length})</TabsTrigger>
+            <TabsTrigger value='completed'>Завершенные ({completedExperiments.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value='all' className='space-y-4'>
@@ -249,7 +249,7 @@ export default function ABTests() {
                       <CardDescription>{experiment.description}</CardDescription>
                     </div>
                     <Button variant='outline' size='sm'>
-                      View Details
+                      Подробнее
                     </Button>
                   </div>
                 </CardHeader>
@@ -258,51 +258,51 @@ export default function ABTests() {
                     {/* Experiment Info */}
                     <div className='grid gap-4 md:grid-cols-3'>
                       <div className='flex items-center gap-2 text-sm'>
-                        <IconUsers className='h-4 w-4 text-muted-foreground' />
-                        <span className='text-muted-foreground'>Target Audience:</span>
+                        <IconUsers className='text-muted-foreground h-4 w-4' />
+                        <span className='text-muted-foreground'>Целевая аудитория:</span>
                         <span className='font-medium'>{experiment.targetAudience.size.toLocaleString()}</span>
                       </div>
                       <div className='flex items-center gap-2 text-sm'>
-                        <IconFlask className='h-4 w-4 text-muted-foreground' />
-                        <span className='text-muted-foreground'>Variants:</span>
+                        <IconFlask className='text-muted-foreground h-4 w-4' />
+                        <span className='text-muted-foreground'>Варианты:</span>
                         <span className='font-medium'>{experiment.variants.length}</span>
                       </div>
                       <div className='flex items-center gap-2 text-sm'>
-                        <IconTarget className='h-4 w-4 text-muted-foreground' />
-                        <span className='text-muted-foreground'>Goal:</span>
+                        <IconTarget className='text-muted-foreground h-4 w-4' />
+                        <span className='text-muted-foreground'>Цель:</span>
                         <span className='font-medium'>{experiment.successCriteria.metric}</span>
                       </div>
                     </div>
 
                     {/* Variants */}
                     <div className='space-y-2'>
-                      <h4 className='text-sm font-semibold'>Variants Performance</h4>
+                      <h4 className='text-sm font-semibold'>Производительность вариантов</h4>
                       <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
                         {experiment.variants.map((variant) => (
-                          <div key={variant.id} className='rounded-lg border bg-background/50 p-3'>
+                          <div key={variant.id} className='bg-background/50 rounded-lg border p-3'>
                             <div className='mb-2 flex items-center justify-between'>
-                              <span className='font-medium text-sm'>{variant.name}</span>
+                              <span className='text-sm font-medium'>{variant.name}</span>
                               {variant.isControl && (
                                 <Badge variant='outline' className='text-xs'>
-                                  Control
+                                  Контроль
                                 </Badge>
                               )}
                             </div>
                             <div className='space-y-1 text-xs'>
                               <div className='flex justify-between'>
-                                <span className='text-muted-foreground'>Distribution:</span>
+                                <span className='text-muted-foreground'>Распределение:</span>
                                 <span className='font-medium'>{variant.distribution}%</span>
                               </div>
                               {variant.performanceMetrics && (
                                 <>
                                   <div className='flex justify-between'>
-                                    <span className='text-muted-foreground'>Conversion Rate:</span>
+                                    <span className='text-muted-foreground'>Конверсия:</span>
                                     <span className='font-medium'>
                                       {(variant.performanceMetrics.conversionRate! * 100).toFixed(1)}%
                                     </span>
                                   </div>
                                   <div className='flex justify-between'>
-                                    <span className='text-muted-foreground'>Sample Size:</span>
+                                    <span className='text-muted-foreground'>Размер выборки:</span>
                                     <span className='font-medium'>
                                       {variant.performanceMetrics.sampleSize?.toLocaleString()}
                                     </span>
@@ -324,8 +324,8 @@ export default function ABTests() {
             {runningExperiments.length === 0 ? (
               <Card>
                 <CardContent className='flex flex-col items-center justify-center py-12'>
-                  <IconBrandSpeedtest className='h-12 w-12 text-muted-foreground mb-4' />
-                  <p className='text-muted-foreground'>No running experiments</p>
+                  <IconBrandSpeedtest className='text-muted-foreground mb-4 h-12 w-12' />
+                  <p className='text-muted-foreground'>Нет активных экспериментов</p>
                 </CardContent>
               </Card>
             ) : (
@@ -346,7 +346,7 @@ export default function ABTests() {
                         <CardDescription>{experiment.description}</CardDescription>
                       </div>
                       <Button variant='outline' size='sm'>
-                        View Details
+                        Подробнее
                       </Button>
                     </div>
                   </CardHeader>
@@ -359,8 +359,8 @@ export default function ABTests() {
             {draftExperiments.length === 0 ? (
               <Card>
                 <CardContent className='flex flex-col items-center justify-center py-12'>
-                  <IconEdit className='h-12 w-12 text-muted-foreground mb-4' />
-                  <p className='text-muted-foreground'>No draft experiments</p>
+                  <IconEdit className='text-muted-foreground mb-4 h-12 w-12' />
+                  <p className='text-muted-foreground'>Нет черновиков экспериментов</p>
                 </CardContent>
               </Card>
             ) : (
@@ -381,7 +381,7 @@ export default function ABTests() {
                         <CardDescription>{experiment.description}</CardDescription>
                       </div>
                       <Button variant='outline' size='sm'>
-                        Edit Draft
+                        Редактировать
                       </Button>
                     </div>
                   </CardHeader>
@@ -394,8 +394,8 @@ export default function ABTests() {
             {completedExperiments.length === 0 ? (
               <Card>
                 <CardContent className='flex flex-col items-center justify-center py-12'>
-                  <IconCheck className='h-12 w-12 text-muted-foreground mb-4' />
-                  <p className='text-muted-foreground'>No completed experiments</p>
+                  <IconCheck className='text-muted-foreground mb-4 h-12 w-12' />
+                  <p className='text-muted-foreground'>Нет завершенных экспериментов</p>
                 </CardContent>
               </Card>
             ) : (
@@ -416,7 +416,7 @@ export default function ABTests() {
                         <CardDescription>{experiment.description}</CardDescription>
                       </div>
                       <Button variant='outline' size='sm'>
-                        View Results
+                        Посмотреть результаты
                       </Button>
                     </div>
                   </CardHeader>
@@ -429,4 +429,3 @@ export default function ABTests() {
     </>
   )
 }
-
