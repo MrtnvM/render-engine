@@ -33,52 +33,66 @@ render-cli --version
 
 ## Commands
 
-### `init`
+### `compile`
 
-Initialize a new Render Engine project with interactive prompts or default values.
-
-```bash
-render-cli init [options]
-```
-
-**Options:**
-
-- `-d, --dir <directory>` - Project directory (default: current directory)
-- `-y, --yes` - Skip prompts and use defaults
-
-### `render`
-
-Render content using the Render Engine.
+Compile a React DSL file to a Render JSON schema.
 
 ```bash
-render-cli render [input] [options]
+render compile <inputFile> [options]
 ```
 
 **Arguments:**
 
-- `input` - Input file or content to render
+- `inputFile` - Path to the input React DSL file (.tsx or .jsx)
 
 **Options:**
 
-- `-o, --output <path>` - Output file path
-- `-t, --template <template>` - Template to use for rendering
-- `-v, --verbose` - Enable verbose output
+- `-o, --output <outputFile>` - Path to the output JSON file (defaults to same name with .json extension)
 
-### `build`
+### `push`
 
-Build and optimize render templates.
+Compile and publish a React DSL file to Supabase.
 
 ```bash
-render-cli build [options]
+render push <filePath> [options]
 ```
+
+**Arguments:**
+
+- `filePath` - Path to the input file without extension (e.g., "src/cart")
 
 **Options:**
 
-- `-i, --input <path>` - Input directory or file (default: ./src)
-- `-o, --output <path>` - Output directory (default: ./dist)
-- `-w, --watch` - Watch for changes and rebuild
-- `-m, --minify` - Minify output
-- `--sourcemap` - Generate source maps
+- `--supabase-url <url>` - Supabase project URL (overrides SUPABASE_URL env var)
+- `--supabase-key <key>` - Supabase service role key (overrides SUPABASE_SERVICE_KEY env var)
+
+### `watch`
+
+Watch a React DSL file for changes and automatically compile and publish to Supabase.
+
+```bash
+render watch <filePath> [options]
+```
+
+**Arguments:**
+
+- `filePath` - Path to the input file without extension (e.g., "src/cart")
+
+**Options:**
+
+- `--supabase-url <url>` - Supabase project URL (overrides SUPABASE_URL env var)
+- `--supabase-key <key>` - Supabase service role key (overrides SUPABASE_SERVICE_KEY env var)
+- `--debounce <ms>` - Debounce delay in milliseconds (default: 300)
+
+**Example:**
+
+```bash
+# Watch a file and automatically push changes
+render watch src/playground
+
+# Watch with custom debounce
+render watch src/playground --debounce 500
+```
 
 ## Development
 

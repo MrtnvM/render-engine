@@ -7,6 +7,7 @@ import { renderCommand } from './commands/render.js'
 import { compileCommand } from './commands/compile.js'
 import { publishCommand } from './commands/publish.js'
 import { pushCommand } from './commands/push.js'
+import { watchCommand } from './commands/watch.js'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
@@ -25,6 +26,7 @@ program.addCommand(renderCommand)
 program.addCommand(compileCommand)
 program.addCommand(publishCommand)
 program.addCommand(pushCommand)
+program.addCommand(watchCommand)
 
 // Global error handling
 program.configureHelp({
