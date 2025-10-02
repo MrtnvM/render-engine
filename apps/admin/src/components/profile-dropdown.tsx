@@ -42,12 +42,6 @@ export function ProfileDropdown() {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to='/settings'>
-              Оплата
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to='/settings'>
               Настройки
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </Link>

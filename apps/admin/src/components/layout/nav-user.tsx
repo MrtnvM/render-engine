@@ -1,5 +1,5 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -23,10 +23,10 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const navigate = useNavigate()
   const signOut = () => {
     useAuthStore.getState().auth.signOut()
-    navigate({ to: '/sign-in' })
+    // Redirect to home page after sign out
+    window.location.href = '/'
   }
 
   return (
@@ -69,23 +69,10 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Обновить до Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <Link to='/settings/account'>
                   <BadgeCheck />
                   Аккаунт
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to='/settings'>
-                  <CreditCard />
-                  Оплата
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>

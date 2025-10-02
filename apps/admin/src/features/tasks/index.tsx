@@ -24,8 +24,8 @@ export default function Tasks() {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2 gap-x-4'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Render Engine - Задачи</h2>
-            <p className='text-muted-foreground'>Список ваших задач на этот месяц!</p>
+            <h2 className='text-2xl font-bold tracking-tight'>Render Engine - Сценарии</h2>
+            <p className='text-muted-foreground'>Управление вашими UI сценариями</p>
           </div>
           <TasksPrimaryButtons />
         </div>

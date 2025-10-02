@@ -8,8 +8,6 @@ import {
   IconHelp,
   IconLayoutDashboard,
   IconLock,
-  IconLockAccess,
-  IconMessages,
   IconNotification,
   IconPackages,
   IconPalette,
@@ -56,7 +54,7 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
         },
         {
-          title: 'Задачи',
+          title: 'Сценарии',
           url: '/tasks',
           icon: IconChecklist,
         },
@@ -64,12 +62,6 @@ export const sidebarData: SidebarData = {
           title: 'Приложения',
           url: '/apps',
           icon: IconPackages,
-        },
-        {
-          title: 'Чаты',
-          url: '/chats',
-          badge: '3',
-          icon: IconMessages,
         },
         {
           title: 'Пользователи',
@@ -92,32 +84,6 @@ export const sidebarData: SidebarData = {
     {
       title: 'Страницы',
       items: [
-        {
-          title: 'Авторизация',
-          icon: IconLockAccess,
-          items: [
-            {
-              title: 'Вход',
-              url: '/sign-in',
-            },
-            {
-              title: 'Вход (2 колонки)',
-              url: '/sign-in-2',
-            },
-            {
-              title: 'Регистрация',
-              url: '/sign-up',
-            },
-            {
-              title: 'Восстановление пароля',
-              url: '/forgot-password',
-            },
-            {
-              title: 'Одноразовый пароль',
-              url: '/otp',
-            },
-          ],
-        },
         {
           title: 'Ошибки',
           icon: IconBug,

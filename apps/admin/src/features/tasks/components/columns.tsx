@@ -29,25 +29,41 @@ export const columns: ColumnDef<Task>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'id',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Task' />,
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
-    enableSorting: false,
+    accessorKey: 'key',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Ключ' />,
+    cell: ({ row }) => <div className='w-[120px] font-mono text-sm'>{row.getValue('key')}</div>,
+    enableSorting: true,
     enableHiding: false,
   },
   {
-    accessorKey: 'title',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Title' />,
+    accessorKey: 'mainComponent',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Главный компонент' />,
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label)
-
       return (
         <div className='flex space-x-2'>
-          {label && <Badge variant='outline'>{label.label}</Badge>}
-          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>{row.getValue('title')}</span>
+          <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
+            {row.getValue('mainComponent')}
+          </span>
         </div>
       )
     },
+  },
+  {
+    accessorKey: 'version',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Версия' />,
+    cell: ({ row }) => (
+      <div className='flex items-center space-x-2'>
+        <Badge variant='secondary'>{row.getValue('version')}</Badge>
+        <span className='text-muted-foreground text-xs'>#{row.original.build_number}</span>
+      </div>
+    ),
+    enableSorting: true,
+  },
+  {
+    accessorKey: 'componentsCount',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Компонентов' />,
+    cell: ({ row }) => <div className='w-[80px] text-center'>{row.getValue('componentsCount')}</div>,
+    enableSorting: true,
   },
   {
     accessorKey: 'status',

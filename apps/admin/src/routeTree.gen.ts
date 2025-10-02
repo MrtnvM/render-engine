@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
@@ -17,13 +16,6 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
-import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
-import { Route as authSignIn2RouteImport } from './routes/(auth)/sign-in-2'
-import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
-import { Route as authOtpRouteImport } from './routes/(auth)/otp'
-import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
-import { Route as AuthAuthenticatedRouteRouteImport } from './routes/auth/_authenticated/route'
-import { Route as AuthauthRouteRouteImport } from './routes/auth/(auth)/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedEditorRouteRouteImport } from './routes/_authenticated/editor/route'
 import { Route as AuthenticatedAvitoDesignSystemRouteRouteImport } from './routes/_authenticated/avito-design-system/route'
@@ -31,21 +23,12 @@ import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
-import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
-import { Route as AuthAuthenticatedUserManagementRouteImport } from './routes/auth/_authenticated/user-management'
-import { Route as AuthauthSignUpRouteImport } from './routes/auth/(auth)/sign-up'
-import { Route as AuthauthSignInRouteImport } from './routes/auth/(auth)/sign-in'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -79,39 +62,6 @@ const errors401Route = errors401RouteImport.update({
   id: '/(errors)/401',
   path: '/401',
   getParentRoute: () => rootRouteImport,
-} as any)
-const authSignUpRoute = authSignUpRouteImport.update({
-  id: '/(auth)/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignIn2Route = authSignIn2RouteImport.update({
-  id: '/(auth)/sign-in-2',
-  path: '/sign-in-2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignInRoute = authSignInRouteImport.update({
-  id: '/(auth)/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authOtpRoute = authOtpRouteImport.update({
-  id: '/(auth)/otp',
-  path: '/otp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
-  id: '/(auth)/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthAuthenticatedRouteRoute = AuthAuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthauthRouteRoute = AuthauthRouteRouteImport.update({
-  id: '/(auth)',
-  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthenticatedSettingsRouteRoute =
   AuthenticatedSettingsRouteRouteImport.update({
@@ -153,31 +103,10 @@ const AuthenticatedHelpCenterIndexRoute =
     path: '/help-center/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
-  id: '/chats/',
-  path: '/chats/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   id: '/apps/',
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthAuthenticatedUserManagementRoute =
-  AuthAuthenticatedUserManagementRouteImport.update({
-    id: '/user-management',
-    path: '/user-management',
-    getParentRoute: () => AuthAuthenticatedRouteRoute,
-  } as any)
-const AuthauthSignUpRoute = AuthauthSignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => AuthauthRouteRoute,
-} as any)
-const AuthauthSignInRoute = AuthauthSignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => AuthauthRouteRoute,
 } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
@@ -205,16 +134,9 @@ const AuthenticatedSettingsAccountRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/auth': typeof AuthAuthenticatedRouteRouteWithChildren
   '/avito-design-system': typeof AuthenticatedAvitoDesignSystemRouteRoute
   '/editor': typeof AuthenticatedEditorRouteRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
-  '/auth/': typeof AuthauthRouteRouteWithChildren
-  '/forgot-password': typeof authForgotPasswordRoute
-  '/otp': typeof authOtpRoute
-  '/sign-in': typeof authSignInRoute
-  '/sign-in-2': typeof authSignIn2Route
-  '/sign-up': typeof authSignUpRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -225,11 +147,7 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/auth/sign-in': typeof AuthauthSignInRoute
-  '/auth/sign-up': typeof AuthauthSignUpRoute
-  '/auth/user-management': typeof AuthAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
-  '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -238,12 +156,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/avito-design-system': typeof AuthenticatedAvitoDesignSystemRouteRoute
   '/editor': typeof AuthenticatedEditorRouteRoute
-  '/auth': typeof AuthAuthenticatedRouteRouteWithChildren
-  '/forgot-password': typeof authForgotPasswordRoute
-  '/otp': typeof authOtpRoute
-  '/sign-in': typeof authSignInRoute
-  '/sign-in-2': typeof authSignIn2Route
-  '/sign-up': typeof authSignUpRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -254,11 +166,7 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/auth/sign-in': typeof AuthauthSignInRoute
-  '/auth/sign-up': typeof AuthauthSignUpRoute
-  '/auth/user-management': typeof AuthAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
-  '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -267,17 +175,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRouteRouteWithChildren
   '/_authenticated/avito-design-system': typeof AuthenticatedAvitoDesignSystemRouteRoute
   '/_authenticated/editor': typeof AuthenticatedEditorRouteRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
-  '/auth/(auth)': typeof AuthauthRouteRouteWithChildren
-  '/auth/_authenticated': typeof AuthAuthenticatedRouteRouteWithChildren
-  '/(auth)/forgot-password': typeof authForgotPasswordRoute
-  '/(auth)/otp': typeof authOtpRoute
-  '/(auth)/sign-in': typeof authSignInRoute
-  '/(auth)/sign-in-2': typeof authSignIn2Route
-  '/(auth)/sign-up': typeof authSignUpRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
@@ -288,11 +188,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/auth/(auth)/sign-in': typeof AuthauthSignInRoute
-  '/auth/(auth)/sign-up': typeof AuthauthSignUpRoute
-  '/auth/_authenticated/user-management': typeof AuthAuthenticatedUserManagementRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
-  '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -301,16 +197,9 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/auth'
     | '/avito-design-system'
     | '/editor'
     | '/settings'
-    | '/auth/'
-    | '/forgot-password'
-    | '/otp'
-    | '/sign-in'
-    | '/sign-in-2'
-    | '/sign-up'
     | '/401'
     | '/403'
     | '/404'
@@ -321,11 +210,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
-    | '/auth/sign-in'
-    | '/auth/sign-up'
-    | '/auth/user-management'
     | '/apps'
-    | '/chats'
     | '/help-center'
     | '/settings/'
     | '/tasks'
@@ -334,12 +219,6 @@ export interface FileRouteTypes {
   to:
     | '/avito-design-system'
     | '/editor'
-    | '/auth'
-    | '/forgot-password'
-    | '/otp'
-    | '/sign-in'
-    | '/sign-in-2'
-    | '/sign-up'
     | '/401'
     | '/403'
     | '/404'
@@ -350,11 +229,7 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
-    | '/auth/sign-in'
-    | '/auth/sign-up'
-    | '/auth/user-management'
     | '/apps'
-    | '/chats'
     | '/help-center'
     | '/settings'
     | '/tasks'
@@ -362,17 +237,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authenticated'
-    | '/auth'
     | '/_authenticated/avito-design-system'
     | '/_authenticated/editor'
     | '/_authenticated/settings'
-    | '/auth/(auth)'
-    | '/auth/_authenticated'
-    | '/(auth)/forgot-password'
-    | '/(auth)/otp'
-    | '/(auth)/sign-in'
-    | '/(auth)/sign-in-2'
-    | '/(auth)/sign-up'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
@@ -383,11 +250,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
-    | '/auth/(auth)/sign-in'
-    | '/auth/(auth)/sign-up'
-    | '/auth/_authenticated/user-management'
     | '/_authenticated/apps/'
-    | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
@@ -396,12 +259,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  authForgotPasswordRoute: typeof authForgotPasswordRoute
-  authOtpRoute: typeof authOtpRoute
-  authSignInRoute: typeof authSignInRoute
-  authSignIn2Route: typeof authSignIn2Route
-  authSignUpRoute: typeof authSignUpRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
@@ -411,13 +268,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -466,55 +316,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/401'
       preLoaderRoute: typeof errors401RouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-up': {
-      id: '/(auth)/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof authSignUpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-in-2': {
-      id: '/(auth)/sign-in-2'
-      path: '/sign-in-2'
-      fullPath: '/sign-in-2'
-      preLoaderRoute: typeof authSignIn2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-in': {
-      id: '/(auth)/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof authSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/otp': {
-      id: '/(auth)/otp'
-      path: '/otp'
-      fullPath: '/otp'
-      preLoaderRoute: typeof authOtpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/forgot-password': {
-      id: '/(auth)/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof authForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/_authenticated': {
-      id: '/auth/_authenticated'
-      path: ''
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthAuthenticatedRouteRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/(auth)': {
-      id: '/auth/(auth)'
-      path: '/'
-      fullPath: '/auth/'
-      preLoaderRoute: typeof AuthauthRouteRouteImport
-      parentRoute: typeof AuthRouteRoute
     }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
@@ -565,40 +366,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/chats/': {
-      id: '/_authenticated/chats/'
-      path: '/chats'
-      fullPath: '/chats'
-      preLoaderRoute: typeof AuthenticatedChatsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/apps/': {
       id: '/_authenticated/apps/'
       path: '/apps'
       fullPath: '/apps'
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/auth/_authenticated/user-management': {
-      id: '/auth/_authenticated/user-management'
-      path: '/user-management'
-      fullPath: '/auth/user-management'
-      preLoaderRoute: typeof AuthAuthenticatedUserManagementRouteImport
-      parentRoute: typeof AuthAuthenticatedRouteRoute
-    }
-    '/auth/(auth)/sign-up': {
-      id: '/auth/(auth)/sign-up'
-      path: '/sign-up'
-      fullPath: '/auth/sign-up'
-      preLoaderRoute: typeof AuthauthSignUpRouteImport
-      parentRoute: typeof AuthauthRouteRoute
-    }
-    '/auth/(auth)/sign-in': {
-      id: '/auth/(auth)/sign-in'
-      path: '/sign-in'
-      fullPath: '/auth/sign-in'
-      preLoaderRoute: typeof AuthauthSignInRouteImport
-      parentRoute: typeof AuthauthRouteRoute
     }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
@@ -660,7 +433,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
-  AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -673,7 +445,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
-  AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
@@ -682,56 +453,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface AuthauthRouteRouteChildren {
-  AuthauthSignInRoute: typeof AuthauthSignInRoute
-  AuthauthSignUpRoute: typeof AuthauthSignUpRoute
-}
-
-const AuthauthRouteRouteChildren: AuthauthRouteRouteChildren = {
-  AuthauthSignInRoute: AuthauthSignInRoute,
-  AuthauthSignUpRoute: AuthauthSignUpRoute,
-}
-
-const AuthauthRouteRouteWithChildren = AuthauthRouteRoute._addFileChildren(
-  AuthauthRouteRouteChildren,
-)
-
-interface AuthAuthenticatedRouteRouteChildren {
-  AuthAuthenticatedUserManagementRoute: typeof AuthAuthenticatedUserManagementRoute
-}
-
-const AuthAuthenticatedRouteRouteChildren: AuthAuthenticatedRouteRouteChildren =
-  {
-    AuthAuthenticatedUserManagementRoute: AuthAuthenticatedUserManagementRoute,
-  }
-
-const AuthAuthenticatedRouteRouteWithChildren =
-  AuthAuthenticatedRouteRoute._addFileChildren(
-    AuthAuthenticatedRouteRouteChildren,
-  )
-
-interface AuthRouteRouteChildren {
-  AuthauthRouteRoute: typeof AuthauthRouteRouteWithChildren
-  AuthAuthenticatedRouteRoute: typeof AuthAuthenticatedRouteRouteWithChildren
-}
-
-const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthauthRouteRoute: AuthauthRouteRouteWithChildren,
-  AuthAuthenticatedRouteRoute: AuthAuthenticatedRouteRouteWithChildren,
-}
-
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
-  AuthRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRouteRoute: AuthRouteRouteWithChildren,
-  authForgotPasswordRoute: authForgotPasswordRoute,
-  authOtpRoute: authOtpRoute,
-  authSignInRoute: authSignInRoute,
-  authSignIn2Route: authSignIn2Route,
-  authSignUpRoute: authSignUpRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,

@@ -1,13 +1,19 @@
 import { z } from 'zod'
 
-// We're keeping a simple non-relational schema here.
-// IRL, you will have a schema for your data models.
-export const taskSchema = z.object({
+// Schema matching Scenario.swift from iOS SDK
+export const scenarioSchema = z.object({
   id: z.string(),
-  title: z.string(),
-  status: z.string(),
-  label: z.string(),
-  priority: z.string(),
+  key: z.string(),
+  version: z.string(),
+  build_number: z.number(),
+  mainComponent: z.string(), // Component type name
+  componentsCount: z.number(), // Number of components in the scenario
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
-export type Task = z.infer<typeof taskSchema>
+export type Scenario = z.infer<typeof scenarioSchema>
+
+// Legacy export for backwards compatibility
+export const taskSchema = scenarioSchema
+export type Task = Scenario
