@@ -25,26 +25,7 @@ class DIContainer {
     // MARK: - Repositories
     
     lazy var scenarioRepository: ScenarioRepository = {
-        return ScenarioRepositoryImpl(
-            networkClient: networkClient,
-            supabaseClient: supabaseClient
-        )
-    }()
-    
-    // MARK: - Use Cases
-    
-    lazy var fetchScenarioUseCase: FetchScenarioUseCase = {
-        return FetchScenarioUseCase(
-            scenarioRepository: scenarioRepository
-        )
-    }()
-    
-    // MARK: - Application Services
-    
-    lazy var scenarioService: ScenarioService = {
-        return ScenarioService(
-            fetchScenarioUseCase: fetchScenarioUseCase
-        )
+        return ScenarioRepositoryImpl(supabaseClient: supabaseClient)
     }()
     
     // MARK: SDK

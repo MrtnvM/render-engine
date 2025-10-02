@@ -3,9 +3,6 @@ import UIKit
 /// Main view controller following clean architecture principles
 class MainViewController: UIViewController {
     
-    // MARK: - Dependencies
-    private let schemaService = DIContainer.shared.scenarioService
-    
     // MARK: - UI Components
     private var mainView: MainView!
 

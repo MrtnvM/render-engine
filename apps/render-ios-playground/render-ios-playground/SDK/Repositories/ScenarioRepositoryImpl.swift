@@ -2,49 +2,12 @@ import Foundation
 import Supabase
 
 class ScenarioRepositoryImpl: ScenarioRepository {
-    private let networkClient: NetworkClient
     private let supabaseClient: SupabaseClient
+    private let logger = DIContainer.shared.currentLogger
     private var observers: [String: ScenarioObserver] = [:]
     
-    init(networkClient: NetworkClient, supabaseClient: SupabaseClient) {
-        self.networkClient = networkClient
+    init(supabaseClient: SupabaseClient) {
         self.supabaseClient = supabaseClient
-    }
-    
-    func fetchScenario(from url: URL) async throws -> Scenario {
-        let json = try await networkClient.fetchJSON(from: url)
-        guard let scenario = Scenario.create(from: json) else {
-            throw ApplicationError.scenarioFetchFailed(
-                "Can not parse scenario"
-            )
-        }
-        
-        return scenario
-    }
-    
-    func fetchScenario(id: String) async throws -> Scenario {
-        let scenarios: [ScenarioJSON] = try await supabaseClient
-            .from("scenario_table")
-            .select()
-            .eq("id", value: id)
-            .order("version", ascending: false)
-            .execute()
-            .value
-        
-        if scenarios.isEmpty {
-            throw ApplicationError.scenarioFetchFailed(
-                "No scenario with ID: \(id)"
-            )
-        }
-        
-        let scenarioData = scenarios[0].toMap()
-        guard let scenario = Scenario.create(from: scenarioData) else {
-            throw ApplicationError.scenarioFetchFailed(
-                "Can not parse scenario"
-            )
-        }
-        
-        return scenario
     }
     
     func fetchScenario(key: String) async throws -> Scenario {
@@ -57,16 +20,12 @@ class ScenarioRepositoryImpl: ScenarioRepository {
             .value
         
         if scenarios.isEmpty {
-            throw ApplicationError.scenarioFetchFailed(
-                "No scenario with key: \(key)"
-            )
+            throw RenderSDKError.noScenarioWithKey(key: key)
         }
         
         let scenarioData = scenarios[0].toMap()
         guard let scenario = Scenario.create(from: scenarioData) else {
-            throw ApplicationError.scenarioFetchFailed(
-                "Can not parse scenario"
-            )
+            throw RenderSDKError.scenarioParsingFailed(key: key, data: scenarioData)
         }
         
         return scenario
@@ -75,7 +34,7 @@ class ScenarioRepositoryImpl: ScenarioRepository {
     func subscribeToScenario(_ observer: ScenarioObserver) async throws {
         let scenarioKey = observer.scenarioKey
         guard observers[scenarioKey] == nil else {
-            print("Already subscribed to scenario \(scenarioKey): \(observer)")
+            logger.debug("Already subscribed to scenario \(scenarioKey): \(observer)")
             return
         }
         
@@ -86,22 +45,23 @@ class ScenarioRepositoryImpl: ScenarioRepository {
         
         do {
             try await channel.subscribeWithError()
+            
             for await change in changes {
-                print(change.oldRecord, change.record)
-                
-                // Decode the record to JsonSchema
-                let jsonSchema = try change.decodeRecord(as: ScenarioJSON.self, decoder: JSONDecoder())
+                let jsonSchema = try change.decodeRecord(
+                    as: ScenarioJSON.self,
+                    decoder: JSONDecoder()
+                )
                 let scenarioData = jsonSchema.toMap()
                 
                 guard let scenario = Scenario.create(from: scenarioData) else {
-                    print("Failed to create scenario from updated data")
+                    logger.debug("Failed to create scenario from updated data")
                     continue
                 }
                 
                 observer.onScenarioUpdate(scenario: scenario)
             }
         } catch {
-            print("FAILED TO SUBSCRIBE TO CHANNEL FOR SCENARIO KEY = \(scenarioKey)")
+            logger.error("FAILED TO SUBSCRIBE TO CHANNEL FOR SCENARIO KEY = \(scenarioKey)")
         }
     }
     
@@ -110,7 +70,7 @@ class ScenarioRepositoryImpl: ScenarioRepository {
         let exisingObserver = observers[scenarioKey]
         
         if exisingObserver == nil {
-            print("Observer was not subscribed to scenario \(scenarioKey): \(observer)")
+            logger.debug("Observer was not subscribed to scenario \(scenarioKey): \(observer)")
             return
         }
         

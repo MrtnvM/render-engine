@@ -21,7 +21,7 @@ public class Component: Equatable {
     
     static func create(from config: Config) throws -> Component {
         guard let typeString = config.getString(forKey: "type") else {
-            throw DomainError.invalidScenarioStructure(
+            throw RenderSDKError.invalidScenarioStructure(
                 "Missing 'type' field in component config"
             )
         }
@@ -67,7 +67,7 @@ public class Component: Equatable {
 
     private func checkCircularDependencies(_ child: Component) throws {
         if child.containsComponent(with: self.id) {
-            throw DomainError.renderingError("Circular dependency detected")
+            throw RenderSDKError.renderingError("Circular dependency detected")
         }
     }
     

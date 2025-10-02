@@ -1,15 +1,11 @@
 import UIKit
-import PostgREST
 import Supabase
 
 // Public interface for the SDK
 class RenderSDK {
     static let shared = RenderSDK()
     
-    private let client = DIContainer.shared.supabaseClient
-    private let componentRegistry = DIContainer.shared.componentRegistry
     private let scenarioRepository = DIContainer.shared.scenarioRepository
-    private let scenarioFetcher = DIContainer.shared.scenarioService
     private var logger: Logger { DIContainer.shared.currentLogger }
 
     private init() {}

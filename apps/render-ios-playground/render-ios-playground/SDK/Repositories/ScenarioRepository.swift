@@ -7,9 +7,6 @@ protocol ScenarioObserver {
 
 /// Repository interface for scenario operations
 protocol ScenarioRepository {
-    func fetchScenario(from url: URL) async throws -> Scenario
-    
-    func fetchScenario(id: String) async throws -> Scenario
     func fetchScenario(key: String) async throws -> Scenario
     func subscribeToScenario(_ observer: ScenarioObserver) async throws
     func unsubscribeFromScenario(_ observer: ScenarioObserver) async

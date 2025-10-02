@@ -13,19 +13,19 @@ class NetworkClient {
             let (data, response) = try await session.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ApplicationError.invalidResponse("Invalid response type")
+                throw RenderSDKError.invalidResponse("Invalid response type")
             }
             
             guard httpResponse.statusCode == 200 else {
-                throw ApplicationError.invalidResponse("HTTP status code: \(httpResponse.statusCode)")
+                throw RenderSDKError.invalidResponse("HTTP status code: \(httpResponse.statusCode)")
             }
             
             return data
         } catch {
-            if error is ApplicationError {
+            if error is RenderSDKError {
                 throw error
             } else {
-                throw ApplicationError.networkError(error.localizedDescription)
+                throw RenderSDKError.networkError(error.localizedDescription)
             }
         }
     }
@@ -35,11 +35,11 @@ class NetworkClient {
         
         do {
             guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                throw ApplicationError.parsingError("Response is not a valid JSON object")
+                throw RenderSDKError.parsingError("Response is not a valid JSON object")
             }
             return json
         } catch {
-            throw ApplicationError.parsingError("Failed to parse JSON: \(error.localizedDescription)")
+            throw RenderSDKError.parsingError("Failed to parse JSON: \(error.localizedDescription)")
         }
     }
 }
