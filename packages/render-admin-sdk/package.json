@@ -1,0 +1,54 @@
+{
+  "name": "@render-engine/admin-sdk",
+  "version": "1.0.0",
+  "description": "SDK for transpiling React JSX DSL to Render JSON schema",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./transpiler": {
+      "types": "./dist/transpiler/index.d.ts",
+      "import": "./dist/transpiler/index.js"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/parser": "^7.28.4",
+    "@babel/traverse": "^7.28.4",
+    "@babel/types": "^7.28.4"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.28.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.1.13",
+    "react": "^19.1.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "keywords": [
+    "render",
+    "transpiler",
+    "jsx",
+    "sdk",
+    "server-driven-ui"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

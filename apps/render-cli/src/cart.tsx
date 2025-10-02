@@ -1,4 +1,4 @@
-import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating } from './sdk/ui/index.js'
+import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating } from '@render-engine/admin-sdk/ui'
 
 export const SCENARIO_KEY = 'avito-cart'
 

@@ -1,6 +1,6 @@
 import type { NodePath } from '@babel/traverse'
-import type { ASTNode, ComponentMetadata, JSXElement, JSXText } from './types.js'
-import { getPredefinedComponents } from './ui.js'
+import type { ASTNode, ComponentMetadata, JSXElement, JSXText, TranspilerConfig } from './types.js'
+import { getPredefinedComponents } from './utils.js'
 
 // Helper to convert an AST node to a JavaScript value
 export function astNodeToValue(node?: ASTNode | null, componentProps?: Set<string>): any {
@@ -50,7 +50,7 @@ export function astNodeToValue(node?: ASTNode | null, componentProps?: Set<strin
   }
 }
 
-export default function jsxToJsonPlugin() {
+export default function jsxToJsonPlugin(config?: TranspilerConfig) {
   const components: ComponentMetadata[] = []
 
   // Track component props for each function scope
@@ -142,8 +142,8 @@ export default function jsxToJsonPlugin() {
           const node = path.node
           const componentName = node.openingElement.name.name
 
-          // Get predefined components dynamically from ui.tsx
-          const componentTypes = getPredefinedComponents()
+          // Get predefined components dynamically
+          const componentTypes = getPredefinedComponents(config?.components)
           if (componentTypes.includes(componentName)) {
             // We'll collect this information later when we encounter the export declaration
             ;(path.node as any).componentName = componentName
@@ -216,10 +216,9 @@ export default function jsxToJsonPlugin() {
           if (jsonNode.style && Object.keys(jsonNode.style).length === 0) delete jsonNode.style
           if (jsonNode.properties && Object.keys(jsonNode.properties).length === 0) delete jsonNode.properties
           if (jsonNode.data && Object.keys(jsonNode.data).length === 0) delete jsonNode.data
-          if (jsonNode.children && jsonNode.children.length === 0)
-            delete jsonNode.children
+          if (jsonNode.children && jsonNode.children.length === 0) delete jsonNode.children
 
-            // Attach the generated JSON to the AST node for the parent to use
+          // Attach the generated JSON to the AST node for the parent to use
           ;(path.node as any).json = jsonNode
         },
       },
@@ -281,3 +280,4 @@ export default function jsxToJsonPlugin() {
 
   return { plugin, components }
 }
+

@@ -395,3 +395,4 @@ export interface ImageStyle extends FlexStyle, ShadowStyle {
   objectFit?: 'cover' | 'contain' | 'fill' | 'scaleDown' | 'none' | undefined
   cursor?: CursorValue | undefined
 }
+

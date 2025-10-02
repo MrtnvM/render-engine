@@ -50,3 +50,18 @@ export interface ASTNode {
     value: ASTNode
   }>
 }
+
+export interface TranspiledScenario {
+  key: string
+  version: string
+  main: JsonNode
+  components: Record<string, JsonNode>
+}
+
+export interface TranspilerConfig {
+  /** List of predefined component names */
+  components?: string[]
+  /** Enable strict mode validation */
+  strictMode?: boolean
+}
+

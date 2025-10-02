@@ -2,7 +2,7 @@ import { program } from 'commander'
 import fs from 'fs'
 import path from 'path'
 import chalk from 'chalk'
-import { transpile } from '../sdk/transpiler/transpiler.js'
+import { transpile } from '@render-engine/admin-sdk'
 
 export const compileCommand = program
   .command('compile')

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.19.3",
+    "@render-engine/admin-sdk": "workspace:*",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.8",

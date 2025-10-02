@@ -17,10 +17,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@babel/core": "^7.28.4",
-    "@babel/parser": "^7.28.4",
-    "@babel/traverse": "^7.28.4",
-    "@babel/types": "^7.28.4",
+    "@render-engine/admin-sdk": "workspace:*",
     "@supabase/supabase-js": "^2.57.4",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",

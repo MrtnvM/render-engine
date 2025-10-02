@@ -1,29 +1,18 @@
 import { parse } from '@babel/parser'
 import type { File } from '@babel/types'
 import jsxToJsonPlugin from './babel-plugin-jsx-to-json.js'
-
-// Type definitions
-interface JsonNode {
-  type: string
-  style?: Record<string, any>
-  properties?: Record<string, any>
-  data?: Record<string, any>
-  children?: JsonNode[]
-}
-
-interface TranspiledScenario {
-  key: string
-  version: string
-  main: JsonNode
-  components: Record<string, JsonNode>
-}
+import type { JsonNode, TranspiledScenario, TranspilerConfig } from './types.js'
 
 /**
  * Transpiles a React JSX string into a server-driven UI JSON schema.
  * @param jsxString The JSX code to transpile.
+ * @param config Optional configuration
  * @returns The JSON schema object.
  */
-export async function transpile(jsxString: string): Promise<TranspiledScenario> {
+export async function transpile(
+  jsxString: string,
+  config?: TranspilerConfig,
+): Promise<TranspiledScenario> {
   const traverseModule = await import('@babel/traverse')
   const traverse = (traverseModule.default as any).default
 
@@ -53,7 +42,7 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
   } as any)
 
   // Use the updated plugin structure
-  const pluginResult = jsxToJsonPlugin()
+  const pluginResult = jsxToJsonPlugin(config)
   const visitor = pluginResult.plugin.visitor
   const collectedComponents = pluginResult.components
 
@@ -114,6 +103,7 @@ export async function transpile(jsxString: string): Promise<TranspiledScenario> 
     main: rootJson,
     components,
   }
-  console.log(JSON.stringify(scenario, null, 2))
+
   return scenario
 }
+

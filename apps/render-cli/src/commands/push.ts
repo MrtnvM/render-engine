@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import chalk from 'chalk'
 import { createClient } from '@supabase/supabase-js'
-import { transpile } from '../sdk/transpiler/transpiler.js'
+import { transpile } from '@render-engine/admin-sdk'
 
 export const pushCommand = program
   .command('push')

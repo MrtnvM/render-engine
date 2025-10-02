@@ -1,4 +1,4 @@
-import { Column, Row, Stack, Text, Image, Button, Spacer } from './sdk/ui/index.js'
+import { Column, Row, Stack, Text, Image, Button, Spacer } from '@render-engine/admin-sdk/ui'
 
 export const SCENARIO_KEY = 'playground-example'
 
