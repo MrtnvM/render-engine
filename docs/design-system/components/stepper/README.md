@@ -17,12 +17,14 @@ The design system includes a comprehensive **Stepper** component with multiple v
 ## Component Overview
 
 ### Stepper Component
+
 - **Name**: Stepper
 - **Description**: ✅ iOS, Web, BDUI (iOS, Android, MAV)
 - **Component Set ID**: 16013:43734
 - **Last Modified**: 2025-09-16T15:23:30Z
 
 ### Key Features
+
 - Multiple sizes: Small (S), Medium (M), Large (L)
 - Multiple presets: Default, Overlay
 - Multiple states: Default, Active, Focus, Loading, Disabled, Error
@@ -37,7 +39,8 @@ The Stepper component is designed for quantity selection interfaces where users 
 ## Platform Support
 
 - ✅ iOS
-- ✅ Web  
+- ✅ Android
+- ✅ Web
 - ✅ BDUI (iOS, Android, MAV)
 
 ## Related Components
