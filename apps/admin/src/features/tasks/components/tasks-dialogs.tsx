@@ -1,11 +1,21 @@
-import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useTasks } from '../context/tasks-context'
 import { TasksImportDialog } from './tasks-import-dialog'
 import { TasksMutateDrawer } from './tasks-mutate-drawer'
 
 export function TasksDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useTasks()
+  const { open, setOpen, currentRow, setCurrentRow, deleteScenario } = useTasks()
+
+  const handleDelete = () => {
+    if (currentRow) {
+      deleteScenario(currentRow.id)
+      setOpen(null)
+      setTimeout(() => {
+        setCurrentRow(null)
+      }, 500)
+    }
+  }
+
   return (
     <>
       <TasksMutateDrawer key='task-create' open={open === 'create'} onOpenChange={() => setOpen('create')} />
@@ -36,22 +46,17 @@ export function TasksDialogs() {
                 setCurrentRow(null)
               }, 500)
             }}
-            handleConfirm={() => {
-              setOpen(null)
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-              showSubmittedData(currentRow, 'The following task has been deleted:')
-            }}
+            handleConfirm={handleDelete}
             className='max-w-md'
-            title={`Delete this task: ${currentRow.id} ?`}
+            title={`Удалить сценарий: ${currentRow.key}?`}
             desc={
               <>
-                You are about to delete a task with the ID <strong>{currentRow.id}</strong>. <br />
-                This action cannot be undone.
+                Вы собираетесь удалить сценарий с ключом <strong>{currentRow.key}</strong> (версия {currentRow.version}
+                ). <br />
+                Это действие не может быть отменено.
               </>
             }
-            confirmText='Delete'
+            confirmText='Удалить'
           />
         </>
       )}

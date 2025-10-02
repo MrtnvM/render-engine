@@ -40,4 +40,3 @@ export type {
 
 // Default export
 export { transpile as default } from './transpiler/transpiler.js'
-

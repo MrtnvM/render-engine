@@ -10,4 +10,3 @@ export type {
   ASTNode,
   TranspilerConfig,
 } from './types.js'
-

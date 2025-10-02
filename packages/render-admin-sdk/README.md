@@ -39,8 +39,8 @@ import type { StyleSheet } from '@render-engine/admin-sdk/ui'
 const styles: StyleSheet = {
   container: {
     padding: 16,
-    backgroundColor: '#fff'
-  }
+    backgroundColor: '#fff',
+  },
 }
 ```
 
@@ -51,9 +51,11 @@ const styles: StyleSheet = {
 Transpiles a React JSX string into a server-driven UI JSON schema.
 
 **Parameters:**
+
 - `jsxString` - The JSX code to transpile
 
 **Returns:**
+
 - `TranspiledScenario` - The compiled JSON schema
 
 **Example:**
@@ -79,4 +81,3 @@ const scenario = await transpile(jsxCode)
 ## License
 
 MIT
-

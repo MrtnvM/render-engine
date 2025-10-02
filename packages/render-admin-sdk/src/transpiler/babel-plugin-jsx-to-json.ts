@@ -216,9 +216,10 @@ export default function jsxToJsonPlugin(config?: TranspilerConfig) {
           if (jsonNode.style && Object.keys(jsonNode.style).length === 0) delete jsonNode.style
           if (jsonNode.properties && Object.keys(jsonNode.properties).length === 0) delete jsonNode.properties
           if (jsonNode.data && Object.keys(jsonNode.data).length === 0) delete jsonNode.data
-          if (jsonNode.children && jsonNode.children.length === 0) delete jsonNode.children
+          if (jsonNode.children && jsonNode.children.length === 0)
+            delete jsonNode.children
 
-          // Attach the generated JSON to the AST node for the parent to use
+            // Attach the generated JSON to the AST node for the parent to use
           ;(path.node as any).json = jsonNode
         },
       },
@@ -280,4 +281,3 @@ export default function jsxToJsonPlugin(config?: TranspilerConfig) {
 
   return { plugin, components }
 }
-

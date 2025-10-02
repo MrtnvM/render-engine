@@ -9,10 +9,7 @@ import type { JsonNode, TranspiledScenario, TranspilerConfig } from './types.js'
  * @param config Optional configuration
  * @returns The JSON schema object.
  */
-export async function transpile(
-  jsxString: string,
-  config?: TranspilerConfig,
-): Promise<TranspiledScenario> {
+export async function transpile(jsxString: string, config?: TranspilerConfig): Promise<TranspiledScenario> {
   const traverseModule = await import('@babel/traverse')
   const traverse = (traverseModule.default as any).default
 
@@ -106,4 +103,3 @@ export async function transpile(
 
   return scenario
 }
-

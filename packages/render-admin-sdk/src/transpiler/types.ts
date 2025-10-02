@@ -64,4 +64,3 @@ export interface TranspilerConfig {
   /** Enable strict mode validation */
   strictMode?: boolean
 }
-

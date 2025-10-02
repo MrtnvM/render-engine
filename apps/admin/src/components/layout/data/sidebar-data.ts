@@ -64,8 +64,8 @@ export const sidebarData: SidebarData = {
           icon: IconPackages,
         },
         {
-          title: 'Пользователи',
-          url: '/users',
+          title: 'A/B-тесты',
+          url: '/ab-tests',
           icon: IconUsers,
         },
         {
