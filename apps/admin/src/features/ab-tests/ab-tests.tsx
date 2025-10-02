@@ -99,13 +99,6 @@ export default function ABTests() {
             </CardDescription>
           </CardHeader>
           <CardContent className='space-y-4'>
-            <p className='text-sm leading-relaxed'>
-              A/B-тестирование (также известное как сплит-тестирование) позволяет сравнивать различные версии ваших
-              UI-схем, чтобы определить, какая из них работает лучше для ваших пользователей. Эта платформа позволяет
-              проводить контролируемые эксперименты, измерять ключевые показатели эффективности и принимать обоснованные
-              решения об изменениях пользовательского интерфейса.
-            </p>
-
             <div className='grid gap-4 md:grid-cols-3'>
               <div className='bg-background/50 rounded-lg border p-4'>
                 <div className='mb-2 flex items-center gap-2'>
