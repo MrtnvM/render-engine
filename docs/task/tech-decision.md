@@ -1,14 +1,9 @@
 # Техническое Решение: Backend-Driven UI Framework для Avito
 
-**Дата:** 2 октября 2025  
-**Статус:** Утверждено к разработке
-
----
 
 ## 1. Краткое описание проблемы
 
 Avito сталкивается с проблемой медленной доставки изменений в мобильные приложения из-за:
-
 - Необходимости прохождения модерации в App Store и Google Play
 - Длительного цикла релиза (тестирование → постепенный раскат → финальный релиз)
 - Невозможности быстрой итерации и A/B тестирования UI
@@ -54,14 +49,13 @@ Avito сталкивается с проблемой медленной дост
 ### 2.2. Ключевые компоненты
 
 #### **A. Backend Service (TypeScript + PostgreSQL)**
-
-- **API для конфигураций:**
-  - `GET /api/screens/:id` - получение конфигурации экрана
-  - `POST /api/screens` - создание новой конфигурации
-  - `PUT /api/screens/:id` - обновление конфигурации
-  - `GET /api/screens/:id/versions` - история версий
+- **API для сценариев:**
+  - `GET /api/scenarios/:id` - получение сценария
+  - `POST /api/scenarios` - создание новой сценария
+  - `PUT /api/scenarios/:id` - обновление сценария
+  - `GET /api/scenarios/:id/versions` - история версий
+  
 - **Хранение данных:**
-
   - PostgreSQL для конфигураций и метаданных
   - Версионирование конфигов (audit trail)
   - Индексирование для быстрого поиска
@@ -72,11 +66,12 @@ Avito сталкивается с проблемой медленной дост
   - Контроль доступа (RBAC)
 
 #### **B. Admin Panel (React + shadcn/ui)**
-
-- **Visual Editor:**
-  - Drag-and-drop интерфейс для сборки экранов
-  - Live preview всех платформ
+- **Low Code Editor:**
+  - Live-редактор React DSL 
+  - Drag-and-drop интерфейс для перетаскивания в код готовых компоненотов дизайн системы
+  - Live preview всех платформ (web внутри админки, android, ios - внутри playgrond приложений)
   - Управление стилями и свойствами компонентов
+  
 - **Функциональность:**
   - Библиотека компонентов Avito Design System
   - Управление версиями и откат
@@ -87,7 +82,6 @@ Avito сталкивается с проблемой медленной дост
 #### **C. SDK для клиентов**
 
 **iOS SDK (Swift):**
-
 ```swift
 // Packages/render-ios-sdk/
 - RenderEngine: парсинг JSON → UIKit/SwiftUI компоненты
@@ -97,7 +91,6 @@ Avito сталкивается с проблемой медленной дост
 ```
 
 **Android SDK (Kotlin):**
-
 ```kotlin
 // Аналогичная структура для Android
 - RenderEngine: JSON → View components
@@ -107,7 +100,6 @@ Avito сталкивается с проблемой медленной дост
 ```
 
 **Web SDK (React):**
-
 ```typescript
 // packages/render-admin-sdk/
 - Transpiler: JSX/JSON → React компоненты
@@ -120,7 +112,6 @@ Avito сталкивается с проблемой медленной дост
 ## 3. Технологический стек
 
 ### Backend
-
 - **Runtime:** Node.js + TypeScript
 - **Framework:** Express/Fastify
 - **Database:** PostgreSQL 15+
@@ -129,7 +120,6 @@ Avito сталкивается с проблемой медленной дост
 - **Аутентификация:** JWT
 
 ### Admin Panel
-
 - **Framework:** React 18 + TypeScript
 - **Routing:** TanStack Router
 - **UI Kit:** shadcn/ui + Radix UI
@@ -138,19 +128,16 @@ Avito сталкивается с проблемой медленной дост
 - **Styling:** Tailwind CSS
 
 ### Mobile SDK
-
 - **iOS:** Swift 5.9+, SwiftUI + UIKit
 - **Android:** Kotlin 1.9+, Jetpack Compose + Views
 
 ### DevOps
-
 - **Монорепо:** pnpm workspaces
 - **CI/CD:** GitHub Actions
 - **Контейнеризация:** Docker
 - **Мониторинг:** Prometheus + Grafana
 
 ### Analytics
-
 - **Mobile:** Firebase Analytics
 - **Web:** Amplitude / Mixpanel
 - **Custom:** Собственная система событий
@@ -169,13 +156,14 @@ Avito сталкивается с проблемой медленной дост
   <Container padding={16}>
     <Text style={styles.title}>Корзина</Text>
     <ProductList />
-    <Button onPress="checkout">Оформить заказ</Button>
+    <Button onPress="checkout">
+      Оформить заказ
+    </Button>
   </Container>
 </Screen>
 ```
 
 **Транспилируется в JSON:**
-
 ```json
 {
   "type": "Screen",
@@ -205,13 +193,11 @@ Avito сталкивается с проблемой медленной дост
 ### 4.2. Преимущества подхода
 
 ✅ **Для разработчиков:**
-
 - Знакомый синтаксис (React/JSX)
 - TypeScript поддержка и автодополнение
 - Легкая валидация на этапе написания
 
 ✅ **Для системы:**
-
 - JSON удобен для передачи по сети
 - Легко парсится на любой платформе
 - Возможность кеширования и оптимизации
@@ -222,15 +208,15 @@ Avito сталкивается с проблемой медленной дост
 
 ### 5.1. Базовые компоненты (MVP)
 
-| Компонент   | Описание                         | Платформы         |
-| ----------- | -------------------------------- | ----------------- |
-| `Container` | Контейнер с layout               | iOS, Android, Web |
-| `Text`      | Текст с стилями                  | iOS, Android, Web |
-| `Image`     | Изображение                      | iOS, Android, Web |
-| `Button`    | Кнопка с действием               | iOS, Android, Web |
-| `Input`     | Поле ввода                       | iOS, Android, Web |
-| `List`      | Скроллируемый список             | iOS, Android, Web |
-| `Stack`     | Вертикальный/горизонтальный стек | iOS, Android, Web |
+| Компонент | Описание | Платформы |
+|-----------|----------|-----------|
+| `Container` | Контейнер с layout | iOS, Android, Web |
+| `Text` | Текст с стилями | iOS, Android, Web |
+| `Image` | Изображение | iOS, Android, Web |
+| `Button` | Кнопка с действием | iOS, Android, Web |
+| `Input` | Поле ввода | iOS, Android, Web |
+| `List` | Скроллируемый список | iOS, Android, Web |
+| `Stack` | Вертикальный/горизонтальный стек | iOS, Android, Web |
 
 ### 5.2. Avito-специфичные компоненты
 
@@ -262,7 +248,6 @@ Avito сталкивается с проблемой медленной дост
 ```
 
 **Поддержка:**
-
 - Responsive design (breakpoints)
 - Dark mode
 - Platform-specific overrides
@@ -275,13 +260,13 @@ Avito сталкивается с проблемой медленной дост
 
 ```typescript
 interface ScreenVersion {
-  id: string
-  screenId: string
-  version: number
-  config: JSONConfig
-  createdAt: Date
-  createdBy: string
-  isActive: boolean
+  id: string;
+  screenId: string;
+  version: number;
+  config: JSONConfig;
+  createdAt: Date;
+  createdBy: string;
+  isActive: boolean;
 }
 ```
 
@@ -293,15 +278,15 @@ interface ScreenVersion {
 
 ```typescript
 interface ABTest {
-  id: string
-  screenId: string
+  id: string;
+  screenId: string;
   variants: {
-    control: ScreenVersion
-    treatment: ScreenVersion
-  }
-  distribution: number // 0.5 = 50/50
-  startDate: Date
-  endDate: Date
+    control: ScreenVersion;
+    treatment: ScreenVersion;
+  };
+  distribution: number; // 0.5 = 50/50
+  startDate: Date;
+  endDate: Date;
 }
 ```
 
@@ -325,7 +310,6 @@ interface ABTest {
 ### 6.5. Analytics
 
 **Автоматические метрики:**
-
 - Screen views
 - Component impressions
 - Button clicks
@@ -333,7 +317,6 @@ interface ABTest {
 - Navigation flows
 
 **Кастомные события:**
-
 ```json
 {
   "type": "Button",
@@ -363,10 +346,10 @@ interface ABTest {
 
 ```typescript
 enum Role {
-  VIEWER = 'viewer', // Просмотр
-  EDITOR = 'editor', // Редактирование
-  PUBLISHER = 'publisher', // Публикация
-  ADMIN = 'admin', // Полный доступ
+  VIEWER = "viewer",       // Просмотр
+  EDITOR = "editor",       // Редактирование
+  PUBLISHER = "publisher", // Публикация
+  ADMIN = "admin"          // Полный доступ
 }
 ```
 
@@ -382,12 +365,12 @@ enum Role {
 
 ### 8.1. Метрики
 
-| Метрика                | Целевое значение | Критичное значение |
-| ---------------------- | ---------------- | ------------------ |
-| Время загрузки конфига | < 200ms          | < 500ms            |
-| Время первого рендера  | < 100ms          | < 300ms            |
-| Размер конфига         | < 50KB           | < 200KB            |
-| Memory footprint       | < 10MB           | < 30MB             |
+| Метрика | Целевое значение | Критичное значение |
+|---------|------------------|-------------------|
+| Время загрузки конфига | < 200ms | < 500ms |
+| Время первого рендера | < 100ms | < 300ms |
+| Размер конфига | < 50KB | < 200KB |
+| Memory footprint | < 10MB | < 30MB |
 
 ### 8.2. Оптимизации
 
@@ -402,7 +385,6 @@ enum Role {
 ## 9. План разработки
 
 ### Фаза 1: MVP (2-3 недели)
-
 - ✅ Backend API для хранения конфигов
 - ✅ Базовая админ-панель с редактором
 - ✅ iOS SDK с базовыми компонентами
@@ -410,7 +392,6 @@ enum Role {
 - ⬜ Демо экрана из Figma
 
 ### Фаза 2: Базовая функциональность (1-2 недели)
-
 - ⬜ Android SDK
 - ⬜ Web SDK
 - ⬜ Analytics интеграция
@@ -418,7 +399,6 @@ enum Role {
 - ⬜ Улучшенный UI админ-панели
 
 ### Фаза 3: Продвинутые функции (2-3 недели)
-
 - ⬜ A/B тестирование
 - ⬜ Условный рендеринг
 - ⬜ Интернационализация (i18n)
@@ -426,7 +406,6 @@ enum Role {
 - ⬜ Шаблоны и переиспользование
 
 ### Фаза 4: Production-ready (1-2 недели)
-
 - ⬜ Мониторинг и алерты
 - ⬜ Performance оптимизации
 - ⬜ Документация
@@ -437,33 +416,30 @@ enum Role {
 
 ## 10. Риски и митигации
 
-| Риск                                              | Вероятность | Влияние | Митигация                                                               |
-| ------------------------------------------------- | ----------- | ------- | ----------------------------------------------------------------------- |
-| Проблемы производительности на старых устройствах | Средняя     | Высокое | Бюджеты производительности, профилирование, fallback к нативным экранам |
-| Сложность отладки UI багов                        | Высокая     | Среднее | Детальное логирование, preview в админке, source maps                   |
-| Ограничения DSL для сложных UI                    | Средняя     | Среднее | Гибридный подход: BDUI + нативные компоненты                            |
-| Проблемы с кешированием                           | Низкая      | Среднее | Версионирование конфигов, cache invalidation стратегия                  |
-| Недостаточная безопасность                        | Низкая      | Высокое | Code review, security audit, ограничения DSL                            |
+| Риск | Вероятность | Влияние | Митигация |
+|------|-------------|---------|-----------|
+| Проблемы производительности на старых устройствах | Средняя | Высокое | Бюджеты производительности, профилирование, fallback к нативным экранам |
+| Сложность отладки UI багов | Высокая | Среднее | Детальное логирование, preview в админке, source maps |
+| Ограничения DSL для сложных UI | Средняя | Среднее | Гибридный подход: BDUI + нативные компоненты |
+| Проблемы с кешированием | Низкая | Среднее | Версионирование конфигов, cache invalidation стратегия |
+| Недостаточная безопасность | Низкая | Высокое | Code review, security audit, ограничения DSL |
 
 ---
 
 ## 11. Метрики успеха
 
 ### Технические метрики
-
 - **Время доставки изменений:** с 2-3 недель → до **1 дня**
 - **Uptime backend:** > 99.9%
 - **Latency API:** p95 < 200ms
 - **Client render time:** p95 < 100ms
 
 ### Бизнес-метрики
-
 - **Скорость итераций:** увеличение числа A/B тестов на 300%
 - **Время сборки экрана:** < 1 час для простого экрана
 - **Developer satisfaction:** NPS > 8/10
 
 ### Качество кода
-
 - **Test coverage:** > 80%
 - **Linting:** 0 ошибок
 - **TypeScript:** strict mode
@@ -473,14 +449,12 @@ enum Role {
 ## 12. Дальнейшее развитие
 
 ### Краткосрочные планы (3-6 месяцев)
-
 - Поддержка анимаций и переходов
 - Визуальный редактор с drag-and-drop
 - Библиотека готовых шаблонов экранов
 - Интеграция с CMS
 
 ### Долгосрочные планы (6-12 месяцев)
-
 - AI-ассистент для генерации UI
 - Автоматическая оптимизация производительности
 - Cross-platform компоненты с единым кодом
@@ -509,3 +483,4 @@ enum Role {
 **Подготовил:** Render Engine Team  
 **Дата:** 2 октября 2025  
 **Статус:** Ready for Implementation
+
