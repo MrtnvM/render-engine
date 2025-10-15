@@ -8,7 +8,6 @@ The **Store API** manages **scenario data**: key–value state used by component
 - Safe updates (serial queue).
 - **Combine publishers** for observation.
 - Automatic re-render when bound data changes.
-- **Validation** of stored values.
 - Simple lifecycle rules (drop on major version change, no migrations).
 - Debug inspector for development.
 
@@ -29,11 +28,10 @@ The **Store API** manages **scenario data**: key–value state used by component
 
 ### 2.3 Storage mechanisms
 
-- **Memory** — ephemeral, cleared when app terminates.
+- **Memory** — ephemeral, cleared when app/scenario terminates.
 - **UserPrefs** — persisted in `UserDefaults`.
 - **File** — persisted JSON file.
-- **Backend** — optional remote sync adapter.
-- **ScenarioSession** — ephemeral, cleared when scenario ends.
+- **Backend** — remote sync adapter.
 
 ### 2.4 Versioning
 
@@ -88,7 +86,6 @@ public enum Storage: Equatable {
     case userPrefs(suite: String? = nil)
     case file(url: URL)
     case backend(namespace: String)
-    case scenarioSession
 }
 
 public protocol Store: AnyObject {
@@ -115,10 +112,6 @@ public protocol Store: AnyObject {
     // Snapshot
     func snapshot() -> [String: StoreValue]
     func replaceAll(with root: [String: StoreValue])
-
-    // Validation
-    func configureValidation(_ options: ValidationOptions)
-    func validateWrite(_ keyPath: String, _ value: StoreValue) -> ValidationResult
 }
 ```
 
@@ -146,7 +139,7 @@ public protocol StoreFactory: AnyObject {
 - Enforce **singleton-like reuse** when multiple components request the same `(scope, storage)`.
 - Apply **lifecycle rules**:
 
-  - Drop scenario stores when scenario ends.
+  - Drop in-memory scenario stores when scenario ends.
   - Drop/reset all stores when major version changes.
 
 - Provide central place to inject cross-cutting behavior (e.g., logging, analytics, persistence adapters).
@@ -164,40 +157,7 @@ let again = factory.makeStore(scope: .scenario(id: "checkout"), storage: .memory
 assert(checkoutStore === again)
 ```
 
-## 5. Validation
-
-Validation enforces that data in the store conforms to expected **types, ranges, and constraints**.
-
-- On `set` / `merge`: rules are checked.
-- **Strict mode** → reject invalid data.
-- **Lenient mode** → coerce or fallback to defaults.
-
-```swift
-public struct ValidationOptions: Equatable {
-    public enum Mode { case strict, lenient }
-    public var mode: Mode
-    public var schema: [String: ValidationRule]
-}
-
-public struct ValidationRule: Codable, Equatable {
-    public enum Kind: String, Codable { case string, number, integer, bool, color, url, array, object }
-    public var kind: Kind
-    public var required: Bool
-    public var defaultValue: StoreValue?
-    public var min: Double?
-    public var max: Double?
-    public var pattern: String?
-}
-
-public enum ValidationResult {
-    case ok
-    case failed(reason: String)
-}
-```
-
----
-
-## 6. Concurrency
+## 5. Concurrency
 
 - Each `Store` has its own **serial DispatchQueue** for mutations.
 - Reads are thread-safe.
@@ -205,17 +165,16 @@ public enum ValidationResult {
 
 ---
 
-## 7. Backends
+## 6. Backends
 
-- **Memory** — fast, ephemeral.
+- **Memory** — fast, ephemeral, cleared after session ends/app terminates.
 - **UserPrefs** — persisted in `UserDefaults`.
 - **File** — JSON file, atomic writes.
-- **ScenarioSession** — cleared after session ends.
-- **Backend** — optional push/pull adapter.
+- **Backend** — push/pull adapter.
 
 ---
 
-## 8. Renderer Integration
+## 7. Renderer Integration
 
 - Renderer subscribes to key paths using `publisher(for:)`.
 - Subscriptions bound to component lifecycle.
@@ -223,7 +182,7 @@ public enum ValidationResult {
 
 ---
 
-## 9. Lifecycle
+## 8. Lifecycle
 
 - Scenario start → init session store.
 - Scenario end → clear session store.
@@ -231,7 +190,7 @@ public enum ValidationResult {
 
 ---
 
-## 10. Debugging
+## 9. Debugging
 
 - Debug Inspector:
 
@@ -242,7 +201,7 @@ public enum ValidationResult {
 
 ---
 
-## 11. Example
+## 10. Example
 
 ```swift
 let store = DefaultStore(scope: .scenario(id: "checkout"), storage: .memory)
@@ -264,13 +223,12 @@ let cancellable = store.publisher(for: "cart.total")
 
 ---
 
-## 12. Acceptance Criteria
+## 11. Acceptance Criteria
 
 - ✅ Store instances are bound to scope + storage.
-- ✅ Multiple storages supported (memory, prefs, file, session, backend).
+- ✅ Multiple storages supported (memory, prefs, file, backend).
 - ✅ Combine publishers for observation.
 - ✅ Serial queue for thread safety.
 - ✅ Transactions coalesce patches.
-- ✅ Validation with strict/lenient modes.
 - ✅ Drop scenario data on major version bump.
 - ✅ Debug inspector in debug builds only.
