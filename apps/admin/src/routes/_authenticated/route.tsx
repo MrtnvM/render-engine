@@ -6,8 +6,8 @@ export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async () => {
     const { data } = await supabase.auth.getSession()
     if (!data.session) {
-      // Redirect to home page if not authenticated
-      throw redirect({ to: '/' })
+      // Redirect to login page if not authenticated
+      throw redirect({ to: '/login' })
     }
   },
   component: AuthenticatedLayout,
