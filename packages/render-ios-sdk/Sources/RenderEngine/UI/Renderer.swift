@@ -14,18 +14,21 @@ public struct RendererContext {
     public let window: UIWindow?
     public let scenario: Scenario?
     public let props: Config
-    
+    public let store: Store?
+
     public init(
         viewController: UIViewController? = nil,
         navigationController: UINavigationController? = nil,
         window: UIWindow? = nil,
         scenario: Scenario? = nil,
-        props: Config? = nil
+        props: Config? = nil,
+        store: Store? = nil
     ) {
         self.viewController = viewController
         self.navigationController = navigationController
         self.window = window
         self.scenario = scenario
         self.props = props ?? Config()
+        self.store = store
     }
 }

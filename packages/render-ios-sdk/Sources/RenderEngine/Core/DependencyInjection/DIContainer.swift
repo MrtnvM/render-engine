@@ -93,7 +93,13 @@ class DIContainer {
         ]
         return ValueProvider(resolvers: resolvers)
     }()
-    
+
+    // MARK: - Store
+
+    lazy var storeFactory: StoreFactory = {
+        return DefaultStoreFactory(logger: currentLogger)
+    }()
+
     // MARK: - Logger Management
     
     private var _logger: Logger?
