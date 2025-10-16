@@ -2,20 +2,15 @@ import Foundation
 import Combine
 
 /// Default implementation of the Store protocol
-/// Thread-safe via serial DispatchQueue, supports persistence via StorageBackend
+/// Thread-safe via Swift actor, supports persistence via StorageBackend
 public final class DefaultStore: Store, @unchecked Sendable {
 
     public let scope: Scope
     public let storage: Storage
 
     private let backend: StorageBackend
-    private let queue: DispatchQueue
+    private let actor: StoreActor
     private let changeSubject = PassthroughSubject<StoreChange, Never>()
-
-    private var root: StoreValue = .object([:])
-    private var currentTransactionID: UUID?
-    private var transactionPatches: [StorePatch] = []
-
     private let logger: Logger?
 
     /// Initialize a store with scope, storage, and backend
@@ -28,23 +23,18 @@ public final class DefaultStore: Store, @unchecked Sendable {
         self.scope = scope
         self.storage = storage
         self.backend = backend
-        self.queue = DispatchQueue(label: "com.renderengine.store.\(scope.identifier).\(storage.identifier)")
         self.logger = logger
-
-        // Load initial data from backend
-        loadFromBackend()
+        self.actor = StoreActor()
     }
 
     // MARK: - IO Operations
 
-    public func get(_ keyPath: String) -> StoreValue? {
-        return queue.sync {
-            KeyPathNavigator.get(keyPath, in: root)
-        }
+    public func get(_ keyPath: String) async -> StoreValue? {
+        return await actor.get(keyPath)
     }
 
-    public func get<T: Decodable>(_ keyPath: String, as type: T.Type) throws -> T {
-        guard let value = get(keyPath) else {
+    public func get<T: Decodable>(_ keyPath: String, as type: T.Type) async throws -> T {
+        guard let value = await get(keyPath) else {
             throw StoreError.keyPathNotFound(keyPath)
         }
 
@@ -55,174 +45,202 @@ public final class DefaultStore: Store, @unchecked Sendable {
         return try decoder.decode(T.self, from: data)
     }
 
-    public func exists(_ keyPath: String) -> Bool {
-        return get(keyPath) != nil
+    public func exists(_ keyPath: String) async -> Bool {
+        return await get(keyPath) != nil
     }
 
     // MARK: - Mutations
 
-    public func set(_ keyPath: String, _ value: StoreValue) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
+    public func set(_ keyPath: String, _ value: StoreValue) async {
+        let (patch, root) = await actor.set(keyPath, value: value)
 
-            let (newRoot, oldValue) = KeyPathNavigator.set(keyPath, value: value, in: self.root)
-            self.root = newRoot
+        emitChange(patch: patch)
+        await saveToBackend(root: root)
 
-            let patch = StorePatch(op: .set, keyPath: keyPath, oldValue: oldValue, newValue: value)
-            self.emitChange(patch: patch)
-            self.saveToBackend()
-
-            self.logger?.debug("Store.set: \(keyPath) = \(value)", category: "Store")
-        }
+        logger?.debug("Store.set: \(keyPath) = \(value)", category: "Store")
     }
 
-    public func merge(_ keyPath: String, _ object: [String: StoreValue]) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
+    public func merge(_ keyPath: String, _ object: [String: StoreValue]) async {
+        let (patch, root) = await actor.merge(keyPath, object: object)
 
-            let (newRoot, oldValue) = KeyPathNavigator.merge(keyPath, object: object, in: self.root)
-            self.root = newRoot
+        emitChange(patch: patch)
+        await saveToBackend(root: root)
 
-            let patch = StorePatch(op: .merge, keyPath: keyPath, oldValue: oldValue, newValue: .object(object))
-            self.emitChange(patch: patch)
-            self.saveToBackend()
-
-            self.logger?.debug("Store.merge: \(keyPath)", category: "Store")
-        }
+        logger?.debug("Store.merge: \(keyPath)", category: "Store")
     }
 
-    public func remove(_ keyPath: String) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
+    public func remove(_ keyPath: String) async {
+        let (patch, root) = await actor.remove(keyPath)
 
-            let (newRoot, removedValue) = KeyPathNavigator.remove(keyPath, from: self.root)
-            self.root = newRoot
+        emitChange(patch: patch)
+        await saveToBackend(root: root)
 
-            let patch = StorePatch(op: .remove, keyPath: keyPath, oldValue: removedValue, newValue: nil)
-            self.emitChange(patch: patch)
-            self.saveToBackend()
-
-            self.logger?.debug("Store.remove: \(keyPath)", category: "Store")
-        }
+        logger?.debug("Store.remove: \(keyPath)", category: "Store")
     }
 
     // MARK: - Batch Operations
 
-    public func transaction(_ block: @escaping (Store) -> Void) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
+    public func transaction(_ block: @escaping @Sendable (Store) async -> Void) async {
+        // Execute the block and collect patches
+        // Since the block is async, we execute it directly and track changes
+        let initialSnapshot = await actor.snapshot()
 
-            let txID = UUID()
-            self.currentTransactionID = txID
-            self.transactionPatches = []
+        // Execute the transaction block
+        await block(self)
 
-            // Execute the block
-            block(self)
+        // Get the final snapshot to create a consolidated patch
+        let finalSnapshot = await actor.snapshot()
 
-            // Emit all patches as a single change
-            if !self.transactionPatches.isEmpty {
-                let change = StoreChange(patches: self.transactionPatches, transactionID: txID)
-                self.changeSubject.send(change)
-            }
+        // Create a single transaction change event
+        let txID = UUID()
+        let patch = StorePatch(op: .set, keyPath: "", oldValue: .object(initialSnapshot), newValue: .object(finalSnapshot))
+        let change = StoreChange(patches: [patch], transactionID: txID)
+        changeSubject.send(change)
 
-            self.currentTransactionID = nil
-            self.transactionPatches = []
+        await saveToBackend(root: finalSnapshot)
 
-            self.saveToBackend()
-
-            self.logger?.debug("Store.transaction: \(self.transactionPatches.count) patches", category: "Store")
-        }
+        logger?.debug("Store.transaction: completed", category: "Store")
     }
 
     // MARK: - Observation
 
     public func publisher(for keyPath: String) -> AnyPublisher<StoreValue?, Never> {
+        let actor = self.actor
         return StorePublisher(
             keyPath: keyPath,
             changeSubject: changeSubject,
-            getCurrentValue: { [weak self] in
-                self?.get(keyPath)
+            getCurrentValue: {
+                // Bridge async to sync - this is called on background queue by publisher
+                return runAsyncAndWait { await actor.get(keyPath) }
             }
         ).eraseToAnyPublisher()
     }
 
     public func publisher(for keyPaths: Set<String>) -> AnyPublisher<[String: StoreValue?], Never> {
+        let actor = self.actor
         return StoreMultiKeyPublisher(
             keyPaths: keyPaths,
             changeSubject: changeSubject,
-            getCurrentValues: { [weak self] in
-                var result: [String: StoreValue?] = [:]
-                for keyPath in keyPaths {
-                    result[keyPath] = self?.get(keyPath)
+            getCurrentValues: {
+                // Bridge async to sync - this is called on background queue by publisher
+                return runAsyncAndWait {
+                    var result: [String: StoreValue?] = [:]
+                    for keyPath in keyPaths {
+                        result[keyPath] = await actor.get(keyPath)
+                    }
+                    return result
                 }
-                return result
             }
         ).eraseToAnyPublisher()
     }
 
     // MARK: - Snapshot
 
-    public func snapshot() -> [String: StoreValue] {
-        return queue.sync {
-            root.objectValue ?? [:]
-        }
+    public func snapshot() async -> [String: StoreValue] {
+        return await actor.snapshot()
     }
 
-    public func replaceAll(with root: [String: StoreValue]) {
-        queue.async { [weak self] in
-            guard let self = self else { return }
+    public func replaceAll(with root: [String: StoreValue]) async {
+        let patch = await actor.replaceAll(with: root)
 
-            self.root = .object(root)
+        let change = StoreChange(patch: patch)
+        changeSubject.send(change)
 
-            // Emit a change affecting root
-            let patch = StorePatch(op: .set, keyPath: "", oldValue: nil, newValue: self.root)
-            let change = StoreChange(patch: patch)
-            self.changeSubject.send(change)
+        await saveToBackend(root: root)
 
-            self.saveToBackend()
+        logger?.debug("Store.replaceAll: replaced entire store", category: "Store")
+    }
 
-            self.logger?.debug("Store.replaceAll: replaced entire store", category: "Store")
+    /// Load data from backend storage
+    /// Call this explicitly when you want to load persisted data
+    public func loadFromBackend() async {
+        if let data = await backend.load() {
+            _ = await actor.replaceAll(with: data)
+            logger?.debug("Store loaded from backend: \(data.keys.count) keys", category: "Store")
         }
     }
 
     // MARK: - Private Helpers
 
     private func emitChange(patch: StorePatch) {
-        if let txID = currentTransactionID {
-            // We're in a transaction - accumulate patches
+        let change = StoreChange(patch: patch)
+        changeSubject.send(change)
+    }
+
+    private func saveToBackend(root: [String: StoreValue]) async {
+        do {
+            try await backend.save(root)
+        } catch {
+            logger?.error("Failed to save to backend: \(error)", category: "Store")
+        }
+    }
+}
+
+// MARK: - StoreActor
+
+/// Actor that provides thread-safe access to store data
+private actor StoreActor {
+    private var root: StoreValue = .object([:])
+    private var currentTransactionID: UUID?
+    private var transactionPatches: [StorePatch] = []
+
+    func get(_ keyPath: String) -> StoreValue? {
+        return KeyPathNavigator.get(keyPath, in: root)
+    }
+
+    func set(_ keyPath: String, value: StoreValue) -> (StorePatch, [String: StoreValue]) {
+        let (newRoot, oldValue) = KeyPathNavigator.set(keyPath, value: value, in: root)
+        root = newRoot
+
+        let patch = StorePatch(op: .set, keyPath: keyPath, oldValue: oldValue, newValue: value)
+        return (patch, root.objectValue ?? [:])
+    }
+
+    func merge(_ keyPath: String, object: [String: StoreValue]) -> (StorePatch, [String: StoreValue]) {
+        let (newRoot, oldValue) = KeyPathNavigator.merge(keyPath, object: object, in: root)
+        root = newRoot
+
+        let patch = StorePatch(op: .merge, keyPath: keyPath, oldValue: oldValue, newValue: .object(object))
+        return (patch, root.objectValue ?? [:])
+    }
+
+    func remove(_ keyPath: String) -> (StorePatch, [String: StoreValue]) {
+        let (newRoot, removedValue) = KeyPathNavigator.remove(keyPath, from: root)
+        root = newRoot
+
+        let patch = StorePatch(op: .remove, keyPath: keyPath, oldValue: removedValue, newValue: nil)
+        return (patch, root.objectValue ?? [:])
+    }
+
+    func transaction(block: @Sendable () -> Void) -> ([StorePatch], [String: StoreValue]) {
+        let txID = UUID()
+        currentTransactionID = txID
+        transactionPatches = []
+
+        // Execute the block
+        block()
+
+        let patches = transactionPatches
+        currentTransactionID = nil
+        transactionPatches = []
+
+        return (patches, root.objectValue ?? [:])
+    }
+
+    func snapshot() -> [String: StoreValue] {
+        return root.objectValue ?? [:]
+    }
+
+    func replaceAll(with data: [String: StoreValue]) -> StorePatch {
+        let oldValue = root
+        root = .object(data)
+
+        return StorePatch(op: .set, keyPath: "", oldValue: oldValue, newValue: root)
+    }
+
+    func addTransactionPatch(_ patch: StorePatch) {
+        if currentTransactionID != nil {
             transactionPatches.append(patch)
-        } else {
-            // Emit immediately
-            let change = StoreChange(patch: patch)
-            changeSubject.send(change)
-        }
-    }
-
-    private func loadFromBackend() {
-        queue.async { [weak self] in
-            guard let self = self else { return }
-
-            Task {
-                if let data = await self.backend.load() {
-                    self.queue.async {
-                        self.root = .object(data)
-                        self.logger?.debug("Store loaded from backend: \(data.keys.count) keys", category: "Store")
-                    }
-                }
-            }
-        }
-    }
-
-    private func saveToBackend() {
-        Task { @Sendable [weak self] in
-            guard let self = self else { return }
-            let snapshot = self.snapshot()
-
-            do {
-                try await self.backend.save(snapshot)
-            } catch {
-                self.logger?.error("Failed to save to backend: \(error)", category: "Store")
-            }
         }
     }
 }
@@ -244,4 +262,27 @@ public enum StoreError: Error {
             return "Invalid value: \(message)"
         }
     }
+}
+
+// MARK: - Async Bridge
+
+/// Result box for safe concurrency
+private final class ResultBox<T>: @unchecked Sendable {
+    var value: T?
+}
+
+/// Helper to bridge async to sync for publishers
+private func runAsyncAndWait<T>(_ operation: @escaping @Sendable () async -> T) -> T {
+    // Use DispatchSemaphore to synchronously wait for async operation
+    let semaphore = DispatchSemaphore(value: 0)
+    // Use a class to safely share result across concurrency boundaries
+    let box = ResultBox<T>()
+
+    Task { @Sendable in
+        box.value = await operation()
+        semaphore.signal()
+    }
+
+    semaphore.wait()
+    return box.value!
 }

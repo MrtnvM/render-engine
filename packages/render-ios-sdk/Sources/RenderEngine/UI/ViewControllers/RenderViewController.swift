@@ -1,10 +1,10 @@
 import UIKit
 import FlexLayout
 
-public protocol Action {}
+public protocol ScenarioAction {}
 
 public protocol RenderViewControllerDelegate: AnyObject {
-    func didTrigger(action: Action, from viewController: RenderViewController)
+    func didTrigger(action: ScenarioAction, from viewController: RenderViewController)
 }
 
 public class RenderViewController: UIViewController {

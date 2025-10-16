@@ -50,8 +50,11 @@ private final class StoreMultiKeySubscription<S: Subscriber>: Subscription
         self.subscriber = subscriber
         self.keyPaths = keyPaths
 
-        // Emit current values immediately
-        _ = subscriber.receive(getCurrentValues())
+        // Emit current values immediately - use global queue to avoid potential deadlock
+        DispatchQueue.global().async {
+            let values = getCurrentValues()
+            _ = subscriber.receive(values)
+        }
 
         // Subscribe to changes
         cancellable = changeSubject
@@ -65,7 +68,11 @@ private final class StoreMultiKeySubscription<S: Subscriber>: Subscription
             }
             .sink { [weak self] _ in
                 guard let self = self, let subscriber = self.subscriber else { return }
-                _ = subscriber.receive(getCurrentValues())
+                // Schedule on global queue to avoid deadlock
+                DispatchQueue.global().async {
+                    let values = getCurrentValues()
+                    _ = subscriber.receive(values)
+                }
             }
     }
 

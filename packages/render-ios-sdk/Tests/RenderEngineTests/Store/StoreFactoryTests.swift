@@ -46,35 +46,35 @@ struct StoreFactoryTests {
     }
 
     @Test("Factory reset stores for scope")
-    func testResetStoresForScope() {
+    func testResetStoresForScope() async throws {
         let factory = DefaultStoreFactory()
 
         let scenarioStore = factory.makeStore(scope: .scenario(id: "test"), storage: .memory)
-        scenarioStore.set("data", .string("value"))
+        await scenarioStore.set("data", .string("value"))
 
         factory.resetStores(for: .scenario(id: "test"))
 
         // Should get new instance
         let newStore = factory.makeStore(scope: .scenario(id: "test"), storage: .memory)
-        #expect(newStore.exists("data") == false)
+        #expect(await newStore.exists("data") == false)
     }
 
     @Test("Factory reset all stores")
-    func testResetAllStores() {
+    func testResetAllStores() async throws {
         let factory = DefaultStoreFactory()
 
         let appStore = factory.makeStore(scope: .app, storage: .memory)
         let scenarioStore = factory.makeStore(scope: .scenario(id: "test"), storage: .memory)
 
-        appStore.set("app-data", .string("value"))
-        scenarioStore.set("scenario-data", .string("value"))
+        await appStore.set("app-data", .string("value"))
+        await scenarioStore.set("scenario-data", .string("value"))
 
         factory.resetAllStores()
 
         let newAppStore = factory.makeStore(scope: .app, storage: .memory)
         let newScenarioStore = factory.makeStore(scope: .scenario(id: "test"), storage: .memory)
 
-        #expect(newAppStore.exists("app-data") == false)
-        #expect(newScenarioStore.exists("scenario-data") == false)
+        #expect(await newAppStore.exists("app-data") == false)
+        #expect(await newScenarioStore.exists("scenario-data") == false)
     }
 }

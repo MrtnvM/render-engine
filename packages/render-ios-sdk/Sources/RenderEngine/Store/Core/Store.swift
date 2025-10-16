@@ -3,7 +3,7 @@ import Combine
 
 /// Protocol for the Store API - manages scenario data (key-value state)
 /// Provides thread-safe mutations, observation via Combine publishers, and persistence
-public protocol Store: AnyObject {
+public protocol Store: AnyObject, Sendable {
 
     /// The scope this store is bound to
     var scope: Scope { get }
@@ -15,33 +15,33 @@ public protocol Store: AnyObject {
 
     /// Get a value at the specified keyPath
     /// Returns nil if the keyPath doesn't exist
-    func get(_ keyPath: String) -> StoreValue?
+    func get(_ keyPath: String) async -> StoreValue?
 
     /// Get a typed value at the specified keyPath
     /// Throws if the value cannot be decoded to the specified type
-    func get<T: Decodable>(_ keyPath: String, as type: T.Type) throws -> T
+    func get<T: Decodable>(_ keyPath: String, as type: T.Type) async throws -> T
 
     /// Check if a keyPath exists in the store
-    func exists(_ keyPath: String) -> Bool
+    func exists(_ keyPath: String) async -> Bool
 
     // MARK: - Mutations
 
     /// Set a value at the specified keyPath
     /// Creates intermediate objects/arrays as needed
-    func set(_ keyPath: String, _ value: StoreValue)
+    func set(_ keyPath: String, _ value: StoreValue) async
 
     /// Merge an object at the specified keyPath
     /// Only works for object values - merges new keys into existing object
-    func merge(_ keyPath: String, _ object: [String: StoreValue])
+    func merge(_ keyPath: String, _ object: [String: StoreValue]) async
 
     /// Remove a value at the specified keyPath
-    func remove(_ keyPath: String)
+    func remove(_ keyPath: String) async
 
     // MARK: - Batch Operations
 
     /// Execute multiple mutations as a single transaction
     /// All changes are batched into a single StoreChange event
-    func transaction(_ block: @escaping (Store) -> Void)
+    func transaction(_ block: @escaping @Sendable (Store) async -> Void) async
 
     // MARK: - Observation
 
@@ -56,8 +56,8 @@ public protocol Store: AnyObject {
     // MARK: - Snapshot
 
     /// Get a complete snapshot of the store's data
-    func snapshot() -> [String: StoreValue]
+    func snapshot() async -> [String: StoreValue]
 
     /// Replace all data in the store with the provided snapshot
-    func replaceAll(with root: [String: StoreValue])
+    func replaceAll(with root: [String: StoreValue]) async
 }

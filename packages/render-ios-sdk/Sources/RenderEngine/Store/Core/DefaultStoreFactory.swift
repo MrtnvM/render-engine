@@ -50,8 +50,10 @@ public final class DefaultStoreFactory: StoreFactory {
 
         for key in keysToRemove {
             if let store = registry[key] {
-                // Clear the store data
-                store.replaceAll(with: [:])
+                // Clear the store data asynchronously
+                Task { @Sendable in
+                    await store.replaceAll(with: [:])
+                }
                 logger?.debug("Reset store: \(key.description)", category: "StoreFactory")
             }
             registry.removeValue(forKey: key)
@@ -65,7 +67,9 @@ public final class DefaultStoreFactory: StoreFactory {
         defer { lock.unlock() }
 
         for (key, store) in registry {
-            store.replaceAll(with: [:])
+            Task { @Sendable in
+                await store.replaceAll(with: [:])
+            }
             logger?.debug("Reset store: \(key.description)", category: "StoreFactory")
         }
 

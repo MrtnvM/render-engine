@@ -29,16 +29,19 @@ class RenderableButton: UIButton, @MainActor Renderable {
     private func setupButton() {
         applyVisualStyles()
         applyFlexStyles()
-        
+
         // Get title from properties
         let titleText = component.properties.getString(forKey: "title") ?? ""
         setTitle(titleText, for: .normal)
-        
+
         // Apply title styling
         applyTitleStyle()
-        
+
         // Setup button image if provided
         setupImageContent()
+
+        // Setup action handler if available
+        setupActionHandler()
     }
     
     private func applyTitleStyle() {

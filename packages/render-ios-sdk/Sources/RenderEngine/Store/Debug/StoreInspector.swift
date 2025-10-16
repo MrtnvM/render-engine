@@ -114,8 +114,12 @@ public final class StoreInspector: UIViewController {
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Clear", style: .destructive) { [weak self] _ in
-            self?.store.replaceAll(with: [:])
-            self?.loadSnapshot()
+            Task {
+                await self?.store.replaceAll(with: [:])
+                await MainActor.run {
+                    self?.loadSnapshot()
+                }
+            }
         })
 
         present(alert, animated: true)
@@ -124,32 +128,40 @@ public final class StoreInspector: UIViewController {
     // MARK: - Private Helpers
 
     private func loadSnapshot() {
-        snapshot = store.snapshot()
-        keyPaths = snapshot.keys.sorted()
-        tableView.reloadData()
+        Task {
+            snapshot = await store.snapshot()
+            keyPaths = snapshot.keys.sorted()
+            await MainActor.run {
+                tableView.reloadData()
+            }
+        }
     }
 
     private func setValue(keyPath: String, valueText: String) {
-        // Try to parse as JSON
-        if let data = valueText.data(using: .utf8),
-           let jsonValue = try? JSONDecoder().decode(StoreValue.self, from: data) {
-            store.set(keyPath, jsonValue)
-        } else if let intValue = Int(valueText) {
-            store.set(keyPath, .integer(intValue))
-        } else if let doubleValue = Double(valueText) {
-            store.set(keyPath, .number(doubleValue))
-        } else if valueText.lowercased() == "true" {
-            store.set(keyPath, .bool(true))
-        } else if valueText.lowercased() == "false" {
-            store.set(keyPath, .bool(false))
-        } else if valueText.lowercased() == "null" {
-            store.set(keyPath, .null)
-        } else {
-            // Default to string
-            store.set(keyPath, .string(valueText))
-        }
+        Task {
+            // Try to parse as JSON
+            if let data = valueText.data(using: .utf8),
+               let jsonValue = try? JSONDecoder().decode(StoreValue.self, from: data) {
+                await store.set(keyPath, jsonValue)
+            } else if let intValue = Int(valueText) {
+                await store.set(keyPath, .integer(intValue))
+            } else if let doubleValue = Double(valueText) {
+                await store.set(keyPath, .number(doubleValue))
+            } else if valueText.lowercased() == "true" {
+                await store.set(keyPath, .bool(true))
+            } else if valueText.lowercased() == "false" {
+                await store.set(keyPath, .bool(false))
+            } else if valueText.lowercased() == "null" {
+                await store.set(keyPath, .null)
+            } else {
+                // Default to string
+                await store.set(keyPath, .string(valueText))
+            }
 
-        loadSnapshot()
+            await MainActor.run {
+                loadSnapshot()
+            }
+        }
     }
 }
 
@@ -197,8 +209,12 @@ extension StoreInspector: UITableViewDelegate {
             self?.editValue(keyPath: keyPath, currentValue: value)
         })
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
-            self?.store.remove(keyPath)
-            self?.loadSnapshot()
+            Task {
+                await self?.store.remove(keyPath)
+                await MainActor.run {
+                    self?.loadSnapshot()
+                }
+            }
         })
 
         present(alert, animated: true)
@@ -232,8 +248,12 @@ extension StoreInspector: UITableViewDelegate {
     ) {
         if editingStyle == .delete {
             let keyPath = keyPaths[indexPath.row]
-            store.remove(keyPath)
-            loadSnapshot()
+            Task {
+                await store.remove(keyPath)
+                await MainActor.run {
+                    loadSnapshot()
+                }
+            }
         }
     }
 }

@@ -1,15 +1,18 @@
 import { parse } from '@babel/parser'
 import type { File } from '@babel/types'
 import jsxToJsonPlugin from './babel-plugin-jsx-to-json.js'
+import storeCollectorPlugin from './babel-plugin-store-collector.js'
+import actionCollectorPlugin from './babel-plugin-action-collector.js'
 import type { JsonNode, TranspiledScenario, TranspilerConfig } from './types.js'
+import type { TranspiledScenarioWithActions } from '../runtime/action-types.js'
 
 /**
  * Transpiles a React JSX string into a server-driven UI JSON schema.
  * @param jsxString The JSX code to transpile.
  * @param config Optional configuration
- * @returns The JSON schema object.
+ * @returns The JSON schema object with stores and actions.
  */
-export async function transpile(jsxString: string, config?: TranspilerConfig): Promise<TranspiledScenario> {
+export async function transpile(jsxString: string, config?: TranspilerConfig): Promise<TranspiledScenarioWithActions> {
   const traverseModule = await import('@babel/traverse')
   const traverse = (traverseModule.default as any).default
 
@@ -38,7 +41,17 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
     },
   } as any)
 
-  // Use the updated plugin structure
+  // Initialize store and action collectors
+  const storeCollectorResult = storeCollectorPlugin()
+  const actionCollectorResult = actionCollectorPlugin(storeCollectorResult.storeVarToConfig)
+
+  // First pass: collect stores
+  traverse(ast, storeCollectorResult.plugin.visitor as any)
+
+  // Second pass: collect actions (depends on store mapping)
+  traverse(ast, actionCollectorResult.plugin.visitor as any)
+
+  // Use the updated plugin structure for JSX transformation
   const pluginResult = jsxToJsonPlugin(config)
   const visitor = pluginResult.plugin.visitor
   const collectedComponents = pluginResult.components
@@ -93,12 +106,18 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
   // Use extracted SCENARIO_KEY or fallback to generated key
   const finalScenarioKey = scenarioKey || 'generated-scenario-1'
 
+  // Collect stores and actions
+  const stores = Array.from(storeCollectorResult.stores.values())
+  const actions = Array.from(actionCollectorResult.actions.values())
+
   // Wrap the root component in the final scenario structure
-  const scenario: TranspiledScenario = {
+  const scenario: TranspiledScenarioWithActions = {
     key: finalScenarioKey,
     version: '1.0.0',
     main: rootJson,
     components,
+    stores: stores.length > 0 ? stores : undefined,
+    actions: actions.length > 0 ? actions : undefined,
   }
 
   return scenario

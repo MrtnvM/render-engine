@@ -14,6 +14,17 @@ export type {
   TranspilerConfig,
 } from './transpiler/types.js'
 
+// Runtime Store API exports
+export { store, Store, Action, ActionContext } from './runtime/index.js'
+export type {
+  StoreConfig,
+  ActionDescriptor,
+  StoreDescriptor,
+  StoreValueDescriptor,
+  TranspiledScenarioWithActions,
+} from './runtime/index.js'
+export { ActionType, StoreScope, StoreStorage } from './runtime/index.js'
+
 // UI type exports
 export type {
   ViewStyle,

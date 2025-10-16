@@ -48,8 +48,11 @@ private final class StoreSubscription<S: Subscriber>: Subscription where S.Input
         self.subscriber = subscriber
         self.keyPath = keyPath
 
-        // Emit current value immediately
-        _ = subscriber.receive(getCurrentValue())
+        // Emit current value immediately - use global queue to avoid potential deadlock
+        DispatchQueue.global().async {
+            let value = getCurrentValue()
+            _ = subscriber.receive(value)
+        }
 
         // Subscribe to changes
         cancellable = changeSubject
@@ -59,9 +62,19 @@ private final class StoreSubscription<S: Subscriber>: Subscription where S.Input
                     KeyPathResolver.areRelated(keyPath, affectedPath)
                 }
             }
-            .sink { [weak self] _ in
+            .sink { [weak self] change in
                 guard let self = self, let subscriber = self.subscriber else { return }
-                _ = subscriber.receive(getCurrentValue())
+                // Find the patch that affects our keyPath and use its newValue
+                // This avoids calling getCurrentValue() which would cause a deadlock
+                if let patch = change.patches.first(where: { KeyPathResolver.areRelated(keyPath, $0.keyPath) }) {
+                    _ = subscriber.receive(patch.newValue)
+                } else {
+                    // Fallback: schedule getCurrentValue on a different queue to avoid deadlock
+                    DispatchQueue.global().async {
+                        let value = getCurrentValue()
+                        _ = subscriber.receive(value)
+                    }
+                }
             }
     }
 

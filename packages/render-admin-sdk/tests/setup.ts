@@ -1,7 +1,4 @@
-import { expect, afterEach } from 'vitest'
-import { cleanup } from '@testing-library/react'
+import { expect } from 'vitest'
 
-// Cleanup after each test
-afterEach(() => {
-  cleanup()
-})
+// Test setup file for render-admin-sdk
+// No additional setup needed for runtime and transpiler tests
