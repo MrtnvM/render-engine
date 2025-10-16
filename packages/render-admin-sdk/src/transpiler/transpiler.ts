@@ -21,11 +21,11 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
   // Ensure traverse is loaded before importing plugins
   await ensureTraverseLoaded()
 
-  // Dynamically import plugins after traverse is loaded
-  const { extractScenarioKey } = await import('./plugins/scenario-key-extractor-plugin.js')
-  const { collectStores } = await import('./plugins/store-collector-plugin.js')
-  const { collectActions } = await import('./plugins/action-collector-plugin.js')
-  const { transformJsxToJson } = await import('./plugins/jsx-to-json-plugin.js')
+  // Dynamically import plugin classes after traverse is loaded
+  const { ScenarioKeyExtractorPlugin } = await import('./plugins/scenario-key-extractor-plugin.js')
+  const { StoreCollectorPlugin } = await import('./plugins/store-collector-plugin.js')
+  const { ActionCollectorPlugin } = await import('./plugins/action-collector-plugin.js')
+  const { JsxToJsonPlugin } = await import('./plugins/jsx-to-json-plugin.js')
 
   // Parse JSX code to AST once
   const ast: File = parse(jsxString, {
@@ -33,22 +33,22 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
     plugins: ['jsx', 'typescript'],
   })
 
-  // Run plugins on the parsed AST
-  const { scenarioKey } = extractScenarioKey(ast, config)
-  const { stores, storeVarToConfig } = collectStores(ast, config)
-  const { actions } = collectActions(ast, storeVarToConfig, config)
-  const { rootJson, components } = transformJsxToJson(ast, config)
+  // Instantiate and execute plugins on the parsed AST
+  const scenarioKeyPlugin = new ScenarioKeyExtractorPlugin(config)
+  const { scenarioKey } = scenarioKeyPlugin.execute(ast)
+
+  const storeCollectorPlugin = new StoreCollectorPlugin(config)
+  const { stores, storeVarToConfig } = storeCollectorPlugin.execute(ast)
+
+  const actionCollectorPlugin = new ActionCollectorPlugin(storeVarToConfig, config)
+  const { actions } = actionCollectorPlugin.execute(ast)
+
+  const jsxToJsonPlugin = new JsxToJsonPlugin(config)
+  const { rootJson, components } = jsxToJsonPlugin.execute(ast)
 
   // Validate root JSON
   if (!rootJson) {
     throw new Error('Ошибка транспиляции: не найден корневой JSX элемент.')
-  }
-
-  // Validate scenario key
-  if (!scenarioKey) {
-    throw new Error(
-      'Ошибка транспиляции: необходимо экспортировать SCENARIO_KEY. Пример: export const SCENARIO_KEY = "my-scenario"',
-    )
   }
 
   // Assemble final scenario

@@ -1,163 +1,103 @@
 import type { File } from '@babel/types'
-import { traverse } from '../traverse.js'
+import type { Visitor } from '@babel/traverse'
 import type { TranspilerConfig } from '../types.js'
 import type { ActionDescriptor, ActionType, StoreValueDescriptor } from '../../runtime/action-types.js'
+import { TranspilerPlugin } from './base-plugin.js'
+import { serializeValue, extractStringValue } from './serialization-utils.js'
+
+export interface ActionCollectorResult {
+  actions: Map<string, ActionDescriptor>
+}
 
 /**
- * Collect store method calls and convert them to actions
+ * Plugin to collect store method calls and convert them to actions.
+ *
+ * Detects patterns:
+ * - `myStore.set('key', value)`
+ * - `myStore.remove('key')`
+ * - `myStore.merge('key', value)`
+ * - `myStore.transaction(...)`
  */
-export function collectActions(
-  ast: File,
-  storeVarToConfig: Map<string, { scope: string; storage: string }>,
-  config?: TranspilerConfig,
-): {
-  actions: Map<string, ActionDescriptor>
-} {
-  const actions: Map<string, ActionDescriptor> = new Map()
+export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResult> {
+  private actions: Map<string, ActionDescriptor> = new Map()
+  private storeVarToConfig: Map<string, { scope: string; storage: string }>
 
-  traverse(ast, {
-    // Detect: myStore.set('key', value), myStore.transaction(...)
-    CallExpression(path: any) {
-      const callee = path.node.callee
+  constructor(
+    storeVarToConfig: Map<string, { scope: string; storage: string }>,
+    config?: TranspilerConfig
+  ) {
+    super(config)
+    this.storeVarToConfig = storeVarToConfig
+  }
 
-      if (callee?.type === 'MemberExpression') {
-        const object = callee.object
-        const property = callee.property
+  protected getVisitors(): Visitor {
+    return {
+      // Detect: myStore.set('key', value), myStore.transaction(...)
+      CallExpression: (path: any) => {
+        const callee = path.node.callee
 
-        if (object?.type === 'Identifier' && property?.type === 'Identifier' && storeVarToConfig.has(object.name)) {
-          const storeConfig = storeVarToConfig.get(object.name)!
-          const methodName = property.name
+        if (callee?.type === 'MemberExpression') {
+          const object = callee.object
+          const property = callee.property
 
-          if (['set', 'remove', 'merge', 'transaction'].includes(methodName)) {
-            try {
-              const action = parseStoreAction(storeConfig.scope, storeConfig.storage, methodName, path.node.arguments)
-              actions.set(action.id, action)
-            } catch (error) {
-              console.warn(`Failed to parse action ${methodName}:`, error)
+          if (object?.type === 'Identifier' && property?.type === 'Identifier' && this.storeVarToConfig.has(object.name)) {
+            const storeConfig = this.storeVarToConfig.get(object.name)!
+            const methodName = property.name
+
+            if (['set', 'remove', 'merge', 'transaction'].includes(methodName)) {
+              try {
+                const action = this.parseStoreAction(storeConfig.scope, storeConfig.storage, methodName, path.node.arguments)
+                this.actions.set(action.id, action)
+              } catch (error) {
+                console.warn(`Failed to parse action ${methodName}:`, error)
+              }
             }
           }
         }
-      }
-    },
-  } as any)
-
-  return { actions }
-}
-
-/**
- * Parse store action from method call arguments
- */
-function parseStoreAction(scope: string, storage: string, method: string, args: any[]): ActionDescriptor {
-  const identifier = `${scope}.${storage}`
-
-  // Extract keyPath (first argument)
-  const keyPathNode = args[0]
-  const keyPath = extractStringValue(keyPathNode)
-
-  // Extract value (second argument for set/merge)
-  let value: StoreValueDescriptor | undefined
-  if (method === 'set' || method === 'merge') {
-    const valueNode = args[1]
-    if (valueNode) {
-      value = serializeValue(valueNode)
+      },
     }
   }
 
-  // Handle transaction - collect nested actions
-  let nestedActions: ActionDescriptor[] | undefined
-  if (method === 'transaction') {
-    // For transactions, we would need to analyze the callback function
-    // This is complex and may require runtime execution or static analysis
-    // For now, we'll leave this as undefined and handle it later
-    nestedActions = []
+  protected afterTraverse(ast: File, state: any): ActionCollectorResult {
+    return { actions: this.actions }
   }
 
-  return {
-    id: `${identifier}_${method}_${keyPath.replace(/\./g, '_')}`,
-    type: `store.${method}` as ActionType,
-    scope: scope as any,
-    storage: storage as any,
-    keyPath,
-    value,
-    actions: nestedActions,
-  }
-}
+  /**
+   * Parse store action from method call arguments
+   */
+  private parseStoreAction(scope: string, storage: string, method: string, args: any[]): ActionDescriptor {
+    const identifier = `${scope}.${storage}`
 
-/**
- * Extract string value from AST node
- */
-function extractStringValue(node: any): string {
-  if (!node) throw new Error('KeyPath is required')
+    // Extract keyPath (first argument)
+    const keyPathNode = args[0]
+    const keyPath = extractStringValue(keyPathNode)
 
-  if (node.type === 'StringLiteral') {
-    return node.value
-  }
-
-  if (node.type === 'TemplateLiteral') {
-    // Handle simple template strings
-    if (node.quasis && node.quasis.length === 1) {
-      return node.quasis[0].value.raw
+    // Extract value (second argument for set/merge)
+    let value: StoreValueDescriptor | undefined
+    if (method === 'set' || method === 'merge') {
+      const valueNode = args[1]
+      if (valueNode) {
+        value = serializeValue(valueNode)
+      }
     }
-  }
 
-  throw new Error('KeyPath must be a string literal')
-}
+    // Handle transaction - collect nested actions
+    let nestedActions: ActionDescriptor[] | undefined
+    if (method === 'transaction') {
+      // For transactions, we would need to analyze the callback function
+      // This is complex and may require runtime execution or static analysis
+      // For now, we'll leave this as undefined and handle it later
+      nestedActions = []
+    }
 
-/**
- * Serialize AST node to StoreValueDescriptor
- */
-function serializeValue(node: any): StoreValueDescriptor {
-  if (!node) return { type: 'null' }
-
-  switch (node.type) {
-    case 'StringLiteral':
-      return { type: 'string', value: node.value }
-
-    case 'NumericLiteral':
-      return Number.isInteger(node.value)
-        ? { type: 'integer', value: node.value }
-        : { type: 'number', value: node.value }
-
-    case 'BooleanLiteral':
-      return { type: 'bool', value: node.value }
-
-    case 'NullLiteral':
-      return { type: 'null' }
-
-    case 'ArrayExpression':
-      return {
-        type: 'array',
-        value: (node.elements || []).map((el: any) => {
-          if (!el || el.type === 'SpreadElement') return { type: 'null' }
-          return serializeValue(el)
-        }),
-      }
-
-    case 'ObjectExpression':
-      const obj: Record<string, StoreValueDescriptor> = {}
-      for (const prop of node.properties || []) {
-        if (prop.type === 'ObjectProperty') {
-          let key: string
-          if (prop.key.type === 'Identifier') {
-            key = prop.key.name
-          } else if (prop.key.type === 'StringLiteral') {
-            key = prop.key.value
-          } else {
-            continue
-          }
-          obj[key] = serializeValue(prop.value)
-        }
-      }
-      return { type: 'object', value: obj }
-
-    case 'Identifier':
-      // For identifiers, we can't statically resolve the value
-      // This would need runtime evaluation or more complex analysis
-      console.warn(`Cannot serialize identifier: ${node.name}`)
-      return { type: 'null' }
-
-    default:
-      console.warn(`Unsupported value type in action: ${node.type}`)
-      return { type: 'null' }
+    return {
+      id: `${identifier}_${method}_${keyPath.replace(/\./g, '_')}`,
+      type: `store.${method}` as ActionType,
+      scope: scope as any,
+      storage: storage as any,
+      keyPath,
+      value,
+      actions: nestedActions,
+    }
   }
 }
