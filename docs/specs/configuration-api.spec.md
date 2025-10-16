@@ -56,8 +56,8 @@ Fetch a configuration schema for a given scenario.
 | `scenario_id`           | string          | ✅       | Unique ID of the UI scenario (e.g., `"onboarding_flow"`) |
 | `platform`              | enum            | ✅       | Client platform: `ios`, `android`, `web`                 |
 | `render_engine_version` | string (semver) | ✅       | Version of the client RenderEngine                       |
-| `user_id`               | string          | ✅       | User identifier (used for experiment resolution)         |
-| `experiment_id`         | string          | ❌       | Optional override experiment variant                     |
+| `user_id`               | string          | ❌        | User identifier (used for experiment resolution)         |
+| `experiment_id`         | string          | ❌        | Optional override experiment variant                     |
 
 **Request Example:**
 
@@ -109,37 +109,6 @@ GET /api/v1/config?scenario_id=onboarding&platform=ios&render_engine_version=1.2
 
 ---
 
-#### `GET /api/v1/config/default`
-
-Return the default schema (per scenario or global).
-
-**Query Parameters:**
-
-| Name          | Type   | Required | Description                                                                              |
-| ------------- | ------ | -------- | ---------------------------------------------------------------------------------------- |
-| `scenario_id` | string | ❌       | If provided, returns default schema for that scenario; otherwise, returns global default |
-
-**Response Example:**
-
-```json
-{
-  "schema_version": "1.0.0",
-  "scenario_id": "default",
-  "config": {
-    "type": "Screen",
-    "id": "default_screen",
-    "children": [
-      {
-        "type": "Text",
-        "props": { "text": "Something went wrong. Please try again." }
-      }
-    ]
-  }
-}
-```
-
----
-
 #### `WS /api/v1/debug/config/subscribe`
 
 Subscribe to real-time updates of schemas (debug mode only).
@@ -158,7 +127,7 @@ Subscribe to real-time updates of schemas (debug mode only).
 
 ### 4.2 Experiment Resolution
 
-- The API will **forward `user_id` and optional `experiment_id`** to an **external experiment service**.
+- The API will **forward `user_id` and `experiment_id`** to an **external experiment service** only if `experiment_id` and `user_id` are provided.
 - The service determines the variant of schema to return.
 - If service unavailable → fallback to default variant.
 
@@ -176,7 +145,7 @@ Subscribe to real-time updates of schemas (debug mode only).
     "max_version": "semver"
   },
   "scenario_id": "string",
-  "platform": "ios|android|web",
+  "platform": "all|mobile|ios|android|web",
   "config": { "…component tree…" }
 }
 ```
@@ -185,7 +154,6 @@ Subscribe to real-time updates of schemas (debug mode only).
 
 - Each scenario may have its own default.
 - A **global default schema** must always exist.
-- Clients must also **bundle an offline default screen** in app binary.
 
 ---
 
@@ -199,13 +167,12 @@ Subscribe to real-time updates of schemas (debug mode only).
 
 ## 7. Error Handling & Fallbacks
 
-1. **Scenario not found (404):** return default schema.
+1. **Scenario not found (404):** client displaying error screen.
 2. **Unsupported RenderEngine version (409):**
 
-   - If compatible older schema exists → return it.
-   - Else return default schema.
+   - client displaying error screen.
 
-3. **Server error (500):** return default schema.
+3. **Server error (500):** client displaying error screen.
 4. **Experiment service failure:** return base variant of schema.
 
 ---
@@ -226,4 +193,4 @@ Subscribe to real-time updates of schemas (debug mode only).
   - Logs: request/response, fallback usage, experiment resolutions.
   - Metrics: cache hit rate, default schema fallback count.
 
-SEE DIAGRAM: docs/specs/configuration_api_sequence.png
+SEE DIAGRAM: docs/specs/configuration_api_sequence.png (but without default schema logic)

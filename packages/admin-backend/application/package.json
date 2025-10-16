@@ -1,13 +1,20 @@
 {
-  "name": "@render-engine/application",
+  "name": "@render-engine/admin-backend-application",
   "type": "module",
   "version": "1.0.0",
   "packageManager": "pnpm@10.13.1",
-  "description": "Application package for the render-engine app that written in Clean Architecture",
+  "description": "Application layer for render-engine backend using Clean Architecture",
   "author": "",
   "license": "ISC",
   "keywords": [],
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
@@ -16,12 +23,19 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@render-engine/domain": "workspace:*"
+    "@render-engine/admin-backend-domain": "workspace:*",
+    "@render-engine/admin-sdk": "workspace:*",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@render-engine/eslint-config": "workspace:*",
     "@types/node": "^22.16.0",
+    "@vitest/ui": "^3.2.4",
     "eslint": "^9.17.0",
-    "prettier": "3.6.2"
+    "prettier": "3.6.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

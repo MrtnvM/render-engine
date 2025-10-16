@@ -1,6 +1,9 @@
 packages:
   - apps/*
   - packages/*
+  - packages/admin-backend/domain
+  - packages/admin-backend/application
+  - packages/admin-backend/infrastructure
 
 onlyBuiltDependencies:
   - '@swc/core'

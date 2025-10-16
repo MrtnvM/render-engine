@@ -8,8 +8,8 @@ import {
   SchemaValidationResult,
   SchemaValidationWarning,
 } from '../../schema-validation/value-objects/validation-result.vo.js'
-import { SchemaValidationSeverity } from 'src/schema-management/shared/enums/validation-severity.enum.js'
-import { ComponentType } from 'src/schema-management/shared/enums/component-type.enum.js'
+import { SchemaValidationSeverity } from '../../shared/enums/validation-severity.enum.js'
+import { ComponentType } from '../../shared/enums/component-type.enum.js'
 import { Name, Description, SemanticVersion } from '../../../kernel/value-objects/index.js'
 import { Component } from './component.entity.js'
 import { Property } from '../value-objects/property.value-object.js'

@@ -1,5 +1,5 @@
 {
-  "name": "@render-engine/domain",
+  "name": "@render-engine/admin-backend-domain",
   "type": "module",
   "version": "1.0.0",
   "packageManager": "pnpm@10.13.1",

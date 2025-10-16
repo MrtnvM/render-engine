@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
-import { scenarioTable, type Scenario } from './database/scenario.table.js'
+import { scenarioTable, type Scenario } from '@render-engine/admin-backend-infrastructure/database/schema.js'
 
 // Initialize the database connection
 const connectionString = process.env.DATABASE_URL!

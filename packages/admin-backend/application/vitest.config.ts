@@ -4,9 +4,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: ['src/**/__tests__/**/*.{test,spec}.ts'],
     exclude: ['node_modules', 'dist', '.idea', '.git', '.cache'],
+    passWithNoTests: false,
     setupFiles: ['./tests/setup.ts'],
-    passWithNoTests: true,
   },
 })

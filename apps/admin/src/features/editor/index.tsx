@@ -7,6 +7,8 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { useScenarioRaw } from '@/features/tasks/hooks/use-scenarios'
+import { CompilationPanel } from './components/compilation-panel'
+import { PublishDialog } from './components/publish-dialog'
 
 // --- minimal typings so Monaco knows React + your Render components ---
 const reactShimDts = `
@@ -194,6 +196,7 @@ function App() {
 export default function Editor() {
   const search = useSearch({ from: '/_authenticated/editor' })
   const { data: scenarioData, isLoading, isError } = useScenarioRaw(search.scenarioId ?? null)
+  const [compiledScenario, setCompiledScenario] = useState<any>(null)
 
   // Generate initial code from scenario data or use starter
   const initialCode = useMemo(() => {
@@ -214,6 +217,10 @@ export default function Editor() {
   }, [scenarioData])
 
   const [code, setCode] = useState(initialCode)
+
+  const handleCompilationSuccess = (result: any) => {
+    setCompiledScenario(result)
+  }
 
   // Update code when scenario data loads
   useEffect(() => {
@@ -597,6 +604,11 @@ export default function Editor() {
                 : 'Редактор кода для создания и редактирования сценариев'}
             </p>
           </div>
+          {!scenarioData && (
+            <div className='flex gap-2'>
+              <PublishDialog compiledScenario={compiledScenario} disabled={!compiledScenario} />
+            </div>
+          )}
         </div>
         <div className='flex-1 overflow-auto px-4 py-1'>
           {isLoading ? (
@@ -608,21 +620,31 @@ export default function Editor() {
               <p className='text-red-500'>Ошибка загрузки сценария. Проверьте подключение к базе данных.</p>
             </div>
           ) : (
-            <div className='h-[calc(100vh-12rem)]'>
-              <EditorComponent
-                height='100%'
-                defaultLanguage={scenarioData ? 'json' : 'typescript'}
-                value={code}
-                onChange={(v) => setCode(v ?? '')}
-                onMount={onMount}
-                options={{
-                  fontSize: 14,
-                  minimap: { enabled: false },
-                  automaticLayout: true,
-                  tabSize: 2,
-                  readOnly: !!scenarioData, // Make read-only when viewing scenario
-                }}
-              />
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-12rem)]'>
+              {/* Editor */}
+              <div className='lg:col-span-2 h-full'>
+                <EditorComponent
+                  height='100%'
+                  defaultLanguage={scenarioData ? 'json' : 'typescript'}
+                  value={code}
+                  onChange={(v) => setCode(v ?? '')}
+                  onMount={onMount}
+                  options={{
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    automaticLayout: true,
+                    tabSize: 2,
+                    readOnly: !!scenarioData, // Make read-only when viewing scenario
+                  }}
+                />
+              </div>
+
+              {/* Compilation Panel */}
+              {!scenarioData && (
+                <div className='lg:col-span-1 h-full overflow-auto'>
+                  <CompilationPanel jsxCode={code} onCompilationSuccess={handleCompilationSuccess} />
+                </div>
+              )}
             </div>
           )}
         </div>

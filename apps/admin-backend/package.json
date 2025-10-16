@@ -15,10 +15,16 @@
   "dependencies": {
     "@hono/node-server": "^1.19.3",
     "@render-engine/admin-sdk": "workspace:*",
+    "@render-engine/admin-backend-application": "workspace:*",
+    "@render-engine/admin-backend-infrastructure": "workspace:*",
+    "@render-engine/admin-backend-domain": "workspace:*",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.9.8",
-    "postgres": "^3.4.7"
+    "postgres": "^3.4.7",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
