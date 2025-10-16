@@ -1,42 +1,58 @@
-import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating, View } from '@render-engine/admin-sdk/ui'
+import {
+  Column,
+  Row,
+  Text,
+  Image,
+  Button,
+  Checkbox,
+  Stepper,
+  Rating,
+  View,
+  SafeAreaView,
+} from '@render-engine/admin-sdk/ui'
 
 export const SCENARIO = {
   key: 'avito-cart',
   name: 'Avito Cart',
   description: 'Shopping cart scenario for Avito marketplace',
-  version: '1.0.0'
+  version: '1.0.0',
 }
 
 export default function CartScreen() {
   return (
-    <Column style={{ flexGrow: 1, backgroundColor: '#ffffff' }}>
-      <Column style={{ flexGrow: 1 }}>
-        <TopRow />
-        <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
-        <CartItem
-          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
-          price="4 990 ₽"
-          title="ЗарядкаMagSafe Charger 15W 1 метр"
-          quantity={1}
-          checked={true}
-        />
-        <CartItem
-          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png"
-          price="15 990 ₽"
-          title="AirPods Pro 2"
-          quantity={1}
-          checked={true}
-        />
-        <CartItem
-          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png"
-          price="26 591 ₽"
-          title="Apple Watch 10 42mm Blue"
-          quantity={1}
-          checked={true}
-        />
+    <SafeAreaView
+      style={{ width: '100%', height: '100%', backgroundColor: 'red', flexGrow: 1 }}
+      properties={{ edges: ['top'] }}
+    >
+      <Column style={{ flexGrow: 1, backgroundColor: 'yellow', height: '100%' }}>
+        <Column style={{ flexGrow: 1 }}>
+          <TopRow />
+          <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
+          <CartItem
+            image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
+            price="4 990 ₽"
+            title="ЗарядкаMagSafe Charger 15W 1 метр"
+            quantity={1}
+            checked={true}
+          />
+          <CartItem
+            image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png"
+            price="15 990 ₽"
+            title="AirPods Pro 2"
+            quantity={1}
+            checked={true}
+          />
+          <CartItem
+            image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png"
+            price="26 591 ₽"
+            title="Apple Watch 10 42mm Blue"
+            quantity={1}
+            checked={true}
+          />
+        </Column>
+        <BottomBar />
       </Column>
-      <BottomBar />
-    </Column>
+    </SafeAreaView>
   )
 }
 
