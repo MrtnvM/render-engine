@@ -5,12 +5,12 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
+    "db:generate": "pnpm --filter @render-engine/admin-backend-infrastructure db:generate",
+    "db:migrate": "pnpm --filter @render-engine/admin-backend-infrastructure db:migrate",
+    "db:push": "pnpm --filter @render-engine/admin-backend-infrastructure db:push",
+    "db:studio": "pnpm --filter @render-engine/admin-backend-infrastructure db:studio",
     "db:seed": "tsx src/infrastructure/schema-management/seed.ts",
-    "db:drop": "drizzle-kit drop"
+    "db:drop": "pnpm --filter @render-engine/admin-backend-infrastructure db:drop"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.3",
