@@ -3,6 +3,7 @@ import { container } from 'tsyringe'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import { DrizzleScenarioRepository } from '@render-engine/admin-backend-infrastructure'
+import * as schema from '@render-engine/admin-backend-infrastructure/database/schema.js'
 import {
   CompileScenarioUseCase,
   PublishScenarioUseCase,
@@ -17,7 +18,7 @@ import {
 
 // Создание клиента базы данных
 const client = postgres(process.env.DATABASE_URL!, { prepare: false })
-const db = drizzle(client)
+const db = drizzle(client, { schema })
 
 // Регистрация репозитория
 container.register('IScenarioRepository', {
