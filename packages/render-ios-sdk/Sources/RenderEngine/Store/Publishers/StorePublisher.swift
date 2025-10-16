@@ -48,13 +48,7 @@ private final class StoreSubscription<S: Subscriber>: Subscription where S.Input
         self.subscriber = subscriber
         self.keyPath = keyPath
 
-        // Emit current value immediately - use global queue to avoid potential deadlock
-        DispatchQueue.global().async {
-            let value = getCurrentValue()
-            _ = subscriber.receive(value)
-        }
-
-        // Subscribe to changes
+        // Subscribe to changes first
         cancellable = changeSubject
             .filter { change in
                 // Only emit if this keyPath or a parent keyPath was affected
@@ -76,6 +70,13 @@ private final class StoreSubscription<S: Subscriber>: Subscription where S.Input
                     }
                 }
             }
+
+        // Emit current value immediately AFTER setting up the subscription
+        // Use global queue with sync to ensure initial value is emitted before any changes
+        let value = DispatchQueue.global().sync {
+            return getCurrentValue()
+        }
+        _ = subscriber.receive(value)
     }
 
     func request(_ demand: Subscribers.Demand) {

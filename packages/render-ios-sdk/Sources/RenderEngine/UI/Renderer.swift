@@ -16,13 +16,20 @@ public struct RendererContext {
     public let props: Config
     public let store: Store?
 
+    // Action-related properties
+    internal var storeFactory: StoreFactory?
+    internal var logger: Logger?
+    public var loadedActions: [String: Action] = [:]
+
     public init(
         viewController: UIViewController? = nil,
         navigationController: UINavigationController? = nil,
         window: UIWindow? = nil,
         scenario: Scenario? = nil,
         props: Config? = nil,
-        store: Store? = nil
+        store: Store? = nil,
+        storeFactory: StoreFactory? = nil,
+        logger: Logger? = nil
     ) {
         self.viewController = viewController
         self.navigationController = navigationController
@@ -30,5 +37,7 @@ public struct RendererContext {
         self.scenario = scenario
         self.props = props ?? Config()
         self.store = store
+        self.storeFactory = storeFactory
+        self.logger = logger
     }
 }
