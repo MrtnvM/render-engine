@@ -7,7 +7,7 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
-      export const SCENARIO_KEY = "test-scenario"
+      export const SCENARIO = { key: "test-scenario", name: "Test Scenario", description: "Test scenario for action collector", version: "1.0.0" }
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
@@ -33,7 +33,7 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
-      export const SCENARIO_KEY = "test-scenario"
+      export const SCENARIO = { key: "test-scenario", name: "Test Scenario", description: "Test scenario for action collector", version: "1.0.0" }
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
@@ -55,7 +55,7 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
-      export const SCENARIO_KEY = "test-scenario"
+      export const SCENARIO = { key: "test-scenario", name: "Test Scenario", description: "Test scenario for action collector", version: "1.0.0" }
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
@@ -83,7 +83,7 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
-      export const SCENARIO_KEY = "test-scenario"
+      export const SCENARIO = { key: "test-scenario", name: "Test Scenario", description: "Test scenario for action collector", version: "1.0.0" }
 
       const appStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
       const userStore = store({ scope: StoreScope.Scenario, storage: StoreStorage.UserPrefs })
@@ -109,7 +109,7 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
-      export const SCENARIO_KEY = "test-scenario"
+      export const SCENARIO = { key: "test-scenario", name: "Test Scenario", description: "Test scenario for action collector", version: "1.0.0" }
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
@@ -132,7 +132,7 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
-      export const SCENARIO_KEY = "test-scenario"
+      export const SCENARIO = { key: "test-scenario", name: "Test Scenario", description: "Test scenario for action collector", version: "1.0.0" }
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 

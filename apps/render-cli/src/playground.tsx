@@ -1,6 +1,11 @@
 import { Column, Row, Stack, Text, Image, Button, Spacer } from '@render-engine/admin-sdk/ui'
 
-export const SCENARIO_KEY = 'playground-example'
+export const SCENARIO = {
+  key: 'playground-example',
+  name: 'Playground Example',
+  description: 'Example scenario for testing the render engine',
+  version: '1.0.0'
+}
 
 export const MyScreen = () => (
   <Column style={{ padding: 16, backgroundColor: '#F5F5F5' }}>

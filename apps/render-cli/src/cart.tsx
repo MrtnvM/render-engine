@@ -1,6 +1,11 @@
 import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating, View } from '@render-engine/admin-sdk/ui'
 
-export const SCENARIO_KEY = 'avito-cart'
+export const SCENARIO = {
+  key: 'avito-cart',
+  name: 'Avito Cart',
+  description: 'Shopping cart scenario for Avito marketplace',
+  version: '1.0.0'
+}
 
 export default function CartScreen() {
   return (

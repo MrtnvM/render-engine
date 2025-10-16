@@ -3,7 +3,7 @@ import type { File } from '@babel/types'
 import type { TranspilerConfig } from './types.js'
 import type { TranspiledScenarioWithActions } from '../runtime/action-types.js'
 import {
-  ScenarioKeyExtractorPlugin,
+  ScenarioMetadataExtractorPlugin,
   StoreCollectorPlugin,
   ActionCollectorPlugin,
   JsxToJsonPlugin,
@@ -24,8 +24,8 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
   })
 
   // Instantiate and execute plugins on the parsed AST
-  const scenarioKeyPlugin = new ScenarioKeyExtractorPlugin(config)
-  const { scenarioKey } = scenarioKeyPlugin.execute(ast)
+  const scenarioMetadataPlugin = new ScenarioMetadataExtractorPlugin(config)
+  const scenarioMeta = scenarioMetadataPlugin.execute(ast)
 
   const storeCollectorPlugin = new StoreCollectorPlugin(config)
   const { stores, storeVarToConfig } = storeCollectorPlugin.execute(ast)
@@ -43,8 +43,7 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
 
   // Assemble final scenario
   const scenario: TranspiledScenarioWithActions = {
-    key: scenarioKey,
-    version: '1.0.0',
+    ...scenarioMeta,
     main: rootJson,
     components,
     stores: stores.size > 0 ? Array.from(stores.values()) : undefined,

@@ -16,8 +16,13 @@ pnpm add @render-engine/admin-sdk
 import { transpile } from '@render-engine/admin-sdk'
 
 const jsxCode = `
-  export const SCENARIO_KEY = 'my-scenario'
-  
+  export const SCENARIO = {
+    key: 'my-scenario',
+    name: 'My Scenario',
+    description: 'Example scenario',
+    version: '1.0.0'
+  }
+
   export default function App() {
     return (
       <View style={{ padding: 16 }}>
@@ -64,6 +69,8 @@ Transpiles a React JSX string into a server-driven UI JSON schema.
 const scenario = await transpile(jsxCode)
 // {
 //   key: 'my-scenario',
+//   name: 'My Scenario',
+//   description: 'Example scenario',
 //   version: '1.0.0',
 //   main: { ... },
 //   components: { ... }

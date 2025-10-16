@@ -18,7 +18,7 @@
  */
 
 export { TranspilerPlugin } from './base-plugin.js'
-export { ScenarioKeyExtractorPlugin } from './scenario-key-extractor-plugin.js'
+export { ScenarioMetadataExtractorPlugin } from './scenario-metadata-extractor-plugin.js'
 export { StoreCollectorPlugin, type StoreCollectorResult } from './store-collector-plugin.js'
 export { ActionCollectorPlugin, type ActionCollectorResult } from './action-collector-plugin.js'
 export { JsxToJsonPlugin, type JsxToJsonResult } from './jsx-to-json-plugin.js'

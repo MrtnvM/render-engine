@@ -5,7 +5,7 @@ export enum ActionType {
   StoreSet = 'store.set',
   StoreRemove = 'store.remove',
   StoreMerge = 'store.merge',
-  StoreTransaction = 'store.transaction'
+  StoreTransaction = 'store.transaction',
 }
 
 /**
@@ -13,7 +13,7 @@ export enum ActionType {
  */
 export enum StoreScope {
   App = 'app',
-  Scenario = 'scenario'
+  Scenario = 'scenario',
 }
 
 /**
@@ -23,7 +23,7 @@ export enum StoreStorage {
   Memory = 'memory',
   UserPrefs = 'userPrefs',
   File = 'file',
-  Backend = 'backend'
+  Backend = 'backend',
 }
 
 /**
@@ -56,11 +56,20 @@ export interface StoreDescriptor {
   initialValue?: Record<string, StoreValueDescriptor>
 }
 
+export interface ScenarioMeta {
+  key: string
+  name: string
+  description: string
+  version: string
+}
+
 /**
  * Transpiled scenario with stores and actions
  */
 export interface TranspiledScenarioWithActions {
   key: string
+  name: string
+  description: string
   version: string
   main: any
   components?: Record<string, any>
