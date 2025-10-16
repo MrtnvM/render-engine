@@ -1,21 +1,21 @@
 {
   "key": "avito-cart",
-  "version": "1.0.57",
+  "name": "Avito Cart",
+  "description": "Shopping cart scenario for Avito marketplace",
+  "version": "1.0.0",
   "main": {
-    "type": "SafeAreaView",
+    "type": "Column",
     "style": {
-      "flexGrow": null,
-      "backgroundColor": null
-    },
-    "properties": {
-      "edges": null
+      "flexDirection": "column",
+      "flexGrow": 1,
+      "backgroundColor": "#ffffff"
     },
     "children": [
       {
         "type": "Column",
         "style": {
           "flexDirection": "column",
-          "flexGrow": null
+          "flexGrow": 1
         },
         "children": [
           {
@@ -24,40 +24,40 @@
           {
             "type": "SellerSection",
             "data": {
-              "storeName": null,
-              "rating": null,
-              "reviewCount": null,
-              "checked": null
+              "storeName": "Pear Store",
+              "rating": "4.8",
+              "reviewCount": "643",
+              "checked": false
             }
           },
           {
             "type": "CartItem",
             "data": {
-              "image": null,
-              "price": null,
-              "title": null,
-              "quantity": null,
-              "checked": null
+              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
+              "price": "4 990 ₽",
+              "title": "ЗарядкаMagSafe Charger 15W 1 метр",
+              "quantity": 1,
+              "checked": true
             }
           },
           {
             "type": "CartItem",
             "data": {
-              "image": null,
-              "price": null,
-              "title": null,
-              "quantity": null,
-              "checked": null
+              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png",
+              "price": "15 990 ₽",
+              "title": "AirPods Pro 2",
+              "quantity": 1,
+              "checked": true
             }
           },
           {
             "type": "CartItem",
             "data": {
-              "image": null,
-              "price": null,
-              "title": null,
-              "quantity": null,
-              "checked": null
+              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png",
+              "price": "26 591 ₽",
+              "title": "Apple Watch 10 42mm Blue",
+              "quantity": 1,
+              "checked": true
             }
           }
         ]
@@ -69,20 +69,18 @@
   },
   "components": {
     "CartScreen": {
-      "type": "SafeAreaView",
+      "type": "Column",
       "style": {
-        "flexGrow": null,
-        "backgroundColor": null
-      },
-      "properties": {
-        "edges": null
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "backgroundColor": "#ffffff"
       },
       "children": [
         {
           "type": "Column",
           "style": {
             "flexDirection": "column",
-            "flexGrow": null
+            "flexGrow": 1
           },
           "children": [
             {
@@ -91,40 +89,40 @@
             {
               "type": "SellerSection",
               "data": {
-                "storeName": null,
-                "rating": null,
-                "reviewCount": null,
-                "checked": null
+                "storeName": "Pear Store",
+                "rating": "4.8",
+                "reviewCount": "643",
+                "checked": false
               }
             },
             {
               "type": "CartItem",
               "data": {
-                "image": null,
-                "price": null,
-                "title": null,
-                "quantity": null,
-                "checked": null
+                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
+                "price": "4 990 ₽",
+                "title": "ЗарядкаMagSafe Charger 15W 1 метр",
+                "quantity": 1,
+                "checked": true
               }
             },
             {
               "type": "CartItem",
               "data": {
-                "image": null,
-                "price": null,
-                "title": null,
-                "quantity": null,
-                "checked": null
+                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png",
+                "price": "15 990 ₽",
+                "title": "AirPods Pro 2",
+                "quantity": 1,
+                "checked": true
               }
             },
             {
               "type": "CartItem",
               "data": {
-                "image": null,
-                "price": null,
-                "title": null,
-                "quantity": null,
-                "checked": null
+                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png",
+                "price": "26 591 ₽",
+                "title": "Apple Watch 10 42mm Blue",
+                "quantity": 1,
+                "checked": true
               }
             }
           ]
@@ -138,47 +136,47 @@
       "type": "Row",
       "style": {
         "flexDirection": "row",
-        "alignItems": null,
-        "paddingHorizontal": null,
-        "paddingVertical": null
+        "alignItems": "center",
+        "paddingHorizontal": 16,
+        "paddingVertical": 12
       },
       "children": [
         {
           "type": "Checkbox",
           "style": {
-            "borderColor": null,
-            "borderRadius": null,
-            "marginRight": null
+            "borderColor": "#0099F7",
+            "borderRadius": 4,
+            "marginRight": 16
           },
           "properties": {
-            "checked": null,
-            "disabled": null
+            "checked": true,
+            "disabled": false
           }
         },
         {
           "type": "Text",
           "style": {
-            "fontFamily": null,
-            "fontSize": null,
-            "fontWeight": null,
-            "color": null,
-            "marginRight": null,
-            "flexGrow": null
+            "fontFamily": "Manrope",
+            "fontSize": 15,
+            "fontWeight": "500",
+            "color": "#000000",
+            "marginRight": 16,
+            "flexGrow": 1
           },
           "properties": {
-            "text": null
+            "text": "Выбрать всё"
           }
         },
         {
           "type": "Text",
           "style": {
-            "fontFamily": null,
-            "fontSize": null,
-            "fontWeight": null,
-            "color": null
+            "fontFamily": "Manrope",
+            "fontSize": 15,
+            "fontWeight": "500",
+            "color": "#0099F7"
           },
           "properties": {
-            "text": null
+            "text": "Удалить (3)"
           }
         }
       ]
@@ -186,95 +184,113 @@
     "Price": {
       "type": "Text",
       "style": {
-        "fontFamily": null,
-        "fontSize": null,
-        "fontWeight": null,
-        "flexShrink": null,
-        "marginBottom": null
+        "fontFamily": "Manrope",
+        "fontSize": 18,
+        "fontWeight": "800",
+        "flexShrink": 0,
+        "marginBottom": 2
       },
       "properties": {
-        "text": null
+        "text": {
+          "type": "prop",
+          "key": "price"
+        }
       }
     },
     "ProductTitle": {
       "type": "Text",
       "style": {
-        "fontFamily": null,
-        "fontSize": null,
-        "fontWeight": null,
-        "flexMode": null
+        "fontFamily": "Manrope",
+        "fontSize": 13,
+        "fontWeight": "500",
+        "flexMode": "adjustWidth"
       },
       "properties": {
-        "text": null
+        "text": {
+          "type": "prop",
+          "key": "title"
+        }
       }
     },
     "SellerSection": {
       "type": "Row",
       "style": {
-        "flexDirection": null,
-        "alignItems": null,
-        "justifyContent": null,
-        "paddingHorizontal": null,
-        "paddingVertical": null
+        "flexDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "flexStart",
+        "paddingHorizontal": 16,
+        "paddingVertical": 4
       },
       "children": [
         {
           "type": "Checkbox",
           "style": {
-            "borderRadius": null,
-            "marginRight": null
+            "borderRadius": 4,
+            "marginRight": 16
           },
           "properties": {
-            "checked": null,
-            "disabled": null
+            "checked": {
+              "type": "prop",
+              "key": "checked"
+            },
+            "disabled": false
           }
         },
         {
           "type": "Text",
           "style": {
-            "fontFamily": null,
-            "fontSize": null,
-            "fontWeight": null,
-            "marginRight": null
+            "fontFamily": "Manrope",
+            "fontSize": 21,
+            "fontWeight": "800",
+            "marginRight": 8
           },
           "properties": {
-            "text": null
+            "text": {
+              "type": "prop",
+              "key": "storeName"
+            }
           }
         },
         {
           "type": "Image",
           "style": {
-            "width": null,
-            "height": null,
-            "marginRight": null,
-            "alignSelf": null
+            "width": 16,
+            "height": 16,
+            "marginRight": 2,
+            "alignSelf": "center"
           },
           "properties": {
-            "source": null
+            "source": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/star.png"
           }
         },
         {
           "type": "Text",
           "style": {
-            "fontFamily": null,
-            "fontSize": null,
-            "fontWeight": null,
-            "marginRight": null
+            "fontFamily": "Manrope",
+            "fontSize": 15,
+            "fontWeight": "500",
+            "marginRight": 4
           },
           "properties": {
-            "text": null
+            "text": {
+              "type": "prop",
+              "key": "rating"
+            }
           }
         },
         {
           "type": "Text",
           "style": {
-            "fontFamily": null,
-            "fontSize": null,
-            "fontWeight": null,
-            "color": null
+            "fontFamily": "Manrope",
+            "fontSize": 15,
+            "fontWeight": "500",
+            "color": "#A3A3A3"
           },
           "properties": {
-            "text": null
+            "text": {
+              "type": "prop",
+              "key": "reviewCount"
+            }
           }
         }
       ]
@@ -282,128 +298,152 @@
     "BuyWithDelivery": {
       "type": "Text",
       "style": {
-        "fontFamily": null,
-        "fontSize": null,
-        "fontWeight": null,
-        "color": null
+        "fontFamily": "Manrope",
+        "fontSize": 13,
+        "fontWeight": "500",
+        "color": "#A168F7"
       },
       "properties": {
-        "text": null
+        "text": "Купить с доставкой"
       }
     },
     "CountStepper": {
       "type": "Stepper",
       "style": {
-        "borderRadius": null,
-        "marginVertical": null
+        "borderRadius": 12,
+        "marginVertical": 10
       },
       "properties": {
-        "value": null,
-        "minimumValue": null,
-        "maximumValue": null,
-        "disabled": null
+        "value": {
+          "type": "prop",
+          "key": "quantity"
+        },
+        "minimumValue": 1,
+        "maximumValue": 10,
+        "disabled": false
       }
     },
     "LikeButton": {
       "type": "Image",
       "style": {
-        "borderRadius": null,
-        "width": null,
-        "height": null
+        "borderRadius": 6,
+        "width": 24,
+        "height": 24
       },
       "properties": {
-        "source": null
+        "source": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/favorites.png"
       }
     },
     "DeleteButton": {
       "type": "Image",
       "style": {
-        "borderRadius": null,
-        "width": null,
-        "height": null
+        "borderRadius": 6,
+        "width": 24,
+        "height": 24
       },
       "properties": {
-        "source": null
+        "source": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/delete.png"
       }
     },
     "ProductImage": {
       "type": "Image",
       "style": {
-        "width": null,
-        "height": null,
-        "borderRadius": null
+        "width": 96,
+        "height": 96,
+        "borderRadius": 12
       },
       "properties": {
-        "source": null
+        "source": {
+          "type": "prop",
+          "key": "image"
+        }
       }
     },
     "ProductCheckbox": {
       "type": "Checkbox",
       "style": {
-        "borderRadius": null,
-        "padding": null
+        "borderRadius": 4,
+        "padding": 4
       },
       "properties": {
-        "checked": null,
-        "disabled": null
+        "checked": {
+          "type": "prop",
+          "key": "checked"
+        },
+        "disabled": false
       }
     },
     "CartItem": {
       "type": "Row",
       "style": {
         "flexDirection": "row",
-        "alignItems": null,
-        "gap": null,
-        "paddingHorizontal": null,
-        "paddingVertical": null
+        "alignItems": "stretch",
+        "gap": 12,
+        "paddingHorizontal": 16,
+        "paddingVertical": 16
       },
       "children": [
         {
           "type": "ProductCheckbox",
           "data": {
-            "checked": null
+            "checked": {
+              "type": "prop",
+              "key": "checked"
+            }
           }
         },
         {
           "type": "ProductImage",
           "data": {
-            "image": null
+            "image": {
+              "type": "prop",
+              "key": "image"
+            }
           }
         },
         {
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "flexGrow": null,
-            "flexMode": null,
-            "flexShrink": null
+            "flexGrow": 1,
+            "flexMode": "adjustWidth",
+            "flexShrink": 1
           },
           "children": [
             {
               "type": "Column",
               "style": {
                 "flexDirection": "column",
-                "gap": null,
-                "flexShrink": null,
-                "flexMode": null
+                "gap": 2,
+                "flexShrink": 1,
+                "flexMode": "adjustWidth"
               },
               "children": [
                 {
                   "type": "Price",
                   "data": {
-                    "price": null
+                    "price": {
+                      "type": "prop",
+                      "key": "price"
+                    }
                   }
                 },
                 {
                   "type": "ProductTitle",
                   "data": {
-                    "title": null
+                    "title": {
+                      "type": "prop",
+                      "key": "title"
+                    }
                   }
                 },
                 {
                   "type": "CountStepper",
                   "data": {
-                    "quantity": null
+                    "quantity": {
+                      "type": "prop",
+                      "key": "quantity"
+                    }
                   }
                 },
                 {
@@ -417,8 +457,8 @@
           "type": "Column",
           "style": {
             "flexDirection": "column",
-            "gap": null,
-            "flexShrink": null
+            "gap": 6,
+            "flexShrink": 0
           },
           "children": [
             {
@@ -435,69 +475,69 @@
       "type": "Column",
       "style": {
         "flexDirection": "column",
-        "paddingHorizontal": null,
-        "paddingVertical": null,
-        "gap": null
+        "paddingHorizontal": 16,
+        "paddingVertical": 20,
+        "gap": 16
       },
       "children": [
         {
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "alignItems": null,
-            "gap": null
+            "alignItems": "center",
+            "gap": 6
           },
           "children": [
             {
               "type": "Text",
               "style": {
-                "fontFamily": null,
-                "fontSize": null,
-                "paddingHorizontal": null,
-                "paddingVertical": null,
-                "borderRadius": null
+                "fontFamily": "Manrope",
+                "fontSize": 24,
+                "paddingHorizontal": 8,
+                "paddingVertical": 4,
+                "borderRadius": 8
               },
               "properties": {
-                "text": null
+                "text": "🎁"
               }
             },
             {
               "type": "Column",
               "style": {
                 "flexDirection": "column",
-                "flexGrow": null
+                "flexGrow": 1
               },
               "children": [
                 {
                   "type": "Row",
                   "style": {
                     "flexDirection": "row",
-                    "justifyContent": null,
-                    "alignItems": null
+                    "justifyContent": "spaceBetween",
+                    "alignItems": "center"
                   },
                   "children": [
                     {
                       "type": "Text",
                       "style": {
-                        "fontFamily": null,
-                        "fontSize": null,
-                        "fontWeight": null,
-                        "paddingHorizontal": null,
-                        "paddingVertical": null,
-                        "borderRadius": null
+                        "fontFamily": "Manrope",
+                        "fontSize": 14,
+                        "fontWeight": "800",
+                        "paddingHorizontal": 8,
+                        "paddingVertical": 4,
+                        "borderRadius": 6
                       },
                       "properties": {
-                        "text": null
+                        "text": "Добавьте ещё 1 товар до скидки 5%"
                       }
                     },
                     {
                       "type": "Button",
                       "style": {
-                        "borderRadius": null,
-                        "padding": null
+                        "borderRadius": 8,
+                        "padding": 8
                       },
                       "properties": {
-                        "title": null
+                        "title": "→"
                       }
                     }
                   ]
@@ -510,68 +550,68 @@
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "gap": null
+            "gap": 16
           },
           "children": [
             {
               "type": "BundleItem",
               "data": {
-                "image": null,
-                "currentPrice": null,
-                "originalPrice": null,
-                "title": null
+                "image": "watch.png",
+                "currentPrice": "26 591 ₽",
+                "originalPrice": "27 990 ₽",
+                "title": "Apple Watch 10 42mm Blue"
               }
             },
             {
               "type": "BundleItem",
               "data": {
-                "image": null,
-                "currentPrice": null,
-                "originalPrice": null,
-                "title": null
+                "image": "shorts.png",
+                "currentPrice": "13 314 ₽",
+                "originalPrice": "13 320 ₽",
+                "title": "Шорты мужские новые 44 размер черные"
               }
             },
             {
               "type": "Column",
               "style": {
                 "flexDirection": "column",
-                "width": null,
-                "height": null,
-                "borderRadius": null,
-                "justifyContent": null,
-                "alignItems": null
+                "width": 94,
+                "height": 94,
+                "borderRadius": 12,
+                "justifyContent": "center",
+                "alignItems": "center"
               },
               "children": [
                 {
                   "type": "Column",
                   "style": {
                     "flexDirection": "column",
-                    "alignItems": null,
-                    "gap": null
+                    "alignItems": "center",
+                    "gap": 4
                   },
                   "children": [
                     {
                       "type": "Text",
                       "style": {
-                        "fontFamily": null,
-                        "fontSize": null,
-                        "fontWeight": null,
-                        "paddingHorizontal": null,
-                        "paddingVertical": null,
-                        "borderRadius": null
+                        "fontFamily": "Manrope",
+                        "fontSize": 15,
+                        "fontWeight": "500",
+                        "paddingHorizontal": 8,
+                        "paddingVertical": 4,
+                        "borderRadius": 6
                       },
                       "properties": {
-                        "text": null
+                        "text": "Ещё"
                       }
                     },
                     {
                       "type": "Button",
                       "style": {
-                        "borderRadius": null,
-                        "padding": null
+                        "borderRadius": 8,
+                        "padding": 8
                       },
                       "properties": {
-                        "title": null
+                        "title": "→"
                       }
                     }
                   ]
@@ -586,98 +626,107 @@
       "type": "Column",
       "style": {
         "flexDirection": "column",
-        "width": null,
-        "gap": null
+        "width": 236,
+        "gap": 12
       },
       "children": [
         {
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "alignItems": null,
-            "gap": null
+            "alignItems": "center",
+            "gap": 12
           },
           "children": [
             {
               "type": "Image",
               "style": {
-                "width": null,
-                "height": null,
-                "borderRadius": null
+                "width": 94,
+                "height": 94,
+                "borderRadius": 12
               },
               "properties": {
-                "source": null
+                "source": {
+                  "type": "prop",
+                  "key": "image"
+                }
               }
             },
             {
               "type": "Column",
               "style": {
                 "flexDirection": "column",
-                "gap": null,
-                "width": null
+                "gap": 12,
+                "width": 130
               },
               "children": [
                 {
                   "type": "Column",
                   "style": {
                     "flexDirection": "column",
-                    "gap": null
+                    "gap": 4
                   },
                   "children": [
                     {
                       "type": "Row",
                       "style": {
                         "flexDirection": "row",
-                        "gap": null
+                        "gap": 6
                       },
                       "children": [
                         {
                           "type": "Text",
                           "style": {
-                            "fontFamily": null,
-                            "fontSize": null,
-                            "fontWeight": null,
-                            "paddingHorizontal": null,
-                            "paddingVertical": null,
-                            "borderRadius": null
+                            "fontFamily": "Manrope",
+                            "fontSize": 16,
+                            "fontWeight": "800",
+                            "paddingHorizontal": 6,
+                            "paddingVertical": 2,
+                            "borderRadius": 4
                           },
                           "properties": {
-                            "text": null
+                            "text": {
+                              "type": "prop",
+                              "key": "currentPrice"
+                            }
                           }
                         },
                         {
                           "type": "Row",
                           "style": {
                             "flexDirection": "row",
-                            "alignItems": null
+                            "alignItems": "center"
                           },
                           "children": [
                             {
                               "type": "Text",
                               "style": {
-                                "fontFamily": null,
-                                "fontSize": null,
-                                "fontWeight": null,
-                                "color": null,
-                                "paddingHorizontal": null,
-                                "paddingVertical": null,
-                                "borderRadius": null
+                                "fontFamily": "Manrope",
+                                "fontSize": 15,
+                                "fontWeight": "500",
+                                "color": "#757575",
+                                "paddingHorizontal": 4,
+                                "paddingVertical": 2,
+                                "borderRadius": 4
                               },
                               "properties": {
-                                "text": null
+                                "text": {
+                                  "type": "prop",
+                                  "key": "originalPrice"
+                                }
                               }
                             },
                             {
                               "type": "Text",
                               "style": {
-                                "fontFamily": null,
-                                "color": null,
-                                "paddingHorizontal": null,
-                                "paddingVertical": null,
-                                "borderRadius": null
+                                "fontFamily": "Manrope",
+                                "color": "#757575",
+                                "paddingHorizontal": 4,
+                                "paddingVertical": 2,
+                                "borderRadius": 4
                               },
                               "properties": {
-                                "text": null
+                                "text": "─"
                               }
                             }
                           ]
@@ -687,15 +736,18 @@
                     {
                       "type": "Text",
                       "style": {
-                        "fontFamily": null,
-                        "fontSize": null,
-                        "fontWeight": null,
-                        "paddingHorizontal": null,
-                        "paddingVertical": null,
-                        "borderRadius": null
+                        "fontFamily": "Manrope",
+                        "fontSize": 11,
+                        "fontWeight": "500",
+                        "paddingHorizontal": 6,
+                        "paddingVertical": 2,
+                        "borderRadius": 4
                       },
                       "properties": {
-                        "text": null
+                        "text": {
+                          "type": "prop",
+                          "key": "title"
+                        }
                       }
                     }
                   ]
@@ -703,14 +755,14 @@
                 {
                   "type": "Button",
                   "style": {
-                    "borderRadius": null,
-                    "paddingHorizontal": null,
-                    "paddingVertical": null,
-                    "borderWidth": null,
-                    "borderColor": null
+                    "borderRadius": 10,
+                    "paddingHorizontal": 12,
+                    "paddingVertical": 8,
+                    "borderWidth": 1,
+                    "borderColor": "#E0E0E0"
                   },
                   "properties": {
-                    "title": null
+                    "title": "В корзину"
                   }
                 }
               ]
@@ -723,26 +775,26 @@
       "type": "Column",
       "style": {
         "flexDirection": "column",
-        "paddingHorizontal": null,
-        "paddingVertical": null,
-        "borderRadius": null,
-        "shadowColor": null,
+        "paddingHorizontal": 16,
+        "paddingVertical": 16,
+        "borderRadius": 28,
+        "shadowColor": "#000000",
         "shadowOffset": {
-          "width": null,
+          "width": 2,
           "height": null
         },
-        "shadowOpacity": null,
-        "shadowRadius": null,
-        "backgroundColor": null
+        "shadowOpacity": 0.8,
+        "shadowRadius": 24,
+        "backgroundColor": "#DCDCDC"
       },
       "children": [
         {
           "type": "Row",
           "style": {
             "flexDirection": "row",
-            "justifyContent": null,
-            "alignItems": null,
-            "marginBottom": null
+            "justifyContent": "spaceBetween",
+            "alignItems": "center",
+            "marginBottom": 16
           },
           "children": [
             {
@@ -754,30 +806,30 @@
                 {
                   "type": "Text",
                   "style": {
-                    "fontFamily": null,
-                    "fontSize": null,
-                    "fontWeight": null,
-                    "color": null,
-                    "paddingHorizontal": null,
-                    "paddingVertical": null,
-                    "borderRadius": null
+                    "fontFamily": "Manrope",
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "color": "#000000",
+                    "paddingHorizontal": 8,
+                    "paddingVertical": 4,
+                    "borderRadius": 6
                   },
                   "properties": {
-                    "text": null
+                    "text": "3 товара"
                   }
                 },
                 {
                   "type": "Text",
                   "style": {
-                    "fontFamily": null,
-                    "fontSize": null,
-                    "fontWeight": null,
-                    "paddingHorizontal": null,
-                    "paddingVertical": null,
-                    "borderRadius": null
+                    "fontFamily": "Manrope",
+                    "fontSize": 21,
+                    "fontWeight": "800",
+                    "paddingHorizontal": 12,
+                    "paddingVertical": 6,
+                    "borderRadius": 8
                   },
                   "properties": {
-                    "text": null
+                    "text": "120 979 ₽"
                   }
                 }
               ]
@@ -785,18 +837,18 @@
             {
               "type": "Button",
               "style": {
-                "borderRadius": null,
-                "paddingHorizontal": null,
-                "paddingVertical": null,
-                "backgroundColor": null
+                "borderRadius": 16,
+                "paddingHorizontal": 18,
+                "paddingVertical": 17,
+                "backgroundColor": "#965EEB"
               },
               "properties": {
                 "titleStyle": {
-                  "color": null,
-                  "fontWeight": null,
-                  "fontSize": null
+                  "color": "#FFFFFF",
+                  "fontWeight": "500",
+                  "fontSize": 15
                 },
-                "title": null
+                "title": "Оформить доставку"
               }
             }
           ]
