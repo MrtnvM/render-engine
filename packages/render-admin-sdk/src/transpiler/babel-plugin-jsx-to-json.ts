@@ -50,6 +50,20 @@ export function astNodeToValue(node?: ASTNode | null, componentProps?: Set<strin
   }
 }
 
+// Helper to get the component name from different JSX name types
+function getComponentName(nameNode: any): string {
+  switch (nameNode.type) {
+    case 'JSXIdentifier':
+      return nameNode.name
+    case 'JSXMemberExpression':
+      return `${getComponentName(nameNode.object)}.${nameNode.property.name}`
+    case 'JSXNamespacedName':
+      return `${nameNode.namespace.name}:${nameNode.name.name}`
+    default:
+      return 'unknown'
+  }
+}
+
 export default function jsxToJsonPlugin(config?: TranspilerConfig) {
   const components: ComponentMetadata[] = []
 
@@ -140,7 +154,7 @@ export default function jsxToJsonPlugin(config?: TranspilerConfig) {
       JSXElement: {
         exit(path: NodePath<JSXElement>) {
           const node = path.node
-          const componentName = node.openingElement.name.name
+          const componentName = getComponentName(node.openingElement.name)
 
           // Get predefined components dynamically
           const componentTypes = getPredefinedComponents(config?.components)

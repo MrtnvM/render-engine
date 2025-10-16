@@ -1,3 +1,4 @@
+import { CompilationError } from '@render-engine/admin-backend-application';
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Hono } from 'hono'
 import compileRoute from '../compile.route.js'
@@ -72,13 +73,7 @@ describe('POST /api/scenarios/compile', () => {
 
   it('should handle compilation errors', async () => {
     const mockCompileUseCase = {
-      execute: vi.fn().mockRejectedValue({
-        name: 'CompilationError',
-        message: 'Syntax error',
-        errors: [
-          { code: 'SYNTAX_ERROR', message: 'Unexpected token', severity: 'error' },
-        ],
-      }),
+      execute: vi.fn().mockRejectedValue(new CompilationError('Syntax error', [{ code: 'SYNTAX_ERROR', message: 'Unexpected token', severity: 'error' }])),
     }
 
     vi.mocked(container.resolve).mockReturnValue(mockCompileUseCase)

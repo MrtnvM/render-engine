@@ -1,3 +1,4 @@
+import { PublishError } from '@render-engine/admin-backend-application';
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Hono } from 'hono'
 import publishRoute from '../publish.route.js'
@@ -83,10 +84,7 @@ describe('POST /api/scenarios/publish', () => {
 
   it('should handle publish errors', async () => {
     const mockPublishUseCase = {
-      execute: vi.fn().mockRejectedValue({
-        name: 'PublishError',
-        message: 'Invalid version format',
-      }),
+      execute: vi.fn().mockRejectedValue(new PublishError('Invalid version format')),
     }
 
     vi.mocked(container.resolve).mockReturnValue(mockPublishUseCase)

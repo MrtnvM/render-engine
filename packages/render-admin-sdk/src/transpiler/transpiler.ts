@@ -14,11 +14,11 @@ import type { TranspiledScenarioWithActions } from '../runtime/action-types.js'
  */
 export async function transpile(jsxString: string, config?: TranspilerConfig): Promise<TranspiledScenarioWithActions> {
   const traverseModule = await import('@babel/traverse')
-  const traverse = (traverseModule.default as any).default
+  const traverse = traverseModule.default
 
   const ast: File = parse(jsxString, {
     sourceType: 'module',
-    plugins: ['jsx', 'typescript'], // Enable JSX and TypeScript parsing
+    plugins: ['jsx', 'typescript', 'estree'], // Enable JSX and TypeScript parsing
   })
 
   let rootJson: JsonNode | null = null
