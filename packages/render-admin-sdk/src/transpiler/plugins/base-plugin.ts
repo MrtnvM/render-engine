@@ -21,9 +21,31 @@ export abstract class TranspilerPlugin<TResult = any> {
    * @param ast The Babel AST to process
    * @returns The plugin's result
    */
-  public execute(ast: File): TResult {
+  public async execute(ast: File): Promise<TResult> {
     const result = this.beforeTraverse(ast)
-    traverse(ast, this.getVisitors() as any)
+
+    let traverseFunction: any = null
+
+    if (typeof traverse === 'function') {
+      traverseFunction = traverse
+    } else {
+      const loadedTraverse: any = await import('@babel/traverse')
+
+      if (typeof loadedTraverse === 'function') {
+        traverseFunction = loadedTraverse
+      } else if (typeof loadedTraverse.default === 'function') {
+        traverseFunction = loadedTraverse.default
+      } else if (typeof loadedTraverse.default?.default === 'function') {
+        traverseFunction = loadedTraverse.default.default
+      }
+    }
+
+    if (!traverseFunction) {
+      throw new Error('Failed to load @babel/traverse')
+    }
+
+    traverseFunction(ast, this.getVisitors() as any)
+
     return this.afterTraverse(ast, result)
   }
 

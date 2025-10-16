@@ -16,7 +16,6 @@ import {
  * @returns The JSON schema object with stores and actions.
  */
 export async function transpile(jsxString: string, config?: TranspilerConfig): Promise<TranspiledScenarioWithActions> {
-
   // Parse JSX code to AST once
   const ast: File = parse(jsxString, {
     sourceType: 'module',
@@ -25,16 +24,16 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
 
   // Instantiate and execute plugins on the parsed AST
   const scenarioMetadataPlugin = new ScenarioMetadataExtractorPlugin(config)
-  const scenarioMeta = scenarioMetadataPlugin.execute(ast)
+  const scenarioMeta = await scenarioMetadataPlugin.execute(ast)
 
   const storeCollectorPlugin = new StoreCollectorPlugin(config)
-  const { stores, storeVarToConfig } = storeCollectorPlugin.execute(ast)
+  const { stores, storeVarToConfig } = await storeCollectorPlugin.execute(ast)
 
   const actionCollectorPlugin = new ActionCollectorPlugin(storeVarToConfig, config)
-  const { actions } = actionCollectorPlugin.execute(ast)
+  const { actions } = await actionCollectorPlugin.execute(ast)
 
   const jsxToJsonPlugin = new JsxToJsonPlugin(config)
-  const { rootJson, components } = jsxToJsonPlugin.execute(ast)
+  const { rootJson, components } = await jsxToJsonPlugin.execute(ast)
 
   // Validate root JSON
   if (!rootJson) {

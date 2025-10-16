@@ -19,5 +19,5 @@ import babelTraverse from '@babel/traverse'
 //   }
 // }
 
-export const traverse = babelTraverse || (babelTraverse as any).default
+export const traverse = babelTraverse || (babelTraverse as any).default || (babelTraverse as any).default.default
 //export const traverse = traverseFunction

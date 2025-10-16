@@ -22,10 +22,7 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
   private actions: Map<string, ActionDescriptor> = new Map()
   private storeVarToConfig: Map<string, { scope: string; storage: string }>
 
-  constructor(
-    storeVarToConfig: Map<string, { scope: string; storage: string }>,
-    config?: TranspilerConfig
-  ) {
+  constructor(storeVarToConfig: Map<string, { scope: string; storage: string }>, config?: TranspilerConfig) {
     super(config)
     this.storeVarToConfig = storeVarToConfig
   }
@@ -40,13 +37,22 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
           const object = callee.object
           const property = callee.property
 
-          if (object?.type === 'Identifier' && property?.type === 'Identifier' && this.storeVarToConfig.has(object.name)) {
+          if (
+            object?.type === 'Identifier' &&
+            property?.type === 'Identifier' &&
+            this.storeVarToConfig.has(object.name)
+          ) {
             const storeConfig = this.storeVarToConfig.get(object.name)!
             const methodName = property.name
 
             if (['set', 'remove', 'merge', 'transaction'].includes(methodName)) {
               try {
-                const action = this.parseStoreAction(storeConfig.scope, storeConfig.storage, methodName, path.node.arguments)
+                const action = this.parseStoreAction(
+                  storeConfig.scope,
+                  storeConfig.storage,
+                  methodName,
+                  path.node.arguments,
+                )
                 this.actions.set(action.id, action)
               } catch (error) {
                 console.warn(`Failed to parse action ${methodName}:`, error)
