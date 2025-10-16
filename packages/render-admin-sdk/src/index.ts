@@ -1,6 +1,5 @@
 // Main transpiler exports
 export { transpile } from './transpiler/transpiler.js'
-export { astNodeToValue } from './transpiler/babel-plugin-jsx-to-json.js'
 export { getPredefinedComponents, DEFAULT_COMPONENTS } from './transpiler/utils.js'
 
 // Type exports

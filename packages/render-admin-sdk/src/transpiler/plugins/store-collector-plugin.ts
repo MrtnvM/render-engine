@@ -1,47 +1,50 @@
-import type { StoreDescriptor, StoreValueDescriptor } from '../runtime/action-types'
+import type { File } from '@babel/types'
+import { traverse } from '../traverse.js'
+import type { TranspilerConfig } from '../types.js'
+import type { StoreDescriptor, StoreValueDescriptor } from '../../runtime/action-types.js'
 
 /**
- * Babel plugin to collect store() declarations and track store variable mappings
+ * Collect store() declarations and track store variable mappings
  */
-export default function storeCollectorPlugin() {
+export function collectStores(
+  ast: File,
+  config?: TranspilerConfig,
+): {
+  stores: Map<string, StoreDescriptor>
+  storeVarToConfig: Map<string, { scope: string; storage: string }>
+} {
   const stores: Map<string, StoreDescriptor> = new Map()
   const storeVarToConfig: Map<string, { scope: string; storage: string }> = new Map()
 
-  const plugin = {
-    visitor: {
-      // Detect: const myStore = store<Type>({ ... })
-      VariableDeclarator(path: any) {
-        const init = path.node.init
-        if (
-          init?.type === 'CallExpression' &&
-          init.callee?.type === 'Identifier' &&
-          init.callee.name === 'store'
-        ) {
-          const storeVarName = path.node.id?.name
-          if (!storeVarName) return
+  traverse(ast, {
+    // Detect: const myStore = store<Type>({ ... })
+    VariableDeclarator(path: any) {
+      const init = path.node.init
+      if (init?.type === 'CallExpression' && init.callee?.type === 'Identifier' && init.callee.name === 'store') {
+        const storeVarName = path.node.id?.name
+        if (!storeVarName) return
 
-          const configArg = init.arguments[0]
-          if (configArg?.type === 'ObjectExpression') {
-            try {
-              const storeDescriptor = parseStoreConfig(configArg)
-              const key = `${storeDescriptor.scope}.${storeDescriptor.storage}`
-              stores.set(key, storeDescriptor)
+        const configArg = init.arguments[0]
+        if (configArg?.type === 'ObjectExpression') {
+          try {
+            const storeDescriptor = parseStoreConfig(configArg)
+            const key = `${storeDescriptor.scope}.${storeDescriptor.storage}`
+            stores.set(key, storeDescriptor)
 
-              // Track variable name → (scope, storage) mapping
-              storeVarToConfig.set(storeVarName, {
-                scope: storeDescriptor.scope,
-                storage: storeDescriptor.storage
-              })
-            } catch (error) {
-              console.warn('Failed to parse store config:', error)
-            }
+            // Track variable name → (scope, storage) mapping
+            storeVarToConfig.set(storeVarName, {
+              scope: storeDescriptor.scope,
+              storage: storeDescriptor.storage,
+            })
+          } catch (error) {
+            console.warn('Failed to parse store config:', error)
           }
         }
       }
-    }
-  }
+    },
+  } as any)
 
-  return { plugin, stores, storeVarToConfig }
+  return { stores, storeVarToConfig }
 }
 
 /**
@@ -51,8 +54,10 @@ function parseStoreConfig(node: any): StoreDescriptor {
   const props: Record<string, any> = {}
 
   for (const prop of node.properties || []) {
-    if (prop.type === 'ObjectProperty' && prop.key?.type === 'Identifier') {
-      const key = prop.key.name
+    if (prop.type === 'ObjectProperty') {
+      const key = prop.key?.name
+      if (!key) continue
+
       const value = prop.value
 
       if (value.type === 'MemberExpression') {
@@ -71,7 +76,7 @@ function parseStoreConfig(node: any): StoreDescriptor {
   return {
     scope: props.scope || 'scenario',
     storage: props.storage || 'memory',
-    initialValue: props.initialValue
+    initialValue: props.initialValue,
   }
 }
 
@@ -126,14 +131,16 @@ function serializeValue(node: any): StoreValueDescriptor {
         value: (node.elements || []).map((el: any) => {
           if (!el || el.type === 'SpreadElement') return { type: 'null' }
           return serializeValue(el)
-        })
+        }),
       }
 
     case 'ObjectExpression':
       const obj: Record<string, StoreValueDescriptor> = {}
       for (const prop of node.properties || []) {
-        if (prop.type === 'ObjectProperty' && prop.key?.type === 'Identifier') {
-          obj[prop.key.name] = serializeValue(prop.value)
+        if (prop.type === 'ObjectProperty') {
+          if (prop.key?.type === 'Identifier') {
+            obj[prop.key.name] = serializeValue(prop.value)
+          }
         }
       }
       return { type: 'object', value: obj }

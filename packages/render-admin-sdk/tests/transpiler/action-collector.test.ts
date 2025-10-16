@@ -7,6 +7,8 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
       export default function Main() {
@@ -31,6 +33,8 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
       export default function Main() {
@@ -50,6 +54,8 @@ describe('Action Collector Plugin', () => {
     const code = `
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
+
+      export const SCENARIO_KEY = "test-scenario"
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
@@ -77,6 +83,8 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const appStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
       const userStore = store({ scope: StoreScope.Scenario, storage: StoreStorage.UserPrefs })
 
@@ -101,6 +109,8 @@ describe('Action Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 
       export default function Main() {
@@ -121,6 +131,8 @@ describe('Action Collector Plugin', () => {
     const code = `
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
+
+      export const SCENARIO_KEY = "test-scenario"
 
       const myStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
 

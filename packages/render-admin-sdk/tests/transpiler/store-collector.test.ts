@@ -7,6 +7,8 @@ describe('Store Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const myStore = store({
         scope: StoreScope.App,
         storage: StoreStorage.Memory
@@ -30,6 +32,8 @@ describe('Store Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const sessionStore = store({
         scope: StoreScope.Scenario,
         storage: StoreStorage.UserPrefs
@@ -50,6 +54,8 @@ describe('Store Collector Plugin', () => {
     const code = `
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
+
+      export const SCENARIO_KEY = "test-scenario"
 
       const cartStore = store({
         scope: StoreScope.Scenario,
@@ -79,6 +85,8 @@ describe('Store Collector Plugin', () => {
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
 
+      export const SCENARIO_KEY = "test-scenario"
+
       const appStore = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
       const userStore = store({ scope: StoreScope.Scenario, storage: StoreStorage.UserPrefs })
 
@@ -96,6 +104,8 @@ describe('Store Collector Plugin', () => {
     const code = `
       import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
       import { View } from '../ui'
+
+      export const SCENARIO_KEY = "test-scenario"
 
       const store1 = store({ scope: StoreScope.App, storage: StoreStorage.Memory })
       const store2 = store({ scope: StoreScope.App, storage: StoreStorage.Memory })

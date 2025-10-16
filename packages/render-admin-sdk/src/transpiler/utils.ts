@@ -2,7 +2,18 @@
  * Default predefined component names
  * These are extracted from the UI component definitions
  */
-export const DEFAULT_COMPONENTS = ['View', 'Row', 'Column', 'Stack', 'Text', 'Image', 'Button', 'Checkbox', 'Spacer']
+export const DEFAULT_COMPONENTS = [
+  'View',
+  'Row',
+  'Column',
+  'Stack',
+  'Text',
+  'Image',
+  'Button',
+  'Checkbox',
+  'Spacer',
+  'SafeAreaView',
+]
 
 /**
  * Get predefined component names

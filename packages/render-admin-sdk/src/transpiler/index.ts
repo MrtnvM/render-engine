@@ -1,5 +1,4 @@
 export { transpile } from './transpiler.js'
-export { astNodeToValue } from './babel-plugin-jsx-to-json.js'
 export { getPredefinedComponents, DEFAULT_COMPONENTS } from './utils.js'
 export type {
   JsonNode,

@@ -1,60 +1,53 @@
-import type { ActionDescriptor, ActionType, StoreValueDescriptor } from '../runtime/action-types'
+import type { File } from '@babel/types'
+import { traverse } from '../traverse.js'
+import type { TranspilerConfig } from '../types.js'
+import type { ActionDescriptor, ActionType, StoreValueDescriptor } from '../../runtime/action-types.js'
 
 /**
- * Babel plugin to collect store method calls and convert them to actions
+ * Collect store method calls and convert them to actions
  */
-export default function actionCollectorPlugin(storeVarToConfig: Map<string, { scope: string; storage: string }>) {
+export function collectActions(
+  ast: File,
+  storeVarToConfig: Map<string, { scope: string; storage: string }>,
+  config?: TranspilerConfig,
+): {
+  actions: Map<string, ActionDescriptor>
+} {
   const actions: Map<string, ActionDescriptor> = new Map()
 
-  const plugin = {
-    visitor: {
-      // Detect: myStore.set('key', value), myStore.transaction(...)
-      CallExpression(path: any) {
-        const callee = path.node.callee
+  traverse(ast, {
+    // Detect: myStore.set('key', value), myStore.transaction(...)
+    CallExpression(path: any) {
+      const callee = path.node.callee
 
-        if (callee?.type === 'MemberExpression') {
-          const object = callee.object
-          const property = callee.property
+      if (callee?.type === 'MemberExpression') {
+        const object = callee.object
+        const property = callee.property
 
-          if (
-            object?.type === 'Identifier' &&
-            property?.type === 'Identifier' &&
-            storeVarToConfig.has(object.name)
-          ) {
-            const storeConfig = storeVarToConfig.get(object.name)!
-            const methodName = property.name
+        if (object?.type === 'Identifier' && property?.type === 'Identifier' && storeVarToConfig.has(object.name)) {
+          const storeConfig = storeVarToConfig.get(object.name)!
+          const methodName = property.name
 
-            if (['set', 'remove', 'merge', 'transaction'].includes(methodName)) {
-              try {
-                const action = parseStoreAction(
-                  storeConfig.scope,
-                  storeConfig.storage,
-                  methodName,
-                  path.node.arguments
-                )
-                actions.set(action.id, action)
-              } catch (error) {
-                console.warn(`Failed to parse action ${methodName}:`, error)
-              }
+          if (['set', 'remove', 'merge', 'transaction'].includes(methodName)) {
+            try {
+              const action = parseStoreAction(storeConfig.scope, storeConfig.storage, methodName, path.node.arguments)
+              actions.set(action.id, action)
+            } catch (error) {
+              console.warn(`Failed to parse action ${methodName}:`, error)
             }
           }
         }
       }
-    }
-  }
+    },
+  } as any)
 
-  return { plugin, actions }
+  return { actions }
 }
 
 /**
  * Parse store action from method call arguments
  */
-function parseStoreAction(
-  scope: string,
-  storage: string,
-  method: string,
-  args: any[]
-): ActionDescriptor {
+function parseStoreAction(scope: string, storage: string, method: string, args: any[]): ActionDescriptor {
   const identifier = `${scope}.${storage}`
 
   // Extract keyPath (first argument)
@@ -86,7 +79,7 @@ function parseStoreAction(
     storage: storage as any,
     keyPath,
     value,
-    actions: nestedActions
+    actions: nestedActions,
   }
 }
 
@@ -137,7 +130,7 @@ function serializeValue(node: any): StoreValueDescriptor {
         value: (node.elements || []).map((el: any) => {
           if (!el || el.type === 'SpreadElement') return { type: 'null' }
           return serializeValue(el)
-        })
+        }),
       }
 
     case 'ObjectExpression':
