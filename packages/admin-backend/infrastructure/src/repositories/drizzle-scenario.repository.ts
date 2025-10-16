@@ -5,8 +5,8 @@ import type {
   IScenarioRepository,
   IScenario,
   ICreateScenarioData,
+  IPaginated,
 } from '@render-engine/admin-backend-domain'
-import type { IPaginated } from '@render-engine/admin-backend-domain'
 import { scenarioTable } from '../database/schema.js'
 
 /**
@@ -29,7 +29,11 @@ export class DrizzleScenarioRepository implements IScenarioRepository {
    * Проверить существование сценария по ID
    */
   async exists(id: string): Promise<boolean> {
-    const results = await this.db.select({ id: scenarioTable.id }).from(scenarioTable).where(eq(scenarioTable.id, id)).limit(1)
+    const results = await this.db
+      .select({ id: scenarioTable.id })
+      .from(scenarioTable)
+      .where(eq(scenarioTable.id, id))
+      .limit(1)
 
     return results.length > 0
   }
@@ -43,12 +47,7 @@ export class DrizzleScenarioRepository implements IScenarioRepository {
     const offset = (page - 1) * limit
 
     const [items, totalResult] = await Promise.all([
-      this.db
-        .select()
-        .from(scenarioTable)
-        .orderBy(desc(scenarioTable.updatedAt))
-        .limit(limit)
-        .offset(offset),
+      this.db.select().from(scenarioTable).orderBy(desc(scenarioTable.updatedAt)).limit(limit).offset(offset),
       this.db.select({ count: scenarioTable.id }).from(scenarioTable),
     ])
 
