@@ -24,7 +24,7 @@ describe('DrizzleScenarioRepository', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    // Setup mock chain - create flexible mock objects that can chain in any order
+    // Setup mock chain - need to use a function to return fresh chainable objects
     const createChainableMock = () => ({
       where: mockWhere,
       orderBy: mockOrderBy,
@@ -35,10 +35,11 @@ describe('DrizzleScenarioRepository', () => {
     })
 
     mockSelect.mockReturnValue({ from: mockFrom })
-    mockFrom.mockReturnValue(createChainableMock())
-    mockWhere.mockReturnValue(createChainableMock())
-    mockLimit.mockReturnValue(createChainableMock())
-    mockOrderBy.mockReturnValue(createChainableMock())
+    // Use mockImplementation to return a fresh chainable mock on each call
+    mockFrom.mockImplementation(createChainableMock)
+    mockWhere.mockImplementation(createChainableMock)
+    mockLimit.mockImplementation(createChainableMock)
+    mockOrderBy.mockImplementation(createChainableMock)
     mockOffset.mockResolvedValue([])
     mockReturning.mockResolvedValue([])
 
@@ -363,8 +364,20 @@ describe('DrizzleScenarioRepository', () => {
         },
       ]
 
-      mockOffset.mockResolvedValue(mockScenarios)
-      mockFrom.mockReturnValueOnce({ select: vi.fn().mockResolvedValue([{}, {}]) })
+      // Mock for first query (get items) - return chainable mock first
+      // Mock for second query (get count) - return resolved promise with count result
+      mockFrom
+        .mockImplementationOnce(() => ({
+          where: mockWhere,
+          orderBy: mockOrderBy,
+          limit: mockLimit,
+          offset: mockOffset,
+          returning: mockReturning,
+          select: vi.fn().mockResolvedValue([]),
+        }))
+        .mockResolvedValueOnce([{}, {}])
+
+      mockOffset.mockResolvedValueOnce(mockScenarios)
 
       const result = await repository.findAll({ page: 1, limit: 10 })
 
@@ -375,8 +388,20 @@ describe('DrizzleScenarioRepository', () => {
     })
 
     it('should use default pagination values', async () => {
-      mockOffset.mockResolvedValue([])
-      mockFrom.mockReturnValueOnce({ select: vi.fn().mockResolvedValue([]) })
+      // Mock for first query (get items)
+      // Mock for second query (get count)
+      mockFrom
+        .mockImplementationOnce(() => ({
+          where: mockWhere,
+          orderBy: mockOrderBy,
+          limit: mockLimit,
+          offset: mockOffset,
+          returning: mockReturning,
+          select: vi.fn().mockResolvedValue([]),
+        }))
+        .mockResolvedValueOnce([])
+
+      mockOffset.mockResolvedValueOnce([])
 
       const result = await repository.findAll()
 
