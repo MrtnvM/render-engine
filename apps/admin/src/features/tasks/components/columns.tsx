@@ -46,6 +46,31 @@ export const columns: ColumnDef<Task>[] = [
     enableSorting: true,
   },
   {
+    accessorKey: 'build_number',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Билд' />,
+    cell: ({ row }) => <div className='w-[80px] text-center'>#{row.getValue('build_number')}</div>,
+    enableSorting: true,
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Дата обновления' />,
+    cell: ({ row }) => {
+      const date = row.getValue('updatedAt') as Date
+      return (
+        <div className='w-[160px] text-sm'>
+          {date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </div>
+      )
+    },
+    enableSorting: true,
+  },
+  {
     accessorKey: 'componentsCount',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Компонентов' />,
     cell: ({ row }) => <div className='w-[80px] text-center'>{row.getValue('componentsCount')}</div>,
