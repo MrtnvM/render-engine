@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageStyle, TextStyle, ViewStyle } from './stylesheet.types'
+import { ImageStyle, TextStyle, ViewStyle } from './stylesheet.types.js'
 
 // ---------------- VIEW ----------------
 export interface ViewProps {
@@ -103,3 +103,16 @@ export interface SpacerProps extends ViewStyle {
 }
 
 export const Spacer = (props: SpacerProps): null => null
+
+// ---------------- SAFE AREA VIEW ----------------
+
+export interface SafeAreaViewProps {
+  id?: string
+  children?: React.ReactNode
+  style?: ViewStyle
+  properties?: {
+    edges?: ('top' | 'bottom' | 'left' | 'right')[]
+  }
+}
+
+export const SafeAreaView = (props: SafeAreaViewProps): null => null

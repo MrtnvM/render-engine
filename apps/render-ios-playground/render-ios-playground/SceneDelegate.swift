@@ -28,25 +28,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         RenderEngine.shared.configureLogger(
             consoleEnabled: true,
             fileEnabled: true,
-            consoleLogLevel: .info,
+            consoleLogLevel: .debug,
             fileLogLevel: .debug
         )
         
         print("RenderEngine SDK configured and ready")
-        
+
         // Create the window
         let window = UIWindow(windowScene: windowScene)
-        
+
         // Create RenderViewController with scenarioKey
         let renderViewController = RenderViewController(scenarioKey: "avito-cart")
-        
+
         // Wrap in navigation controller
         let navigationController = UINavigationController(rootViewController: renderViewController)
-        
+
         // Set as root view controller
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
-        
+
         self.window = window
     }
 

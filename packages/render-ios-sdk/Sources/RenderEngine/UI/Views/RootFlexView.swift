@@ -2,17 +2,22 @@ import UIKit
 import FlexLayout
 
 // MARK: - Safe Area Options
-struct SafeAreaOptions: OptionSet {
-    let rawValue: Int
-    
-    static let top        = SafeAreaOptions(rawValue: 1 << 0)
-    static let bottom     = SafeAreaOptions(rawValue: 1 << 1)
-    static let left       = SafeAreaOptions(rawValue: 1 << 2)
-    static let right      = SafeAreaOptions(rawValue: 1 << 3)
-    
-    static let vertical   : SafeAreaOptions = [.top, .bottom]
-    static let horizontal : SafeAreaOptions = [.left, .right]
-    static let all        : SafeAreaOptions = [.top, .bottom, .left, .right]
+public struct SafeAreaOptions: OptionSet, Sendable {
+    public let rawValue: Int
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    public static let top        = SafeAreaOptions(rawValue: 1 << 0)
+    public static let bottom     = SafeAreaOptions(rawValue: 1 << 1)
+    public static let left       = SafeAreaOptions(rawValue: 1 << 2)
+    public static let right      = SafeAreaOptions(rawValue: 1 << 3)
+
+    public static let vertical   : SafeAreaOptions = [.top, .bottom]
+    public static let horizontal : SafeAreaOptions = [.left, .right]
+    public static let all        : SafeAreaOptions = [.top, .bottom, .left, .right]
+    public static let none       : SafeAreaOptions = []
 }
 
 // MARK: - Scenario Observer Wrapper
@@ -48,6 +53,7 @@ class RootFlexView: UIView {
         self.scenario = scenario
         super.init(frame: .zero)
         backgroundColor = .systemBackground
+        logger.debug("RootFlexView init with safeArea: \(safeArea.rawValue)", category: "RootFlexView")
     }
     
     required init?(coder: NSCoder) {
@@ -57,6 +63,7 @@ class RootFlexView: UIView {
     // MARK: - Lifecycle
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
+        logger.debug("safeAreaInsetsDidChange: \(safeAreaInsets), safeArea config: \(safeArea.rawValue)", category: "RootFlexView")
         applySafeAreaInsets()
         setNeedsLayout()
     }
@@ -80,13 +87,16 @@ class RootFlexView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        frame = superview?.bounds ?? .zero
+        logger.debug("layoutSubviews - frame: \(frame), bounds: \(bounds), safeAreaInsets: \(safeAreaInsets)", category: "RootFlexView")
         flex.layout(mode: .fitContainer)
     }
     
     // MARK: - Scenario Handling
     private func onScenarioChanged(_ scenario: Scenario?) {
         guard let scenario = scenario else { return }
+        
+        logger.info("Scenario key: (\(scenario.key))", category: "Scneario")
+        logger.info("Scenario Version: \(scenario.version)", category: "Scenario")
         
         subviews.forEach { $0.removeFromSuperview() }
         renderScenario(scenario: scenario)
@@ -125,10 +135,17 @@ class RootFlexView: UIView {
     // MARK: - Safe Area Insets
     private func applySafeAreaInsets() {
         let insets = safeAreaInsets
-        flex.paddingTop(safeArea.contains(.top) ? insets.top : 0)
-        flex.paddingBottom(safeArea.contains(.bottom) ? insets.bottom : 0)
-        flex.paddingLeft(safeArea.contains(.left) ? insets.left : 0)
-        flex.paddingRight(safeArea.contains(.right) ? insets.right : 0)
+        let topPadding = safeArea.contains(.top) ? insets.top : 0
+        let bottomPadding = safeArea.contains(.bottom) ? insets.bottom : 0
+        let leftPadding = safeArea.contains(.left) ? insets.left : 0
+        let rightPadding = safeArea.contains(.right) ? insets.right : 0
+
+        logger.debug("Applying safe area padding - top: \(topPadding), bottom: \(bottomPadding), left: \(leftPadding), right: \(rightPadding)", category: "RootFlexView")
+
+        flex.paddingTop(topPadding)
+        flex.paddingBottom(bottomPadding)
+        flex.paddingLeft(leftPadding)
+        flex.paddingRight(rightPadding)
     }
     
     // MARK: - Rendering

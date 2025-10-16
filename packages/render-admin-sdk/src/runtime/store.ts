@@ -1,5 +1,5 @@
-import { ActionContext, Action } from './action-context'
-import { ActionType, StoreScope, StoreStorage } from './action-types'
+import { ActionContext, Action } from './action-context.js'
+import { ActionType, StoreScope, StoreStorage } from './action-types.js'
 
 /**
  * Store configuration

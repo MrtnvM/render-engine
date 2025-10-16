@@ -27,14 +27,17 @@ class MainViewController: UIViewController {
         await MainActor.run {
             mainView.showLoading(true)
         }
-        
+
+        print("📱 MainViewController - About to render scenario: \(scenarioKey)")
+        print("📱 MainViewController - MainView safeAreaInsets: \(mainView.safeAreaInsets)")
+
         do {
             try await RenderEngine.shared.render(
                 scenarioKey: scenarioKey,
                 in: self,
                 containerView: mainView
             )
-            
+
             await MainActor.run {
                 mainView.showLoading(false)
             }

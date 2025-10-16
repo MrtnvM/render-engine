@@ -61,7 +61,7 @@ export const publishCommand = program
 
       console.log(
         chalk.blue(
-          `   Publishing build number ${chalk.bold(nextBuildNumber)} with version ${chalk.bold(latestVersion)}.`,
+          `   Publishing (${scenarioKey}) build number ${chalk.bold(nextBuildNumber)} with version ${chalk.bold(latestVersion)}.`,
         ),
       )
 

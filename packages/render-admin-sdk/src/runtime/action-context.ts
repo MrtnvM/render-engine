@@ -1,5 +1,5 @@
-import type { Store } from './store'
-import type { ActionDescriptor, ActionType, StoreDescriptor, StoreScope, StoreStorage, StoreValueDescriptor } from './action-types'
+import type { Store } from './store.js'
+import type { ActionDescriptor, ActionType, StoreDescriptor, StoreScope, StoreStorage, StoreValueDescriptor } from './action-types.js'
 
 /**
  * Global context to collect stores and actions during component rendering

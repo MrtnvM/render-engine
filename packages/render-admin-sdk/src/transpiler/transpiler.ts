@@ -2,14 +2,12 @@ import { parse } from '@babel/parser'
 import type { File } from '@babel/types'
 import type { TranspilerConfig } from './types.js'
 import type { TranspiledScenarioWithActions } from '../runtime/action-types.js'
-
-// Dynamically import traverse to ensure it's loaded before plugins use it
-let traverseModule: any = null
-async function ensureTraverseLoaded() {
-  if (!traverseModule) {
-    traverseModule = await import('./traverse.js')
-  }
-}
+import {
+  ScenarioKeyExtractorPlugin,
+  StoreCollectorPlugin,
+  ActionCollectorPlugin,
+  JsxToJsonPlugin,
+} from './plugins/index.js'
 
 /**
  * Transpiles a React JSX string into a server-driven UI JSON schema.
@@ -18,14 +16,6 @@ async function ensureTraverseLoaded() {
  * @returns The JSON schema object with stores and actions.
  */
 export async function transpile(jsxString: string, config?: TranspilerConfig): Promise<TranspiledScenarioWithActions> {
-  // Ensure traverse is loaded before importing plugins
-  await ensureTraverseLoaded()
-
-  // Dynamically import plugin classes after traverse is loaded
-  const { ScenarioKeyExtractorPlugin } = await import('./plugins/scenario-key-extractor-plugin.js')
-  const { StoreCollectorPlugin } = await import('./plugins/store-collector-plugin.js')
-  const { ActionCollectorPlugin } = await import('./plugins/action-collector-plugin.js')
-  const { JsxToJsonPlugin } = await import('./plugins/jsx-to-json-plugin.js')
 
   // Parse JSX code to AST once
   const ast: File = parse(jsxString, {

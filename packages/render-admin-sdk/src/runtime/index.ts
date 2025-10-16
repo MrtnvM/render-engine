@@ -2,8 +2,8 @@
  * Runtime API for Store and Actions
  */
 
-export { store, Store, type StoreConfig } from './store'
-export { Action, ActionContext } from './action-context'
+export { store, Store, type StoreConfig } from './store.js'
+export { Action, ActionContext } from './action-context.js'
 export {
   ActionType,
   StoreScope,
@@ -12,4 +12,4 @@ export {
   type StoreDescriptor,
   type StoreValueDescriptor,
   type TranspiledScenarioWithActions
-} from './action-types'
+} from './action-types.js'

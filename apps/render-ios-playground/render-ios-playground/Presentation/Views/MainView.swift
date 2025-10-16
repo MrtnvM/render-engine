@@ -111,11 +111,14 @@ class MainView: UIView {
     func displayContent(_ content: UIView) {
         // Remove existing content view if any
         contentView?.removeFromSuperview()
-        
+
         // Set new content view
         contentView = content
         addSubview(content)
-        
+
+        print("📱 MainView.displayContent - MainView safeAreaInsets: \(safeAreaInsets)")
+        print("📱 MainView.displayContent - MainView bounds: \(bounds)")
+
         // Position content above the buttons
         content.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -124,6 +127,8 @@ class MainView: UIView {
             content.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             content.bottomAnchor.constraint(equalTo: designSystemButton.topAnchor, constant: -20)
         ])
+
+        print("📱 MainView.displayContent - Content frame after constraints: \(content.frame)")
     }
     
     func clearContent() {

@@ -1,4 +1,4 @@
-import { ImageResizeMode } from './image-resize-mode.types'
+import { ImageResizeMode } from './image-resize-mode.types.js'
 
 export type ColorValue = string
 export type FlexAlignType = 'flexStart' | 'flexEnd' | 'center' | 'stretch' | 'baseline'

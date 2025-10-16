@@ -60,11 +60,14 @@ public class RenderEngine {
         guard isConfigured else {
             throw RenderSDKError.renderingError("RenderEngine not configured. Call configure() first.")
         }
-        
+
         logger.sdk("Rendering scenario with key: \(scenarioKey)")
-        
-        let renderVC = RenderViewController(scenarioKey: scenarioKey)
-        
+
+        // Scenarios handle safe area internally, so default to .none
+        let safeArea: SafeAreaOptions = .none
+        logger.sdk("SafeArea mode: NONE (scenarios handle safe area internally)")
+        let renderVC = RenderViewController(scenarioKey: scenarioKey, safeArea: safeArea)
+
         if let containerView = containerView {
             // Add as child view controller when container view is provided
             viewController.addChild(renderVC)
