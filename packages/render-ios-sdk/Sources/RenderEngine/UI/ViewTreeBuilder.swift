@@ -6,20 +6,26 @@ class ViewTreeBuilder {
     private let viewController: UIViewController?
     private let navigationController: UINavigationController?
     private let window: UIWindow?
-    
+    private let store: Store?
+    private let storeFactory: StoreFactory
+
     private let registry = DIContainer.shared.componentRegistry
-    private let logger = DIContainer.shared.logger
-    
+    private let logger = DIContainer.shared.currentLogger
+
     init(
         scenario: Scenario,
         viewController: UIViewController? = nil,
         navigationController: UINavigationController? = nil,
-        window: UIWindow? = nil
+        window: UIWindow? = nil,
+        store: Store? = nil,
+        storeFactory: StoreFactory = DIContainer.shared.storeFactory
     ) {
         self.scenario = scenario
         self.viewController = viewController
         self.navigationController = navigationController
         self.window = window
+        self.store = store
+        self.storeFactory = storeFactory
     }
     
     /**
@@ -61,6 +67,9 @@ class ViewTreeBuilder {
             window: window,
             scenario: scenario,
             props: props,
+            store: store,
+            storeFactory: storeFactory,
+            logger: logger
         )
         
         // 3. Use the renderer to create the UIView. The renderer is responsible
