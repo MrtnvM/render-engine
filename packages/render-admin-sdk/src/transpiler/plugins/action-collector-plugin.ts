@@ -1,12 +1,12 @@
 import type { File } from '@babel/types'
-import type { Visitor } from '@babel/traverse'
+import type { Visitor, NodePath } from '@babel/traverse'
 import type { TranspilerConfig } from '../types.js'
-import type { ActionDescriptor, ActionType, StoreValueDescriptor } from '../../runtime/action-types.js'
+import type { StoreActionDescriptor, ActionType, StoreValueDescriptor } from '../../runtime/action-types.js'
 import { TranspilerPlugin } from './base-plugin.js'
 import { serializeValue, extractStringValue } from './serialization-utils.js'
 
 export interface ActionCollectorResult {
-  actions: Map<string, ActionDescriptor>
+  actions: Map<string, StoreActionDescriptor>
 }
 
 /**
@@ -19,7 +19,7 @@ export interface ActionCollectorResult {
  * - `myStore.transaction(...)`
  */
 export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResult> {
-  private actions: Map<string, ActionDescriptor> = new Map()
+  private actions: Map<string, StoreActionDescriptor> = new Map()
   private storeVarToConfig: Map<string, { scope: string; storage: string }>
 
   constructor(storeVarToConfig: Map<string, { scope: string; storage: string }>, config?: TranspilerConfig) {
@@ -52,6 +52,7 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
                   storeConfig.storage,
                   methodName,
                   path.node.arguments,
+                  this.getEnclosingHandlerId(path),
                 )
                 this.actions.set(action.id, action)
               } catch (error) {
@@ -71,7 +72,13 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
   /**
    * Parse store action from method call arguments
    */
-  private parseStoreAction(scope: string, storage: string, method: string, args: any[]): ActionDescriptor {
+  private parseStoreAction(
+    scope: string,
+    storage: string,
+    method: string,
+    args: any[],
+    handlerId?: string,
+  ): StoreActionDescriptor {
     const identifier = `${scope}.${storage}`
 
     // Extract keyPath (first argument)
@@ -88,7 +95,7 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
     }
 
     // Handle transaction - collect nested actions
-    let nestedActions: ActionDescriptor[] | undefined
+    let nestedActions: StoreActionDescriptor[] | undefined
     if (method === 'transaction') {
       // For transactions, we would need to analyze the callback function
       // This is complex and may require runtime execution or static analysis
@@ -97,6 +104,7 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
     }
 
     return {
+      kind: 'store',
       id: `${identifier}_${method}_${keyPath.replace(/\./g, '_')}`,
       type: `store.${method}` as ActionType,
       scope: scope as any,
@@ -104,6 +112,15 @@ export class ActionCollectorPlugin extends TranspilerPlugin<ActionCollectorResul
       keyPath,
       value,
       actions: nestedActions,
+      handlerId,
     }
+  }
+
+  private getEnclosingHandlerId(path: NodePath<any>): string | undefined {
+    const fnPath = path.findParent((parent: NodePath<any>) => parent.isFunction && parent.isFunction())
+    if (fnPath && (fnPath.node as any).__renderActionId) {
+      return (fnPath.node as any).__renderActionId as string
+    }
+    return undefined
   }
 }

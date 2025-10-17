@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
+import type { StoreActionDescriptor } from '../../src/runtime/action-types'
 import { transpile } from '../../src/transpiler/transpiler'
+
+function getStoreActions(actions: any[] | undefined): StoreActionDescriptor[] {
+  return (actions || []).filter((action): action is StoreActionDescriptor => action.kind === 'store')
+}
 
 describe('Action Collector Plugin', () => {
   it('should collect set() action', async () => {
@@ -19,13 +24,13 @@ describe('Action Collector Plugin', () => {
 
     const result = await transpile(code)
 
-    expect(result.actions).toBeDefined()
-    expect(result.actions).toHaveLength(1)
-    expect(result.actions![0].type).toBe('store.set')
-    expect(result.actions![0].scope).toBe('app')
-    expect(result.actions![0].storage).toBe('memory')
-    expect(result.actions![0].keyPath).toBe('userName')
-    expect(result.actions![0].value).toEqual({ type: 'string', value: 'Alice' })
+    const storeActions = getStoreActions(result.actions)
+    expect(storeActions).toHaveLength(1)
+    expect(storeActions[0].type).toBe('store.set')
+    expect(storeActions[0].scope).toBe('app')
+    expect(storeActions[0].storage).toBe('memory')
+    expect(storeActions[0].keyPath).toBe('userName')
+    expect(storeActions[0].value).toEqual({ type: 'string', value: 'Alice' })
   })
 
   it('should collect remove() action', async () => {
@@ -45,9 +50,10 @@ describe('Action Collector Plugin', () => {
 
     const result = await transpile(code)
 
-    expect(result.actions![0].type).toBe('store.remove')
-    expect(result.actions![0].keyPath).toBe('tempData')
-    expect(result.actions![0].value).toBeUndefined()
+    const storeActions = getStoreActions(result.actions)
+    expect(storeActions[0].type).toBe('store.remove')
+    expect(storeActions[0].keyPath).toBe('tempData')
+    expect(storeActions[0].value).toBeUndefined()
   })
 
   it('should collect merge() action', async () => {
@@ -67,9 +73,10 @@ describe('Action Collector Plugin', () => {
 
     const result = await transpile(code)
 
-    expect(result.actions![0].type).toBe('store.merge')
-    expect(result.actions![0].keyPath).toBe('user')
-    expect(result.actions![0].value).toEqual({
+    const storeActions = getStoreActions(result.actions)
+    expect(storeActions[0].type).toBe('store.merge')
+    expect(storeActions[0].keyPath).toBe('user')
+    expect(storeActions[0].value).toEqual({
       type: 'object',
       value: {
         age: { type: 'integer', value: 31 },
@@ -97,11 +104,12 @@ describe('Action Collector Plugin', () => {
 
     const result = await transpile(code)
 
-    expect(result.actions).toHaveLength(2)
-    expect(result.actions![0].scope).toBe('app')
-    expect(result.actions![0].storage).toBe('memory')
-    expect(result.actions![1].scope).toBe('scenario')
-    expect(result.actions![1].storage).toBe('userprefs')
+    const storeActions = getStoreActions(result.actions)
+    expect(storeActions).toHaveLength(2)
+    expect(storeActions[0].scope).toBe('app')
+    expect(storeActions[0].storage).toBe('memory')
+    expect(storeActions[1].scope).toBe('scenario')
+    expect(storeActions[1].storage).toBe('userprefs')
   })
 
   it('should generate unique action IDs', async () => {
@@ -122,9 +130,10 @@ describe('Action Collector Plugin', () => {
 
     const result = await transpile(code)
 
-    expect(result.actions![0].id).toBe('app.memory_set_key1')
-    expect(result.actions![1].id).toBe('app.memory_set_key2')
-    expect(result.actions![0].id).not.toBe(result.actions![1].id)
+    const storeActions = getStoreActions(result.actions)
+    expect(storeActions[0].id).toBe('app.memory_set_key1')
+    expect(storeActions[1].id).toBe('app.memory_set_key2')
+    expect(storeActions[0].id).not.toBe(storeActions[1].id)
   })
 
   it('should handle nested keyPaths', async () => {
@@ -144,7 +153,8 @@ describe('Action Collector Plugin', () => {
 
     const result = await transpile(code)
 
-    expect(result.actions![0].keyPath).toBe('user.profile.name')
-    expect(result.actions![0].id).toBe('app.memory_set_user_profile_name')
-  })
+    const storeActions = getStoreActions(result.actions)
+    expect(storeActions[0].keyPath).toBe('user.profile.name')
+    expect(storeActions[0].id).toBe('app.memory_set_user_profile_name')
+})
 })

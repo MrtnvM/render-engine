@@ -18,6 +18,8 @@ export { store, Store, Action, ActionContext } from './runtime/index.js'
 export type {
   StoreConfig,
   ActionDescriptor,
+  StoreActionDescriptor,
+  HandlerActionDescriptor,
   StoreDescriptor,
   StoreValueDescriptor,
   TranspiledScenarioWithActions,

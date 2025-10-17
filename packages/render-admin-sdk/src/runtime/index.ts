@@ -9,6 +9,8 @@ export {
   StoreScope,
   StoreStorage,
   type ActionDescriptor,
+  type StoreActionDescriptor,
+  type HandlerActionDescriptor,
   type StoreDescriptor,
   type StoreValueDescriptor,
   type TranspiledScenarioWithActions

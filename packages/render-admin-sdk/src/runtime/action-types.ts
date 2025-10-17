@@ -1,3 +1,5 @@
+import type { SerializedActionHandler } from './serialized-handler-types.js'
+
 /**
  * Action types for Store operations
  */
@@ -35,17 +37,28 @@ export interface StoreValueDescriptor {
 }
 
 /**
- * Action descriptor in JSON format
+ * Action descriptors in JSON format
  */
-export interface ActionDescriptor {
+export interface StoreActionDescriptor {
+  kind: 'store'
   id: string
   type: ActionType
   scope: StoreScope
   storage: StoreStorage
   keyPath: string
   value?: StoreValueDescriptor
-  actions?: ActionDescriptor[] // For transactions
+  actions?: StoreActionDescriptor[] // For transactions
+  handlerId?: string
 }
+
+export interface HandlerActionDescriptor {
+  kind: 'handler'
+  id: string
+  handler: SerializedActionHandler
+  linkedActionIds?: string[]
+}
+
+export type ActionDescriptor = StoreActionDescriptor | HandlerActionDescriptor
 
 /**
  * Store descriptor in JSON format
