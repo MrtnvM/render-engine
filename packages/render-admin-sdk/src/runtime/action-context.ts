@@ -1,30 +1,37 @@
 import type { Store } from './store.js'
-import type { ActionDescriptor, ActionType, StoreDescriptor, StoreScope, StoreStorage, StoreValueDescriptor } from './action-types.js'
+import type {
+  StoreActionDescriptor,
+  ActionType,
+  StoreDescriptor,
+  StoreScope,
+  StoreStorage,
+  StoreValueDescriptor,
+} from './action-types.js'
 
 /**
  * Global context to collect stores and actions during component rendering
  */
 export class ActionContext {
   private static stores: Map<string, Store<any>> = new Map()
-  private static actions: Map<string, ActionDescriptor> = new Map()
+  private static actions: Map<string, StoreActionDescriptor> = new Map()
 
   static registerStore(store: Store<any>): void {
     this.stores.set(store.identifier, store)
   }
 
-  static registerAction(action: Action): void {
+  static registerAction(action: StoreAction): void {
     this.actions.set(action.id, action.toDescriptor())
   }
 
   static getStores(): StoreDescriptor[] {
-    return Array.from(this.stores.values()).map(s => ({
+    return Array.from(this.stores.values()).map((s) => ({
       scope: s.config.scope,
       storage: s.config.storage,
-      initialValue: s.config.initialValue
+      initialValue: s.config.initialValue,
     }))
   }
 
-  static getActions(): ActionDescriptor[] {
+  static getActions(): StoreActionDescriptor[] {
     return Array.from(this.actions.values())
   }
 
@@ -37,7 +44,7 @@ export class ActionContext {
 /**
  * Action instance that can be converted to ActionDescriptor
  */
-export class Action {
+export class StoreAction {
   constructor(
     public readonly id: string,
     public readonly type: ActionType,
@@ -45,21 +52,22 @@ export class Action {
     public readonly storage: StoreStorage,
     public readonly keyPath: string,
     public readonly value?: any,
-    public readonly actions?: Action[]
+    public readonly actions?: StoreAction[],
   ) {
     // Register action in context
     ActionContext.registerAction(this)
   }
 
-  toDescriptor(): ActionDescriptor {
+  toDescriptor(): StoreActionDescriptor {
     return {
+      kind: 'store',
       id: this.id,
       type: this.type,
       scope: this.scope,
       storage: this.storage,
       keyPath: this.keyPath,
       value: this.value !== undefined ? this.serializeValue(this.value) : undefined,
-      actions: this.actions?.map(a => a.toDescriptor())
+      actions: this.actions?.map((a) => a.toDescriptor()),
     }
   }
 
@@ -67,15 +75,13 @@ export class Action {
     if (value === null) return { type: 'null' }
     if (typeof value === 'string') return { type: 'string', value }
     if (typeof value === 'number') {
-      return Number.isInteger(value)
-        ? { type: 'integer', value }
-        : { type: 'number', value }
+      return Number.isInteger(value) ? { type: 'integer', value } : { type: 'number', value }
     }
     if (typeof value === 'boolean') return { type: 'bool', value }
     if (Array.isArray(value)) {
       return {
         type: 'array',
-        value: value.map(v => this.serializeValue(v))
+        value: value.map((v) => this.serializeValue(v)),
       }
     }
     if (typeof value === 'object') {

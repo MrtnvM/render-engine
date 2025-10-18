@@ -1,12 +1,7 @@
 import { parse } from '@babel/parser'
 import type { File } from '@babel/types'
 import type { TranspilerConfig } from './types.js'
-import type {
-  TranspiledScenarioWithActions,
-  ActionDescriptor,
-  HandlerActionDescriptor,
-  StoreActionDescriptor,
-} from '../runtime/action-types.js'
+import type { TranspiledScenarioWithActions } from '../runtime/action-types.js'
 import {
   ScenarioMetadataExtractorPlugin,
   StoreCollectorPlugin,
@@ -15,7 +10,11 @@ import {
 } from './plugins/index.js'
 
 /**
- * Transpiles a React JSX string into a server-driven UI JSON schema.
+ * Transpiles a React JSX string into a server-driven UI JSON schema (Legacy V1).
+ *
+ * Note: This is the old transpiler that only collects store actions.
+ * For declarative actions (conditionals, sequences, etc.), use transpileV2.
+ *
  * @param jsxString The JSX code to transpile.
  * @param config Optional configuration
  * @returns The JSON schema object with stores and actions.
@@ -35,7 +34,7 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
   const { stores, storeVarToConfig } = await storeCollectorPlugin.execute(ast)
 
   const jsxToJsonPlugin = new JsxToJsonPlugin(config)
-  const { rootJson, components, actionHandlers } = await jsxToJsonPlugin.execute(ast)
+  const { rootJson, components } = await jsxToJsonPlugin.execute(ast)
 
   const actionCollectorPlugin = new ActionCollectorPlugin(storeVarToConfig, config)
   const { actions } = await actionCollectorPlugin.execute(ast)
@@ -46,40 +45,12 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
   }
 
   // Assemble final scenario
-  const storeActions: StoreActionDescriptor[] = Array.from(actions.values())
-
-  const handlerDescriptors: HandlerActionDescriptor[] = Object.entries(actionHandlers).map(
-    ([id, handler]) => ({
-      kind: 'handler',
-      id,
-      handler,
-    }),
-  )
-
-  const handlerById = new Map<string, HandlerActionDescriptor>(
-    handlerDescriptors.map((descriptor) => [descriptor.id, descriptor]),
-  )
-
-  for (const action of storeActions) {
-    if (action.handlerId) {
-      const handler = handlerById.get(action.handlerId)
-      if (handler) {
-        if (!handler.linkedActionIds) {
-          handler.linkedActionIds = []
-        }
-        handler.linkedActionIds.push(action.id)
-      }
-    }
-  }
-
-  const combinedActions: ActionDescriptor[] = [...handlerDescriptors, ...storeActions]
-
   const scenario: TranspiledScenarioWithActions = {
     ...scenarioMeta,
     main: rootJson,
     components,
     stores: stores.size > 0 ? Array.from(stores.values()) : undefined,
-    actions: combinedActions.length > 0 ? combinedActions : undefined,
+    actions: actions.size > 0 ? Array.from(actions.values()) : undefined,
   }
 
   return scenario

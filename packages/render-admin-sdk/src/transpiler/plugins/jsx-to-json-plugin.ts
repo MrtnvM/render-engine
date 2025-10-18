@@ -1,15 +1,12 @@
-import type { File } from '@babel/types'
+import type { File, Node } from '@babel/types'
 import type { Visitor } from '@babel/traverse'
 import type { ASTNode, JSXElement, JSXText, JsonNode, TranspilerConfig } from '../types.js'
-import type { SerializedActionHandler } from '../../runtime/serialized-handler-types.js'
 import { TranspilerPlugin } from './base-plugin.js'
 import { getPredefinedComponents } from '../utils.js'
-import { serializeActionHandler } from './action-handler-serializer.js'
 
 export interface JsxToJsonResult {
   rootJson: JsonNode | null
   components: Record<string, JsonNode>
-  actionHandlers: Record<string, SerializedActionHandler>
 }
 
 /**
@@ -23,7 +20,6 @@ export interface JsxToJsonResult {
 export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
   private rootJson: JsonNode | null = null
   private components: Record<string, JsonNode> = {}
-  private actionHandlers: Map<string, SerializedActionHandler> = new Map()
   private collectedComponents: Array<{
     name: string
     exportType: 'default' | 'named' | 'helper'
@@ -32,12 +28,9 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
 
   // Track component props for each function scope
   private componentPropsStack: Set<string>[] = []
-  private actionIdCounter = 0
 
-  private generateActionId(): string {
-    this.actionIdCounter += 1
-    return `action_${this.actionIdCounter}`
-  }
+  // Handler ID mapping (provided by ActionHandlerAnalyzer)
+  public handlerIdByFunction: Map<Node, string> = new Map()
 
   constructor(config?: TranspilerConfig) {
     super(config)
@@ -311,7 +304,6 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
     return {
       rootJson: this.rootJson,
       components: this.components,
-      actionHandlers: Object.fromEntries(this.actionHandlers.entries()),
     }
   }
 
@@ -360,11 +352,13 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
         return null
       case 'ArrowFunctionExpression':
       case 'FunctionExpression': {
-        const actionId = this.generateActionId()
-        const serialized = serializeActionHandler(node)
-        this.actionHandlers.set(actionId, serialized)
-        ;(node as any).__renderActionId = actionId
-        return actionId
+        // Check if this handler has been analyzed by ActionHandlerAnalyzer
+        const actionId = this.handlerIdByFunction.get(node as any)
+        if (actionId) {
+          return actionId
+        }
+        // If no action ID, return null (handler wasn't analyzed - might be unsupported pattern)
+        return null
       }
       default:
         // In a real-world scenario, you might want to throw an error

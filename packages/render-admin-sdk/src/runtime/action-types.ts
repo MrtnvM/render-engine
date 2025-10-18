@@ -1,7 +1,7 @@
-import type { SerializedActionHandler } from './serialized-handler-types.js'
-
 /**
- * Action types for Store operations
+ * Action types for Store operations (Legacy - used by old transpiler)
+ *
+ * Note: For new declarative actions, see declarative-action-types.ts
  */
 export enum ActionType {
   StoreSet = 'store.set',
@@ -51,14 +51,7 @@ export interface StoreActionDescriptor {
   handlerId?: string
 }
 
-export interface HandlerActionDescriptor {
-  kind: 'handler'
-  id: string
-  handler: SerializedActionHandler
-  linkedActionIds?: string[]
-}
-
-export type ActionDescriptor = StoreActionDescriptor | HandlerActionDescriptor
+export type ActionDescriptor = StoreActionDescriptor
 
 /**
  * Store descriptor in JSON format
