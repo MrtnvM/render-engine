@@ -328,6 +328,13 @@ Deliver a **working, enforceable schema validation system** for backend-driven U
 }
 ```
 
+### List component runtime model
+
+- `props.items` defines the static template for each cell as an array of component definitions.
+- Optional `data.items` may override the initial items at load time using the same component schema.
+- Optional `data.itemsStoreKeyPath` (or `data.items.keyPath`) binds the list to a store key path. The store value must be an array (or object map) of component definitions that match the component schema above.
+- The iOS renderer virtualizes rows with `UITableView` + diffable data source, so only the visible cells mount child components while still responding to live store updates.
+
 ---
 
 ✅ This final spec ensures **end-to-end schema validation** for UI configs and scenario data, directly aligned with the **Store API doc** you shared.

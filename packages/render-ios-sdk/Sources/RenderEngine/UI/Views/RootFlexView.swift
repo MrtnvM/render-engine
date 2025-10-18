@@ -39,10 +39,11 @@ fileprivate class ScenarioObserverObject: ScenarioObserver {
 class RootFlexView: UIView {
     private let logger = DIContainer.shared.currentLogger
     private let repository = DIContainer.shared.scenarioRepository
-    
+    private let storeFactory = DIContainer.shared.storeFactory
+
     private var currentObserver: ScenarioObserverObject?
     private let safeArea: SafeAreaOptions
-    
+
     var scenario: Scenario? {
         didSet { onScenarioChanged(scenario) }
     }
@@ -150,7 +151,15 @@ class RootFlexView: UIView {
     
     // MARK: - Rendering
     private func renderScenario(scenario: Scenario) {
-        let builder = ViewTreeBuilder(scenario: scenario)
+        let store = storeFactory.makeStore(
+            scope: .scenario(id: scenario.id),
+            storage: .memory
+        )
+        let builder = ViewTreeBuilder(
+            scenario: scenario,
+            store: store,
+            storeFactory: storeFactory
+        )
         guard let view = builder.buildViewTree(from: scenario.mainComponent) else {
             logger.warning("NO VIEW RENDERED FOR SCENARIO", category: "RootFlexView")
             return
