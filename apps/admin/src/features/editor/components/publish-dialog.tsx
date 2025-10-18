@@ -14,9 +14,10 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle2, XCircle, Loader2, Upload } from 'lucide-react'
 import { usePublishScenario } from '../hooks/use-publish-scenario'
+import type { TranspiledScenario } from '@render-engine/admin-sdk'
 
 interface PublishDialogProps {
-  compiledScenario: any
+  compiledScenario: TranspiledScenario | null
   disabled?: boolean
 }
 

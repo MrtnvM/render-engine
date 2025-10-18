@@ -48,7 +48,7 @@ const ColumnHeaderItem: React.FC<ColumnHeaderItemProps> = ({
 )
 
 // Column Headers Component
-const ColumnHeaders: React.FC = () => (
+const _ColumnHeaders: React.FC = () => (
   <div className='mb-6 flex gap-8 text-center'>
     <ColumnHeaderItem title='Size' className='flex-shrink-0' width='w-20' />
     <ColumnHeaderItem title='Default' subLabels={['Secondary', 'Primary']} />
@@ -144,7 +144,7 @@ const ButtonSizeRow: React.FC<ButtonSizeRowProps> = ({ size }) => (
 )
 
 // Button Variants Showcase Component
-const ButtonVariantsShowcase: React.FC = () => {
+const _ButtonVariantsShowcase: React.FC = () => {
   const sizes = ['m', 'xl', 'l', 's', 'xs'] as const
 
   return (

@@ -2,17 +2,18 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { CheckCircle2, XCircle, AlertTriangle, Info, Loader2 } from 'lucide-react'
+import { CheckCircle2, XCircle, Loader2 } from 'lucide-react'
 import { useCompileScenario } from '../hooks/use-compile-scenario'
+import type { TranspiledScenario } from '@render-engine/admin-sdk'
 
 interface CompilationPanelProps {
   jsxCode: string
-  onCompilationSuccess?: (result: any) => void
+  onCompilationSuccess?: (result: TranspiledScenario) => void
 }
 
 export function CompilationPanel({ jsxCode, onCompilationSuccess }: CompilationPanelProps) {
   const compileMutation = useCompileScenario()
-  const [compiledResult, setCompiledResult] = useState<any>(null)
+  const [compiledResult, setCompiledResult] = useState<TranspiledScenario | null>(null)
 
   const handleCompile = () => {
     compileMutation.mutate(

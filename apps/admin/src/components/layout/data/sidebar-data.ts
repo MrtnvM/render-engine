@@ -5,7 +5,6 @@ import {
   IconHelp,
   IconLayoutDashboard,
   IconNotification,
-  IconPackages,
   IconPalette,
   IconSettings,
   IconTool,

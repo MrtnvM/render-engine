@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import type { JsonNode, StoreDescriptor, ActionDescriptor } from '@render-engine/admin-sdk'
 
 interface PublishScenarioRequest {
   key: string
   version?: string
-  mainComponent: Record<string, any>
-  components: Record<string, any>
-  stores?: any[]
-  actions?: any[]
-  metadata?: Record<string, any>
+  mainComponent: JsonNode
+  components: Record<string, JsonNode>
+  stores?: StoreDescriptor[]
+  actions?: ActionDescriptor[]
+  metadata?: Record<string, unknown>
 }
 
 interface PublishedScenario {
@@ -15,9 +16,9 @@ interface PublishedScenario {
   key: string
   version: string
   buildNumber: number
-  mainComponent: Record<string, any>
-  components: Record<string, any>
-  metadata: Record<string, any>
+  mainComponent: JsonNode
+  components: Record<string, JsonNode>
+  metadata: Record<string, unknown>
   createdAt: string
   updatedAt: string
 }

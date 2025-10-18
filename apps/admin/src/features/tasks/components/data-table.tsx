@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Row,
 } from '@tanstack/react-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { taskSchema } from '../data/schema'
@@ -53,7 +54,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  const handleRowClick = (row: any, event: React.MouseEvent) => {
+  const handleRowClick = (row: Row<TData>, event: React.MouseEvent) => {
     // Don't navigate if clicking on checkbox, button, or interactive elements
     const target = event.target as HTMLElement
     if (target.closest('button') || target.closest('[role="checkbox"]') || target.closest('[role="menuitem"]')) {

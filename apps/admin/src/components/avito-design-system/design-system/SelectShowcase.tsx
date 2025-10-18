@@ -45,7 +45,7 @@ interface ColumnHeaderItemProps {
   width?: string
 }
 
-const ColumnHeaderItem: React.FC<ColumnHeaderItemProps> = ({
+const _ColumnHeaderItem: React.FC<ColumnHeaderItemProps> = ({
   title,
   subLabels,
   className = 'flex-1',
@@ -140,7 +140,7 @@ interface SelectSizeRowProps {
   size: 'xs' | 's' | 'm' | 'l' | 'xl'
 }
 
-const SelectSizeRow: React.FC<SelectSizeRowProps> = ({ size }) => (
+const _SelectSizeRow: React.FC<SelectSizeRowProps> = ({ size }) => (
   <div key={`rect-${size}`} className='flex items-center gap-8'>
     <div className='flex w-20 flex-shrink-0 items-center justify-center'>
       <span className='text-sm font-medium text-gray-900 uppercase'>{size}</span>
