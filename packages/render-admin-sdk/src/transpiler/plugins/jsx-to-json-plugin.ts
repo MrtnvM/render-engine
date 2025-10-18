@@ -2,7 +2,7 @@ import type { File, Node } from '@babel/types'
 import type { Visitor } from '@babel/traverse'
 import type { ASTNode, JSXElement, JSXText, JsonNode, TranspilerConfig } from '../types.js'
 import { TranspilerPlugin } from './base-plugin.js'
-import { getPredefinedComponents } from '../utils.js'
+import { getAvailableComponents, isValidComponent } from './component-registry-plugin.js'
 
 export interface JsxToJsonResult {
   rootJson: JsonNode | null
@@ -124,12 +124,17 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
           const node = path.node
           const componentName = this.getComponentName(node.openingElement.name)
 
-          // Get predefined components dynamically
-          const componentTypes = getPredefinedComponents(this.config?.components)
-          if (componentTypes.includes(componentName)) {
-            // We'll collect this information later when we encounter the export declaration
-            ;(path.node as any).componentName = componentName
+          // Validate component exists in ui.tsx
+          if (!isValidComponent(componentName)) {
+            const availableComponents = getAvailableComponents()
+            throw new Error(
+              `Unknown component: <${componentName}>. ` +
+              `Available components: ${availableComponents.join(', ')}`
+            )
           }
+
+          // Mark component for collection
+          ;(path.node as any).componentName = componentName
 
           // 1. Determine Component Type
           const componentType = componentName

@@ -1,6 +1,6 @@
 // Main transpiler export
 export { transpile } from './transpiler/transpiler.js'
-export { getPredefinedComponents, DEFAULT_COMPONENTS } from './transpiler/utils.js'
+export { getAvailableComponents, isValidComponent } from './transpiler/plugins/component-registry-plugin.js'
 
 // Transpiler type exports
 export type {

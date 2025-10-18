@@ -22,4 +22,5 @@ export { ScenarioMetadataExtractorPlugin } from './scenario-metadata-extractor-p
 export { StoreCollectorPlugin, type StoreCollectorResult } from './store-collector-plugin.js'
 export { JsxToJsonPlugin, type JsxToJsonResult } from './jsx-to-json-plugin.js'
 export { ActionHandlerAnalyzerPlugin, type ActionHandlerAnalyzerResult } from './action-handler-analyzer.js'
+export { getAvailableComponents, isValidComponent, clearComponentCache } from './component-registry-plugin.js'
 export * from './serialization-utils.js'
