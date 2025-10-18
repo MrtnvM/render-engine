@@ -63,12 +63,19 @@ export class CompileScenarioUseCase {
       return {
         key: result.key,
         version: result.version || '1.0.0',
-        name: result.name || result.key,
-        description: result.description || '',
         main: result.main,
         components: result.components || {},
-        stores: result.stores,
-        actions: result.actions,
+        stores: result.stores?.map((store, index) => ({
+          name: `store_${index}`,
+          scope: store.scope,
+          storage: store.storage,
+          initialData: store.initialValue,
+        })),
+        actions: result.actions?.map((action) => ({
+          name: action.id,
+          type: action.kind,
+          payload: action,
+        })),
       }
     } catch (error: any) {
       // Если это уже CompilationError, пробрасываем дальше

@@ -290,12 +290,25 @@ export interface SwitchAction extends BaseAction {
 // ==================== Helper Types ====================
 
 /**
+ * Store value descriptor for serialization
+ * Simplified version of LiteralValue for store initial values
+ */
+export type StoreValueDescriptor =
+  | { type: 'string'; value: string }
+  | { type: 'number'; value: number }
+  | { type: 'integer'; value: number }
+  | { type: 'bool'; value: boolean }
+  | { type: 'null' }
+  | { type: 'array'; value: StoreValueDescriptor[] }
+  | { type: 'object'; value: Record<string, StoreValueDescriptor> }
+
+/**
  * Store descriptor for scenario initialization
  */
 export interface StoreDescriptor {
   scope: 'app' | 'scenario'
   storage: 'memory' | 'userPrefs' | 'file' | 'backend'
-  initialValue?: Record<string, any>
+  initialValue?: Record<string, StoreValueDescriptor>
 }
 
 /**
