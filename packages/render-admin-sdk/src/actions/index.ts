@@ -19,6 +19,8 @@ export {
   requestLocationPermission,
   requestNotificationPermission,
 } from './system.js'
+export { api, apiRequest } from './api.js'
 
 export type { ToastDuration, ToastPosition } from './ui.js'
 export type { HapticStyle } from './system.js'
+export type { ApiRequestConfig, HttpMethod } from './api.js'

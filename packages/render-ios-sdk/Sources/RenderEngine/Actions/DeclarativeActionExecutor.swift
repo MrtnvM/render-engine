@@ -110,6 +110,12 @@ public final class DeclarativeActionExecutor {
             // Not yet implemented
             break
 
+        // API actions
+        case .apiRequest:
+            if let apiAction = action.as(ApiRequestAction.self) {
+                try await executeApiRequest(apiAction, scenarioId: scenarioId, eventData: eventData)
+            }
+
         // Control flow
         case .sequence:
             if let seqAction = action.as(SequenceAction.self) {
@@ -390,6 +396,136 @@ public final class DeclarativeActionExecutor {
         }
     }
 
+    // MARK: - API Action Executors
+
+    private func executeApiRequest(_ action: ApiRequestAction, scenarioId: String, eventData: [String: Any]?) async throws {
+        logger?.debug("Executing API request: \(action.method) \(action.endpoint)", category: "APIExecutor")
+
+        // Build URL
+        guard let url = URL(string: action.endpoint) else {
+            logger?.error("Invalid endpoint URL: \(action.endpoint)", category: "APIExecutor")
+            if let onError = action.onError {
+                let errorData = ["message": "Invalid endpoint URL"]
+                try await execute(onError, scenarioId: scenarioId, eventData: errorData)
+            }
+            throw ActionExecutionError.invalidOperation("Invalid endpoint URL: \(action.endpoint)")
+        }
+
+        // Build URLRequest
+        var request = URLRequest(url: url)
+        request.httpMethod = action.method
+
+        // Resolve and set headers
+        if let headers = action.headers {
+            for (key, valueDescriptor) in headers {
+                let headerValue = try await resolveValueAsString(valueDescriptor, eventData: eventData)
+                request.setValue(headerValue, forHTTPHeaderField: key)
+            }
+        }
+
+        // Resolve and set body
+        if let bodyDescriptor = action.body {
+            let bodyValue = try await resolveValue(bodyDescriptor, scenarioId: scenarioId, eventData: eventData)
+            let bodyData = try storeValueToJSONData(bodyValue)
+            request.httpBody = bodyData
+
+            // Set Content-Type if not already set
+            if request.value(forHTTPHeaderField: "Content-Type") == nil {
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            }
+        }
+
+        // Execute HTTP request
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw ActionExecutionError.invalidOperation("Invalid HTTP response")
+            }
+
+            logger?.debug("API request completed with status: \(httpResponse.statusCode)", category: "APIExecutor")
+
+            // Check for success status codes (2xx)
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse response data
+                var responseData: Any = NSNull()
+                if !data.isEmpty {
+                    if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
+                        responseData = json
+                    } else if let string = String(data: data, encoding: .utf8) {
+                        responseData = string
+                    }
+                }
+
+                // Handle response mapping if specified
+                if let mapping = action.responseMapping {
+                    let store = getStore(from: mapping.targetStoreRef, scenarioId: scenarioId)
+                    let storeValue = anyToStoreValue(responseData)
+
+                    // Apply transform if specified
+                    let finalValue: StoreValue
+                    if let transform = mapping.transform {
+                        finalValue = try applyResponseTransform(storeValue, transform: transform)
+                    } else {
+                        finalValue = storeValue
+                    }
+
+                    await store.set(mapping.keyPath, finalValue)
+                    logger?.debug("Stored response at \(mapping.keyPath)", category: "APIExecutor")
+                }
+
+                // Execute onSuccess callback
+                if let onSuccess = action.onSuccess {
+                    let successEventData = ["value": responseData]
+                    try await execute(onSuccess, scenarioId: scenarioId, eventData: successEventData)
+                }
+            } else {
+                // Handle error status codes
+                let errorMessage = String(data: data, encoding: .utf8) ?? "HTTP \(httpResponse.statusCode)"
+                logger?.warning("API request failed with status \(httpResponse.statusCode): \(errorMessage)", category: "APIExecutor")
+
+                if let onError = action.onError {
+                    let errorEventData = [
+                        "value": [
+                            "status": httpResponse.statusCode,
+                            "message": errorMessage
+                        ] as [String: Any]
+                    ]
+                    try await execute(onError, scenarioId: scenarioId, eventData: errorEventData)
+                } else {
+                    throw ActionExecutionError.invalidOperation("API request failed with status \(httpResponse.statusCode)")
+                }
+            }
+        } catch let error as ActionExecutionError {
+            throw error
+        } catch {
+            logger?.error("API request failed: \(error.localizedDescription)", category: "APIExecutor")
+
+            if let onError = action.onError {
+                let errorEventData = [
+                    "value": [
+                        "message": error.localizedDescription
+                    ]
+                ]
+                try await execute(onError, scenarioId: scenarioId, eventData: errorEventData)
+            } else {
+                throw ActionExecutionError.invalidOperation("API request failed: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func applyResponseTransform(_ value: StoreValue, transform: ResponseTransform) throws -> StoreValue {
+        // Simplified transform implementation
+        // In a full implementation, would support JSONPath and templating
+        logger?.debug("Applying response transform: \(transform.type)", category: "APIExecutor")
+        return value
+    }
+
+    private func storeValueToJSONData(_ value: StoreValue) throws -> Data {
+        let anyValue = storeValueToAny(value)
+        return try JSONSerialization.data(withJSONObject: anyValue, options: [])
+    }
+
     // MARK: - Control Flow Executors
 
     private func executeSequence(_ action: SequenceAction, scenarioId: String, eventData: [String: Any]?) async throws {
@@ -465,15 +601,22 @@ public final class DeclarativeActionExecutor {
     }
 
     private func resolveValueAsString(_ descriptor: ValueDescriptor, eventData: [String: Any]?) async throws -> String {
-        // Simplified version for string resolution
-        switch descriptor {
-        case .literal(let literal):
-            if case let stringValue as String = literal.value.value {
-                return stringValue
-            }
-            return String(describing: literal.value.value)
-        default:
+        // Resolve the value first, then convert to string
+        let value = try await resolveValue(descriptor, scenarioId: "default", eventData: eventData)
+
+        switch value {
+        case .string(let s):
+            return s
+        case .integer(let i):
+            return String(i)
+        case .number(let n):
+            return String(n)
+        case .bool(let b):
+            return String(b)
+        case .null:
             return ""
+        default:
+            return String(describing: value)
         }
     }
 

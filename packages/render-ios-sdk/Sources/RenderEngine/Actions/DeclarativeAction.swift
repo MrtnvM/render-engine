@@ -34,6 +34,9 @@ public enum DeclarativeActionKind: String, Codable, Sendable {
     case systemCopyToClipboard = "system.copyToClipboard"
     case systemRequestPermission = "system.requestPermission"
 
+    // API
+    case apiRequest = "api.request"
+
     // Control flow
     case sequence = "sequence"
     case conditional = "conditional"
@@ -268,6 +271,31 @@ public struct HapticAction: DeclarativeAction {
     public let style: String
 }
 
+// MARK: - API Actions
+
+public struct ApiRequestAction: DeclarativeAction {
+    public let id: String
+    public let kind: DeclarativeActionKind = .apiRequest
+    public let endpoint: String
+    public let method: String
+    public let headers: [String: ValueDescriptor]?
+    public let body: ValueDescriptor?
+    public let onSuccess: AnyDeclarativeAction?
+    public let onError: AnyDeclarativeAction?
+    public let responseMapping: ResponseMapping?
+}
+
+public struct ResponseMapping: Codable, Equatable, Sendable {
+    public let targetStoreRef: StoreReference
+    public let keyPath: String
+    public let transform: ResponseTransform?
+}
+
+public struct ResponseTransform: Codable, Equatable, Sendable {
+    public let type: String  // "jsonPath" or "template"
+    public let expression: String
+}
+
 // MARK: - Control Flow Actions
 
 public struct SequenceAction: DeclarativeAction {
@@ -339,6 +367,8 @@ public struct AnyDeclarativeAction: Codable, Sendable {
             _action = try OpenUrlAction(from: decoder)
         case .systemHaptic:
             _action = try HapticAction(from: decoder)
+        case .apiRequest:
+            _action = try ApiRequestAction(from: decoder)
         case .sequence:
             _action = try SequenceAction(from: decoder)
         case .conditional:

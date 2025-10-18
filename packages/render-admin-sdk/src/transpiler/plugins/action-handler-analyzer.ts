@@ -26,6 +26,7 @@ import type {
   ShareAction,
   OpenUrlAction,
   HapticAction,
+  ApiRequestAction,
 } from '../../runtime/declarative-action-types.js'
 import type {
   ValueDescriptor,
@@ -297,7 +298,7 @@ export class ActionHandlerAnalyzerPlugin extends TranspilerPlugin<ActionHandlerA
           return this.analyzeStoreOperation(storeRef, methodName, expr.arguments, path)
         }
 
-        // Check for namespace actions: navigate.push(), ui.showToast(), system.share()
+        // Check for namespace actions: navigate.push(), ui.showToast(), system.share(), api.request()
         if (varName === 'navigate') {
           return this.analyzeNavigationAction(methodName, expr.arguments, path)
         }
@@ -306,6 +307,9 @@ export class ActionHandlerAnalyzerPlugin extends TranspilerPlugin<ActionHandlerA
         }
         if (varName === 'system') {
           return this.analyzeSystemAction(methodName, expr.arguments, path)
+        }
+        if (varName === 'api') {
+          return this.analyzeApiAction(methodName, expr.arguments, path)
         }
       }
     }
@@ -327,6 +331,11 @@ export class ActionHandlerAnalyzerPlugin extends TranspilerPlugin<ActionHandlerA
       // System functions
       if (['share', 'openUrl', 'haptic', 'copyToClipboard', 'requestCameraPermission', 'requestPhotoLibraryPermission', 'requestLocationPermission', 'requestNotificationPermission'].includes(functionName)) {
         return this.analyzeSystemAction(functionName, expr.arguments, path)
+      }
+
+      // API functions
+      if (functionName === 'apiRequest') {
+        return this.analyzeApiAction('request', expr.arguments, path)
       }
 
       // Unknown function - ignore for now
@@ -746,6 +755,13 @@ export class ActionHandlerAnalyzerPlugin extends TranspilerPlugin<ActionHandlerA
 
     // Identifier (could be local variable or function parameter)
     if (t.isIdentifier(expr)) {
+      // Check if it's a local variable (including callback parameters)
+      if (this.localVariables.has(expr.name)) {
+        // This is a parameter from a callback (e.g., 'data' or 'error')
+        // Treat it as event data that will be provided at runtime
+        return { kind: 'eventData', path: 'value' }
+      }
+
       // Check if it's a handler parameter (e.g., event data)
       const functionNode = path.node
       const paramIndex = functionNode.params.findIndex(
@@ -756,15 +772,7 @@ export class ActionHandlerAnalyzerPlugin extends TranspilerPlugin<ActionHandlerA
         return { kind: 'eventData', path: 'value' } // Default to 'value' property
       }
 
-      // Check if it's a local variable
-      if (this.localVariables.has(expr.name)) {
-        throw createExternalVariableError(
-          expr.name,
-          expr,
-        )
-      }
-
-      // Unknown identifier
+      // Unknown identifier - external variable reference
       throw createExternalVariableError(expr.name, expr)
     }
 
@@ -1017,6 +1025,160 @@ export class ActionHandlerAnalyzerPlugin extends TranspilerPlugin<ActionHandlerA
       default:
         return null
     }
+  }
+
+  /**
+   * Analyze API action
+   */
+  private analyzeApiAction(
+    methodName: string,
+    args: Array<t.Expression | t.SpreadElement | t.ArgumentPlaceholder>,
+    path: NodePath<t.Function>,
+  ): ActionDescriptor | null {
+    if (methodName !== 'request') {
+      return null
+    }
+
+    // api.request() requires a config object as first argument
+    if (args.length < 1) {
+      throw new Error('api.request() requires a config object')
+    }
+
+    const configArg = args[0]
+    if (t.isSpreadElement(configArg) || t.isArgumentPlaceholder(configArg)) {
+      throw new Error('Spread elements not supported in config')
+    }
+
+    if (!t.isObjectExpression(configArg)) {
+      throw new Error('api.request() config must be an object literal')
+    }
+
+    // Extract config properties
+    let endpoint: string | undefined
+    let httpMethod: string | undefined
+    let headers: Record<string, ValueDescriptor> | undefined
+    let body: ValueDescriptor | undefined
+    let onSuccess: ActionDescriptor | undefined
+    let onError: ActionDescriptor | undefined
+
+    for (const prop of configArg.properties) {
+      if (!t.isObjectProperty(prop) || prop.computed) continue
+
+      const key = t.isIdentifier(prop.key) ? prop.key.name : String((prop.key as any).value)
+      const value = prop.value
+
+      switch (key) {
+        case 'endpoint':
+          if (t.isStringLiteral(value)) {
+            endpoint = value.value
+          } else {
+            throw new Error('endpoint must be a string literal')
+          }
+          break
+
+        case 'method':
+          if (t.isStringLiteral(value)) {
+            httpMethod = value.value
+          } else {
+            throw new Error('method must be a string literal')
+          }
+          break
+
+        case 'headers':
+          if (t.isObjectExpression(value)) {
+            headers = {}
+            for (const headerProp of value.properties) {
+              if (t.isObjectProperty(headerProp) && !headerProp.computed) {
+                let headerKey: string
+                if (t.isIdentifier(headerProp.key)) {
+                  headerKey = headerProp.key.name
+                } else if (t.isStringLiteral(headerProp.key)) {
+                  headerKey = headerProp.key.value
+                } else {
+                  continue
+                }
+                headers[headerKey] = this.analyzeValue(headerProp.value as t.Expression, path)
+              }
+            }
+          }
+          break
+
+        case 'body':
+          body = this.analyzeValue(value as t.Expression, path)
+          break
+
+        case 'onSuccess':
+          // Analyze onSuccess callback
+          if (t.isArrowFunctionExpression(value) || t.isFunctionExpression(value)) {
+            // Track callback parameters as local variables
+            const previousLocalVars = new Set(this.localVariables)
+            value.params.forEach((param) => {
+              if (t.isIdentifier(param)) {
+                this.localVariables.add(param.name)
+              }
+            })
+
+            const successAction = this.analyzeHandlerBody(value.body, path)
+            if (successAction) {
+              onSuccess = successAction
+            }
+
+            // Restore previous local variables
+            this.localVariables = previousLocalVars
+          }
+          break
+
+        case 'onError':
+          // Analyze onError callback
+          if (t.isArrowFunctionExpression(value) || t.isFunctionExpression(value)) {
+            // Track callback parameters as local variables
+            const previousLocalVars = new Set(this.localVariables)
+            value.params.forEach((param) => {
+              if (t.isIdentifier(param)) {
+                this.localVariables.add(param.name)
+              }
+            })
+
+            const errorAction = this.analyzeHandlerBody(value.body, path)
+            if (errorAction) {
+              onError = errorAction
+            }
+
+            // Restore previous local variables
+            this.localVariables = previousLocalVars
+          }
+          break
+
+        case 'responseMapping':
+          // TODO: Implement response mapping if needed
+          break
+      }
+    }
+
+    if (!endpoint) {
+      throw new Error('api.request() requires an endpoint')
+    }
+
+    if (!httpMethod) {
+      throw new Error('api.request() requires a method')
+    }
+
+    const action: ApiRequestAction = {
+      id: this.generateActionId(),
+      kind: 'api.request',
+      endpoint,
+      method: httpMethod as any,
+      headers,
+      body,
+    }
+
+    // Add onSuccess/onError as sequence if they exist
+    if (onSuccess || onError) {
+      ;(action as any).onSuccess = onSuccess
+      ;(action as any).onError = onError
+    }
+
+    return action
   }
 
   /**

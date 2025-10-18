@@ -103,9 +103,11 @@ export {
   requestPhotoLibraryPermission,
   requestLocationPermission,
   requestNotificationPermission,
+  api,
+  apiRequest,
 } from './actions/index.js'
 
-export type { ToastDuration, ToastPosition, HapticStyle } from './actions/index.js'
+export type { ToastDuration, ToastPosition, HapticStyle, ApiRequestConfig, HttpMethod } from './actions/index.js'
 
 // Default export
 export { transpile as default } from './transpiler/transpiler.js'
