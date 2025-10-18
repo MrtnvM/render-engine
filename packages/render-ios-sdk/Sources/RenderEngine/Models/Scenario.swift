@@ -6,6 +6,8 @@ public class Scenario {
     public let key: String
     public let mainComponent: Component
     public let components: [String: Component]
+    public let stores: [StoreDescriptor]
+    public let actions: [AnyDeclarativeAction]
     public let version: String
     public let build_number: Int
     public let metadata: [String: Any]
@@ -17,6 +19,8 @@ public class Scenario {
         key: String,
         mainComponent: Component,
         components: [String: Component],
+        stores: [StoreDescriptor],
+        actions: [AnyDeclarativeAction],
         version: String,
         build_number: Int,
         metadata: [String: Any],
@@ -28,12 +32,14 @@ public class Scenario {
         self.version = version
         self.build_number = build_number
         self.mainComponent = mainComponent
-        self.metadata = metadata
         self.components = components
+        self.stores = stores
+        self.actions = actions
+        self.metadata = metadata
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
-    
+
     public static func create(from json: [String: Any?]) -> Scenario? {
         let config = Config(json)
 
@@ -60,6 +66,28 @@ public class Scenario {
             }
         }
 
+        // Parse stores from JSON
+        var stores: [StoreDescriptor] = []
+        if let storesArray = config.getArray(forKey: "stores") as? [[String: Any]] {
+            for storeJson in storesArray {
+                if let storeData = try? JSONSerialization.data(withJSONObject: storeJson),
+                   let store = try? JSONDecoder().decode(StoreDescriptor.self, from: storeData) {
+                    stores.append(store)
+                }
+            }
+        }
+
+        // Parse actions from JSON
+        var actions: [AnyDeclarativeAction] = []
+        if let actionsArray = config.getArray(forKey: "actions") as? [[String: Any]] {
+            for actionJson in actionsArray {
+                if let actionData = try? JSONSerialization.data(withJSONObject: actionJson),
+                   let action = try? JSONDecoder().decode(AnyDeclarativeAction.self, from: actionData) {
+                    actions.append(action)
+                }
+            }
+        }
+
         // Parse timestamps
         let createdAt = config.getDate(forKey: "createdAt") ?? Date()
         let updatedAt = config.getDate(forKey: "updatedAt") ?? Date()
@@ -69,6 +97,8 @@ public class Scenario {
             key: key,
             mainComponent: mainComponent,
             components: components,
+            stores: stores,
+            actions: actions,
             version: version,
             build_number: build_number,
             metadata: metadata,
@@ -83,12 +113,14 @@ struct ScenarioJSON: Decodable, Sendable {
     let key: String
     let mainComponent: [String: JSONValue]
     let components: [String: JSONValue]
+    let stores: [[String: JSONValue]]?
+    let actions: [[String: JSONValue]]?
     let version: String
     let build_number: Int
     let metadata: [String: JSONValue]
-    
+
     func toMap() -> [String: Any?] {
-        return [
+        var result: [String: Any?] = [
             "id": id,
             "key": key,
             "mainComponent": convertJSONValueToAny(mainComponent),
@@ -97,8 +129,18 @@ struct ScenarioJSON: Decodable, Sendable {
             "build_number": build_number,
             "metadata": convertJSONValueToAny(metadata)
         ]
+
+        if let stores = stores {
+            result["stores"] = stores.map { convertJSONValueToAny($0) }
+        }
+
+        if let actions = actions {
+            result["actions"] = actions.map { convertJSONValueToAny($0) }
+        }
+
+        return result
     }
-    
+
     private func convertJSONValueToAny(_ jsonValue: [String: JSONValue]) -> [String: Any?] {
         var result = [String: Any?]()
         for (key, value) in jsonValue {
@@ -106,7 +148,7 @@ struct ScenarioJSON: Decodable, Sendable {
         }
         return result
     }
-    
+
     private func convertJSONValueToAny(_ jsonValue: JSONValue) -> Any? {
         switch jsonValue {
         case .string(let string):

@@ -1,5 +1,20 @@
-import { ActionContext, StoreAction } from './action-context.js'
-import { ActionType, StoreScope, StoreStorage } from './action-types.js'
+/**
+ * Store scope - where the store is bound
+ */
+export enum StoreScope {
+  App = 'app',
+  Scenario = 'scenario',
+}
+
+/**
+ * Storage mechanism for the store
+ */
+export enum StoreStorage {
+  Memory = 'memory',
+  UserPrefs = 'userPrefs',
+  File = 'file',
+  Backend = 'backend',
+}
 
 /**
  * Store configuration
@@ -12,6 +27,9 @@ export interface StoreConfig<T = any> {
 
 /**
  * Type-safe Store API for managing scenario data
+ *
+ * Note: This Store API is used in the Admin SDK runtime DSL for type-safe operations.
+ * The transpiler analyzes calls to these methods and converts them to declarative actions.
  */
 export class Store<T = any> {
   constructor(public readonly config: StoreConfig<T>) {}
@@ -25,90 +43,73 @@ export class Store<T = any> {
 
   /**
    * Set a value at the specified keyPath
+   * @transpiled This method is analyzed by the transpiler and converted to StoreSetAction
    */
-  set(keyPath: string, value: any): StoreAction
-  set<K extends keyof T>(keyPath: K, value: T[K]): StoreAction
-  set(keyPath: string | keyof T, value: any): StoreAction {
-    const keyPathStr = String(keyPath)
-    const actionId = `${this.identifier}_set_${keyPathStr.replace(/\./g, '_')}`
-    return new StoreAction(actionId, ActionType.StoreSet, this.config.scope, this.config.storage, keyPathStr, value)
+  set(keyPath: string, value: any): void
+  set<K extends keyof T>(keyPath: K, value: T[K]): void
+  set(keyPath: string | keyof T, value: any): void {
+    // This method is only for type safety in the DSL
+    // The transpiler converts this to a StoreSetAction
+    throw new Error('Store.set() is transpiled and should not be called at runtime')
   }
 
   /**
-   * Get a value at the specified keyPath (runtime only - not transpiled)
+   * Get a value at the specified keyPath
+   * @transpiled This method is analyzed by the transpiler and converted to StoreValueRef
    */
   get(keyPath: string): any
   get<K extends keyof T>(keyPath: K): T[K] | undefined
   get(keyPath: string | keyof T): any {
-    // Runtime helper - not transpiled
-    throw new Error('Store.get() is only available at runtime in iOS SDK')
+    // This method is only for type safety in the DSL
+    // The transpiler converts this to a StoreValueRef descriptor
+    throw new Error('Store.get() is transpiled and should not be called at runtime')
   }
 
   /**
    * Remove a value at the specified keyPath
+   * @transpiled This method is analyzed by the transpiler and converted to StoreRemoveAction
    */
-  remove(keyPath: string): StoreAction
-  remove<K extends keyof T>(keyPath: K): StoreAction
-  remove(keyPath: string | keyof T): StoreAction {
-    const keyPathStr = String(keyPath)
-    const actionId = `${this.identifier}_remove_${keyPathStr.replace(/\./g, '_')}`
-    return new StoreAction(actionId, ActionType.StoreRemove, this.config.scope, this.config.storage, keyPathStr)
+  remove(keyPath: string): void
+  remove<K extends keyof T>(keyPath: K): void
+  remove(keyPath: string | keyof T): void {
+    // This method is only for type safety in the DSL
+    // The transpiler converts this to a StoreRemoveAction
+    throw new Error('Store.remove() is transpiled and should not be called at runtime')
   }
 
   /**
    * Merge an object at the specified keyPath
+   * @transpiled This method is analyzed by the transpiler and converted to StoreMergeAction
    */
-  merge(keyPath: string, value: Record<string, any>): StoreAction
-  merge<K extends keyof T>(keyPath: K, value: Partial<T[K]>): StoreAction
-  merge(keyPath: string | keyof T, value: any): StoreAction {
-    const keyPathStr = String(keyPath)
-    const actionId = `${this.identifier}_merge_${keyPathStr.replace(/\./g, '_')}`
-    return new StoreAction(actionId, ActionType.StoreMerge, this.config.scope, this.config.storage, keyPathStr, value)
+  merge(keyPath: string, value: Record<string, any>): void
+  merge<K extends keyof T>(keyPath: K, value: Partial<T[K]>): void
+  merge(keyPath: string | keyof T, value: any): void {
+    // This method is only for type safety in the DSL
+    // The transpiler converts this to a StoreMergeAction
+    throw new Error('Store.merge() is transpiled and should not be called at runtime')
   }
 
   /**
    * Execute multiple mutations as a single transaction
+   * @transpiled This method is analyzed by the transpiler and converted to StoreTransactionAction
    */
-  transaction(block: (store: Store<T>) => void): StoreAction {
-    const transactionId = `${this.identifier}_transaction_${Date.now()}`
-
-    // Create temporary context to collect nested actions
-    const nestedActions: StoreAction[] = []
-    const proxy = new Proxy(this, {
-      get: (target, prop) => {
-        if (prop === 'set' || prop === 'remove' || prop === 'merge') {
-          return (...args: any[]) => {
-            const action = (target[prop as keyof Store<T>] as any)(...args) as StoreAction
-            nestedActions.push(action)
-            return action
-          }
-        }
-        return target[prop as keyof Store<T>]
-      },
-    })
-
-    block(proxy)
-
-    return new StoreAction(
-      transactionId,
-      ActionType.StoreTransaction,
-      this.config.scope,
-      this.config.storage,
-      '',
-      undefined,
-      nestedActions,
-    )
+  transaction(block: (store: Store<T>) => void): void {
+    // This method is only for type safety in the DSL
+    // The transpiler converts this to a StoreTransactionAction
+    throw new Error('Store.transaction() is transpiled and should not be called at runtime')
   }
 }
 
 /**
  * Factory function to create a type-safe store
+ *
+ * @example
+ * const userStore = store<{ name: string, age: number }>({
+ *   scope: StoreScope.Scenario,
+ *   storage: StoreStorage.Memory,
+ *   initialValue: { name: '', age: 0 }
+ * })
  */
 export function store<T = any>(config: StoreConfig<T>): Store<T> {
-  const instance = new Store<T>(config)
-
-  // Register store in action context for transpiler
-  ActionContext.registerStore(instance)
-
-  return instance
+  return new Store<T>(config)
 }

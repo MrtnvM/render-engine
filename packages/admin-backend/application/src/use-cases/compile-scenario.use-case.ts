@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe'
-import { transpile } from '@render-engine/admin-sdk'
+import { transpile, type TranspiledScenario } from '@render-engine/admin-sdk'
 import type { CompileScenarioDto } from '../dtos/compile-scenario.dto.js'
 import type { CompiledScenarioDto } from '../dtos/scenario-response.dto.js'
 import type { ValidationErrorDto } from '../dtos/validation-error.dto.js'
@@ -36,7 +36,7 @@ export class CompileScenarioUseCase {
       }
 
       // Транспиляция JSX в JSON
-      const result = await transpile(dto.jsxCode)
+      const result: TranspiledScenario = await transpile(dto.jsxCode)
 
       // Проверка наличия обязательных полей
       if (!result.key) {
@@ -63,10 +63,12 @@ export class CompileScenarioUseCase {
       return {
         key: result.key,
         version: result.version || '1.0.0',
+        name: result.name || result.key,
+        description: result.description || '',
         main: result.main,
         components: result.components || {},
-        stores: result.stores as any,
-        actions: result.actions as any,
+        stores: result.stores,
+        actions: result.actions,
       }
     } catch (error: any) {
       // Если это уже CompilationError, пробрасываем дальше

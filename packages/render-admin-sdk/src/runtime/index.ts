@@ -1,23 +1,11 @@
 /**
- * Runtime API for Store and Actions
+ * Runtime API for Store and Declarative Actions
  */
 
-export { store, Store, type StoreConfig } from './store.js'
-export { StoreAction as Action, ActionContext } from './action-context.js'
+// Store API
+export { store, Store, StoreScope, StoreStorage, type StoreConfig } from './store.js'
 
-// Legacy action types (to be deprecated)
-export {
-  ActionType,
-  StoreScope,
-  StoreStorage,
-  type ActionDescriptor as LegacyActionDescriptor,
-  type StoreActionDescriptor,
-  type StoreDescriptor as LegacyStoreDescriptor,
-  type StoreValueDescriptor,
-  type TranspiledScenarioWithActions as LegacyTranspiledScenario,
-} from './action-types.js'
-
-// New declarative action types
+// Declarative action types
 export type {
   ActionDescriptor,
   ActionKind,
@@ -30,12 +18,20 @@ export type {
   NavigationPopAction,
   NavigationReplaceAction,
   NavigationModalAction,
+  NavigationDismissModalAction,
+  NavigationPopToAction,
+  NavigationResetAction,
   ShowToastAction,
   ShowAlertAction,
   ShowSheetAction,
+  DismissSheetAction,
+  ShowLoadingAction,
+  HideLoadingAction,
   ShareAction,
   OpenUrlAction,
   HapticAction,
+  CopyToClipboardAction,
+  RequestPermissionAction,
   ApiRequestAction,
   SequenceAction,
   ConditionalAction,

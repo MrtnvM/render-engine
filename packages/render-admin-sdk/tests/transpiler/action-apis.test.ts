@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { transpileV2 } from '../../src/transpiler/transpiler-v2'
+import { transpile } from '../../src/transpiler/transpiler'
 import type {
   NavigationPushAction,
   NavigationPopAction,
@@ -30,7 +30,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       expect(result.actions).toHaveLength(1)
@@ -63,7 +63,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0] as NavigationPopAction
@@ -87,7 +87,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -112,7 +112,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -138,7 +138,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -164,7 +164,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0] as ShowToastAction
@@ -193,7 +193,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -222,7 +222,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -246,7 +246,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -276,7 +276,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       expect(result.actions).toHaveLength(1)
@@ -308,7 +308,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0] as ShareAction
@@ -333,7 +333,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0] as OpenUrlAction
@@ -362,7 +362,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0] as HapticAction
@@ -387,7 +387,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -412,7 +412,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       const action = result.actions![0]
@@ -453,7 +453,7 @@ describe('Action APIs', () => {
         }
       `
 
-      const result = await transpileV2(code, { useDeclarativeActions: true } as any)
+      const result = await transpile(code)
 
       expect(result.actions).toBeDefined()
       expect(result.actions).toHaveLength(1)
