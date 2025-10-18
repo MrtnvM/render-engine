@@ -232,7 +232,7 @@ public final class DeclarativeActionExecutor {
 
     private func executeShowAlert(_ action: ShowAlertAction, eventData: [String: Any]?) async throws {
         let title = try await resolveValueAsString(action.title, eventData: eventData)
-        let message = try? await resolveValueAsString(action.message ?? .literal(LiteralValue(kind: "literal", type: "null", value: AnyCodable(NSNull()))), eventData: eventData)
+        let message = try? await resolveValueAsString(action.message ?? .literal(LiteralValue(type: "null", value: AnyCodable(NSNull()))), eventData: eventData)
 
         logger?.debug("Showing alert: \(title)", category: "UIExecutor")
 
@@ -532,14 +532,16 @@ public final class DeclarativeActionExecutor {
         logger?.debug("Executing sequence with \(action.actions.count) actions", category: "ControlFlowExecutor")
 
         if action.strategy == "parallel" {
-            // Execute actions in parallel
-            try await withThrowingTaskGroup(of: Void.self) { group in
-                for nestedAction in action.actions {
-                    group.addTask {
-                        try await self.execute(nestedAction, scenarioId: scenarioId, eventData: eventData)
+            // Execute actions serially for now (parallel execution has concurrency issues)
+            for nestedAction in action.actions {
+                do {
+                    try await execute(nestedAction, scenarioId: scenarioId, eventData: eventData)
+                } catch {
+                    if action.stopOnError == true {
+                        throw error
                     }
+                    logger?.error("Action failed but continuing: \(error)", category: "ControlFlowExecutor")
                 }
-                try await group.waitForAll()
             }
         } else {
             // Execute actions serially

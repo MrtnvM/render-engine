@@ -19,7 +19,7 @@ public struct RendererContext {
     // Action-related properties
     internal var storeFactory: StoreFactory?
     internal var logger: Logger?
-    public var loadedActions: [String: Action] = [:]
+    public var loadedActions: [String: AnyDeclarativeAction] = [:]
 
     public init(
         viewController: UIViewController? = nil,

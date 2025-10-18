@@ -45,7 +45,7 @@ public enum DeclarativeActionKind: String, Codable, Sendable {
 // MARK: - Value Descriptors
 
 /// Value descriptor that can be resolved at runtime
-public enum ValueDescriptor: Codable, Equatable, Sendable {
+public enum ValueDescriptor: Codable, Equatable {
     case literal(LiteralValue)
     case storeValue(StoreValueRef)
     case computed(ComputedValue)
@@ -91,17 +91,22 @@ public enum ValueDescriptor: Codable, Equatable, Sendable {
     }
 }
 
-public struct LiteralValue: Codable, Equatable, Sendable {
+public struct LiteralValue: Codable, Equatable {
     public let kind: String = "literal"
     public let type: String
     public let value: AnyCodable
+
+    public init(type: String, value: AnyCodable) {
+        self.type = type
+        self.value = value
+    }
 
     enum CodingKeys: String, CodingKey {
         case kind, type, value
     }
 }
 
-public struct StoreValueRef: Codable, Equatable, Sendable {
+public struct StoreValueRef: Codable, Equatable {
     public let kind: String = "storeValue"
     public let storeRef: StoreReference
     public let keyPath: String
@@ -112,7 +117,7 @@ public struct StoreValueRef: Codable, Equatable, Sendable {
     }
 }
 
-public struct ComputedValue: Codable, Equatable, Sendable {
+public struct ComputedValue: Codable, Equatable {
     public let kind: String = "computed"
     public let operation: String
     public let operands: [ValueDescriptor]
@@ -138,7 +143,7 @@ public struct StoreReference: Codable, Equatable, Sendable {
 
 // MARK: - Declarative Actions
 
-public protocol DeclarativeAction: Codable, Sendable {
+public protocol DeclarativeAction: Codable {
     var id: String { get }
     var kind: DeclarativeActionKind { get }
 }
@@ -225,7 +230,7 @@ public struct ShowAlertAction: DeclarativeAction {
     public let buttons: [AlertButton]
 }
 
-public struct AlertButton: Codable, Equatable, Sendable {
+public struct AlertButton: Codable, Equatable {
     public let text: String
     public let style: String
     public let action: AnyDeclarativeAction?
@@ -238,7 +243,7 @@ public struct ShowSheetAction: DeclarativeAction {
     public let options: [SheetOption]
 }
 
-public struct SheetOption: Codable, Equatable, Sendable {
+public struct SheetOption: Codable, Equatable {
     public let text: String
     public let icon: String?
     public let action: AnyDeclarativeAction?
@@ -252,7 +257,7 @@ public struct ShareAction: DeclarativeAction {
     public let content: ShareContent
 }
 
-public struct ShareContent: Codable, Equatable, Sendable {
+public struct ShareContent: Codable, Equatable {
     public let text: ValueDescriptor?
     public let url: ValueDescriptor?
     public let image: ValueDescriptor?
@@ -285,13 +290,13 @@ public struct ApiRequestAction: DeclarativeAction {
     public let responseMapping: ResponseMapping?
 }
 
-public struct ResponseMapping: Codable, Equatable, Sendable {
+public struct ResponseMapping: Codable, Equatable {
     public let targetStoreRef: StoreReference
     public let keyPath: String
     public let transform: ResponseTransform?
 }
 
-public struct ResponseTransform: Codable, Equatable, Sendable {
+public struct ResponseTransform: Codable, Equatable {
     public let type: String  // "jsonPath" or "template"
     public let expression: String
 }
@@ -314,7 +319,7 @@ public struct ConditionalAction: DeclarativeAction {
     public let `else`: [AnyDeclarativeAction]?
 }
 
-public struct ConditionDescriptor: Codable, Equatable, Sendable {
+public struct ConditionDescriptor: Codable, Equatable {
     public let type: String
     public let left: ValueDescriptor?
     public let right: ValueDescriptor?
@@ -323,7 +328,7 @@ public struct ConditionDescriptor: Codable, Equatable, Sendable {
 
 // MARK: - Type-erased wrapper
 
-public struct AnyDeclarativeAction: Codable, Sendable {
+public struct AnyDeclarativeAction: Codable, Equatable {
     private let _action: any DeclarativeAction
 
     public var id: String { _action.id }
@@ -393,11 +398,16 @@ public struct AnyDeclarativeAction: Codable, Sendable {
     public func `as`<T: DeclarativeAction>(_ type: T.Type) -> T? {
         return _action as? T
     }
+
+    public static func == (lhs: AnyDeclarativeAction, rhs: AnyDeclarativeAction) -> Bool {
+        // Compare by id and kind as a simple equality check
+        return lhs.id == rhs.id && lhs.kind == rhs.kind
+    }
 }
 
 // MARK: - AnyCodable Helper
 
-public struct AnyCodable: Codable, Equatable, Sendable {
+public struct AnyCodable: Codable, Equatable {
     public let value: Any
 
     public init(_ value: Any) {
