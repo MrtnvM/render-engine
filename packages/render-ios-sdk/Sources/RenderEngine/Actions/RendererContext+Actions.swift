@@ -30,8 +30,8 @@ extension RendererContext {
         let factory = getStoreFactory()
 
         for descriptor in descriptors {
-            let scope = descriptor.toScope(scenarioId: scenarioId)
-            let storage = descriptor.toStorage()
+            let scope = descriptor.scope == "app" ? Scope.app : Scope.scenario(id: scenarioId)
+            let storage = storageFromString(descriptor.storage)
 
             // Get or create store
             let store = factory.makeStore(
@@ -41,8 +41,7 @@ extension RendererContext {
 
             // Set initial values if provided
             if let initialValue = descriptor.initialValue {
-                let storeData = initialValue.mapValues { $0.toStoreValue() }
-                await store.replaceAll(with: storeData)
+                await store.replaceAll(with: initialValue)
             }
 
             logger?.debug("Initialized store: \(scope) [\(storage)]", category: "Renderer")
@@ -51,31 +50,62 @@ extension RendererContext {
 
     // MARK: - Action Execution
 
-    /// Execute an action by ID
+    /// Execute a declarative action by ID
     @discardableResult
-    public func executeAction(id: String, scenarioId: String = "default") async throws -> Bool {
+    public func executeAction(id: String, scenarioId: String = "default", eventData: [String: Any]? = nil) async throws -> Bool {
         // Find action in loaded scenario
         guard let action = loadedActions[id] else {
-            throw ActionError.actionNotFound(id)
+            throw ActionExecutionError.navigationControllerMissing
         }
 
         let factory = getStoreFactory()
-        let executor = ActionExecutor(storeFactory: factory, logger: logger)
-        return try await executor.execute(action, scenarioId: scenarioId)
+        let executor = DeclarativeActionExecutor(
+            storeFactory: factory,
+            navigationController: navigationController,
+            logger: logger
+        )
+
+        try await executor.execute(action, scenarioId: scenarioId, eventData: eventData)
+        return true
     }
 
     /// Execute multiple actions
-    public func executeActions(ids: [String], scenarioId: String = "default") async throws {
+    public func executeActions(ids: [String], scenarioId: String = "default", eventData: [String: Any]? = nil) async throws {
         for id in ids {
-            try await executeAction(id: id, scenarioId: scenarioId)
+            try await executeAction(id: id, scenarioId: scenarioId, eventData: eventData)
         }
     }
 
-    /// Execute an action directly (not by ID)
+    /// Execute a declarative action directly (not by ID)
     @discardableResult
-    public func executeAction(_ action: Action, scenarioId: String = "default") async throws -> Bool {
+    public func executeAction(_ action: AnyDeclarativeAction, scenarioId: String = "default", eventData: [String: Any]? = nil) async throws -> Bool {
         let factory = getStoreFactory()
-        let executor = ActionExecutor(storeFactory: factory, logger: logger)
-        return try await executor.execute(action, scenarioId: scenarioId)
+        let executor = DeclarativeActionExecutor(
+            storeFactory: factory,
+            navigationController: navigationController,
+            logger: logger
+        )
+
+        try await executor.execute(action, scenarioId: scenarioId, eventData: eventData)
+        return true
+    }
+
+    // MARK: - Helpers
+
+    private func storageFromString(_ storage: String) -> Storage {
+        switch storage.lowercased() {
+        case "memory":
+            return .memory
+        case "userprefs":
+            return .userPrefs(suite: nil)
+        case "file":
+            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsPath.appendingPathComponent("store_\(storage).json")
+            return .file(url: fileURL)
+        case "backend":
+            return .backend(namespace: "default")
+        default:
+            return .memory
+        }
     }
 }

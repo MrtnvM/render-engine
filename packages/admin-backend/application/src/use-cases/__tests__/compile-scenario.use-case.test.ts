@@ -86,16 +86,25 @@ describe('CompileScenarioUseCase', () => {
         version: '1.0.0',
         main: { type: 'View' },
         components: {},
-        stores: [{ name: 'userStore' }],
-        actions: [{ name: 'updateUser' }],
+        stores: [{ scope: 'app', storage: 'memory', initialValue: { count: { type: 'integer', value: 0 } } }],
+        actions: [{ id: 'updateUser', kind: 'store.set', storeRef: { scope: 'app', storage: 'memory' }, keyPath: 'user', value: { kind: 'literal', type: 'string', value: 'test' } }],
       }
 
       vi.mocked(transpile).mockResolvedValue(mockResult as any)
 
       const result = await useCase.execute({ jsxCode })
 
-      expect(result.stores).toEqual([{ name: 'userStore' }])
-      expect(result.actions).toEqual([{ name: 'updateUser' }])
+      expect(result.stores).toEqual([{
+        name: 'store_0',
+        scope: 'app',
+        storage: 'memory',
+        initialData: { count: { type: 'integer', value: 0 } }
+      }])
+      expect(result.actions).toEqual([{
+        name: 'updateUser',
+        type: 'store.set',
+        payload: mockResult.actions[0]
+      }])
     })
 
     it('should use default version if not provided', async () => {

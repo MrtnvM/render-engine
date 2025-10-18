@@ -1,7 +1,7 @@
 import type { File } from '@babel/types'
 import type { Visitor } from '@babel/traverse'
 import type { TranspilerConfig } from '../types.js'
-import type { ScenarioMeta } from '../../runtime/action-types.js'
+import type { ScenarioMeta } from '../../runtime/declarative-action-types.js'
 import { TranspilerPlugin } from './base-plugin.js'
 
 /**

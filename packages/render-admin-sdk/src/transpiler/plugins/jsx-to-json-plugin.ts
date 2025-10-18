@@ -1,4 +1,4 @@
-import type { File } from '@babel/types'
+import type { File, Node } from '@babel/types'
 import type { Visitor } from '@babel/traverse'
 import type { ASTNode, JSXElement, JSXText, JsonNode, TranspilerConfig } from '../types.js'
 import { TranspilerPlugin } from './base-plugin.js'
@@ -28,6 +28,9 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
 
   // Track component props for each function scope
   private componentPropsStack: Set<string>[] = []
+
+  // Handler ID mapping (provided by ActionHandlerAnalyzer)
+  public handlerIdByFunction: Map<Node, string> = new Map()
 
   constructor(config?: TranspilerConfig) {
     super(config)
@@ -347,6 +350,16 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
         )
       case 'NullLiteral':
         return null
+      case 'ArrowFunctionExpression':
+      case 'FunctionExpression': {
+        // Check if this handler has been analyzed by ActionHandlerAnalyzer
+        const actionId = this.handlerIdByFunction.get(node as any)
+        if (actionId) {
+          return actionId
+        }
+        // If no action ID, return null (handler wasn't analyzed - might be unsupported pattern)
+        return null
+      }
       default:
         // In a real-world scenario, you might want to throw an error
         // for unsupported types or handle more cases (e.g., TemplateLiteral).

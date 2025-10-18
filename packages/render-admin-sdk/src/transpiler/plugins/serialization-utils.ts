@@ -1,4 +1,4 @@
-import type { StoreValueDescriptor } from '../../runtime/action-types.js'
+import type { StoreValueDescriptor } from '../../runtime/declarative-action-types.js'
 
 /**
  * Serialize an AST node to StoreValueDescriptor format.
