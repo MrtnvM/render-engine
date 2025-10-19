@@ -44,12 +44,30 @@
                 "__storeRef": "cartStore",
                 "__keyPath": "cartItemIds"
               },
+              "itemGetter": {
+                "kind": "storeValue",
+                "storeRef": {
+                  "__storeRef": "cartStore",
+                  "__isRef": true
+                },
+                "keyPath": {
+                  "kind": "computed",
+                  "operation": "template",
+                  "template": "items.{0}",
+                  "operands": [
+                    {
+                      "kind": "eventData",
+                      "path": "id"
+                    }
+                  ]
+                }
+              },
               "itemComponent": {
                 "type": "CartItem",
                 "data": {
-                  "itemId": {
+                  "item": {
                     "type": "prop",
-                    "key": "itemId"
+                    "key": "item"
                   }
                 }
               }
@@ -317,13 +335,19 @@
         {
           "type": "ProductCheckbox",
           "data": {
-            "checked": true
+            "checked": {
+              "type": "prop",
+              "key": "item.checked"
+            }
           }
         },
         {
           "type": "ProductImage",
           "data": {
-            "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
+            "image": {
+              "type": "prop",
+              "key": "item.image"
+            }
           }
         },
         {
@@ -347,7 +371,10 @@
                 {
                   "type": "Price",
                   "data": {
-                    "price": "4 990 ₽"
+                    "price": {
+                      "type": "prop",
+                      "key": "item.price"
+                    }
                   }
                 },
                 {
@@ -355,14 +382,17 @@
                   "data": {
                     "title": {
                       "type": "prop",
-                      "key": "itemId"
+                      "key": "item.title"
                     }
                   }
                 },
                 {
                   "type": "CountStepper",
                   "data": {
-                    "quantity": 1
+                    "quantity": {
+                      "type": "prop",
+                      "key": "item.quantity"
+                    }
                   }
                 },
                 {

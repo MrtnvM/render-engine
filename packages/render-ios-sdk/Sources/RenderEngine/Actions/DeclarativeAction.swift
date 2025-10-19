@@ -121,9 +121,10 @@ public struct ComputedValue: Codable, Equatable {
     public let kind: String = "computed"
     public let operation: String
     public let operands: [ValueDescriptor]
+    public let template: String?
 
     enum CodingKeys: String, CodingKey {
-        case kind, operation, operands
+        case kind, operation, operands, template
     }
 }
 

@@ -101,6 +101,8 @@ export const pushCommand = program
         key: scenarioKey,
         mainComponent: schema.main || schema.mainComponent || {},
         components: schema.components || {},
+        stores: schema.stores || [],
+        actions: schema.actions || [],
         version: latestVersion,
         build_number: nextBuildNumber,
         metadata: schema.metadata || {},

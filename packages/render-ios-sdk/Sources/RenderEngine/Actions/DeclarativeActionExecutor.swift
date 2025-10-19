@@ -617,7 +617,11 @@ public final class DeclarativeActionExecutor {
             return String(b)
         case .null:
             return ""
-        default:
+        case .color(let c):
+            return c
+        case .url(let u):
+            return u
+        case .array, .object:
             return String(describing: value)
         }
     }
@@ -719,6 +723,28 @@ public final class DeclarativeActionExecutor {
     }
 
     private func evaluateComputed(_ computed: ComputedValue, scenarioId: String, eventData: [String: Any]?) async throws -> StoreValue {
+        // Handle template operation separately (doesn't require 2 operands)
+        if computed.operation == "template" {
+            guard let template = computed.template else {
+                throw ActionExecutionError.invalidOperation("Template operation requires a template string")
+            }
+
+            // Resolve all operands
+            var resolvedOperands: [String] = []
+            for operand in computed.operands {
+                let value = try await resolveValue(operand, scenarioId: scenarioId, eventData: eventData)
+                resolvedOperands.append(storeValueToString(value))
+            }
+
+            // Replace placeholders {0}, {1}, etc. with resolved operands
+            var result = template
+            for (index, operand) in resolvedOperands.enumerated() {
+                result = result.replacingOccurrences(of: "{\(index)}", with: operand)
+            }
+
+            return .string(result)
+        }
+
         guard computed.operands.count >= 2 else {
             throw ActionExecutionError.invalidOperation("Computed value requires at least 2 operands")
         }
@@ -764,6 +790,43 @@ public final class DeclarativeActionExecutor {
         }
 
         return .null
+    }
+
+    private func storeValueToString(_ value: StoreValue) -> String {
+        switch value {
+        case .string(let str):
+            return str
+        case .integer(let int):
+            return String(int)
+        case .number(let num):
+            return String(num)
+        case .bool(let bool):
+            return String(bool)
+        case .null:
+            return "null"
+        case .color(let color):
+            return color
+        case .url(let urlString):
+            return urlString
+        case .array(let arr):
+            // For template keyPath building, arrays shouldn't appear
+            // But if they do, serialize to JSON
+            let arrayValues = arr.map { $0.value }
+            if let jsonData = try? JSONSerialization.data(withJSONObject: arrayValues, options: []),
+               let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
+            }
+            return "[]"
+        case .object(let obj):
+            // For template keyPath building, objects shouldn't appear
+            // But if they do, serialize to JSON
+            let objectValues = obj.mapValues { $0.value }
+            if let jsonData = try? JSONSerialization.data(withJSONObject: objectValues, options: []),
+               let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
+            }
+            return "{}"
+        }
     }
 
     // MARK: - Helpers
@@ -858,10 +921,11 @@ public final class DeclarativeActionExecutor {
         case .integer(let i): return i
         case .number(let n): return n
         case .bool(let b): return b
+        case .color(let c): return c
+        case .url(let u): return u
         case .array(let a): return a.map { storeValueToAny($0) }
         case .object(let o): return o.mapValues { storeValueToAny($0) }
         case .null: return NSNull()
-        default: return NSNull()
         }
     }
 }

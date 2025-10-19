@@ -39,8 +39,17 @@ class ViewTreeBuilder {
     func buildViewTree(from component: Component, props: Config? = nil) -> UIView? {
         // 1. Check if this is a custom component defined in the scenario
         if let subcomponent = scenario.components[component.type] {
+            logger.debug("Building custom component: \(component.type)", category: "ViewTreeBuilder")
             let parentProps = props ?? Config()
-            let combinedProps = component.data.merge(parentProps)
+            logger.debug("Parent props keys: \(parentProps.getRawDictionary().keys.joined(separator: ", "))", category: "ViewTreeBuilder")
+            logger.debug("Component.data keys: \(component.data.getRawDictionary().keys.joined(separator: ", "))", category: "ViewTreeBuilder")
+
+            // Resolve prop references in component.data using parentProps
+            let resolvedData = resolvePropsInData(component.data, using: parentProps)
+            logger.debug("Resolved data keys: \(resolvedData.getRawDictionary().keys.joined(separator: ", "))", category: "ViewTreeBuilder")
+
+            let combinedProps = resolvedData.merge(parentProps)
+            logger.debug("Combined props keys: \(combinedProps.getRawDictionary().keys.joined(separator: ", "))", category: "ViewTreeBuilder")
             subcomponent.metadata["componentName"] = component.type
             return buildViewTree(from: subcomponent, props: combinedProps)
         }
@@ -241,5 +250,102 @@ class ViewTreeBuilder {
         case .fitContainer:
             flex.layout(mode: .fitContainer)
         }
+    }
+
+    /// Resolves prop references in component data using parent props
+    private func resolvePropsInData(_ data: Config, using props: Config) -> Config {
+        logger.debug("resolvePropsInData called", category: "ViewTreeBuilder")
+        var resolvedDict: [String: Any] = [:]
+
+        for (key, value) in data.getRawDictionary() {
+            if let value = value {
+                let resolved = resolveValue(value, using: props)
+                resolvedDict[key] = resolved
+                logger.debug("Resolved '\(key)': \(value) -> \(resolved)", category: "ViewTreeBuilder")
+            }
+        }
+
+        return Config(resolvedDict)
+    }
+
+    /// Recursively resolves a value that might be a prop descriptor
+    private func resolveValue(_ value: Any, using props: Config) -> Any {
+        // Check if this is a prop descriptor: {type: "prop", key: "..."}
+        if let dict = value as? [String: Any],
+           let type = dict["type"] as? String,
+           type == "prop",
+           let key = dict["key"] as? String {
+
+            logger.debug("Found prop descriptor with key: '\(key)'", category: "ViewTreeBuilder")
+
+            // Resolve the prop reference
+            var resolved: Any?
+            if key.contains(".") {
+                // Handle dot notation (e.g., "item.image")
+                resolved = resolveDottedPath(key, in: props)
+                logger.debug("Resolved dotted path '\(key)': \(resolved ?? "nil")", category: "ViewTreeBuilder")
+            } else {
+                // Simple key lookup
+                resolved = props.get(forKey: key)
+                logger.debug("Resolved simple key '\(key)': \(resolved ?? "nil")", category: "ViewTreeBuilder")
+            }
+
+            // Unwrap StoreValueDescriptor if needed
+            if let resolvedValue = resolved,
+               let valueDict = resolvedValue as? [String: Any],
+               let _ = valueDict["type"] as? String,
+               let actualValue = valueDict["value"] {
+                logger.debug("Unwrapping StoreValueDescriptor for '\(key)', actual value: \(actualValue)", category: "ViewTreeBuilder")
+                return actualValue
+            }
+
+            return resolved ?? value
+        }
+
+        // If it's a dictionary, recursively resolve its values
+        if let dict = value as? [String: Any] {
+            var resolvedDict: [String: Any] = [:]
+            for (k, v) in dict {
+                resolvedDict[k] = resolveValue(v, using: props)
+            }
+            return resolvedDict
+        }
+
+        // If it's an array, recursively resolve its elements
+        if let array = value as? [Any] {
+            return array.map { resolveValue($0, using: props) }
+        }
+
+        // Return the value as-is if it's not a descriptor
+        return value
+    }
+
+    /// Resolves a dotted path like "item.image" from props
+    private func resolveDottedPath(_ path: String, in props: Config) -> Any? {
+        let components = path.split(separator: ".").map(String.init)
+        guard !components.isEmpty else {
+            logger.warning("Empty path in resolveDottedPath", category: "ViewTreeBuilder")
+            return nil
+        }
+
+        logger.debug("Resolving dotted path: \(path), components: \(components)", category: "ViewTreeBuilder")
+
+        // Start with the first component from props
+        var currentValue: Any? = props.get(forKey: components[0])
+        logger.debug("First component '\(components[0])' resolved to: \(currentValue ?? "nil")", category: "ViewTreeBuilder")
+
+        // Navigate through remaining components
+        for component in components.dropFirst() {
+            if let dict = currentValue as? [String: Any] {
+                currentValue = dict[component]
+                logger.debug("Navigated to '\(component)': \(currentValue ?? "nil")", category: "ViewTreeBuilder")
+            } else {
+                logger.warning("Cannot navigate '\(component)' - current value is not a dictionary", category: "ViewTreeBuilder")
+                return nil
+            }
+        }
+
+        logger.debug("Final resolved value for '\(path)': \(currentValue ?? "nil")", category: "ViewTreeBuilder")
+        return currentValue
     }
 }

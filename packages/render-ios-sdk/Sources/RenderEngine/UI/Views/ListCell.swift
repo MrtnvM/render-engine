@@ -19,6 +19,10 @@ class ListCell: UITableViewCell {
 
     /// Configure the cell with a component template and item data
     func configure(with itemComponent: Component, item: Any, index: Int, context: RendererContext) {
+        logger.debug("ListCell.configure called for index \(index)", category: "ListCell")
+        logger.debug("Item type: \(type(of: item))", category: "ListCell")
+        logger.debug("Item value: \(item)", category: "ListCell")
+
         // Clear previous content
         contentFlexView?.removeFromSuperview()
         contentFlexView = nil
@@ -30,9 +34,13 @@ class ListCell: UITableViewCell {
         // If item is a string, also set it directly
         if let stringItem = item as? String {
             itemProps["item"] = stringItem
+            logger.debug("Item is a string: \(stringItem)", category: "ListCell")
+        } else if let dictItem = item as? [String: Any] {
+            logger.debug("Item is a dictionary with keys: \(dictItem.keys.joined(separator: ", "))", category: "ListCell")
         }
 
         let propsConfig = Config(itemProps)
+        logger.debug("Created props config with keys: \(propsConfig.getRawDictionary().keys.joined(separator: ", "))", category: "ListCell")
 
         // Build the view tree for this item with props context
         let viewTreeBuilder = ViewTreeBuilder(

@@ -179,6 +179,18 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
                     jsonNode.data.itemComponent = itemComponentJson
                   }
                 }
+              }
+              // Special handling for List's getItem prop
+              else if (componentType === 'List' && propName === 'getItem') {
+                const getItemValue = attribute.value
+                if (getItemValue?.type === 'JSXExpressionContainer' &&
+                    getItemValue.expression?.type === 'ArrowFunctionExpression') {
+                  const arrowFn = getItemValue.expression
+                  const itemGetterDescriptor = this.extractGetItemDescriptor(arrowFn)
+                  if (itemGetterDescriptor) {
+                    jsonNode.data.itemGetter = itemGetterDescriptor
+                  }
+                }
               } else {
                 const value = this.astNodeToValue(attribute.value as ASTNode, currentComponentProps)
 
@@ -397,13 +409,27 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
       case 'MemberExpression': {
         // Handle member expressions like item.name, item.price
         const memberExpr = node as any
-        const object = this.astNodeToValue(memberExpr.object, componentProps)
         const property = memberExpr.property?.name || memberExpr.property?.value
 
-        // If the object is a prop reference, keep the prop reference
-        // The iOS SDK will resolve item.name at runtime
+        // Check if the object is a prop identifier (e.g., 'item')
+        if (memberExpr.object.type === 'Identifier' &&
+            componentProps && componentProps.has(memberExpr.object.name)) {
+          // Return prop reference with dot notation
+          return {
+            type: 'prop',
+            key: `${memberExpr.object.name}.${property}`,
+          }
+        }
+
+        // Try to resolve the object value
+        const object = this.astNodeToValue(memberExpr.object, componentProps)
+
+        // If the object is a prop reference, extend it with the property
         if (object && typeof object === 'object' && object.type === 'prop') {
-          return object
+          return {
+            type: 'prop',
+            key: `${object.key}.${property}`,
+          }
         }
 
         return null
@@ -533,6 +559,106 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
 
     // Recursively process the JSX element with item props in scope
     return this.processJSXElement(jsxElement, itemProps)
+  }
+
+  /**
+   * Extract getItem descriptor for List
+   * Handles: (id) => cartStore.get(`items.${id}`)
+   * Converts to StoreValueRef with computed keyPath template
+   */
+  private extractGetItemDescriptor(arrowFn: any): any {
+    // Get parameter name (e.g., 'id')
+    const params = arrowFn.params || []
+    if (params.length === 0 || params[0].type !== 'Identifier') {
+      return null
+    }
+    const paramName = params[0].name
+
+    // Get the function body
+    let bodyExpression = null
+    if (arrowFn.body?.type === 'CallExpression') {
+      // Direct return: (id) => cartStore.get(`items.${id}`)
+      bodyExpression = arrowFn.body
+    } else if (arrowFn.body?.type === 'BlockStatement' && arrowFn.body.body?.length > 0) {
+      // Block with return: (id) => { return cartStore.get(`items.${id}`) }
+      const returnStatement = arrowFn.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
+      if (returnStatement?.argument?.type === 'CallExpression') {
+        bodyExpression = returnStatement.argument
+      }
+    }
+
+    if (!bodyExpression) {
+      return null
+    }
+
+    // Check if it's a store.get() call
+    if (bodyExpression.callee?.type !== 'MemberExpression' ||
+        bodyExpression.callee.property?.name !== 'get') {
+      return null
+    }
+
+    // Get the store variable name (e.g., 'cartStore')
+    const storeVarName = bodyExpression.callee.object?.name
+    if (!storeVarName) {
+      return null
+    }
+
+    // Get the keyPath argument
+    const keyPathArg = bodyExpression.arguments?.[0]
+    if (!keyPathArg) {
+      return null
+    }
+
+    // Handle template literal: `items.${id}`
+    if (keyPathArg.type === 'TemplateLiteral') {
+      const template = keyPathArg
+      let templateString = ''
+      let operandIndex = 0
+
+      // Build template string with placeholders
+      for (let i = 0; i < template.quasis.length; i++) {
+        templateString += template.quasis[i].value.raw
+        if (i < template.expressions.length) {
+          // Check if expression references the parameter
+          const expr = template.expressions[i]
+          if (expr.type === 'Identifier' && expr.name === paramName) {
+            templateString += `{${operandIndex}}`
+            operandIndex++
+          }
+        }
+      }
+
+      // Create computed value descriptor with template
+      return {
+        kind: 'storeValue',
+        storeRef: {
+          __storeRef: storeVarName,
+          __isRef: true
+        },
+        keyPath: {
+          kind: 'computed',
+          operation: 'template',
+          template: templateString,
+          operands: [
+            { kind: 'eventData', path: 'id' }
+          ]
+        }
+      }
+    }
+
+    // Handle simple string literal (no template)
+    if (keyPathArg.type === 'StringLiteral') {
+      return {
+        kind: 'storeValue',
+        storeRef: {
+          __storeRef: storeVarName,
+          __isRef: true
+        },
+        keyPath: keyPathArg.value
+      }
+    }
+
+    return null
   }
 
   /**

@@ -73,7 +73,8 @@ export default function CartScreen() {
         <List
           style={{ flexGrow: 1 }}
           data={cartStore.get('cartItemIds') as string[]}
-          renderItem={(itemId) => <CartItem itemId={itemId} />}
+          getItem={(id) => cartStore.get(`items.${id}`)}
+          renderItem={(item) => <CartItem item={item} />}
         />
       </Column>
       <BottomBar />
@@ -252,10 +253,7 @@ function ProductCheckbox({ checked }: { checked: boolean }) {
   return <Checkbox style={{ borderRadius: 4, padding: 4 }} properties={{ checked: checked, disabled: false }} />
 }
 
-function CartItem({ itemId }: { itemId: string }) {
-  // For now, we'll use itemId directly as a simple string
-  // In a real implementation with store binding, this would fetch from cartStore.get(`items.${itemId}`)
-  // Since we're passing itemId as a prop reference, we'll just display it
+function CartItem({ item }: { item: any }) {
   return (
     <Row
       style={{
@@ -265,14 +263,14 @@ function CartItem({ itemId }: { itemId: string }) {
         paddingVertical: 16,
       }}
     >
-      <ProductCheckbox checked={true} />
-      <ProductImage image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png" />
+      <ProductCheckbox checked={item.checked} />
+      <ProductImage image={item.image} />
 
       <Row style={{ flexGrow: 1, flexMode: 'adjustWidth', flexShrink: 1 }}>
         <Column style={{ gap: 2, flexShrink: 1, flexMode: 'adjustWidth' }}>
-          <Price price="4 990 ₽" />
-          <ProductTitle title={itemId} />
-          <CountStepper quantity={1} />
+          <Price price={item.price} />
+          <ProductTitle title={item.title} />
+          <CountStepper quantity={item.quantity} />
           <BuyWithDelivery />
         </Column>
       </Row>

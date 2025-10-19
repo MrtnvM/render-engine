@@ -126,17 +126,35 @@ private class ListView: RenderableView, UITableViewDataSource, UITableViewDelega
             // This is a simplified approach for MVP
             if let initialValue = descriptor.initialValue {
                 logger.debug("Store initialValue keys: \(initialValue.keys.joined(separator: ", "))", category: "ListView")
+                logger.debug("Looking for keyPath: \(keyPath) in initialValue", category: "ListView")
 
                 // The initialValue might have nested structure {type: "array", value: [...]}
                 if let storeValueDict = initialValue[keyPath] as? [String: Any] {
+                    logger.debug("Found store value dict with keys: \(storeValueDict.keys.joined(separator: ", "))", category: "ListView")
                     if let type = storeValueDict["type"] as? String,
                        type == "array",
                        let valueArray = storeValueDict["value"] as? [[String: Any]] {
                         // Extract the actual values from {type: "string", value: "item1"} format
-                        items = valueArray.compactMap { dict in
+                        var itemIds = valueArray.compactMap { dict in
                             dict["value"]
                         }
-                        logger.debug("Loaded \(items.count) items from store initial value", category: "ListView")
+                        logger.debug("Loaded \(itemIds.count) item IDs from store initial value: \(itemIds)", category: "ListView")
+
+                        // Check if there's an itemGetter to resolve full items
+                        if let itemGetterDict = component.data.getDictionary(forKey: "itemGetter"),
+                           !itemGetterDict.isEmpty {
+                            logger.debug("Found itemGetter with keys: \(itemGetterDict.keys.joined(separator: ", "))", category: "ListView")
+                            logger.debug("ItemGetter structure: \(itemGetterDict)", category: "ListView")
+                            items = resolveItemsWithGetter(itemIds: itemIds, getter: itemGetterDict, initialValue: initialValue, scenarioId: scenario.key)
+                            logger.debug("Resolved items count: \(items.count)", category: "ListView")
+                            for (index, item) in items.enumerated() {
+                                logger.debug("Item[\(index)]: \(item)", category: "ListView")
+                            }
+                        } else {
+                            // No itemGetter, use IDs directly
+                            logger.debug("No itemGetter found, using IDs directly", category: "ListView")
+                            items = itemIds
+                        }
                     } else {
                         logger.warning("Store value at \(keyPath) has unexpected format", category: "ListView")
                         items = []
@@ -170,6 +188,104 @@ private class ListView: RenderableView, UITableViewDataSource, UITableViewDelega
         tableView.reloadData()
     }
 
+    private func resolveItemsWithGetter(itemIds: [Any], getter: [String: Any], initialValue: [String: Any], scenarioId: String) -> [Any] {
+        // The getter should have structure:
+        // { kind: "storeValue", storeRef: {...}, keyPath: { kind: "computed", operation: "template", template: "items.{0}", operands: [...] } }
+
+        logger.debug("resolveItemsWithGetter called with \(itemIds.count) item IDs", category: "ListView")
+
+        guard let keyPathValue = getter["keyPath"] else {
+            logger.error("itemGetter missing keyPath", category: "ListView")
+            return itemIds
+        }
+
+        logger.debug("KeyPath value type: \(type(of: keyPathValue))", category: "ListView")
+
+        var resolvedItems: [Any] = []
+
+        for (index, itemId) in itemIds.enumerated() {
+            logger.debug("Processing item \(index): \(itemId)", category: "ListView")
+
+            // Build the actual keyPath by resolving the template
+            let resolvedKeyPath: String
+
+            if let keyPathDict = keyPathValue as? [String: Any],
+               let kind = keyPathDict["kind"] as? String,
+               kind == "computed",
+               let operation = keyPathDict["operation"] as? String,
+               operation == "template",
+               let template = keyPathDict["template"] as? String {
+                // Replace {0} with the item ID
+                resolvedKeyPath = template.replacingOccurrences(of: "{0}", with: "\(itemId)")
+                logger.debug("Resolved template '\(template)' to '\(resolvedKeyPath)'", category: "ListView")
+            } else if let keyPathString = keyPathValue as? String {
+                // Simple string keyPath
+                resolvedKeyPath = keyPathString
+                logger.debug("Using simple keyPath: \(resolvedKeyPath)", category: "ListView")
+            } else {
+                logger.warning("Unsupported keyPath format in itemGetter", category: "ListView")
+                resolvedItems.append(itemId)
+                continue
+            }
+
+            // Navigate the keyPath to get the item object
+            let pathComponents = resolvedKeyPath.split(separator: ".").map(String.init)
+            logger.debug("Path components: \(pathComponents)", category: "ListView")
+            var currentValue: Any? = initialValue
+
+            for component in pathComponents {
+                if let dict = currentValue as? [String: Any] {
+                    currentValue = dict[component]
+                    logger.debug("Navigated to '\(component)', found: \(currentValue != nil ? "value" : "nil")", category: "ListView")
+
+                    // Unwrap StoreValueDescriptor if needed
+                    if let valueDict = currentValue as? [String: Any],
+                       let _ = valueDict["type"] as? String,
+                       let actualValue = valueDict["value"] {
+                        currentValue = actualValue
+                        logger.debug("Unwrapped StoreValueDescriptor, actual value type: \(type(of: actualValue))", category: "ListView")
+                    }
+                } else {
+                    logger.warning("Cannot navigate - current value is not a dictionary", category: "ListView")
+                    currentValue = nil
+                    break
+                }
+            }
+
+            // Extract the actual value from StoreValueDescriptor format
+            if let valueDict = currentValue as? [String: Any],
+               let type = valueDict["type"] as? String,
+               type == "object",
+               let objectValue = valueDict["value"] as? [String: Any] {
+                // Convert StoreValueDescriptor object to plain dictionary
+                var plainObject: [String: Any] = [:]
+                logger.debug("Converting StoreValueDescriptor object with \(objectValue.count) fields", category: "ListView")
+                for (key, val) in objectValue {
+                    if let valDict = val as? [String: Any],
+                       let innerValue = valDict["value"] {
+                        plainObject[key] = innerValue
+                        logger.debug("  \(key) = \(innerValue)", category: "ListView")
+                    }
+                }
+                resolvedItems.append(plainObject)
+                logger.debug("Resolved item with keys: \(plainObject.keys.joined(separator: ", "))", category: "ListView")
+            } else {
+                // Fallback: use the value as-is
+                logger.warning("Current value is not a StoreValueDescriptor object, using as-is", category: "ListView")
+                if let value = currentValue {
+                    logger.debug("Appending value: \(value)", category: "ListView")
+                    resolvedItems.append(value)
+                } else {
+                    logger.warning("No value found, using itemId", category: "ListView")
+                    resolvedItems.append(itemId)
+                }
+            }
+        }
+
+        logger.debug("Resolved \(resolvedItems.count) full items", category: "ListView")
+        return resolvedItems
+    }
+
     // MARK: - UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -183,6 +299,7 @@ private class ListView: RenderableView, UITableViewDataSource, UITableViewDelega
         ) as! ListCell
 
         let item = items[indexPath.row]
+        logger.debug("Configuring cell \(indexPath.row) with item: \(item)", category: "ListView")
         cell.configure(with: itemComponent, item: item, index: indexPath.row, context: self.context)
 
         return cell

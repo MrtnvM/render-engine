@@ -136,6 +136,7 @@ export interface ListProps<T = any> {
   id?: string
   style?: ViewStyle
   data: T[]
+  getItem?: (id: T) => any
   renderItem: (item: T, index: number) => React.ReactElement
   keyExtractor?: (item: T, index: number) => string
 }
