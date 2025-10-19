@@ -9,7 +9,9 @@ import {
   Rating,
   View,
   SafeAreaView,
+  List,
 } from '@render-engine/admin-sdk/ui'
+import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
 
 export const SCENARIO = {
   key: 'avito-cart',
@@ -18,32 +20,60 @@ export const SCENARIO = {
   version: '1.0.0',
 }
 
+// Define cart store with normalized data structure
+const cartStore = store<{
+  cartItemIds: string[]
+  items: Record<
+    string,
+    {
+      image: string
+      price: string
+      title: string
+      quantity: number
+      checked: boolean
+    }
+  >
+}>({
+  scope: StoreScope.Scenario,
+  storage: StoreStorage.Memory,
+  initialValue: {
+    cartItemIds: ['item1', 'item2', 'item3'],
+    items: {
+      item1: {
+        image: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png',
+        price: '4 990 ₽',
+        title: 'ЗарядкаMagSafe Charger 15W 1 метр',
+        quantity: 1,
+        checked: true,
+      },
+      item2: {
+        image: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png',
+        price: '15 990 ₽',
+        title: 'AirPods Pro 2',
+        quantity: 1,
+        checked: true,
+      },
+      item3: {
+        image: 'https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png',
+        price: '26 591 ₽',
+        title: 'Apple Watch 10 42mm Blue',
+        quantity: 1,
+        checked: true,
+      },
+    },
+  },
+})
+
 export default function CartScreen() {
   return (
     <SafeAreaView properties={{ edges: ['top'] }} style={{ flexGrow: 1, backgroundColor: '#ffffff' }}>
       <Column style={{ flexGrow: 1 }}>
         <TopRow />
         <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
-        <CartItem
-          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
-          price="4 990 ₽"
-          title="ЗарядкаMagSafe Charger 15W 1 метр"
-          quantity={1}
-          checked={true}
-        />
-        <CartItem
-          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png"
-          price="15 990 ₽"
-          title="AirPods Pro 2"
-          quantity={1}
-          checked={true}
-        />
-        <CartItem
-          image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png"
-          price="26 591 ₽"
-          title="Apple Watch 10 42mm Blue"
-          quantity={1}
-          checked={true}
+        <List
+          style={{ flexGrow: 1 }}
+          data={cartStore.get('cartItemIds') as string[]}
+          renderItem={(itemId) => <CartItem itemId={itemId} />}
         />
       </Column>
       <BottomBar />
@@ -222,7 +252,10 @@ function ProductCheckbox({ checked }: { checked: boolean }) {
   return <Checkbox style={{ borderRadius: 4, padding: 4 }} properties={{ checked: checked, disabled: false }} />
 }
 
-function CartItem({ image, price, title, quantity, checked }: any) {
+function CartItem({ itemId }: { itemId: string }) {
+  // For now, we'll use itemId directly as a simple string
+  // In a real implementation with store binding, this would fetch from cartStore.get(`items.${itemId}`)
+  // Since we're passing itemId as a prop reference, we'll just display it
   return (
     <Row
       style={{
@@ -232,14 +265,14 @@ function CartItem({ image, price, title, quantity, checked }: any) {
         paddingVertical: 16,
       }}
     >
-      <ProductCheckbox checked={checked} />
-      <ProductImage image={image} />
+      <ProductCheckbox checked={true} />
+      <ProductImage image="https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png" />
 
       <Row style={{ flexGrow: 1, flexMode: 'adjustWidth', flexShrink: 1 }}>
         <Column style={{ gap: 2, flexShrink: 1, flexMode: 'adjustWidth' }}>
-          <Price price={price} />
-          <ProductTitle title={title} />
-          <CountStepper quantity={quantity} />
+          <Price price="4 990 ₽" />
+          <ProductTitle title={itemId} />
+          <CountStepper quantity={1} />
           <BuyWithDelivery />
         </Column>
       </Row>

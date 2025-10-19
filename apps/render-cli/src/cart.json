@@ -35,33 +35,24 @@
             }
           },
           {
-            "type": "CartItem",
+            "type": "List",
+            "style": {
+              "flexGrow": 1
+            },
             "data": {
-              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
-              "price": "4 990 ₽",
-              "title": "ЗарядкаMagSafe Charger 15W 1 метр",
-              "quantity": 1,
-              "checked": true
-            }
-          },
-          {
-            "type": "CartItem",
-            "data": {
-              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png",
-              "price": "15 990 ₽",
-              "title": "AirPods Pro 2",
-              "quantity": 1,
-              "checked": true
-            }
-          },
-          {
-            "type": "CartItem",
-            "data": {
-              "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png",
-              "price": "26 591 ₽",
-              "title": "Apple Watch 10 42mm Blue",
-              "quantity": 1,
-              "checked": true
+              "data": {
+                "__storeRef": "cartStore",
+                "__keyPath": "cartItemIds"
+              },
+              "itemComponent": {
+                "type": "CartItem",
+                "data": {
+                  "itemId": {
+                    "type": "prop",
+                    "key": "itemId"
+                  }
+                }
+              }
             }
           }
         ]
@@ -326,19 +317,13 @@
         {
           "type": "ProductCheckbox",
           "data": {
-            "checked": {
-              "type": "prop",
-              "key": "checked"
-            }
+            "checked": true
           }
         },
         {
           "type": "ProductImage",
           "data": {
-            "image": {
-              "type": "prop",
-              "key": "image"
-            }
+            "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
           }
         },
         {
@@ -362,10 +347,7 @@
                 {
                   "type": "Price",
                   "data": {
-                    "price": {
-                      "type": "prop",
-                      "key": "price"
-                    }
+                    "price": "4 990 ₽"
                   }
                 },
                 {
@@ -373,17 +355,14 @@
                   "data": {
                     "title": {
                       "type": "prop",
-                      "key": "title"
+                      "key": "itemId"
                     }
                   }
                 },
                 {
                   "type": "CountStepper",
                   "data": {
-                    "quantity": {
-                      "type": "prop",
-                      "key": "quantity"
-                    }
+                    "quantity": 1
                   }
                 },
                 {
@@ -795,5 +774,110 @@
         }
       ]
     }
-  }
+  },
+  "stores": [
+    {
+      "scope": "scenario",
+      "storage": "memory",
+      "initialValue": {
+        "cartItemIds": {
+          "type": "array",
+          "value": [
+            {
+              "type": "string",
+              "value": "item1"
+            },
+            {
+              "type": "string",
+              "value": "item2"
+            },
+            {
+              "type": "string",
+              "value": "item3"
+            }
+          ]
+        },
+        "items": {
+          "type": "object",
+          "value": {
+            "item1": {
+              "type": "object",
+              "value": {
+                "image": {
+                  "type": "string",
+                  "value": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png"
+                },
+                "price": {
+                  "type": "string",
+                  "value": "4 990 ₽"
+                },
+                "title": {
+                  "type": "string",
+                  "value": "ЗарядкаMagSafe Charger 15W 1 метр"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "value": 1
+                },
+                "checked": {
+                  "type": "bool",
+                  "value": true
+                }
+              }
+            },
+            "item2": {
+              "type": "object",
+              "value": {
+                "image": {
+                  "type": "string",
+                  "value": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png"
+                },
+                "price": {
+                  "type": "string",
+                  "value": "15 990 ₽"
+                },
+                "title": {
+                  "type": "string",
+                  "value": "AirPods Pro 2"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "value": 1
+                },
+                "checked": {
+                  "type": "bool",
+                  "value": true
+                }
+              }
+            },
+            "item3": {
+              "type": "object",
+              "value": {
+                "image": {
+                  "type": "string",
+                  "value": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png"
+                },
+                "price": {
+                  "type": "string",
+                  "value": "26 591 ₽"
+                },
+                "title": {
+                  "type": "string",
+                  "value": "Apple Watch 10 42mm Blue"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "value": 1
+                },
+                "checked": {
+                  "type": "bool",
+                  "value": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

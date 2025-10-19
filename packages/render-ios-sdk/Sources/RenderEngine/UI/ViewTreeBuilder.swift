@@ -61,6 +61,9 @@ class ViewTreeBuilder {
             window: window,
             scenario: scenario,
             props: props,
+            store: nil,
+            storeFactory: DIContainer.shared.storeFactory,
+            logger: DIContainer.shared.currentLogger
         )
         
         // 3. Use the renderer to create the UIView. The renderer is responsible

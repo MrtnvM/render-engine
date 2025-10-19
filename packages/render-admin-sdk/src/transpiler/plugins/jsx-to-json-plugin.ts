@@ -167,25 +167,39 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
           node.openingElement.attributes.forEach((attribute: any) => {
             if (attribute.type === 'JSXAttribute') {
               const propName = attribute.name.name
-              const value = this.astNodeToValue(attribute.value as ASTNode, currentComponentProps)
 
-              // Handle special props that should remain at root level
-              if (propName === 'style') {
-                // Process style object and merge into jsonNode.style
-                if (value && typeof value === 'object') {
-                  jsonNode.style = { ...jsonNode.style, ...value }
+              // Special handling for List's renderItem prop
+              if (componentType === 'List' && propName === 'renderItem') {
+                const renderItemValue = attribute.value
+                if (renderItemValue?.type === 'JSXExpressionContainer' &&
+                    renderItemValue.expression?.type === 'ArrowFunctionExpression') {
+                  const arrowFn = renderItemValue.expression
+                  const itemComponentJson = this.extractRenderItemComponent(arrowFn)
+                  if (itemComponentJson) {
+                    jsonNode.data.itemComponent = itemComponentJson
+                  }
                 }
-              } else if (propName === 'properties') {
-                // Merge properties instead of replacing
-                if (value && typeof value === 'object') {
-                  jsonNode.properties = { ...jsonNode.properties, ...value }
-                }
-              } else if (propName === 'titleStyle') {
-                // titleStyle should go into properties for Button components
-                jsonNode.properties.titleStyle = value
               } else {
-                // All other props go into the data object
-                jsonNode.data[propName] = value
+                const value = this.astNodeToValue(attribute.value as ASTNode, currentComponentProps)
+
+                // Handle special props that should remain at root level
+                if (propName === 'style') {
+                  // Process style object and merge into jsonNode.style
+                  if (value && typeof value === 'object') {
+                    jsonNode.style = { ...jsonNode.style, ...value }
+                  }
+                } else if (propName === 'properties') {
+                  // Merge properties instead of replacing
+                  if (value && typeof value === 'object') {
+                    jsonNode.properties = { ...jsonNode.properties, ...value }
+                  }
+                } else if (propName === 'titleStyle') {
+                  // titleStyle should go into properties for Button components
+                  jsonNode.properties.titleStyle = value
+                } else {
+                  // All other props go into the data object
+                  jsonNode.data[propName] = value
+                }
               }
             }
           })
@@ -380,6 +394,50 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
         }
         // For non-component props, return null (or could throw an error)
         return null
+      case 'MemberExpression': {
+        // Handle member expressions like item.name, item.price
+        const memberExpr = node as any
+        const object = this.astNodeToValue(memberExpr.object, componentProps)
+        const property = memberExpr.property?.name || memberExpr.property?.value
+
+        // If the object is a prop reference, keep the prop reference
+        // The iOS SDK will resolve item.name at runtime
+        if (object && typeof object === 'object' && object.type === 'prop') {
+          return object
+        }
+
+        return null
+      }
+      case 'TSAsExpression':
+      case 'TSTypeAssertion': {
+        // Handle type assertions: value as Type or <Type>value
+        const expr = (node as any).expression
+        return this.astNodeToValue(expr, componentProps)
+      }
+      case 'CallExpression': {
+        // Handle store.get() calls
+        const callExpr = node as any
+        if (callExpr.callee?.type === 'MemberExpression') {
+          const object = callExpr.callee.object
+          const property = callExpr.callee.property
+
+          if (object?.type === 'Identifier' && property?.type === 'Identifier' && property.name === 'get') {
+            // This looks like store.get('keyPath')
+            // We need access to the StoreCollectorPlugin result to get store config
+            // For now, we'll create a simplified StoreValueRef that will be validated later
+            const keyPathArg = callExpr.arguments?.[0]
+            if (keyPathArg?.type === 'StringLiteral') {
+              // Return a placeholder that indicates this needs store resolution
+              // This will be processed by a separate plugin or at runtime
+              return {
+                __storeRef: object.name,
+                __keyPath: keyPathArg.value,
+              }
+            }
+          }
+        }
+        return null
+      }
       case 'JSXExpressionContainer':
         return this.astNodeToValue(node.expression, componentProps)
       case 'ObjectExpression':
@@ -437,5 +495,115 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
       default:
         return 'unknown'
     }
+  }
+
+  /**
+   * Extract and serialize the renderItem component for List
+   * Handles: (item, index) => <Component {...item} />
+   */
+  private extractRenderItemComponent(arrowFn: any): any {
+    // Get the parameter names from the arrow function
+    const params = arrowFn.params || []
+    const itemProps = new Set<string>()
+
+    // Extract parameter names (item, index)
+    params.forEach((param: any) => {
+      if (param.type === 'Identifier') {
+        itemProps.add(param.name)
+      }
+    })
+
+    let jsxElement = null
+
+    // Handle direct JSX return: (item) => <Component />
+    if (arrowFn.body?.type === 'JSXElement') {
+      jsxElement = arrowFn.body
+    }
+    // Handle block body with return: (item) => { return <Component /> }
+    else if (arrowFn.body?.type === 'BlockStatement' && arrowFn.body.body?.length > 0) {
+      const returnStatement = arrowFn.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
+      if (returnStatement?.argument?.type === 'JSXElement') {
+        jsxElement = returnStatement.argument
+      }
+    }
+
+    if (!jsxElement) {
+      return null
+    }
+
+    // Recursively process the JSX element with item props in scope
+    return this.processJSXElement(jsxElement, itemProps)
+  }
+
+  /**
+   * Recursively process a JSX element and convert to JSON
+   */
+  private processJSXElement(node: any, componentProps: Set<string>): any {
+    const componentName = this.getComponentName(node.openingElement.name)
+
+    // Validate component exists
+    if (!this.registry.isValid(componentName)) {
+      throw new Error(this.registry.getUnknownComponentError(componentName))
+    }
+
+    const jsonNode: any = {
+      type: componentName,
+      style: {},
+      properties: {},
+      data: {},
+      children: [],
+    }
+
+    // Add default flexDirection for Row and Column
+    if (componentName === 'Row') {
+      jsonNode.style.flexDirection = 'row'
+    } else if (componentName === 'Column') {
+      jsonNode.style.flexDirection = 'column'
+    }
+
+    // Process attributes
+    node.openingElement.attributes.forEach((attribute: any) => {
+      if (attribute.type === 'JSXAttribute') {
+        const propName = attribute.name.name
+        const value = this.astNodeToValue(attribute.value as ASTNode, componentProps)
+
+        if (propName === 'style') {
+          if (value && typeof value === 'object') {
+            jsonNode.style = { ...jsonNode.style, ...value }
+          }
+        } else if (propName === 'properties') {
+          if (value && typeof value === 'object') {
+            jsonNode.properties = { ...jsonNode.properties, ...value }
+          }
+        } else if (propName === 'titleStyle') {
+          jsonNode.properties.titleStyle = value
+        } else {
+          jsonNode.data[propName] = value
+        }
+      }
+    })
+
+    // Process children
+    node.children.forEach((child: any) => {
+      if (child.type === 'JSXText') {
+        const text = child.value.trim()
+        if (text && componentName === 'Text') {
+          jsonNode.properties.text = text
+        }
+      } else if (child.type === 'JSXElement') {
+        const childJson = this.processJSXElement(child, componentProps)
+        if (childJson) {
+          jsonNode.children.push(childJson)
+        }
+      }
+    })
+
+    // Clean up empty objects
+    if (Object.keys(jsonNode.style).length === 0) delete jsonNode.style
+    if (Object.keys(jsonNode.properties).length === 0) delete jsonNode.properties
+    if (Object.keys(jsonNode.data).length === 0) delete jsonNode.data
+    if (jsonNode.children.length === 0) delete jsonNode.children
+
+    return jsonNode
   }
 }

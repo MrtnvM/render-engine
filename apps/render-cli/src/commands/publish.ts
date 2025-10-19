@@ -71,6 +71,8 @@ export const publishCommand = program
         key: scenarioKey,
         mainComponent: schema.mainComponent || schema.main || {},
         components: schema.components || {},
+        stores: schema.stores || null,
+        actions: schema.actions || null,
         version: latestVersion,
         build_number: nextBuildNumber,
         metadata: schema.metadata || {},

@@ -129,3 +129,15 @@ export interface NavbarProps extends ViewStyle {
 }
 
 export const Navbar = (props: NavbarProps): null => null
+
+// ---------------- LIST ----------------
+
+export interface ListProps<T = any> {
+  id?: string
+  style?: ViewStyle
+  data: T[]
+  renderItem: (item: T, index: number) => React.ReactElement
+  keyExtractor?: (item: T, index: number) => string
+}
+
+export const List = <T,>(props: ListProps<T>): null => null

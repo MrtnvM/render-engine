@@ -81,7 +81,8 @@ class DIContainer {
             RatingRenderer(),
             NavbarRenderer(),
             SpacerRenderer(),
-            SafeAreaViewRenderer()
+            SafeAreaViewRenderer(),
+            ListRenderer()
         ]
         renderers.forEach { registry.register(renderer: $0) }
         return registry

@@ -20,19 +20,32 @@ class ScenarioRepositoryImpl: ScenarioRepository {
             .order("build_number", ascending: false)
             .execute()
             .value
-        
+
         if scenarios.isEmpty {
             throw RenderSDKError.noScenarioWithKey(key: key)
         }
-        
+
+        logger.debug("Fetched scenario from Supabase: key=\(key)", category: "ScenarioRepository")
+        logger.debug("ScenarioJSON has stores: \(scenarios[0].stores != nil)", category: "ScenarioRepository")
+        if let stores = scenarios[0].stores {
+            logger.debug("Stores count: \(stores.count)", category: "ScenarioRepository")
+        }
+
         let scenarioData = scenarios[0].toMap()
+        logger.debug("scenarioData keys: \(scenarioData.keys.joined(separator: ", "))", category: "ScenarioRepository")
+        if let stores = scenarioData["stores"] {
+            logger.debug("scenarioData has stores: \(stores)", category: "ScenarioRepository")
+        } else {
+            logger.warning("scenarioData missing stores key", category: "ScenarioRepository")
+        }
+
         guard let scenario = Scenario.create(from: scenarioData) else {
             throw RenderSDKError.scenarioParsingFailed(
                 key: key,
                 data: String(describing: scenarioData)
             )
         }
-        
+
         return scenario
     }
     

@@ -68,13 +68,32 @@ public class Scenario {
 
         // Parse stores from JSON
         var stores: [StoreDescriptor] = []
-        if let storesArray = config.getArray(forKey: "stores") as? [[String: Any]] {
-            for storeJson in storesArray {
-                if let storeData = try? JSONSerialization.data(withJSONObject: storeJson),
-                   let store = try? JSONDecoder().decode(StoreDescriptor.self, from: storeData) {
-                    stores.append(store)
+        let logger = DIContainer.shared.logger
+
+        let storesArray = config.getArray(forKey: "stores")
+        if !storesArray.isEmpty {
+            logger.debug("Found stores array with \(storesArray.count) items", category: "Scenario")
+
+            if let storesArrayTyped = storesArray as? [[String: Any]] {
+                logger.debug("Stores array is properly typed", category: "Scenario")
+
+                for (index, storeJson) in storesArrayTyped.enumerated() {
+                    logger.debug("Processing store \(index): keys=\(storeJson.keys.joined(separator: ", "))", category: "Scenario")
+
+                    do {
+                        let storeData = try JSONSerialization.data(withJSONObject: storeJson)
+                        let store = try JSONDecoder().decode(StoreDescriptor.self, from: storeData)
+                        stores.append(store)
+                        logger.debug("Successfully parsed store \(index): scope=\(store.scope), storage=\(store.storage)", category: "Scenario")
+                    } catch {
+                        logger.error("Failed to parse store \(index): \(error)", category: "Scenario")
+                    }
                 }
+            } else {
+                logger.error("Stores array is not [[String: Any]] type", category: "Scenario")
             }
+        } else {
+            logger.warning("No stores array found in config", category: "Scenario")
         }
 
         // Parse actions from JSON
