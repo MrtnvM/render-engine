@@ -342,7 +342,7 @@ describe('ActionHandlerAnalyzer', () => {
     it('should transpile handler with parameter to eventData reference', async () => {
       const code = `
         import { store, StoreScope, StoreStorage } from '@render-engine/admin-sdk'
-        import { TextField } from '@render-engine/admin-sdk/ui'
+        import { Button } from '@render-engine/admin-sdk/ui'
 
         export const SCENARIO = { key: "test", name: "Test", description: "Test", version: "1.0.0" }
 
@@ -350,8 +350,8 @@ describe('ActionHandlerAnalyzer', () => {
 
         export default function Main() {
           return (
-            <TextField
-              onChange={(value) => store1.set('text', value)}
+            <Button
+              onPress={(value) => store1.set('text', value)}
             />
           )
         }

@@ -2,16 +2,17 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { CompilationPanel } from '../compilation-panel'
+import * as useCompileScenarioModule from '../../hooks/use-compile-scenario'
 
 // Mock the hook
 vi.mock('../../hooks/use-compile-scenario', () => ({
-  useCompileScenario: () => ({
+  useCompileScenario: vi.fn(() => ({
     mutate: vi.fn(),
     isPending: false,
     isSuccess: false,
     isError: false,
     error: null,
-  }),
+  })),
 }))
 
 describe('CompilationPanel', () => {
@@ -42,8 +43,7 @@ describe('CompilationPanel', () => {
   })
 
   it('should show loading state during compilation', () => {
-    const { useCompileScenario } = require('../../hooks/use-compile-scenario')
-    vi.mocked(useCompileScenario).mockReturnValue({
+    vi.mocked(useCompileScenarioModule.useCompileScenario).mockReturnValue({
       mutate: vi.fn(),
       isPending: true,
       isSuccess: false,
@@ -56,7 +56,6 @@ describe('CompilationPanel', () => {
   })
 
   it('should display compilation success message', () => {
-    const { useCompileScenario } = require('../../hooks/use-compile-scenario')
     const mockResult = {
       key: 'test-scenario',
       version: '1.0.0',
@@ -64,7 +63,7 @@ describe('CompilationPanel', () => {
       components: { Button: { type: 'Button' } },
     }
 
-    vi.mocked(useCompileScenario).mockReturnValue({
+    vi.mocked(useCompileScenarioModule.useCompileScenario).mockReturnValue({
       mutate: vi.fn(),
       isPending: false,
       isSuccess: true,
@@ -80,8 +79,7 @@ describe('CompilationPanel', () => {
   })
 
   it('should display compilation errors', () => {
-    const { useCompileScenario } = require('../../hooks/use-compile-scenario')
-    vi.mocked(useCompileScenario).mockReturnValue({
+    vi.mocked(useCompileScenarioModule.useCompileScenario).mockReturnValue({
       mutate: vi.fn(),
       isPending: false,
       isSuccess: false,
@@ -102,12 +100,11 @@ describe('CompilationPanel', () => {
 
   it('should call onCompilationSuccess callback', async () => {
     const onSuccess = vi.fn()
-    const { useCompileScenario } = require('../../hooks/use-compile-scenario')
     const mockMutate = vi.fn((_, options) => {
       options.onSuccess({ key: 'test', version: '1.0.0', main: {}, components: {} })
     })
 
-    vi.mocked(useCompileScenario).mockReturnValue({
+    vi.mocked(useCompileScenarioModule.useCompileScenario).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isSuccess: false,
@@ -130,8 +127,7 @@ describe('CompilationPanel', () => {
   })
 
   it('should show component count in success message', () => {
-    const { useCompileScenario } = require('../../hooks/use-compile-scenario')
-    vi.mocked(useCompileScenario).mockReturnValue({
+    vi.mocked(useCompileScenarioModule.useCompileScenario).mockReturnValue({
       mutate: vi.fn(),
       isPending: false,
       isSuccess: true,
@@ -151,8 +147,7 @@ describe('CompilationPanel', () => {
   })
 
   it('should show stores and actions if present', () => {
-    const { useCompileScenario } = require('../../hooks/use-compile-scenario')
-    vi.mocked(useCompileScenario).mockReturnValue({
+    vi.mocked(useCompileScenarioModule.useCompileScenario).mockReturnValue({
       mutate: vi.fn(),
       isPending: false,
       isSuccess: true,

@@ -67,7 +67,7 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
             key: data.key,
             version: data.version,
             build_number: data.build_number,
-            mainComponent: data.mainComponent,
+            mainComponent: { type: data.mainComponent } as any,
           },
         })
       } else {
@@ -75,8 +75,8 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           key: data.key,
           version: data.version,
           build_number: data.build_number,
-          mainComponent: data.mainComponent,
-          components: [],
+          mainComponent: { type: data.mainComponent } as any,
+          components: {},
           metadata: {},
         })
       }

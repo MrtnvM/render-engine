@@ -1,17 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
+import type { Scenario } from '@/types/scenario'
 
 interface CompileScenarioRequest {
   jsxCode: string
 }
 
-interface CompiledScenario {
-  key: string
-  version: string
-  main: Record<string, any>
-  components: Record<string, any>
-  stores?: any[]
-  actions?: any[]
-}
+type CompiledScenario = Scenario
 
 interface CompilationError {
   error: string

@@ -116,3 +116,16 @@ export interface SafeAreaViewProps {
 }
 
 export const SafeAreaView = (props: SafeAreaViewProps): null => null
+
+// ---------------- NAVBAR ----------------
+
+export interface NavbarProps extends ViewStyle {
+  style?: ViewStyle
+  properties?: {
+    title?: string
+    leftButtonTitle?: string
+    rightButtonTitle?: string
+  }
+}
+
+export const Navbar = (props: NavbarProps): null => null

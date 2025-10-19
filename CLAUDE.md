@@ -56,6 +56,17 @@ pnpm db:seed         # Seed database with sample data
 # Testing individual packages
 cd packages/domain && pnpm test
 cd packages/render-admin-sdk && pnpm test
+
+# iOS SDK development
+cd packages/render-ios-sdk
+# Note: swift build doesn't work directly due to UIKit dependencies
+# Use xcodebuild instead:
+xcodebuild -scheme RenderEngine -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' build
+xcodebuild -scheme RenderEngine -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' test
+
+# iOS Playground app
+cd apps/render-ios-playground
+open RenderPlayground.xcodeproj  # Open in Xcode, then build and run (Cmd+R)
 ```
 
 ## Architecture Principles

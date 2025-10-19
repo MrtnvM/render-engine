@@ -1,5 +1,5 @@
 export { transpile } from './transpiler.js'
-export { getPredefinedComponents, DEFAULT_COMPONENTS } from './utils.js'
+export { getAvailableComponents, isValidComponent } from './plugins/component-registry-plugin.js'
 export type {
   JsonNode,
   TranspiledScenario,

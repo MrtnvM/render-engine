@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import type { Scenario } from '../data/schema'
+import type { JsonNode } from '@/types/scenario'
 
 // Database type matching the backend schema
 interface ScenarioRow {
@@ -9,9 +10,9 @@ interface ScenarioRow {
   key: string
   version: string
   build_number: number
-  mainComponent: any
-  components: any
-  metadata: any
+  mainComponent: JsonNode
+  components: Record<string, JsonNode>
+  metadata: Record<string, unknown>
   created_at: string
   updated_at: string
 }
@@ -25,7 +26,7 @@ function transformScenario(row: ScenarioRow): Scenario {
       mainComponentName = row.mainComponent
     } else if (typeof row.mainComponent === 'object') {
       // Handle JSONB object like {"type": "FeedScreen"}
-      mainComponentName = (row.mainComponent as any).type || JSON.stringify(row.mainComponent)
+      mainComponentName = row.mainComponent.type || JSON.stringify(row.mainComponent)
     }
   }
 
@@ -121,9 +122,9 @@ export function useCreateScenario() {
       key: string
       version: string
       build_number?: number
-      mainComponent: any
-      components: any
-      metadata?: any
+      mainComponent: JsonNode
+      components: Record<string, JsonNode>
+      metadata?: Record<string, unknown>
     }) => {
       const { data, error } = await supabase
         .from('scenario_table')
@@ -169,9 +170,9 @@ export function useUpdateScenario() {
         key: string
         version: string
         build_number: number
-        mainComponent: any
-        components: any
-        metadata: any
+        mainComponent: JsonNode
+        components: Record<string, JsonNode>
+        metadata: Record<string, unknown>
       }>
     }) => {
       const { data, error } = await supabase

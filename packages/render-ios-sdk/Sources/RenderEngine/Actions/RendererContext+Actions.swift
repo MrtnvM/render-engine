@@ -41,7 +41,8 @@ extension RendererContext {
 
             // Set initial values if provided
             if let initialValue = descriptor.initialValue {
-                await store.replaceAll(with: initialValue)
+                let storeValues = initialValue.mapValues { StoreValue.from($0) }
+                await store.replaceAll(with: storeValues)
             }
 
             logger?.debug("Initialized store: \(scope) [\(storage)]", category: "Renderer")
@@ -52,6 +53,7 @@ extension RendererContext {
 
     /// Execute a declarative action by ID
     @discardableResult
+    @MainActor
     public func executeAction(id: String, scenarioId: String = "default", eventData: [String: Any]? = nil) async throws -> Bool {
         // Find action in loaded scenario
         guard let action = loadedActions[id] else {
@@ -70,6 +72,7 @@ extension RendererContext {
     }
 
     /// Execute multiple actions
+    @MainActor
     public func executeActions(ids: [String], scenarioId: String = "default", eventData: [String: Any]? = nil) async throws {
         for id in ids {
             try await executeAction(id: id, scenarioId: scenarioId, eventData: eventData)
@@ -78,6 +81,7 @@ extension RendererContext {
 
     /// Execute a declarative action directly (not by ID)
     @discardableResult
+    @MainActor
     public func executeAction(_ action: AnyDeclarativeAction, scenarioId: String = "default", eventData: [String: Any]? = nil) async throws -> Bool {
         let factory = getStoreFactory()
         let executor = DeclarativeActionExecutor(

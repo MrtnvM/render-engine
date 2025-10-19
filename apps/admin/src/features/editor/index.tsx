@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import EditorComponent, { OnMount } from '@monaco-editor/react'
 import { Header } from '@/components/layout/header'
@@ -9,6 +9,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { useScenarioRaw } from '@/features/tasks/hooks/use-scenarios'
 import { CompilationPanel } from './components/compilation-panel'
 import { PublishDialog } from './components/publish-dialog'
+import type { Scenario } from '@/types/scenario'
 
 // --- minimal typings so Monaco knows React + your Render components ---
 const reactShimDts = `
@@ -599,7 +600,7 @@ function BottomBar() {
 export default function Editor() {
   const search = useSearch({ from: '/_authenticated/editor' })
   const { data: scenarioData, isLoading, isError } = useScenarioRaw(search.scenarioId ?? null)
-  const [compiledScenario, setCompiledScenario] = useState<any>(null)
+  const [compiledScenario, setCompiledScenario] = useState<Scenario | null>(null)
 
   // Generate initial code from scenario data or use starter
   const initialCode = useMemo(() => {
@@ -621,7 +622,7 @@ export default function Editor() {
 
   const [code, setCode] = useState(initialCode)
 
-  const handleCompilationSuccess = (result: any) => {
+  const handleCompilationSuccess = (result: Scenario) => {
     setCompiledScenario(result)
   }
 

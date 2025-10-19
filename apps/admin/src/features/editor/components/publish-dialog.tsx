@@ -14,9 +14,10 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle2, XCircle, Loader2, Upload } from 'lucide-react'
 import { usePublishScenario } from '../hooks/use-publish-scenario'
+import type { Scenario } from '@/types/scenario'
 
 interface PublishDialogProps {
-  compiledScenario: any
+  compiledScenario: Scenario | null
   disabled?: boolean
 }
 
@@ -34,7 +35,7 @@ export function PublishDialog({ compiledScenario, disabled }: PublishDialogProps
         key: compiledScenario.key,
         version,
         mainComponent: compiledScenario.main,
-        components: compiledScenario.components,
+        components: compiledScenario.components || {},
         stores: compiledScenario.stores,
         actions: compiledScenario.actions,
         metadata: {

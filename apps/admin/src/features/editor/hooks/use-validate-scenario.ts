@@ -1,12 +1,13 @@
 import { useMutation } from '@tanstack/react-query'
+import type { JsonNode, StoreDescriptor, ActionDescriptor } from '@/types/scenario'
 
 interface ValidationRequest {
   key: string
   version: string
-  main: Record<string, any>
-  components: Record<string, any>
-  stores?: any[]
-  actions?: any[]
+  main: JsonNode
+  components: Record<string, JsonNode>
+  stores?: StoreDescriptor[]
+  actions?: ActionDescriptor[]
 }
 
 interface ValidationResult {
