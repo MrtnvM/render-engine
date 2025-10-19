@@ -1,15 +1,26 @@
-import { Column, Row, Text, Image, Button, Checkbox, Stepper, Rating, View } from '@render-engine/admin-sdk/ui'
+import {
+  Column,
+  Row,
+  Text,
+  Image,
+  Button,
+  Checkbox,
+  Stepper,
+  Rating,
+  View,
+  SafeAreaView,
+} from '@render-engine/admin-sdk/ui'
 
 export const SCENARIO = {
   key: 'avito-cart',
   name: 'Avito Cart',
   description: 'Shopping cart scenario for Avito marketplace',
-  version: '1.0.0'
+  version: '1.0.0',
 }
 
 export default function CartScreen() {
   return (
-    <Column style={{ flexGrow: 1, backgroundColor: '#ffffff' }}>
+    <SafeAreaView properties={{ edges: ['top'] }} style={{ flexGrow: 1, backgroundColor: '#ffffff' }}>
       <Column style={{ flexGrow: 1 }}>
         <TopRow />
         <SellerSection storeName="Pear Store" rating="4.8" reviewCount="643" checked={false} />
@@ -36,7 +47,7 @@ export default function CartScreen() {
         />
       </Column>
       <BottomBar />
-    </Column>
+    </SafeAreaView>
   )
 }
 

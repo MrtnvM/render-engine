@@ -49,6 +49,7 @@ export interface ASTNode {
     }
     value: ASTNode
   }>
+  elements?: Array<ASTNode | null>
 }
 
 export interface TranspiledScenario {

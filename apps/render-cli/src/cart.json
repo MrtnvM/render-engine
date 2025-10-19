@@ -4,11 +4,15 @@
   "description": "Shopping cart scenario for Avito marketplace",
   "version": "1.0.0",
   "main": {
-    "type": "Column",
+    "type": "SafeAreaView",
     "style": {
-      "flexDirection": "column",
       "flexGrow": 1,
       "backgroundColor": "#ffffff"
+    },
+    "properties": {
+      "edges": [
+        "top"
+      ]
     },
     "children": [
       {
@@ -68,70 +72,6 @@
     ]
   },
   "components": {
-    "CartScreen": {
-      "type": "Column",
-      "style": {
-        "flexDirection": "column",
-        "flexGrow": 1,
-        "backgroundColor": "#ffffff"
-      },
-      "children": [
-        {
-          "type": "Column",
-          "style": {
-            "flexDirection": "column",
-            "flexGrow": 1
-          },
-          "children": [
-            {
-              "type": "TopRow"
-            },
-            {
-              "type": "SellerSection",
-              "data": {
-                "storeName": "Pear Store",
-                "rating": "4.8",
-                "reviewCount": "643",
-                "checked": false
-              }
-            },
-            {
-              "type": "CartItem",
-              "data": {
-                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/magsafe.png",
-                "price": "4 990 ₽",
-                "title": "ЗарядкаMagSafe Charger 15W 1 метр",
-                "quantity": 1,
-                "checked": true
-              }
-            },
-            {
-              "type": "CartItem",
-              "data": {
-                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/airpods.png",
-                "price": "15 990 ₽",
-                "title": "AirPods Pro 2",
-                "quantity": 1,
-                "checked": true
-              }
-            },
-            {
-              "type": "CartItem",
-              "data": {
-                "image": "https://yhfeoztyhuiccuyeghiw.supabase.co/storage/v1/object/public/render-bucket/watch2.png",
-                "price": "26 591 ₽",
-                "title": "Apple Watch 10 42mm Blue",
-                "quantity": 1,
-                "checked": true
-              }
-            }
-          ]
-        },
-        {
-          "type": "BottomBar"
-        }
-      ]
-    },
     "TopRow": {
       "type": "Row",
       "style": {

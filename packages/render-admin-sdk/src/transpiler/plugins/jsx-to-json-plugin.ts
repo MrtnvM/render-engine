@@ -400,6 +400,12 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
         )
       case 'NullLiteral':
         return null
+      case 'ArrayExpression':
+        return (
+          node.elements?.map((element: ASTNode | null) =>
+            element ? this.astNodeToValue(element, componentProps) : null
+          ) || []
+        )
       case 'ArrowFunctionExpression':
       case 'FunctionExpression': {
         // Check if this handler has been analyzed by ActionHandlerAnalyzer
