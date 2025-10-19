@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
-import type { TranspiledScenario } from '@render-engine/admin-sdk'
+import type { Scenario } from '@/types/scenario'
 
 interface CompileScenarioRequest {
   jsxCode: string
 }
 
-type CompiledScenario = TranspiledScenario
+type CompiledScenario = Scenario
 
 interface CompilationError {
   error: string

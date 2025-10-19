@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import type { JsonNode, StoreDescriptor, ActionDescriptor } from '@render-engine/admin-sdk'
+import type { JsonNode, StoreDescriptor, ActionDescriptor } from '@/types/scenario'
 
 interface ValidationRequest {
   key: string

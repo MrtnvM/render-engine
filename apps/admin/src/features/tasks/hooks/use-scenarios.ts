@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import type { Scenario } from '../data/schema'
-import type { JsonNode } from '@render-engine/admin-sdk'
+import type { JsonNode } from '@/types/scenario'
 
 // Database type matching the backend schema
 interface ScenarioRow {
