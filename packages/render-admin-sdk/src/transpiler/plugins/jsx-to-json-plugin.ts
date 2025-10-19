@@ -2,7 +2,7 @@ import type { File, Node } from '@babel/types'
 import type { Visitor } from '@babel/traverse'
 import type { ASTNode, JSXElement, JSXText, JsonNode, TranspilerConfig } from '../types.js'
 import { TranspilerPlugin } from './base-plugin.js'
-import { getAvailableComponents, isValidComponent } from './component-registry-plugin.js'
+import type { ComponentRegistry } from './component-registry.js'
 
 export interface JsxToJsonResult {
   rootJson: JsonNode | null
@@ -32,8 +32,12 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
   // Handler ID mapping (provided by ActionHandlerAnalyzer)
   public handlerIdByFunction: Map<Node, string> = new Map()
 
-  constructor(config?: TranspilerConfig) {
+  // Component registry for validation
+  private registry: ComponentRegistry
+
+  constructor(registry: ComponentRegistry, config?: TranspilerConfig) {
     super(config)
+    this.registry = registry
   }
 
   /**
@@ -98,6 +102,11 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
           // Pop the props stack when exiting function
           this.componentPropsStack.pop()
 
+          // Skip if this is a default export (handled by ExportDefaultDeclaration)
+          if (path.parent?.type === 'ExportDefaultDeclaration') {
+            return
+          }
+
           // Original function declaration logic for collecting components
           const functionName = path.node.id?.name
           if (functionName) {
@@ -124,13 +133,9 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
           const node = path.node
           const componentName = this.getComponentName(node.openingElement.name)
 
-          // Validate component exists in ui.tsx
-          if (!isValidComponent(componentName)) {
-            const availableComponents = getAvailableComponents()
-            throw new Error(
-              `Unknown component: <${componentName}>. ` +
-              `Available components: ${availableComponents.join(', ')}`
-            )
+          // Validate component exists (either base UI component or local scenario component)
+          if (!this.registry.isValid(componentName)) {
+            throw new Error(this.registry.getUnknownComponentError(componentName))
           }
 
           // Mark component for collection
@@ -260,6 +265,46 @@ export class JsxToJsonPlugin extends TranspilerPlugin<JsxToJsonResult> {
                 })
               }
             })
+          }
+        },
+      },
+      VariableDeclarator: {
+        exit: (path: any) => {
+          // Skip if this is part of an export (handled by ExportNamedDeclaration)
+          if (path.findParent((p: any) => p.isExportNamedDeclaration() || p.isExportDefaultDeclaration())) {
+            return
+          }
+
+          const variableName = path.node.id?.name
+          const init = path.node.init
+
+          if (!variableName || !init) {
+            return
+          }
+
+          // Check for arrow function components: const Foo = () => <JSX/>
+          if (init.type === 'ArrowFunctionExpression') {
+            let jsxElement = null
+
+            // Direct JSX return: () => <JSX/>
+            if (init.body?.type === 'JSXElement' && (init.body as any).json) {
+              jsxElement = init.body
+            }
+            // Block body with return: () => { return <JSX/> }
+            else if (init.body?.type === 'BlockStatement' && init.body.body?.length > 0) {
+              const returnStatement = init.body.body.find((stmt: any) => stmt.type === 'ReturnStatement')
+              if (returnStatement?.argument?.type === 'JSXElement' && (returnStatement.argument as any).json) {
+                jsxElement = returnStatement.argument
+              }
+            }
+
+            if (jsxElement) {
+              this.collectedComponents.push({
+                name: variableName,
+                exportType: 'helper',
+                jsonNode: (jsxElement as any).json,
+              })
+            }
           }
         },
       },

@@ -11,6 +11,9 @@ import type { TranspilerConfig } from './types.js'
 import type { TranspiledScenario, StoreDescriptor } from '../runtime/declarative-action-types.js'
 import type { StoreReference } from '../runtime/value-descriptors.js'
 import {
+  ComponentRegistry,
+  BaseComponentsPlugin,
+  LocalComponentsPlugin,
   ScenarioMetadataExtractorPlugin,
   StoreCollectorPlugin,
   ActionHandlerAnalyzerPlugin,
@@ -31,11 +34,22 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
     plugins: ['jsx', 'typescript'],
   })
 
-  // Extract scenario metadata
+  // Create component registry
+  const componentRegistry = new ComponentRegistry()
+
+  // Step 1: Extract and register base UI components from ui.tsx
+  const baseComponentsPlugin = new BaseComponentsPlugin(componentRegistry, config)
+  await baseComponentsPlugin.execute(ast)
+
+  // Step 2: Extract and register local scenario components
+  const localComponentsPlugin = new LocalComponentsPlugin(componentRegistry, config)
+  await localComponentsPlugin.execute(ast)
+
+  // Step 3: Extract scenario metadata
   const scenarioMetadataPlugin = new ScenarioMetadataExtractorPlugin(config)
   const scenarioMeta = await scenarioMetadataPlugin.execute(ast)
 
-  // Collect store declarations
+  // Step 4: Collect store declarations
   const storeCollectorPlugin = new StoreCollectorPlugin(config)
   const { stores, storeVarToConfig } = await storeCollectorPlugin.execute(ast)
 
@@ -48,12 +62,12 @@ export async function transpile(jsxString: string, config?: TranspilerConfig): P
     })
   }
 
-  // Analyze action handlers and convert to declarative actions
+  // Step 5: Analyze action handlers and convert to declarative actions
   const actionHandlerAnalyzerPlugin = new ActionHandlerAnalyzerPlugin(storeRefMap, config)
   const { actionHandlers, handlerIdByFunction } = await actionHandlerAnalyzerPlugin.execute(ast)
 
-  // Convert JSX to JSON (this will reference action IDs)
-  const jsxToJsonPlugin = new JsxToJsonPlugin(config)
+  // Step 6: Convert JSX to JSON (this will reference action IDs and validate components)
+  const jsxToJsonPlugin = new JsxToJsonPlugin(componentRegistry, config)
   // Pass handler ID mapping to JSX plugin so it can reference actions by ID
   ;(jsxToJsonPlugin as any).handlerIdByFunction = handlerIdByFunction
   const { rootJson, components } = await jsxToJsonPlugin.execute(ast)

@@ -18,9 +18,11 @@
  */
 
 export { TranspilerPlugin } from './base-plugin.js'
+export { ComponentRegistry, type ComponentMetadata, type ComponentSource } from './component-registry.js'
+export { BaseComponentsPlugin, type BaseComponentsResult } from './base-components-plugin.js'
+export { LocalComponentsPlugin, type LocalComponentsResult } from './local-components-plugin.js'
 export { ScenarioMetadataExtractorPlugin } from './scenario-metadata-extractor-plugin.js'
 export { StoreCollectorPlugin, type StoreCollectorResult } from './store-collector-plugin.js'
 export { JsxToJsonPlugin, type JsxToJsonResult } from './jsx-to-json-plugin.js'
 export { ActionHandlerAnalyzerPlugin, type ActionHandlerAnalyzerResult } from './action-handler-analyzer.js'
-export { getAvailableComponents, isValidComponent, clearComponentCache } from './component-registry-plugin.js'
 export * from './serialization-utils.js'
