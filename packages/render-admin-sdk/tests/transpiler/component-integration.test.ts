@@ -39,8 +39,8 @@ describe('Component Registry Integration', () => {
     expect(result.main.type).toBe('View')
 
     // Local components should be in the components map
-    expect(result.components.Header).toBeDefined()
-    expect(result.components.Footer).toBeDefined()
+    expect(result.components?.Header).toBeDefined()
+    expect(result.components?.Footer).toBeDefined()
 
     // Main component should reference local components
     expect(result.main.children).toHaveLength(3)
@@ -137,7 +137,7 @@ describe('Component Registry Integration', () => {
     const result = await transpile(code)
 
     // Greeting component should be collected
-    expect(result.components.Greeting).toBeDefined()
+    expect(result.components?.Greeting).toBeDefined()
 
     // Main should reference Greeting with data props
     const greetingUsage = result.main.children![0]
@@ -147,12 +147,12 @@ describe('Component Registry Integration', () => {
     expect(greetingUsage.data!.age).toBe(30)
 
     // Greeting component should use prop references
-    const greetingDef = result.components.Greeting
-    const nameText = greetingDef.children![0]
-    const ageText = greetingDef.children![1]
+    const greetingDef = result.components?.Greeting
+    const nameText = greetingDef?.children![0]
+    const ageText = greetingDef?.children![1]
 
-    expect(nameText.properties!.text).toEqual({ type: 'prop', key: 'name' })
-    expect(ageText.properties!.text).toEqual({ type: 'prop', key: 'age' })
+    expect(nameText?.properties!.text).toEqual({ type: 'prop', key: 'name' })
+    expect(ageText?.properties!.text).toEqual({ type: 'prop', key: 'age' })
   })
 
   it('should throw error for unknown component', async () => {
@@ -244,8 +244,8 @@ describe('Component Registry Integration', () => {
 
     const result = await transpile(code)
 
-    expect(result.components.Title).toBeDefined()
-    expect(result.components.Card).toBeDefined()
+    expect(result.components?.Title).toBeDefined()
+    expect(result.components?.Card).toBeDefined()
 
     const cardUsage = result.main.children![0]
     expect(cardUsage.type).toBe('Card')
@@ -306,9 +306,9 @@ describe('Component Registry Integration', () => {
     const result = await transpile(code)
 
     // All local components should be collected
-    expect(result.components.ProductImage).toBeDefined()
-    expect(result.components.ProductCheckbox).toBeDefined()
-    expect(result.components.CartItem).toBeDefined()
+    expect(result.components?.ProductImage).toBeDefined()
+    expect(result.components?.ProductCheckbox).toBeDefined()
+    expect(result.components?.CartItem).toBeDefined()
 
     // Main screen should use CartItem
     expect(result.main.type).toBe('Column')
@@ -317,7 +317,7 @@ describe('Component Registry Integration', () => {
     expect(result.main.children![1].type).toBe('CartItem')
 
     // CartItem should reference local components
-    const cartItemDef = result.components.CartItem
+    const cartItemDef = result.components?.CartItem
     expect(cartItemDef.children![0].type).toBe('ProductCheckbox')
     expect(cartItemDef.children![1].type).toBe('ProductImage')
 
@@ -355,7 +355,7 @@ describe('Component Registry Integration', () => {
 
     const result = await transpile(code)
 
-    expect(result.components.StaticHeader).toBeDefined()
+    expect(result.components?.StaticHeader).toBeDefined()
     expect(result.main.children![0].type).toBe('StaticHeader')
   })
 
@@ -381,6 +381,6 @@ describe('Component Registry Integration', () => {
     expect(result.main.type).toBe('View')
 
     // Should not be in components map
-    expect(result.components.MainScreen).toBeUndefined()
+    expect(result.components?.MainScreen).toBeUndefined()
   })
 })
